@@ -488,56 +488,27 @@ https://corp.tossinvest.com/ko/contents/consent?id=117
 
 # 4. DB 설계
 
-## 1️⃣ users 테이블
+## users 테이블
+1. USER 엔터티
+- 회원가입 시 등록한 ID를 주식별자로 할것
+- 회원가입 시 등록한 나머지 정보를 속성으로 저정할 것. 숫자는 정수로 저장하기.
 
-| 컬럼명        | 타입              |
-| ---------- | --------------- |
-| id         | Integer (PK)    |
-| email      | String (unique) |
-| password   | String (hashed) |
-| created_at | DateTime        |
+2. 설문 문항 엔터티
+유지 보수 용이성을 위해서 설문 문항들만 저장해놓는 테이블을 따로 하나 만들어줘. 
 
----
+3. 
 
-## 2️⃣ survey_questions 테이블
-
-| 컬럼명           | 타입           |
-| ------------- | ------------ |
-| id            | Integer (PK) |
-| question_text | String       |
-| is_required   | Boolean      |
-| question_type | String       |
-| created_at    | DateTime     |
-
-question_type 예시:
-
-* text
-* number
-* radio
-* select
-
-※ 서버 시작 시 seed 데이터로 문항 자동 삽입
-
----
-
-## 3️⃣ survey_answers 테이블
-
-| 컬럼명          | 타입                      |
-| ------------ | ----------------------- |
-| id           | Integer (PK)            |
-| user_id      | FK(users.id)            |
-| question_id  | FK(survey_questions.id) |
-| answer_text  | String (LLM 전달용 원본값)    |
-| answer_value | Integer (숫자형 저장 필요 시)   |
-| created_at   | DateTime                |
-
-✔ 금액 관련 문항은:
-
-* answer_value = 숫자 저장
-* answer_text = "1000000원" 형태 저장
-
----
-
+- 3. 개인화 설문 화면 
+![alt text](04_Survey_Start.jpg)
+    기능
+    0. 개인화를 위한 질문 작성 단계.
+    1. 개인화 질문에 대한 답변 작성.
+    2. 개인화 질문 제출하기 버튼. 선택 사항이라 넘어가기 가능(내용 안 채워도 활성화됨)
+    설문 방식
+    - 주관식으로 입력받아서 테이블에 저장하고, 그걸 각 회원ID별로 llm에 넘겨주는 로직으로 구현해줘.
+    - 설문문항들만 들어있는 DB테이블을 따로 하나 만들어줘. 그럼 유지보수하기도 편할거같아.
+    - 설문문항이 들어있는 db테이블에서 문항을 가져와서 설문 페이지에 문항을 보여주는거야.
+    - 그리고 llm에 보내줄 때는 설문문항 db과 답변 db을 보내줘서 각각 질문과 답변을 매핑할 수 있도록 설계하려고해. 이걸 고려해서 구현해주면 돼.
 # 5. API 설계
 
 ---
