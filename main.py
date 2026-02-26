@@ -1,16 +1,45 @@
-from flask import Flask, request, jsonify
-from flask_cors import CORS
+from fastapi import FastAPI, HTTPException, Query
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel, EmailStr
 import sqlite3
 import json
 import hashlib
 import os
 from datetime import datetime
+from typing import Optional, Dict, Any
+import uvicorn
 
-app = Flask(__name__)
-CORS(app)
+app = FastAPI(title="SeedUp API Server")
+
+# CORS 설정
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # 데이터베이스 경로
 DB_PATH = 'seedup.db'
+
+# Pydantic 모델 정의
+class SignupRequest(BaseModel):
+    email: str
+    password: str
+    username: str
+    name: Optional[str] = ""
+    phone: Optional[str] = ""
+    dob: Optional[str] = ""
+
+class LoginRequest(BaseModel):
+    email: str
+    password: str
+
+class SurveyRequest(BaseModel):
+    user_id: int
+    survey_data: Dict[str, Any]
+
 
 def init_db():
     """데이터베이스 초기화"""
@@ -91,12 +120,12 @@ def get_db_connection():
     return conn
 
 
-@app.route('/api/check_username', methods=['GET'])
-def check_username():
+@app.get('/api/check_username')
+async def check_username(username: str = Query(..., description="Username to check")):
     """username(ID) 중복체크"""
-    username = request.args.get('username', '').strip()
+    username = username.strip()
     if not username:
-        return jsonify({'success': False, 'message': 'username is required'}), 400
+        raise HTTPException(status_code=400, detail={'success': False, 'message': 'username is required'})
 
     try:
         conn = get_db_connection()
@@ -104,50 +133,42 @@ def check_username():
         cursor.execute('SELECT id FROM users WHERE username = ?', (username,))
         user = cursor.fetchone()
         conn.close()
-        return jsonify({'success': True, 'exists': bool(user)}), 200
+        return {'success': True, 'exists': bool(user)}
     except Exception as e:
         print(f"Error in check_username: {str(e)}")
-        return jsonify({'success': False, 'message': 'error checking username'}), 500
+        raise HTTPException(status_code=500, detail={'success': False, 'message': 'error checking username'})
 
-@app.route('/api/signup', methods=['POST'])
-def signup():
+@app.post('/api/signup')
+async def signup(data: SignupRequest):
     """회원가입 API"""
     try:
-        data = request.get_json()
-        
-        if not data or not data.get('email') or not data.get('password') or not data.get('username'):
-            return jsonify({
-                'success': False,
-                'message': '이메일, 비밀번호, ID는 필수입니다.'
-            }), 400
-
-        email = data.get('email').strip()
-        password = data.get('password')
-        username = data.get('username').strip()
-        name = data.get('name', '').strip()
-        phone = data.get('phone', '').strip()
-        dob = data.get('dob', '').strip()
+        email = data.email.strip()
+        password = data.password
+        username = data.username.strip()
+        name = data.name.strip() if data.name else ""
+        phone = data.phone.strip() if data.phone else ""
+        dob = data.dob.strip() if data.dob else ""
 
         # 이메일 검증
         if '@' not in email:
-            return jsonify({
-                'success': False,
-                'message': '유효한 이메일을 입력해주세요.'
-            }), 400
+            raise HTTPException(
+                status_code=400,
+                detail={'success': False, 'message': '유효한 이메일을 입력해주세요.'}
+            )
 
         # 비밀번호 길이 검증
         if len(password) < 6:
-            return jsonify({
-                'success': False,
-                'message': '비밀번호는 6자 이상이어야 합니다.'
-            }), 400
+            raise HTTPException(
+                status_code=400,
+                detail={'success': False, 'message': '비밀번호는 6자 이상이어야 합니다.'}
+            )
 
         # username 검증
         if not username:
-            return jsonify({
-                'success': False,
-                'message': 'ID를 입력해주세요.'
-            }), 400
+            raise HTTPException(
+                status_code=400,
+                detail={'success': False, 'message': 'ID를 입력해주세요.'}
+            )
 
         # 비밀번호 해싱
         hashed_password = hash_password(password)
@@ -161,10 +182,10 @@ def signup():
             cursor.execute('SELECT id FROM users WHERE username = ? OR email = ?', (username, email))
             existing = cursor.fetchone()
             if existing:
-                return jsonify({
-                    'success': False,
-                    'message': '이미 사용 중인 이메일 또는 ID 입니다.'
-                }), 409
+                raise HTTPException(
+                    status_code=409,
+                    detail={'success': False, 'message': '이미 사용 중인 이메일 또는 ID 입니다.'}
+                )
 
             cursor.execute('''
                 INSERT INTO users (email, username, name, phone, dob, password)
@@ -174,43 +195,37 @@ def signup():
             conn.commit()
             user_id = cursor.lastrowid
 
-            return jsonify({
+            return {
                 'success': True,
                 'message': '회원가입이 완료되었습니다.',
                 'user_id': user_id,
                 'email': email,
                 'username': username
-            }), 201
+            }
 
         except sqlite3.IntegrityError:
-            return jsonify({
-                'success': False,
-                'message': '이미 가입된 이메일 또는 ID입니다.'
-            }), 409
+            raise HTTPException(
+                status_code=409,
+                detail={'success': False, 'message': '이미 가입된 이메일 또는 ID입니다.'}
+            )
         finally:
             conn.close()
     
+    except HTTPException:
+        raise
     except Exception as e:
         print(f"Error in signup: {str(e)}")
-        return jsonify({
-            'success': False,
-            'message': '회원가입 중 오류가 발생했습니다.'
-        }), 500
+        raise HTTPException(
+            status_code=500,
+            detail={'success': False, 'message': '회원가입 중 오류가 발생했습니다.'}
+        )
 
-@app.route('/api/login', methods=['POST'])
-def login():
+@app.post('/api/login')
+async def login(data: LoginRequest):
     """로그인 API"""
     try:
-        data = request.get_json()
-        
-        if not data or not data.get('email') or not data.get('password'):
-            return jsonify({
-                'success': False,
-                'message': '이메일과 비밀번호는 필수입니다.'
-            }), 400
-        
-        email = data.get('email').strip()
-        password = data.get('password')
+        email = data.email.strip()
+        password = data.password
         hashed_password = hash_password(password)
         
         conn = get_db_connection()
@@ -222,27 +237,29 @@ def login():
         conn.close()
         
         if user and user['password'] == hashed_password:
-            return jsonify({
+            return {
                 'success': True,
                 'message': '로그인되었습니다.',
                 'user_id': user['id'],
                 'email': user['email']
-            }), 200
+            }
         else:
-            return jsonify({
-                'success': False,
-                'message': '이메일 또는 비밀번호가 일치하지 않습니다.'
-            }), 401
+            raise HTTPException(
+                status_code=401,
+                detail={'success': False, 'message': '이메일 또는 비밀번호가 일치하지 않습니다.'}
+            )
     
+    except HTTPException:
+        raise
     except Exception as e:
         print(f"Error in login: {str(e)}")
-        return jsonify({
-            'success': False,
-            'message': '로그인 중 오류가 발생했습니다.'
-        }), 500
+        raise HTTPException(
+            status_code=500,
+            detail={'success': False, 'message': '로그인 중 오류가 발생했습니다.'}
+        )
 
-@app.route('/api/users/<int:user_id>', methods=['GET'])
-def get_user(user_id):
+@app.get('/api/users/{user_id}')
+async def get_user(user_id: int):
     """사용자 정보 조회 API"""
     try:
         conn = get_db_connection()
@@ -254,41 +271,35 @@ def get_user(user_id):
         conn.close()
         
         if user:
-            return jsonify({
+            return {
                 'success': True,
                 'user': {
                     'id': user['id'],
                     'email': user['email'],
                     'created_at': user['created_at']
                 }
-            }), 200
+            }
         else:
-            return jsonify({
-                'success': False,
-                'message': '사용자를 찾을 수 없습니다.'
-            }), 404
+            raise HTTPException(
+                status_code=404,
+                detail={'success': False, 'message': '사용자를 찾을 수 없습니다.'}
+            )
     
+    except HTTPException:
+        raise
     except Exception as e:
         print(f"Error in get_user: {str(e)}")
-        return jsonify({
-            'success': False,
-            'message': '사용자 조회 중 오류가 발생했습니다.'
-        }), 500
+        raise HTTPException(
+            status_code=500,
+            detail={'success': False, 'message': '사용자 조회 중 오류가 발생했습니다.'}
+        )
 
-@app.route('/api/survey', methods=['POST'])
-def save_survey():
+@app.post('/api/survey')
+async def save_survey(data: SurveyRequest):
     """설문조사 답변 저장 API"""
     try:
-        data = request.get_json()
-        
-        if not data or not data.get('user_id') or not data.get('survey_data'):
-            return jsonify({
-                'success': False,
-                'message': '사용자 ID와 설문 데이터는 필수입니다.'
-            }), 400
-        
-        user_id = data.get('user_id')
-        survey_data = json.dumps(data.get('survey_data'))
+        user_id = data.user_id
+        survey_data = json.dumps(data.survey_data)
         
         conn = get_db_connection()
         cursor = conn.cursor()
@@ -302,47 +313,33 @@ def save_survey():
             conn.commit()
             response_id = cursor.lastrowid
             
-            return jsonify({
+            return {
                 'success': True,
                 'message': '설문조사 답변이 저장되었습니다.',
                 'response_id': response_id
-            }), 201
+            }
         finally:
             conn.close()
     
     except Exception as e:
         print(f"Error in save_survey: {str(e)}")
-        return jsonify({
-            'success': False,
-            'message': '설문조사 저장 중 오류가 발생했습니다.'
-        }), 500
+        raise HTTPException(
+            status_code=500,
+            detail={'success': False, 'message': '설문조사 저장 중 오류가 발생했습니다.'}
+        )
 
-@app.route('/api/health', methods=['GET'])
-def health():
+@app.get('/api/health')
+async def health():
     """헬스 체크 API"""
-    return jsonify({
+    return {
         'status': 'healthy',
         'message': 'SeedUp API Server is running'
-    }), 200
-
-@app.errorhandler(404)
-def not_found(error):
-    return jsonify({
-        'success': False,
-        'message': '요청한 리소스를 찾을 수 없습니다.'
-    }), 404
-
-@app.errorhandler(500)
-def internal_error(error):
-    return jsonify({
-        'success': False,
-        'message': '서버 내부 오류가 발생했습니다.'
-    }), 500
+    }
 
 if __name__ == '__main__':
     # 데이터베이스 초기화
     init_db()
     
-    # Flask 앱 실행
+    # FastAPI 앱 실행
     print("Starting SeedUp API Server on http://localhost:5000")
-    app.run(debug=True, port=5000)
+    uvicorn.run(app, host="0.0.0.0", port=5000, log_level="info")
