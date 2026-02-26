@@ -1,0 +1,149 @@
+.terms-checkbox-wrapper {
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  background-color: #fff;
+  overflow: hidden;
+  transition: box-shadow 0.3s ease;
+}
+
+.terms-checkbox-wrapper:hover {
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
+.terms-checkbox-row {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  gap: 12px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  user-select: none;
+}
+
+.terms-checkbox-row:hover {
+  background-color: #f8f9fa;
+}
+
+.terms-checkbox-row.checked {
+  background-color: #f0f8ff;
+}
+
+.checkbox-container {
+  position: relative;
+  flex-shrink: 0;
+  width: 24px;
+  height: 24px;
+}
+
+.checkbox-input {
+  position: absolute;
+  opacity: 0;
+  width: 100%;
+  height: 100%;
+  cursor: pointer;
+  margin: 0;
+}
+
+.checkbox-label {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 24px;
+  height: 24px;
+  border: 2px solid #d0d0d0;
+  border-radius: 4px;
+  background-color: #fff;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.checkbox-input:checked + .checkbox-label {
+  background-color: #ffec48;
+  border-color: #ffec48;
+}
+
+.checkbox-input:checked + .checkbox-label::after {
+  content: '✓';
+  color: #333;
+  font-size: 16px;
+  font-weight: bold;
+}
+
+.terms-info-section {
+  flex: 1;
+  min-width: 0;
+}
+
+.terms-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.terms-type {
+  font-size: 12px;
+  font-weight: 600;
+  padding: 4px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.terms-type.필수 {
+  background-color: #ffe0e5;
+  color: #f64e5b;
+}
+
+.terms-type.선택 {
+  background-color: #fff8e1;
+  color: #f8b500;
+}
+
+.terms-title {
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+}
+
+.expand-button {
+  flex-shrink: 0;
+  background: none;
+  border: none;
+  font-size: 14px;
+  color: #999;
+  cursor: pointer;
+  padding: 4px;
+  transition: color 0.2s ease;
+}
+
+.expand-button:hover {
+  color: #333;
+}
+
+.terms-content {
+  padding: 16px;
+  border-top: 1px solid #e0e0e0;
+  background-color: #fafafa;
+  max-height: 400px;
+  overflow-y: auto;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    max-height: 0;
+  }
+  to {
+    opacity: 1;
+    max-height: 400px;
+  }
+}
+
+.content-text {
+  font-size: 13px;
+  line-height: 1.8;
+  color: #555;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
