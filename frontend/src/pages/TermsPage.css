@@ -1,0 +1,80 @@
+.terms-page {
+  flex: 1;
+  padding: 40px 20px;
+  background-color: #f8f9fa;
+}
+
+.terms-container {
+  max-width: 3000px;
+  margin: 0 auto;
+}
+
+.terms-header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.terms-header h1 {
+  font-size: 32px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 12px;
+}
+
+.terms-header p {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.terms-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-bottom: 30px;
+}
+
+.terms-info {
+  text-align: center;
+  margin-bottom: 24px;
+  padding: 12px;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+}
+
+.terms-info p {
+  font-size: 14px;
+  color: #666;
+  margin: 0;
+}
+
+.submit-button {
+  width: 100%;
+  padding: 16px;
+  font-size: 16px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.submit-button.enabled {
+  background-color: #ffec48;
+  color: #333;
+}
+
+.submit-button.enabled:hover {
+  background-color: #ffd700;
+}
+
+.submit-button.enabled:active {
+  background-color: #ffb700;
+}
+
+.submit-button.disabled {
+  background-color: #d0d0d0;
+  color: #999;
+  cursor: not-allowed;
+  opacity: 0.6;
+}
