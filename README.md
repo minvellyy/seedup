@@ -2,18 +2,16 @@
 투자입문자를 위한 국내 주식 투자 자문 AI Agent 서비스
 
 ## 프로젝트 구조
-```
-seedup/
-├── backend/              # FastAPI 백엔드
-│   ├── main.py          # API 서버
-│   ├── requirements.txt # Python 패키지
-│   └── seedup.db        # SQLite 데이터베이스
-├── frontend/            # React 프론트엔드
-│   ├── src/
-│   ├── package.json
-│   └── vite.config.js
-└── docs/                # 문서
-```
+
+This project contains the following structure:
+
+- **backend/**: Contains all backend-related code, including the main FastAPI application and database logic.
+- **frontend/**: Contains the frontend code for the application.
+
+## Notes
+- The `backend/main.py` file is the entry point for the backend server.
+- The `backend/requirements.txt` file contains the dependencies for the backend.
+- The root-level `main.py` and `requirements.txt` files are deprecated and can be removed.
 
 ## 기술 스택
 

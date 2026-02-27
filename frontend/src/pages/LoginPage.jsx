@@ -33,7 +33,7 @@ function LoginPage() {
     }
 
     try {
-      const response = await fetch('http://localhost:5000/api/login', {
+      const response = await fetch('http://localhost:8000/api/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -48,8 +48,10 @@ function LoginPage() {
 
       if (response.ok) {
         // 사용자 ID 저장 (필요한 경우)
+        console.log('로그인 성공 - 저장할 user_id:', data.user_id);
         localStorage.setItem('user_id', data.user_id)
         localStorage.setItem('email', data.email)
+        console.log('localStorage에 저장 완료 - user_id:', localStorage.getItem('user_id'));
         navigate('/survey')
       } else {
         setError(data.message || '로그인에 실패했습니다.')

@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import './SurveyPage.css'
+import axios from 'axios'
 
 function formatNumberWithCommas(num) {
   if (!num) return '';
@@ -7,6 +8,16 @@ function formatNumberWithCommas(num) {
 }
 
 function SurveyPage() {
+  // 페이지 로드 시 localStorage 확인
+  React.useEffect(() => {
+    const storedUserId = localStorage.getItem('user_id');
+    const storedEmail = localStorage.getItem('email');
+    console.log('=== SurveyPage 로드 시 localStorage 확인 ===');
+    console.log('저장된 user_id:', storedUserId);
+    console.log('저장된 email:', storedEmail);
+    console.log('localStorage 전체:', Object.keys(localStorage).map(key => `${key}: ${localStorage.getItem(key)}`));
+  }, []);
+
   const [answers, setAnswers] = useState({
     investmentGoal: '',
     targetDate: '',
@@ -69,10 +80,95 @@ function SurveyPage() {
     return requiredFields.every(field => field)
   }
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     if (isRequiredFieldsFilled()) {
-      setShowModal(true)
-      console.log('설문 답변 제출:', answers)
+      try {
+        // 프론트엔드 필드명을 question_id로 매핑
+        const fieldToQuestionMapping = {
+          investmentGoal: { id: 1, type: 'TEXT' },
+          targetDate: { id: 2, type: 'TEXT' },
+          targetAmount: { id: 3, type: 'NUMBER' },
+          investmentMethod: { id: 4, type: 'SINGLE_CHOICE' },
+          lumpSum: { id: 5, type: 'NUMBER' },
+          installment: { id: 6, type: 'NUMBER' },
+          maxStocks: { id: 7, type: 'NUMBER' },
+          dividendPreference: { id: 8, type: 'SINGLE_CHOICE' },
+          accountType: { id: 9, type: 'TEXT' }
+        };
+
+        // 프론트엔드 값을 백엔드 형식으로 변환
+        const valueMapping = {
+          investmentMethod: {
+            'lumpSum': 'LUMP_SUM',
+            'installment': 'DCA'
+          },
+          dividendPreference: {
+            'high': 'HIGH',
+            'medium': 'MID',
+            'low': 'LOW'
+          }
+        };
+
+        // 답변 데이터를 백엔드가 기대하는 형식으로 변환
+        const formattedAnswers = [];
+        for (const [fieldName, value] of Object.entries(answers)) {
+          if (!value) continue; // 빈 값은 건너뛰기
+          
+          const mapping = fieldToQuestionMapping[fieldName];
+          if (!mapping) continue;
+
+          const answer = { question_id: mapping.id };
+          
+          let finalValue = value;
+          // 값 변환이 필요한 경우
+          if (valueMapping[fieldName] && valueMapping[fieldName][value]) {
+            finalValue = valueMapping[fieldName][value];
+          }
+          
+          if (mapping.type === 'TEXT') {
+            answer.value_text = finalValue;
+          } else if (mapping.type === 'NUMBER') {
+            // 콤마 제거 후 숫자로 변환
+            const cleanedValue = finalValue.toString().replace(/,/g, '');
+            answer.value_number = parseFloat(cleanedValue);
+          } else if (mapping.type === 'SINGLE_CHOICE') {
+            answer.value_choice = finalValue;
+          }
+          
+          formattedAnswers.push(answer);
+        }
+
+        // localStorage에서 user_id 가져오기
+        const userId = localStorage.getItem('user_id');
+        console.log('localStorage의 user_id:', userId);
+        console.log('localStorage 전체:', { ...localStorage });
+        
+        if (!userId) {
+          alert('로그인이 필요합니다.');
+          window.location.href = '/login';
+          return;
+        }
+
+        const userIdNumber = parseInt(userId);
+        console.log('변환된 user_id (숫자):', userIdNumber);
+        console.log('전송할 데이터:', { user_id: userIdNumber, answers: formattedAnswers });
+
+        const response = await axios.post('http://localhost:8000/api/survey', {
+          user_id: userIdNumber,
+          answers: formattedAnswers
+        });
+
+        if (response.data.success) {
+          setShowModal(true);
+          console.log('설문 답변 제출 성공:', response.data);
+        } else {
+          alert('설문 제출에 실패했습니다. 다시 시도해주세요.');
+        }
+      } catch (error) {
+        console.error('설문 제출 중 오류:', error);
+        const errorMessage = error.response?.data?.detail?.message || '설문 제출 중 오류가 발생했습니다.';
+        alert(errorMessage);
+      }
     }
   }
 
@@ -180,7 +276,7 @@ function SurveyPage() {
 
             {answers.investmentMethod === 'installment' && (
               <div className="conditional-section">
-                <label className="required">월 적립금 *</label>
+                <label className="required">월 투자 가능 금액 *</label>
                 <div className="input-group">
                   <input
                     type="text"
@@ -200,7 +296,7 @@ function SurveyPage() {
 
           {/* 5. 최대 보유 종목 수 */}
           <div className="survey-section">
-            <label className="required">5. 최대 보유 종목 수 선호는? *</label>
+            <label className="required">5. 최대 몇 개의 종목을 보유하고 싶으신가요? *</label>
             <input
               type="text"
               name="maxStocks"
