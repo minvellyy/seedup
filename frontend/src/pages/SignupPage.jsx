@@ -169,7 +169,7 @@ function SignupPage() {
   const checkUsernameExists = async (value) => {
     if (!value) return
     try {
-      const res = await fetch(`http://localhost:5000/api/check_username?username=${encodeURIComponent(value)}`)
+      const res = await fetch(`http://localhost:8000/api/check_username?username=${encodeURIComponent(value)}`)
       const data = await res.json()
       if (res.ok) {
         setUsernameAvailable(!data.exists)
@@ -204,7 +204,7 @@ function SignupPage() {
     setShowTermsPopup(false)
     setIsLoading(true)
     try {
-      const response = await fetch('http://localhost:5000/api/signup', {
+      const response = await fetch('http://localhost:8000/api/signup', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -220,6 +220,11 @@ function SignupPage() {
       })
       const data = await response.json()
       if (response.ok) {
+        // 회원가입 성공 시 자동 로그인 처리
+        console.log('회원가입 성공 - user_id:', data.user_id, 'email:', data.email);
+        localStorage.setItem('user_id', data.user_id);
+        localStorage.setItem('email', data.email);
+        console.log('localStorage에 저장 완료 - user_id:', localStorage.getItem('user_id'));
         setShowModal(true)
       } else {
         setErrors({ submit: data.message || '회원가입에 실패했습니다.' })
