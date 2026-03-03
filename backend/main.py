@@ -1,28 +1,16 @@
-from fastapi import FastAPI, HTTPException, Query
+from fastapi import FastAPI, HTTPException, Query, Depends
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel, EmailStr
-import sqlite3
-import json
-import hashlib
-import os
-from datetime import datetime
+from pydantic import BaseModel
+from sqlalchemy.orm import Session
+from sqlalchemy import text
+from database import engine, get_db, SessionLocal
 from typing import Optional, Dict, Any
+import hashlib
+import json
 import uvicorn
+from datetime import datetime
 from routers import survey
-
-app = FastAPI(title="SeedUp API Server")
-
-# CORS 설정
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-# 데이터베이스 경로를 절대 경로로 설정
-DB_PATH = os.path.abspath(os.path.join(os.path.dirname(__file__), 'seedup.db'))
+from models import Base, SurveyQuestion
 
 # Pydantic 모델 정의
 class SignupRequest(BaseModel):
@@ -34,166 +22,119 @@ class SignupRequest(BaseModel):
     dob: Optional[str] = ""
 
 class LoginRequest(BaseModel):
-    email: str
+    username: str
     password: str
 
 class SurveyRequest(BaseModel):
     user_id: int
     survey_data: Dict[str, Any]
 
-
-def init_db():
-    """데이터베이스 초기화"""
-    conn = sqlite3.connect(DB_PATH)
-    cursor = conn.cursor()
-
-    # users 테이블이 존재하는지 확인
-    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='users'")
-    users_exists = cursor.fetchone() is not None
-
-    if users_exists:
-        # 기존 users 테이블의 컬럼 확인
-        cursor.execute("PRAGMA table_info(users)")
-        columns = [col[1] for col in cursor.fetchall()]
-        
-        # dob 컬럼이 있는지 확인
-        if 'dob' in columns or 'birth_date' not in columns:
-            print("Migrating users table to remove 'dob' column...")
-            
-            # 임시 테이블 삭제 (이전 실행에서 남아있을 수 있음)
-            cursor.execute("DROP TABLE IF EXISTS users_new")
-            
-            # 새로운 스키마로 임시 테이블 생성
-            cursor.execute('''
-                CREATE TABLE users_new (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    email TEXT UNIQUE NOT NULL,
-                    username TEXT UNIQUE NOT NULL,
-                    name TEXT,
-                    phone TEXT,
-                    birth_date TEXT,
-                    password TEXT NOT NULL,
-                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-                )
-            ''')
-
-            # 기존 데이터 복사 (birth_date가 있으면 그대로, dob가 있으면 변환)
-            if 'birth_date' in columns:
-                cursor.execute('''
-                    INSERT INTO users_new (id, email, username, name, phone, birth_date, password, created_at)
-                    SELECT id, email, username, name, phone, birth_date, password, created_at FROM users
-                ''')
-            elif 'dob' in columns:
-                cursor.execute('''
-                    INSERT INTO users_new (id, email, username, name, phone, birth_date, password, created_at)
-                    SELECT id, email, username, name, phone, dob, password, created_at FROM users
-                ''')
-            else:
-                cursor.execute('''
-                    INSERT INTO users_new (id, email, username, name, phone, password, created_at)
-                    SELECT id, email, username, name, phone, password, created_at FROM users
-                ''')
-
-            # 기존 테이블 삭제 및 새 테이블 이름 변경
-            cursor.execute('DROP TABLE users')
-            cursor.execute('ALTER TABLE users_new RENAME TO users')
-            print("users table migration completed!")
-    else:
-        # users 테이블이 없으면 새로 생성
-        cursor.execute('''
-            CREATE TABLE users (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                email TEXT UNIQUE NOT NULL,
-                username TEXT UNIQUE NOT NULL,
-                name TEXT,
-                phone TEXT,
-                birth_date TEXT,
-                password TEXT NOT NULL,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-        ''')
-        print("users table created!")
-
-    # survey_questions 테이블이 존재하는지 확인
-    cursor.execute("SELECT name FROM sqlite_master WHERE type='table' AND name='survey_questions'")
-    sq_exists = cursor.fetchone() is not None
-
-    if not sq_exists:
-        # survey_questions 테이블 생성
-        cursor.execute('''
-            CREATE TABLE survey_questions (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                code TEXT UNIQUE,
-                question_text TEXT NOT NULL,
-                answer_type TEXT NOT NULL,
-                options_json TEXT,
-                order_no INTEGER,
-                parent_question_id INTEGER,
-                show_if_question_id INTEGER,
-                show_if_value TEXT,
-                is_required INTEGER DEFAULT 1,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (parent_question_id) REFERENCES survey_questions(id),
-                FOREIGN KEY (show_if_question_id) REFERENCES survey_questions(id)
-            )
-        ''')
-        print("survey_questions table created!")
-
-    # survey_answers 테이블 재생성 (UNIQUE 제약 완전 제거를 위해 무조건 DROP)
-    print("Recreating survey_answers table without UNIQUE constraint...")
-    cursor.execute('DROP TABLE IF EXISTS survey_answers')
-    cursor.execute('''
-        CREATE TABLE survey_answers (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            user_id INTEGER NOT NULL,
-            question_id INTEGER NOT NULL,
-            value_text TEXT,
-            value_number REAL,
-            value_choice TEXT,
-            created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-            FOREIGN KEY (user_id) REFERENCES users(id),
-            FOREIGN KEY (question_id) REFERENCES survey_questions(id)
-        )
-    ''')
-    print("survey_answers table recreated successfully!")
-
-    conn.commit()
-    conn.close()
-    print("Database initialized successfully")
-
+# 유틸리티 함수
 def hash_password(password):
     """비밀번호 해싱 - SHA256 사용"""
     return hashlib.sha256(password.encode('utf-8')).hexdigest()
 
-def get_db_connection():
-    """데이터베이스 연결"""
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
+def init_survey_questions():
+    """설문 질문 초기화 - Raw SQL 사용"""
+    db = SessionLocal()
+    try:
+        # 이미 데이터가 있는지 확인
+        result = db.execute(text('SELECT COUNT(*) FROM survey_questions'))
+        count = result.fetchone()[0]
+        if count > 0:
+            print(f"Survey questions already exist ({count} questions), skipping initialization")
+            return
+        
+        print("Initializing survey questions with Raw SQL...")
+        
+        # Raw SQL로 직접 삽입
+        questions_sql = [
+            ("INVEST_GOAL", "투자 목적은 무엇인가요?", "TEXT", None, 1),
+            ("TARGET_HORIZON", "목표 시점은 언제인가요?", "TEXT", None, 2),
+            ("TARGET_AMOUNT", "목표 금액은 어느 정도인가요?", "NUMBER", None, 3),
+            ("CONTRIBUTION_TYPE", "선호하는 투자 방식을 선택해 주세요", "SINGLE_CHOICE", '["LUMP_SUM", "DCA"]', 4),
+            ("LUMP_SUM_AMOUNT", "일시금 금액", "NUMBER", None, 5),
+            ("MONTHLY_AMOUNT", "월 투자 가능 금액", "NUMBER", None, 6),
+            ("MAX_HOLDINGS", "최대 몇 개의 종목을 보유하고 싶으신가요?", "NUMBER", None, 7),
+            ("DIVIDEND_PREF", "배당 선호 정도는?", "SINGLE_CHOICE", '["HIGH", "MID", "LOW"]', 8),
+            ("ACCOUNT_TYPE", "계좌 유형", "TEXT", None, 9)
+        ]
+        
+        for code, question_text, answer_type, options_json, order_no in questions_sql:
+            db.execute(
+                text('''
+                    INSERT INTO survey_questions (code, question_text, answer_type, options_json, order_no, created_at, updated_at)
+                    VALUES (:code, :question_text, :answer_type, :options_json, :order_no, NOW(), NOW())
+                '''),
+                {
+                    'code': code,
+                    'question_text': question_text,
+                    'answer_type': answer_type,
+                    'options_json': options_json,
+                    'order_no': order_no
+                }
+            )
+        
+        db.commit()
+        print(f"Survey questions initialized successfully! Total: {len(questions_sql)} questions")
+    except Exception as e:
+        print(f"Error initializing survey questions: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        db.rollback()
+    finally:
+        db.close()
 
+app = FastAPI(title="SeedUp API Server")
+
+# 앱 시작 시 설문 질문 초기화
+@app.on_event("startup")
+async def startup_event():
+    print("="*60)
+    print("Starting up application...")
+    print("="*60)
+    try:
+        # 테이블 생성
+        print("Creating database tables...")
+        Base.metadata.create_all(bind=engine)
+        print("Database tables created successfully!")
+        
+        # 설문 질문 초기화
+        print("Initializing survey questions...")
+        init_survey_questions()
+        print("Application startup complete!")
+    except Exception as e:
+        print(f"Error during startup: {str(e)}")
+        import traceback
+        traceback.print_exc()
+    print("="*60)
+
+# CORS 설정
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get('/api/check_username')
-async def check_username(username: str = Query(..., description="Username to check")):
+async def check_username(username: str = Query(..., description="Username to check"), db: Session = Depends(get_db)):
     """username(ID) 중복체크"""
     username = username.strip()
     if not username:
         raise HTTPException(status_code=400, detail={'success': False, 'message': 'username is required'})
 
     try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        cursor.execute('SELECT id FROM users WHERE username = ?', (username,))
-        user = cursor.fetchone()
-        conn.close()
+        result = db.execute(text('SELECT id FROM users WHERE username = :username'), {'username': username})
+        user = result.fetchone()
         return {'success': True, 'exists': bool(user)}
     except Exception as e:
         print(f"Error in check_username: {str(e)}")
         raise HTTPException(status_code=500, detail={'success': False, 'message': 'error checking username'})
 
 @app.post('/api/signup')
-async def signup(data: SignupRequest):
+async def signup(data: SignupRequest, db: Session = Depends(get_db)):
     """회원가입 API"""
     try:
         print(f"[SIGNUP] 회원가입 요청 받음: {data.email}, {data.username}")
@@ -234,14 +175,13 @@ async def signup(data: SignupRequest):
         hashed_password = hash_password(password)
         print(f"[SIGNUP] 비밀번호 해싱 완료")
 
-        # 데이터베이스에 사용자 저장
-        conn = get_db_connection()
-        cursor = conn.cursor()
-
         try:
             # 이미 존재하는 username 또는 email 확인
-            cursor.execute('SELECT id FROM users WHERE username = ? OR email = ?', (username, email))
-            existing = cursor.fetchone()
+            result = db.execute(
+                text('SELECT id FROM users WHERE username = :username OR email = :email'),
+                {'username': username, 'email': email}
+            )
+            existing = result.fetchone()
             if existing:
                 print(f"[SIGNUP] 중복 사용자 발견 - username: {username}, email: {email}")
                 raise HTTPException(
@@ -250,13 +190,18 @@ async def signup(data: SignupRequest):
                 )
 
             print(f"[SIGNUP] DB에 사용자 삽입 시도")
-            cursor.execute('''
-                INSERT INTO users (email, username, name, phone, birth_date, password)
-                VALUES (?, ?, ?, ?, ?, ?)
-            ''', (email, username, name, phone, dob, hashed_password))
+            db.execute(
+                text('''
+                    INSERT INTO users (email, username, name, phone, birth_date, password)
+                    VALUES (:email, :username, :name, :phone, :dob, :password)
+                '''),
+                {'email': email, 'username': username, 'name': name, 'phone': phone, 'dob': dob, 'password': hashed_password}
+            )
+            db.commit()
 
-            conn.commit()
-            user_id = cursor.lastrowid
+            # MySQL에서 마지막 삽입된 ID 가져오기
+            result = db.execute(text('SELECT LAST_INSERT_ID()'))
+            user_id = result.fetchone()[0]
             
             print(f"[SIGNUP] 회원가입 성공 - user_id: {user_id}")
 
@@ -268,14 +213,15 @@ async def signup(data: SignupRequest):
                 'username': username
             }
 
-        except sqlite3.IntegrityError as e:
-            print(f"[SIGNUP] DB IntegrityError: {str(e)}")
+        except HTTPException:
+            raise
+        except Exception as e:
+            db.rollback()
+            print(f"[SIGNUP] DB Error: {str(e)}")
             raise HTTPException(
                 status_code=409,
                 detail={'success': False, 'message': '이미 가입된 이메일 또는 ID입니다.'}
             )
-        finally:
-            conn.close()
     
     except HTTPException:
         raise
@@ -289,32 +235,30 @@ async def signup(data: SignupRequest):
         )
 
 @app.post('/api/login')
-async def login(data: LoginRequest):
+async def login(data: LoginRequest, db: Session = Depends(get_db)):
     """로그인 API"""
     try:
-        email = data.email.strip()
+        username = data.username.strip()
         password = data.password
 
-        conn = get_db_connection()
-        cursor = conn.cursor()
-
-        # email로 사용자 검색
-        cursor.execute('SELECT * FROM users WHERE email = ?', (email,))
-        user = cursor.fetchone()
-
-        conn.close()
+        # username으로 사용자 검색
+        result = db.execute(
+            text('SELECT id, email, username, password FROM users WHERE username = :username'),
+            {'username': username}
+        )
+        user = result.fetchone()
 
         if user:
             # 비밀번호 검증 - SHA256 해시 비교
             password_hash = hashlib.sha256(password.encode('utf-8')).hexdigest()
-            if password_hash == user['password']:
-                print(f"로그인 성공 - user_id: {user['id']}, email: {user['email']}")
+            if password_hash == user[3]:  # user[3]은 password 컬럼
+                print(f"로그인 성공 - user_id: {user[0]}, username: {user[2]}")
                 return {
                     'success': True,
                     'message': '로그인되었습니다.',
-                    'user_id': user['id'],
-                    'email': user['email'],
-                    'username': user['username']
+                    'user_id': user[0],
+                    'email': user[1],
+                    'username': user[2]
                 }
         
         # 사용자가 없거나 비밀번호가 일치하지 않는 경우
@@ -333,24 +277,22 @@ async def login(data: LoginRequest):
         )
 
 @app.get('/api/users/{user_id}')
-async def get_user(user_id: int):
+async def get_user(user_id: int, db: Session = Depends(get_db)):
     """사용자 정보 조회 API"""
     try:
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
-        cursor.execute('SELECT id, email, created_at FROM users WHERE id = ?', (user_id,))
-        user = cursor.fetchone()
-        
-        conn.close()
+        result = db.execute(
+            text('SELECT id, email, created_at FROM users WHERE id = :user_id'),
+            {'user_id': user_id}
+        )
+        user = result.fetchone()
         
         if user:
             return {
                 'success': True,
                 'user': {
-                    'id': user['id'],
-                    'email': user['email'],
-                    'created_at': user['created_at']
+                    'id': user[0],
+                    'email': user[1],
+                    'created_at': str(user[2])
                 }
             }
         else:
@@ -369,7 +311,7 @@ async def get_user(user_id: int):
         )
 
 @app.post('/api/survey')
-async def save_survey(data: dict):
+async def save_survey(data: dict, db: Session = Depends(get_db)):
     """설문조사 답변 저장 API"""
     try:
         print("="*50)
@@ -389,15 +331,11 @@ async def save_survey(data: dict):
                 detail={"success": False, "message": "user_id와 answers는 필수입니다."}
             )
 
-        conn = get_db_connection()
-        cursor = conn.cursor()
-        
         # user_id 검증: users 테이블에 존재하는지 확인
-        cursor.execute('SELECT id FROM users WHERE id = ?', (user_id,))
-        user_exists = cursor.fetchone()
+        result = db.execute(text('SELECT id FROM users WHERE id = :user_id'), {'user_id': user_id})
+        user_exists = result.fetchone()
         
         if not user_exists:
-            conn.close()
             print(f"[ERROR] User validation failed - user_id {user_id} does not exist")
             raise HTTPException(
                 status_code=400,
@@ -407,42 +345,77 @@ async def save_survey(data: dict):
         print(f"[DEBUG] User validation passed - user_id {user_id} exists")
 
         try:
-            for answer in answers:
+            for idx, answer in enumerate(answers):
+                print(f"\n[DEBUG] Processing answer {idx + 1}/{len(answers)}: {answer}")
                 question_id = answer.get("question_id")
+                question_code = answer.get("question_code")
                 value_text = answer.get("value_text")
                 value_number = answer.get("value_number")
                 value_choice = answer.get("value_choice")
+                
+                print(f"[DEBUG] question_code: {question_code}, question_id: {question_id}")
+                print(f"[DEBUG] value_text: {value_text}, value_number: {value_number}, value_choice: {value_choice}")
 
-                # question_id 검증
-                cursor.execute('SELECT id, answer_type, options_json FROM survey_questions WHERE id = ?', (question_id,))
-                question_row = cursor.fetchone()
-
-                if not question_row:
+                # question_id 또는 question_code로 질문 찾기
+                if question_code:
+                    print(f"[DEBUG] Searching by question_code: {question_code}")
+                    result = db.execute(
+                        text('SELECT id, answer_type, options_json FROM survey_questions WHERE code = :code'),
+                        {'code': question_code}
+                    )
+                elif question_id:
+                    print(f"[DEBUG] Searching by question_id: {question_id}")
+                    result = db.execute(
+                        text('SELECT id, answer_type, options_json FROM survey_questions WHERE id = :question_id'),
+                        {'question_id': question_id}
+                    )
+                else:
+                    print(f"[ERROR] No question_id or question_code provided")
                     raise HTTPException(
                         status_code=400,
-                        detail={"success": False, "message": f"Invalid question_id: {question_id}"}
+                        detail={"success": False, "message": "question_id 또는 question_code가 필요합니다."}
+                    )
+                
+                question_row = result.fetchone()
+                print(f"[DEBUG] Question found: {question_row}")
+
+                if not question_row:
+                    print(f"[ERROR] Question not found for code/id: {question_code or question_id}")
+                    raise HTTPException(
+                        status_code=400,
+                        detail={"success": False, "message": f"Invalid question_id/code: {question_id or question_code}"}
                     )
 
-                question_id, answer_type, options_json = question_row
+                q_id, answer_type, options_json = question_row
+                print(f"[DEBUG] Question details - id: {q_id}, type: {answer_type}, options: {options_json}")
+
+                q_id, answer_type, options_json = question_row
+                print(f"[DEBUG] Question details - id: {q_id}, type: {answer_type}, options: {options_json}")
 
                 # 타입 검증 및 값 매핑
+                print(f"[DEBUG] Validating answer type: {answer_type}")
                 if answer_type == "TEXT":
-                    if value_text is None:
+                    if value_text is None or value_text == "":
+                        print(f"[ERROR] TEXT type question missing value_text")
                         raise HTTPException(
                             status_code=400,
-                            detail={"success": False, "message": f"TEXT 타입의 질문에 value_text가 필요합니다. (question_id: {question_id})"}
+                            detail={"success": False, "message": f"TEXT 타입의 질문에 value_text가 필요합니다. (question_id: {q_id})"}
                         )
+                    print(f"[DEBUG] TEXT validation passed")
                 elif answer_type == "NUMBER":
                     if value_number is None:
+                        print(f"[ERROR] NUMBER type question missing value_number")
                         raise HTTPException(
                             status_code=400,
-                            detail={"success": False, "message": f"NUMBER 타입의 질문에 value_number가 필요합니다. (question_id: {question_id})"}
+                            detail={"success": False, "message": f"NUMBER 타입의 질문에 value_number가 필요합니다. (question_id: {q_id})"}
                         )
+                    print(f"[DEBUG] NUMBER validation passed, value: {value_number}")
                 elif answer_type == "SINGLE_CHOICE":
-                    if value_choice is None:
+                    if value_choice is None or value_choice == "":
+                        print(f"[ERROR] SINGLE_CHOICE type question missing value_choice")
                         raise HTTPException(
                             status_code=400,
-                            detail={"success": False, "message": f"SINGLE_CHOICE 타입의 질문에 value_choice가 필요합니다. (question_id: {question_id})"}
+                            detail={"success": False, "message": f"SINGLE_CHOICE 타입의 질문에 value_choice가 필요합니다. (question_id: {q_id})"}
                         )
                     # options_json 파싱
                     try:
@@ -450,25 +423,38 @@ async def save_survey(data: dict):
                     except json.JSONDecodeError:
                         valid_options = []
                     
+                    print(f"[DEBUG] Checking if '{value_choice}' in {valid_options}")
                     if value_choice not in valid_options:
+                        print(f"[ERROR] Invalid choice value")
                         raise HTTPException(
                             status_code=400,
-                            detail={"success": False, "message": f"SINGLE_CHOICE 타입의 질문에 유효하지 않은 값입니다. (question_id: {question_id}, value: {value_choice}, valid_options: {valid_options})"}
+                            detail={"success": False, "message": f"SINGLE_CHOICE 타입의 질문에 유효하지 않은 값입니다. (question_id: {q_id}, value: {value_choice}, valid_options: {valid_options})"}
                         )
+                    print(f"[DEBUG] SINGLE_CHOICE validation passed")
                 else:
+                    print(f"[ERROR] Unknown answer type: {answer_type}")
                     raise HTTPException(
                         status_code=400,
                         detail={"success": False, "message": f"알 수 없는 answer_type: {answer_type}"}
                     )
 
                 # Insert new row for each answer
-                print(f"[DEBUG] Inserting answer - user_id: {user_id}, question_id: {question_id}, value_text: {value_text}, value_number: {value_number}, value_choice: {value_choice}")
-                cursor.execute('''
-                    INSERT INTO survey_answers (user_id, question_id, value_text, value_number, value_choice, created_at, updated_at)
-                    VALUES (?, ?, ?, ?, ?, CURRENT_TIMESTAMP, CURRENT_TIMESTAMP)
-                ''', (user_id, question_id, value_text, value_number, value_choice))
+                print(f"[DEBUG] Inserting answer - user_id: {user_id}, question_id: {q_id}, value_text: {value_text}, value_number: {value_number}, value_choice: {value_choice}")
+                db.execute(
+                    text('''
+                        INSERT INTO survey_answers (user_id, question_id, value_text, value_number, value_choice, created_at, updated_at)
+                        VALUES (:user_id, :question_id, :value_text, :value_number, :value_choice, NOW(), NOW())
+                    '''),
+                    {
+                        'user_id': user_id,
+                        'question_id': q_id,
+                        'value_text': value_text,
+                        'value_number': value_number,
+                        'value_choice': value_choice
+                    }
+                )
 
-            conn.commit()
+            db.commit()
             print(f"Survey answers saved for user_id: {user_id}")
 
             return {
@@ -476,8 +462,12 @@ async def save_survey(data: dict):
                 "message": "설문조사 답변이 저장되었습니다."
             }
 
-        finally:
-            conn.close()
+        except HTTPException:
+            raise
+        except Exception as e:
+            db.rollback()
+            print(f"Error saving survey answers: {str(e)}")
+            raise
 
     except HTTPException as e:
         raise e
@@ -486,6 +476,106 @@ async def save_survey(data: dict):
         raise HTTPException(
             status_code=500,
             detail={"success": False, "message": "설문조사 저장 중 오류가 발생했습니다."}
+        )
+
+@app.post('/api/logout')
+async def logout():
+    """로그아웃 API"""
+    # 클라이언트 측에서 localStorage를 클리어하므로 서버에서는 로그만 남김
+    print(f"[LOGOUT] 로그아웃 요청")
+    return {
+        'success': True,
+        'message': '로그아웃되었습니다.'
+    }
+
+@app.post('/api/init-survey-questions')
+async def manual_init_survey_questions(db: Session = Depends(get_db)):
+    """설문 질문 수동 초기화 API - Raw SQL 사용"""
+    try:
+        # 기존 데이터 확인
+        result = db.execute(text('SELECT COUNT(*) FROM survey_questions'))
+        count = result.fetchone()[0]
+        if count > 0:
+            return {
+                'success': True,
+                'message': '설문 질문이 이미 존재합니다.',
+                'count': count
+            }
+        
+        # Raw SQL로 설문 질문 생성
+        questions_sql = [
+            ("INVEST_GOAL", "투자 목적은 무엇인가요?", "TEXT", None, 1),
+            ("TARGET_HORIZON", "목표 시점은 언제인가요?", "TEXT", None, 2),
+            ("TARGET_AMOUNT", "목표 금액은 어느 정도인가요?", "NUMBER", None, 3),
+            ("CONTRIBUTION_TYPE", "선호하는 투자 방식을 선택해 주세요", "SINGLE_CHOICE", '["LUMP_SUM", "DCA"]', 4),
+            ("LUMP_SUM_AMOUNT", "일시금 금액", "NUMBER", None, 5),
+            ("MONTHLY_AMOUNT", "월 투자 가능 금액", "NUMBER", None, 6),
+            ("MAX_HOLDINGS", "최대 몇 개의 종목을 보유하고 싶으신가요?", "NUMBER", None, 7),
+            ("DIVIDEND_PREF", "배당 선호 정도는?", "SINGLE_CHOICE", '["HIGH", "MID", "LOW"]', 8),
+            ("ACCOUNT_TYPE", "계좌 유형", "TEXT", None, 9)
+        ]
+        
+        for code, question_text, answer_type, options_json, order_no in questions_sql:
+            db.execute(
+                text('''
+                    INSERT INTO survey_questions (code, question_text, answer_type, options_json, order_no, created_at, updated_at)
+                    VALUES (:code, :question_text, :answer_type, :options_json, :order_no, NOW(), NOW())
+                '''),
+                {
+                    'code': code,
+                    'question_text': question_text,
+                    'answer_type': answer_type,
+                    'options_json': options_json,
+                    'order_no': order_no
+                }
+            )
+        
+        db.commit()
+        
+        return {
+            'success': True,
+            'message': '설문 질문이 성공적으로 생성되었습니다.',
+            'count': len(questions_sql)
+        }
+    except Exception as e:
+        db.rollback()
+        print(f"Error initializing survey questions: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail={'success': False, 'message': f'설문 질문 초기화 중 오류가 발생했습니다: {str(e)}'}
+        )
+
+@app.get('/api/survey-questions')
+async def get_survey_questions(db: Session = Depends(get_db)):
+    """설문 질문 목록 조회 API - Raw SQL 사용"""
+    try:
+        result = db.execute(text('SELECT id, code, question_text, answer_type, options_json, order_no FROM survey_questions ORDER BY order_no'))
+        questions = result.fetchall()
+        
+        return {
+            'success': True,
+            'count': len(questions),
+            'questions': [
+                {
+                    'id': q[0],
+                    'code': q[1],
+                    'question_text': q[2],
+                    'answer_type': q[3],
+                    'options_json': q[4],
+                    'order_no': q[5]
+                }
+                for q in questions
+            ]
+        }
+    except Exception as e:
+        print(f"Error getting survey questions: {str(e)}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail={'success': False, 'message': f'설문 질문 조회 중 오류가 발생했습니다: {str(e)}'}
         )
 
 @app.get('/api/health')
@@ -500,9 +590,6 @@ async def health():
 app.include_router(survey.router, prefix="/survey", tags=["Survey"])
 
 if __name__ == '__main__':
-    # 데이터베이스 초기화
-    init_db()
-    
     # FastAPI 앱 실행
     import uvicorn
     uvicorn.run(app, host="127.0.0.1", port=8000)
