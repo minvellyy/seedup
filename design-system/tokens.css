@@ -1,0 +1,28 @@
+/* design-system tokens */
+:root{
+  --seed-bg: #fff7e6;
+  --seed-surface: #ffffff;
+  --seed-card-bg: #f3f4f6;
+  --seed-text: #1f2937;
+  --seed-muted: #6b7280;
+  --seed-border: #e5e7eb;
+  --seed-primary: #ffe34d;
+  --seed-primary-600: #f4d400;
+
+  --container: 1200px;
+  --header-h: 64px;
+  --gap-4: 24px;
+
+  --fs-hero: 48px;
+  --fs-h2: 32px;
+  --fs-body: 16px;
+  --fs-sm: 14px;
+  --fw-normal: 400;
+  --fw-semibold: 600;
+  --fw-bold: 700;
+  --lh-normal: 1.6;
+
+  --btn-h: 48px;
+  --btn-radius: 8px;
+  --btn-font: 16px;
+}
