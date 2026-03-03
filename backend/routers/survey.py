@@ -46,7 +46,7 @@ def get_my_answers(db: Session = Depends(get_db), user_id: int = 1):
             print(f"Warning: Question with id {answer.question_id} not found in survey_questions table.")
             continue
         result.append({
-            "question": question.question_text,
+            "question": question.text,
             "answer": {
                 "value_text": answer.value_text,
                 "value_number": answer.value_number,

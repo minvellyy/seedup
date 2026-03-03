@@ -1,0 +1,20 @@
+name: Stylelint
+
+on:
+  pull_request:
+  push:
+    branches: [ main ]
+
+jobs:
+  stylelint:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: npm ci
+      - name: Run stylelint
+        run: npm run lint:css

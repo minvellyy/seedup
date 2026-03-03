@@ -1,0 +1,6 @@
+/* simple design-system header styles */
+.ds-header{background:white;border-bottom:1px solid var(--seed-border);position:fixed;top:0;left:0;right:0;height:var(--header-h);z-index:1000}
+.ds-inner{max-width:var(--container);margin:0 auto;padding:0 24px;display:flex;align-items:center;justify-content:space-between;height:100%}
+.ds-logo{font-weight:700;color:var(--seed-primary);font-size:20px;text-decoration:none}
+.ds-nav{display:flex;gap:36px}
+.ds-nav a{text-decoration:none;color:var(--seed-text);font-weight:600}
