@@ -8,7 +8,7 @@ function formatNumberWithCommas(num) {
 }
 
 function SurveyPage() {
-  // 페이지 로드 시 localStorage 확인
+  // 페이지 로드 시 localStorage 확인 및 설문 질문 초기화
   React.useEffect(() => {
     const storedUserId = localStorage.getItem('user_id');
     const storedEmail = localStorage.getItem('email');
@@ -16,6 +16,22 @@ function SurveyPage() {
     console.log('저장된 user_id:', storedUserId);
     console.log('저장된 email:', storedEmail);
     console.log('localStorage 전체:', Object.keys(localStorage).map(key => `${key}: ${localStorage.getItem(key)}`));
+    
+    // 설문 질문 초기화
+    const initSurveyQuestions = async () => {
+      try {
+        const response = await axios.post('http://localhost:8000/api/init-survey-questions');
+        console.log('설문 질문 초기화 결과:', response.data);
+        
+        // 실제로 질문이 생성되었는지 확인
+        const questionsResponse = await axios.get('http://localhost:8000/api/survey-questions');
+        console.log('설문 질문 목록:', questionsResponse.data);
+      } catch (error) {
+        console.error('설문 질문 초기화 오류:', error);
+      }
+    };
+    
+    initSurveyQuestions();
   }, []);
 
   const [answers, setAnswers] = useState({
@@ -83,17 +99,17 @@ function SurveyPage() {
   const handleSubmit = async () => {
     if (isRequiredFieldsFilled()) {
       try {
-        // 프론트엔드 필드명을 question_id로 매핑
+        // 프론트엔드 필드명을 question_code로 매핑
         const fieldToQuestionMapping = {
-          investmentGoal: { id: 1, type: 'TEXT' },
-          targetDate: { id: 2, type: 'TEXT' },
-          targetAmount: { id: 3, type: 'NUMBER' },
-          investmentMethod: { id: 4, type: 'SINGLE_CHOICE' },
-          lumpSum: { id: 5, type: 'NUMBER' },
-          installment: { id: 6, type: 'NUMBER' },
-          maxStocks: { id: 7, type: 'NUMBER' },
-          dividendPreference: { id: 8, type: 'SINGLE_CHOICE' },
-          accountType: { id: 9, type: 'TEXT' }
+          investmentGoal: { code: 'INVEST_GOAL', type: 'TEXT' },
+          targetDate: { code: 'TARGET_HORIZON', type: 'TEXT' },
+          targetAmount: { code: 'TARGET_AMOUNT', type: 'NUMBER' },
+          investmentMethod: { code: 'CONTRIBUTION_TYPE', type: 'SINGLE_CHOICE' },
+          lumpSum: { code: 'LUMP_SUM_AMOUNT', type: 'NUMBER' },
+          installment: { code: 'MONTHLY_AMOUNT', type: 'NUMBER' },
+          maxStocks: { code: 'MAX_HOLDINGS', type: 'NUMBER' },
+          dividendPreference: { code: 'DIVIDEND_PREF', type: 'SINGLE_CHOICE' },
+          accountType: { code: 'ACCOUNT_TYPE', type: 'TEXT' }
         };
 
         // 프론트엔드 값을 백엔드 형식으로 변환
@@ -117,7 +133,7 @@ function SurveyPage() {
           const mapping = fieldToQuestionMapping[fieldName];
           if (!mapping) continue;
 
-          const answer = { question_id: mapping.id };
+          const answer = { question_code: mapping.code };
           
           let finalValue = value;
           // 값 변환이 필요한 경우
@@ -166,7 +182,11 @@ function SurveyPage() {
         }
       } catch (error) {
         console.error('설문 제출 중 오류:', error);
-        const errorMessage = error.response?.data?.detail?.message || '설문 제출 중 오류가 발생했습니다.';
+        console.error('오류 상세:', error.response?.data);
+        const errorMessage = error.response?.data?.detail?.message 
+          || error.response?.data?.message 
+          || JSON.stringify(error.response?.data?.detail)
+          || '설문 제출 중 오류가 발생했습니다.';
         alert(errorMessage);
       }
     }
