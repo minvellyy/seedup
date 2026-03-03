@@ -14,16 +14,11 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
-  // 컴포넌트 마운트 시 localStorage에서 사용자 정보 확인
+  // 컴포넌트 마운트 시 localStorage 초기화 (항상 로그아웃 상태로 시작)
   useEffect(() => {
-    const userId = localStorage.getItem('user_id')
-    const email = localStorage.getItem('email')
-    const username = localStorage.getItem('username')
-    
-    if (userId && email) {
-      setUser({ userId, email, username })
-      setIsLoggedIn(true)
-    }
+    localStorage.removeItem('user_id')
+    localStorage.removeItem('email')
+    localStorage.removeItem('username')
   }, [])
 
   const login = (userData) => {
