@@ -1,9 +1,7 @@
 ./env
 ./vite
-frontend/node_modules
-*.db
-backend/seedup.db
-node_modules/
+./node_modules
+./seedup.db
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]

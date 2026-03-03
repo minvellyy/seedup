@@ -1,11 +1,13 @@
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 import './LoginPage.css'
 
 function LoginPage() {
   const navigate = useNavigate()
+  const { login } = useAuth()
   const [formData, setFormData] = useState({
-    email: '',
+    username: '',
     password: ''
   })
   const [error, setError] = useState('')
@@ -26,8 +28,8 @@ function LoginPage() {
     setIsLoading(true)
 
     // 간단한 검증
-    if (!formData.email || !formData.password) {
-      setError('이메일과 비밀번호를 입력해주세요.')
+    if (!formData.username || !formData.password) {
+      setError('ID와 비밀번호를 입력해주세요.')
       setIsLoading(false)
       return
     }
@@ -39,7 +41,7 @@ function LoginPage() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          email: formData.email,
+          username: formData.username,
           password: formData.password
         })
       })
@@ -47,11 +49,10 @@ function LoginPage() {
       const data = await response.json()
 
       if (response.ok) {
-        // 사용자 ID 저장 (필요한 경우)
+        // AuthContext를 통해 로그인 상태 업데이트
         console.log('로그인 성공 - 저장할 user_id:', data.user_id);
-        localStorage.setItem('user_id', data.user_id)
-        localStorage.setItem('email', data.email)
-        console.log('localStorage에 저장 완료 - user_id:', localStorage.getItem('user_id'));
+        login(data)
+        console.log('로그인 상태 업데이트 완료');
         navigate('/survey')
       } else {
         setError(data.message || '로그인에 실패했습니다.')
@@ -72,13 +73,13 @@ function LoginPage() {
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">
-              <label htmlFor="email">이메일</label>
+              <label htmlFor="username">ID</label>
               <input
-                type="email"
-                id="email"
-                name="email"
-                placeholder="your@email.com"
-                value={formData.email}
+                type="text"
+                id="username"
+                name="username"
+                placeholder="아이디를 입력하세요"
+                value={formData.username}
                 onChange={handleChange}
                 disabled={isLoading}
               />
