@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useAuth } from "../contexts/AuthContext";
 import "./SurveyPage.css";
 import "../App.css";
 
@@ -109,7 +110,8 @@ const questions = [
   },
 ];
 
-function InvestTypeSurveyPage({ onSubmit, userId }) {
+function InvestTypeSurveyPage({ onSubmit }) {
+  const { user } = useAuth();
   // radio: number(0-based index)
   // nested-checkbox: { [mainIdx:number]: subIdxOrNull }
   const [answers, setAnswers] = useState({});
@@ -210,11 +212,37 @@ function InvestTypeSurveyPage({ onSubmit, userId }) {
     const totalScore = calculateScore();
     const investorType = getInvestorType(totalScore);
     setResult(investorType);
+
+    // 백엔드에 투자성향 저장
+    if (user && user.userId) {
+      try {
+        const response = await fetch(`http://localhost:8000/api/users/${user.userId}/investment-type`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            user_id: user.userId,
+            investment_type: investorType,
+          }),
+        });
+
+        const data = await response.json();
+        if (data.success) {
+          console.log('투자성향이 저장되었습니다:', investorType);
+        } else {
+          console.error('투자성향 저장 실패:', data.message);
+        }
+      } catch (error) {
+        console.error('투자성향 저장 중 오류:', error);
+      }
+    }
+
     setShowModal(true);
 
     // 필요하면 상위로 제출
     if (typeof onSubmit === "function") {
-      onSubmit({ userId, investorType, answers });
+      onSubmit({ userId: user?.userId, investorType, answers });
     }
   };
 

@@ -14,6 +14,7 @@ class User(Base):
     phone = Column(String(20))
     birth_date = Column(String(20))
     password = Column(String(255), nullable=False)
+    investment_type = Column(String(50))  # 투자성향 (안정형, 위험중립형, 적극투자형, 공격투자형 등)
     created_at = Column(DateTime, server_default=func.now(), nullable=True)
 
     answers = relationship("SurveyAnswer", back_populates="user")

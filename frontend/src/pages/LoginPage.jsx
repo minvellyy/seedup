@@ -53,7 +53,7 @@ function LoginPage() {
         console.log('로그인 성공 - 저장할 user_id:', data.user_id);
         login(data)
         console.log('로그인 상태 업데이트 완료');
-        navigate('/survey')
+        navigate('/dashboard')
       } else {
         setError(data.message || '로그인에 실패했습니다.')
       }
