@@ -1,0 +1,9 @@
+/* design-system theme (helper classes) */
+
+:root{
+  --color-primary: var(--seed-primary);
+  --color-background: var(--seed-bg);
+  --color-text: var(--seed-text);
+}
+
+.ds-container{max-width:var(--container);margin:0 auto;padding:0 var(--gap-4);}
