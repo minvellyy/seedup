@@ -177,6 +177,8 @@ function SurveyPage() {
         if (response.data.success) {
           setShowModal(true);
           console.log('설문 답변 제출 성공:', response.data);
+          // 페이지 이동 추가
+          window.location.href = '/survey/investment';
         } else {
           alert('설문 제출에 실패했습니다. 다시 시도해주세요.');
         }

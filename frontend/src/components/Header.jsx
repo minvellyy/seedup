@@ -9,7 +9,7 @@ function Header() {
   const { isLoggedIn, logout, user } = useAuth()
 
   // 개인화 설문 페이지에서는 비활성화된 새로운 네비게이션 바
-  const showDisabledNav = location.pathname === '/survey'
+  const showDisabledNav = location.pathname === '/survey' || location.pathname === '/survey/investment'
   // 로그인 후 홈 화면에서는 활성화된 새로운 네비게이션 바
   const showActiveNav = isLoggedIn && location.pathname === '/'
   
