@@ -7,7 +7,6 @@ import TermsPage from './pages/TermsPage'
 import LoginPage from './pages/LoginPage'
 import SignupPage from './pages/SignupPage'
 import SurveyPage from './pages/SurveyPage'
-import DashboardPage from './pages/DashboardPage'
 import './App.css'
 
 function App() {
@@ -22,7 +21,6 @@ function App() {
             <Route path="/login" element={<LoginPage />} />
             <Route path="/signup" element={<SignupPage />} />
             <Route path="/survey" element={<SurveyPage />} />
-            <Route path="/dashboard" element={<DashboardPage />} />
           </Routes>
         </div>
       </AuthProvider>
