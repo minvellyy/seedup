@@ -239,7 +239,7 @@ Seedup은 만 14세 미만 아동의 행태정보는 맞춤형 광고에 활용�
 
   const handleModalClose = () => {
     setShowModal(false)
-    navigate('/survey')
+    navigate('/dashboard')
   }
 
   return (

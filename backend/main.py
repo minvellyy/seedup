@@ -9,7 +9,7 @@ import hashlib
 import json
 import uvicorn
 from datetime import datetime
-from routers import survey
+from routers import survey, dashboard
 from models import Base, SurveyQuestion
 
 # Pydantic 모델 정의
@@ -243,7 +243,7 @@ async def login(data: LoginRequest, db: Session = Depends(get_db)):
 
         # username으로 사용자 검색
         result = db.execute(
-            text('SELECT id, email, username, password FROM users WHERE username = :username'),
+            text('SELECT id, email, username, password, investment_type FROM users WHERE username = :username'),
             {'username': username}
         )
         user = result.fetchone()
@@ -258,7 +258,8 @@ async def login(data: LoginRequest, db: Session = Depends(get_db)):
                     'message': '로그인되었습니다.',
                     'user_id': user[0],
                     'email': user[1],
-                    'username': user[2]
+                    'username': user[2],
+                    'investment_type': user[4]  # 투자성향 추가
                 }
         
         # 사용자가 없거나 비밀번호가 일치하지 않는 경우
@@ -578,6 +579,50 @@ async def get_survey_questions(db: Session = Depends(get_db)):
             detail={'success': False, 'message': f'설문 질문 조회 중 오류가 발생했습니다: {str(e)}'}
         )
 
+class InvestmentTypeRequest(BaseModel):
+    user_id: int
+    investment_type: str
+
+@app.post('/api/users/{user_id}/investment-type')
+async def update_investment_type(user_id: int, data: InvestmentTypeRequest, db: Session = Depends(get_db)):
+    """사용자 투자성향 저장 API"""
+    try:
+        # user_id 검증
+        result = db.execute(
+            text('SELECT id FROM users WHERE id = :user_id'),
+            {'user_id': user_id}
+        )
+        user = result.fetchone()
+        
+        if not user:
+            raise HTTPException(
+                status_code=404,
+                detail={'success': False, 'message': '사용자를 찾을 수 없습니다.'}
+            )
+        
+        # 투자성향 업데이트
+        db.execute(
+            text('UPDATE users SET investment_type = :investment_type WHERE id = :user_id'),
+            {'investment_type': data.investment_type, 'user_id': user_id}
+        )
+        db.commit()
+        
+        print(f"투자성향 저장 성공 - user_id: {user_id}, investment_type: {data.investment_type}")
+        return {
+            'success': True,
+            'message': '투자성향이 저장되었습니다.',
+            'investment_type': data.investment_type
+        }
+    except HTTPException:
+        raise
+    except Exception as e:
+        print(f"Error updating investment type: {str(e)}")
+        db.rollback()
+        raise HTTPException(
+            status_code=500,
+            detail={'success': False, 'message': '투자성향 저장 중 오류가 발생했습니다.'}
+        )
+
 @app.get('/api/health')
 async def health():
     """헬스 체크 API"""
@@ -586,8 +631,9 @@ async def health():
         'message': 'SeedUp API Server is running'
     }
 
-# Include survey router
+# Include routers
 app.include_router(survey.router, prefix="/survey", tags=["Survey"])
+app.include_router(dashboard.router)
 
 if __name__ == '__main__':
     # FastAPI 앱 실행
