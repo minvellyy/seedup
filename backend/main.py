@@ -9,7 +9,7 @@ import hashlib
 import json
 import uvicorn
 from datetime import datetime
-from routers import survey, dashboard
+from routers import survey, dashboard, recommendations
 from models import Base, SurveyQuestion
 
 # Pydantic 모델 정의
@@ -634,6 +634,7 @@ async def health():
 # Include routers
 app.include_router(survey.router, prefix="/survey", tags=["Survey"])
 app.include_router(dashboard.router)
+app.include_router(recommendations.router)
 
 if __name__ == '__main__':
     # FastAPI 앱 실행

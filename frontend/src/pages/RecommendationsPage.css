@@ -1,0 +1,356 @@
+.recommendations-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fffaf0 0%, #fff8e1 100%);
+  padding: 40px 20px;
+}
+
+.recommendations-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.section-title {
+  color: #333;
+  font-size: 2.5em;
+  font-weight: bold;
+  margin-bottom: 10px;
+  text-align: center;
+}
+
+.section-subtitle {
+  color: #666;
+  font-size: 1.1em;
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.loading,
+.error-message {
+  text-align: center;
+  color: #333;
+  font-size: 1.5em;
+  padding: 60px 20px;
+}
+
+.error-message {
+  background: rgba(231, 76, 60, 0.3);
+  border-radius: 12px;
+  max-width: 600px;
+  margin: 40px auto;
+}
+
+/* 종목 섹션 */
+.stocks-section {
+  margin-bottom: 80px;
+}
+
+.stocks-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+  gap: 24px;
+}
+
+.stock-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.stock-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.stock-header {
+  display: flex;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.stock-rank {
+  font-size: 2em;
+  font-weight: bold;
+  color: #ffb300;
+  margin-right: 16px;
+  min-width: 50px;
+}
+
+.stock-info {
+  flex: 1;
+}
+
+.stock-name {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #2c3e50;
+  margin: 0 0 4px 0;
+}
+
+.stock-code {
+  color: #7f8c8d;
+  font-size: 0.9em;
+}
+
+.stock-price-info {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding: 16px;
+  background: #f8f9fa;
+  border-radius: 12px;
+}
+
+.current-price {
+  display: flex;
+  flex-direction: column;
+}
+
+.price-label {
+  font-size: 0.85em;
+  color: #7f8c8d;
+  margin-bottom: 4px;
+}
+
+.price-value {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: #2c3e50;
+}
+
+.price-change {
+  text-align: right;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.price-change.positive {
+  color: #e74c3c;
+}
+
+.price-change.negative {
+  color: #3498db;
+}
+
+.change-amount {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.change-percent {
+  font-size: 0.9em;
+  margin-top: 2px;
+}
+
+.mini-chart {
+  margin-bottom: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 10px;
+  height: 100px;
+}
+
+.stock-recommendation {
+  border-top: 2px solid #ecf0f1;
+  padding-top: 16px;
+}
+
+.recommendation-title {
+  font-size: 1em;
+  color: #7f8c8d;
+  margin-bottom: 8px;
+  font-weight: 600;
+}
+
+.recommendation-text {
+  color: #34495e;
+  line-height: 1.6;
+  font-size: 0.95em;
+}
+
+/* 포트폴리오 섹션 */
+.portfolios-section {
+  margin-bottom: 40px;
+}
+
+.portfolios-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  gap: 24px;
+}
+
+.portfolio-card {
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.portfolio-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.3);
+}
+
+.portfolio-header {
+  display: flex;
+  align-items: flex-start;
+  margin-bottom: 24px;
+}
+
+.portfolio-rank {
+  font-size: 2em;
+  font-weight: bold;
+  color: #ffa000;
+  margin-right: 16px;
+  min-width: 50px;
+}
+
+.portfolio-info {
+  flex: 1;
+}
+
+.portfolio-name {
+  font-size: 1.4em;
+  font-weight: bold;
+  color: #2c3e50;
+  margin: 0 0 12px 0;
+}
+
+.portfolio-meta {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.expected-return {
+  color: #e74c3c;
+  font-size: 0.95em;
+}
+
+.expected-return strong {
+  font-size: 1.1em;
+}
+
+.risk-level {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.85em;
+  font-weight: 600;
+}
+
+.risk-level.risk-낮음 {
+  background: #d4edda;
+  color: #155724;
+}
+
+.risk-level.risk-중 {
+  background: #fff3cd;
+  color: #856404;
+}
+
+.risk-level.risk-높음 {
+  background: #f8d7da;
+  color: #721c24;
+}
+
+.portfolio-allocation {
+  margin-bottom: 20px;
+}
+
+.allocation-title {
+  font-size: 1em;
+  color: #7f8c8d;
+  margin-bottom: 12px;
+  font-weight: 600;
+}
+
+.allocation-bar {
+  display: flex;
+  height: 32px;
+  border-radius: 8px;
+  overflow: hidden;
+  margin-bottom: 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.allocation-segment {
+  transition: opacity 0.3s ease;
+}
+
+.allocation-segment:hover {
+  opacity: 0.8;
+}
+
+.allocation-list {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.allocation-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.9em;
+}
+
+.allocation-color {
+  width: 16px;
+  height: 16px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.allocation-name {
+  flex: 1;
+  color: #2c3e50;
+}
+
+.allocation-percent {
+  font-weight: 600;
+  color: #7f8c8d;
+}
+
+.portfolio-recommendation {
+  border-top: 2px solid #ecf0f1;
+  padding-top: 16px;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 768px) {
+  .recommendations-page {
+    padding: 20px 10px;
+  }
+
+  .section-title {
+    font-size: 2em;
+  }
+
+  .stocks-list,
+  .portfolios-list {
+    grid-template-columns: 1fr;
+  }
+
+  .stock-card,
+  .portfolio-card {
+    padding: 20px;
+  }
+
+  .stock-price-info {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .price-change {
+    align-items: flex-start;
+  }
+}

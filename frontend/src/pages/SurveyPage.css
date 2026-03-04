@@ -356,6 +356,13 @@
   line-height: 1.6;
 }
 
+.modal-buttons {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+
 .modal-button {
   padding: 12px 32px;
   background-color: #ffec48;
@@ -369,10 +376,32 @@
   width: 100%;
 }
 
-.modal-button:hover {
+.modal-button.primary {
+  background-color: #ffec48;
+  color: #333;
+  font-size: 16px;
+  padding: 14px 32px;
+}
+
+.modal-button.primary:hover {
   background-color: #ffd700;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 236, 72, 0.3);
+  box-shadow: 0 4px 12px rgba(255, 236, 72, 0.4);
+}
+
+.modal-button.secondary {
+  background-color: #f5f5f5;
+  color: #666;
+  font-size: 14px;
+}
+
+.modal-button.secondary:hover {
+  background-color: #e0e0e0;
+  color: #333;
+}
+
+.modal-button:hover {
+  transform: translateY(-2px);
 }
 
 @media (max-width: 768px) {

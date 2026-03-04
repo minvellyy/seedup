@@ -1,0 +1,534 @@
+.stock-detail-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fffaf0 0%, #fff8e1 100%);
+  padding: 40px 20px;
+}
+
+.stock-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.back-button {
+  background: white;
+  color: #333;
+  border: 2px solid #F97316;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 30px;
+}
+
+.back-button:hover {
+  background: #F97316;
+  color: white;
+}
+
+/* 헤더 */
+.stock-detail-header {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.header-left {
+  flex: 1;
+}
+
+.header-right {
+  text-align: right;
+}
+
+.stock-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.stock-detail-name {
+  font-size: 2.2em;
+  font-weight: bold;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.market-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #F97316, #EA580C);
+  color: white;
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.5em;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+.stock-detail-code {
+  font-size: 1.1em;
+  color: #7f8c8d;
+  margin: 0;
+  font-family: 'Courier New', monospace;
+}
+
+.current-price-large {
+  font-size: 2.5em;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 8px;
+}
+
+.price-change-large {
+  font-size: 1.5em;
+  font-weight: bold;
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.price-change-large.positive {
+  color: #F97316;
+}
+
+.price-change-large.negative {
+  color: #3B82F6;
+}
+
+.price-change-large .percent {
+  font-size: 0.9em;
+}
+
+.stock-detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.section-heading {
+  font-size: 1.8em;
+  color: #333;
+  margin: 0 0 20px 0;
+  font-weight: bold;
+}
+
+/* 차트 섹션 */
+.chart-section {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.chart-container {
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 20px;
+  position: relative;
+}
+
+.chart-labels {
+  margin-top: 15px;
+}
+
+.chart-date-labels {
+  display: flex;
+  justify-content: space-between;
+  color: #7f8c8d;
+  font-size: 0.9em;
+  margin-bottom: 10px;
+}
+
+.chart-price-labels {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.95em;
+}
+
+.max-price {
+  color: #F97316;
+  font-weight: 600;
+}
+
+.min-price {
+  color: #3B82F6;
+  font-weight: 600;
+}
+
+/* 투자 적합도 섹션 */
+.investment-fit-section {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.fit-container {
+  display: flex;
+  gap: 30px;
+  align-items: flex-start;
+}
+
+.fit-score-box {
+  background: linear-gradient(135deg, #F97316, #EA580C);
+  color: white;
+  border-radius: 12px;
+  padding: 30px;
+  text-align: center;
+  min-width: 160px;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+}
+
+.fit-score {
+  font-size: 4em;
+  font-weight: bold;
+  line-height: 1;
+  margin-bottom: 8px;
+}
+
+.fit-score-label {
+  font-size: 1em;
+  opacity: 0.9;
+}
+
+.fit-details {
+  flex: 1;
+}
+
+.fit-summary {
+  font-size: 1.15em;
+  color: #2c3e50;
+  margin: 0 0 16px 0;
+  font-weight: 600;
+}
+
+.fit-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.fit-list li {
+  padding: 10px 0;
+  color: #555;
+  line-height: 1.6;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.fit-list li:last-child {
+  border-bottom: none;
+}
+
+/* 기업 요약 섹션 */
+.company-info-section {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.company-info-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
+}
+
+.info-item {
+  background: #fafafa;
+  border-radius: 10px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  transition: all 0.3s ease;
+}
+
+.info-item:hover {
+  background: #fff8f0;
+  transform: translateY(-2px);
+}
+
+.info-label {
+  font-size: 0.9em;
+  color: #F97316;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.info-value {
+  font-size: 1.2em;
+  color: #2c3e50;
+  font-weight: 500;
+}
+
+/* 기업/산업 분석 섹션 */
+.industry-analysis-section {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.analysis-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.analysis-list li {
+  padding: 16px 20px 16px 50px;
+  margin-bottom: 12px;
+  background: #fafafa;
+  border-radius: 10px;
+  color: #34495e;
+  line-height: 1.7;
+  position: relative;
+  transition: all 0.3s ease;
+}
+
+.analysis-list li:hover {
+  background: #fff8f0;
+  transform: translateX(4px);
+}
+
+.analysis-list li::before {
+  content: '●';
+  position: absolute;
+  left: 20px;
+  color: #F97316;
+  font-size: 1.2em;
+}
+
+/* 종합 분석 섹션 */
+.comprehensive-analysis-section {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.radar-chart-container {
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.radar-chart {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+
+.radar-labels {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+}
+
+.radar-label {
+  position: absolute;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  pointer-events: all;
+  cursor: help;
+  transition: all 0.3s ease;
+}
+
+.radar-label:hover {
+  transform: translate(-50%, -50%) scale(1.1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+}
+
+.label-text {
+  font-size: 0.85em;
+  color: #555;
+  font-weight: 600;
+}
+
+.label-value {
+  font-size: 1.3em;
+  color: #F97316;
+  font-weight: bold;
+}
+
+.tooltip {
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  margin-top: 8px;
+  background: #2c3e50;
+  color: white;
+  padding: 10px 14px;
+  border-radius: 6px;
+  font-size: 0.8em;
+  white-space: nowrap;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  z-index: 100;
+}
+
+.tooltip::before {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 6px solid transparent;
+  border-bottom-color: #2c3e50;
+}
+
+/* 추천 섹션 */
+.recommendation-section {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.recommendation-box {
+  background: linear-gradient(135deg, #FFF4E6 0%, #FFEDD5 100%);
+  border-left: 4px solid #F97316;
+  border-radius: 8px;
+  padding: 24px;
+}
+
+.recommendation-detail {
+  color: #34495e;
+  line-height: 1.8;
+  font-size: 1.1em;
+  margin: 0;
+}
+
+.loading,
+.error-message {
+  text-align: center;
+  color: #333;
+  font-size: 1.5em;
+  padding: 60px 20px;
+}
+
+.error-message {
+  background: rgba(231, 76, 60, 0.1);
+  border: 2px solid #e74c3c;
+  border-radius: 12px;
+  max-width: 600px;
+  margin: 40px auto 20px auto;
+  color: #e74c3c;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+  .stock-detail-container {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .stock-detail-page {
+    padding: 20px 10px;
+  }
+
+  .stock-detail-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .header-right {
+    text-align: left;
+    width: 100%;
+  }
+
+  .price-change-large {
+    justify-content: flex-start;
+  }
+
+  .stock-title-row {
+    flex-wrap: wrap;
+  }
+
+  .stock-detail-name {
+    font-size: 1.8em;
+  }
+
+  .current-price-large {
+    font-size: 2em;
+  }
+
+  .section-heading {
+    font-size: 1.5em;
+  }
+
+  .fit-container {
+    flex-direction: column;
+  }
+
+  .fit-score-box {
+    width: 100%;
+  }
+
+  .company-info-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .radar-chart-container {
+    max-width: 100%;
+  }
+
+  .radar-label {
+    font-size: 0.85em;
+  }
+
+  .label-value {
+    font-size: 1.1em;
+  }
+}
+
+@media (max-width: 480px) {
+  .stock-detail-name {
+    font-size: 1.5em;
+  }
+
+  .market-badge {
+    font-size: 0.6em;
+    padding: 4px 10px;
+  }
+
+  .current-price-large {
+    font-size: 1.8em;
+  }
+
+  .price-change-large {
+    font-size: 1.2em;
+  }
+
+  .section-heading {
+    font-size: 1.3em;
+  }
+
+  .fit-score {
+    font-size: 3em;
+  }
+}
+

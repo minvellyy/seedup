@@ -1,4 +1,6 @@
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 import './SurveyPage.css'
 import axios from 'axios'
 
@@ -8,14 +10,21 @@ function formatNumberWithCommas(num) {
 }
 
 function SurveyPage() {
+  const navigate = useNavigate()
+  const { user } = useAuth()
+  
   // 페이지 로드 시 localStorage 확인 및 설문 질문 초기화
   React.useEffect(() => {
-    const storedUserId = localStorage.getItem('user_id');
-    const storedEmail = localStorage.getItem('email');
-    console.log('=== SurveyPage 로드 시 localStorage 확인 ===');
-    console.log('저장된 user_id:', storedUserId);
-    console.log('저장된 email:', storedEmail);
-    console.log('localStorage 전체:', Object.keys(localStorage).map(key => `${key}: ${localStorage.getItem(key)}`));
+    console.log('=== SurveyPage 로드 시 사용자 정보 확인 ===');
+    console.log('AuthContext user:', user);
+    console.log('localStorage user_id:', localStorage.getItem('user_id'));
+    
+    // 로그인되지 않은 경우 로그인 페이지로 리다이렉트
+    if (!user && !localStorage.getItem('user_id')) {
+      alert('로그인이 필요합니다.');
+      navigate('/login');
+      return;
+    }
     
     // 설문 질문 초기화
     const initSurveyQuestions = async () => {
@@ -32,7 +41,7 @@ function SurveyPage() {
     };
     
     initSurveyQuestions();
-  }, []);
+  }, [user, navigate]);
 
   const [answers, setAnswers] = useState({
     investmentGoal: '',
@@ -154,14 +163,14 @@ function SurveyPage() {
           formattedAnswers.push(answer);
         }
 
-        // localStorage에서 user_id 가져오기
-        const userId = localStorage.getItem('user_id');
-        console.log('localStorage의 user_id:', userId);
-        console.log('localStorage 전체:', { ...localStorage });
+        // AuthContext 또는 localStorage에서 user_id 가져오기
+        const userId = user?.userId || localStorage.getItem('user_id');
+        console.log('사용할 user_id:', userId);
+        console.log('user 객체:', user);
         
         if (!userId) {
           alert('로그인이 필요합니다.');
-          window.location.href = '/login';
+          navigate('/login');
           return;
         }
 
@@ -177,8 +186,10 @@ function SurveyPage() {
         if (response.data.success) {
           setShowModal(true);
           console.log('설문 답변 제출 성공:', response.data);
-          // 페이지 이동 추가
-          window.location.href = '/survey/investment';
+          // 투자성향 설문 페이지로 이동
+          setTimeout(() => {
+            navigate('/invest-type-survey');
+          }, 1500);
         } else {
           alert('설문 제출에 실패했습니다. 다시 시도해주세요.');
         }
