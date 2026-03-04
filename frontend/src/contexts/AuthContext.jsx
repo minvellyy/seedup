@@ -14,11 +14,27 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [isLoggedIn, setIsLoggedIn] = useState(false)
 
-  // 컴포넌트 마운트 시 localStorage 초기화 (항상 로그아웃 상태로 시작)
+  // 컴포넌트 마운트 시 localStorage에서 사용자 정보 복원
   useEffect(() => {
-    localStorage.removeItem('user_id')
-    localStorage.removeItem('email')
-    localStorage.removeItem('username')
+    const storedUserId = localStorage.getItem('user_id')
+    const storedEmail = localStorage.getItem('email')
+    const storedUsername = localStorage.getItem('username')
+    const storedInvestmentType = localStorage.getItem('investment_type')
+    
+    if (storedUserId && storedEmail) {
+      setUser({
+        userId: parseInt(storedUserId),
+        email: storedEmail,
+        username: storedUsername,
+        investmentType: storedInvestmentType
+      })
+      setIsLoggedIn(true)
+      console.log('localStorage에서 로그인 정보 복원:', {
+        userId: storedUserId,
+        email: storedEmail,
+        username: storedUsername
+      })
+    }
   }, [])
 
   const login = (userData) => {

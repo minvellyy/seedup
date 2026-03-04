@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from 'react-router-dom';
 import { useAuth } from "../contexts/AuthContext";
 import "./SurveyPage.css";
 import "../App.css";
@@ -112,6 +113,7 @@ const questions = [
 
 function InvestTypeSurveyPage({ onSubmit }) {
   const { user } = useAuth();
+  const navigate = useNavigate();
   // radio: number(0-based index)
   // nested-checkbox: { [mainIdx:number]: subIdxOrNull }
   const [answers, setAnswers] = useState({});
@@ -330,12 +332,23 @@ function InvestTypeSurveyPage({ onSubmit }) {
               <h1>투자자 성향</h1>
               <h2 style={{ fontSize: '2rem', fontWeight: 'bold', color: '#4CAF50' }}>{result}</h2>
               <p>입력하신 정보로 맞춤형 투자 설계를 분석 중입니다.</p>
-              <button 
-                className="modal-button"
-                onClick={() => setShowModal(false)}
-              >
-                확인
-              </button>
+              <div className="modal-buttons">
+                <button 
+                  className="modal-button primary"
+                  onClick={() => {
+                    setShowModal(false);
+                    navigate('/recommendations');
+                  }}
+                >
+                  나만의 포트폴리오 전략 확인하러 가기
+                </button>
+                <button 
+                  className="modal-button secondary"
+                  onClick={() => setShowModal(false)}
+                >
+                  나중에 보기
+                </button>
+              </div>
             </div>
           </div>
         )}

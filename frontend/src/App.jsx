@@ -9,6 +9,9 @@ import SignupPage from './pages/SignupPage'
 import SurveyPage from './pages/SurveyPage'
 import DashboardPage from './pages/DashboardPage'
 import InvestTypeSurveyPage from './pages/InvestTypeSurveyPage'
+import RecommendationsPage from './pages/RecommendationsPage'
+import StockDetailPage from './pages/StockDetailPage'
+import PortfolioDetailPage from './pages/PortfolioDetailPage'
 import './App.css'
 
 function App() {
@@ -25,6 +28,9 @@ function App() {
             <Route path="/survey" element={<SurveyPage />} />
             <Route path="/invest-type-survey" element={<InvestTypeSurveyPage />} />
             <Route path="/dashboard" element={<DashboardPage />} />
+            <Route path="/recommendations" element={<RecommendationsPage />} />
+            <Route path="/stock/:stockCode" element={<StockDetailPage />} />
+            <Route path="/portfolio/:portfolioId" element={<PortfolioDetailPage />} />
           </Routes>
         </div>
       </AuthProvider>

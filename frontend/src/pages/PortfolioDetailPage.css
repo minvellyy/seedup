@@ -1,0 +1,481 @@
+.portfolio-detail-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fffaf0 0%, #fff8e1 100%);
+  padding: 40px 20px;
+}
+
+.portfolio-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 헤더 액션 버튼들 */
+.header-actions {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30px;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.back-button,
+.download-button {
+  padding: 12px 24px;
+  border-radius: 25px;
+  font-size: 1em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.back-button {
+  background: white;
+  color: #333;
+  border: 2px solid #F97316;
+}
+
+.back-button:hover {
+  background: #F97316;
+  color: white;
+}
+
+.download-button {
+  background: linear-gradient(135deg, #F97316, #EA580C);
+  color: white;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
+}
+
+.download-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(249, 115, 22, 0.4);
+}
+
+/* 포트폴리오 헤더 */
+.portfolio-detail-header {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.portfolio-detail-name {
+  font-size: 2.5em;
+  font-weight: bold;
+  color: #2c3e50;
+  margin: 0 0 16px 0;
+}
+
+.portfolio-summary {
+  font-size: 1.15em;
+  color: #555;
+  line-height: 1.7;
+  margin: 0;
+}
+
+/* 콘텐츠 영역 */
+.portfolio-detail-content {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.section-heading {
+  font-size: 1.8em;
+  color: #333;
+  margin: 0 0 20px 0;
+  font-weight: bold;
+}
+
+/* 종목 구성 섹션 */
+.composition-section {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.composition-bar-container {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.composition-bar {
+  display: flex;
+  width: 100%;
+  height: 50px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.composition-segment {
+  height: 100%;
+  transition: all 0.3s ease;
+  border-right: 2px solid white;
+}
+
+.composition-segment:last-child {
+  border-right: none;
+}
+
+.composition-segment:hover {
+  opacity: 0.8;
+}
+
+.composition-legend {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  background: #fafafa;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+.legend-item:hover {
+  background: #fff8f0;
+  transform: translateX(4px);
+}
+
+.legend-color {
+  width: 20px;
+  height: 20px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.legend-name {
+  flex: 1;
+  font-size: 1.05em;
+  font-weight: 500;
+  color: #2c3e50;
+}
+
+.legend-percent {
+  font-size: 1.1em;
+  font-weight: bold;
+  color: #F97316;
+}
+
+/* 수익률/리스크 섹션 */
+.returns-risk-section {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.returns-risk-container {
+  display: flex;
+  flex-direction: column;
+  gap: 30px;
+}
+
+.returns-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+}
+
+.return-card {
+  background: linear-gradient(135deg, #FFEDD5, #FFF4E6);
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  transition: all 0.3s ease;
+}
+
+.return-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+}
+
+.return-label {
+  font-size: 0.95em;
+  color: #666;
+  margin-bottom: 12px;
+  font-weight: 500;
+}
+
+.return-value {
+  font-size: 2.5em;
+  font-weight: bold;
+  color: #F97316;
+}
+
+.return-value.highlight {
+  color: #EA580C;
+  font-size: 2.8em;
+}
+
+.risk-analysis-box {
+  background: linear-gradient(135deg, #FFF4E6, #FFFAF0);
+  border-left: 4px solid #F97316;
+  border-radius: 12px;
+  padding: 24px;
+}
+
+.risk-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.3em;
+  color: #2c3e50;
+  margin: 0 0 16px 0;
+  font-weight: bold;
+}
+
+.risk-icon {
+  font-size: 1.2em;
+}
+
+.risk-content {
+  font-size: 1.05em;
+  color: #555;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* 종목별 분석 섹션 */
+.stock-analysis-section {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.stock-analysis-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.stock-analysis-card {
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.stock-analysis-card:hover {
+  background: #fff8f0;
+  border-color: #F97316;
+  transform: translateX(4px);
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.15);
+}
+
+.stock-analysis-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.stock-title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex: 1;
+}
+
+.stock-color-indicator {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.stock-analysis-name {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #2c3e50;
+  margin: 0;
+}
+
+.stock-analysis-percent {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #F97316;
+  margin-left: auto;
+}
+
+.stock-code-badge {
+  display: inline-block;
+  background: #E5E7EB;
+  color: #6B7280;
+  padding: 4px 12px;
+  border-radius: 12px;
+  font-size: 0.85em;
+  font-weight: 600;
+  font-family: 'Courier New', monospace;
+}
+
+.stock-analysis-content {
+  color: #555;
+  line-height: 1.7;
+  font-size: 1.05em;
+  margin: 0 0 12px 0;
+}
+
+.stock-link {
+  display: flex;
+  justify-content: flex-end;
+  color: #F97316;
+  font-weight: 600;
+  font-size: 0.95em;
+}
+
+/* 투자 유의사항 섹션 */
+.notice-section {
+  background: white;
+  border-radius: 16px;
+  padding: 30px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.notice-box {
+  background: linear-gradient(135deg, #FFF4E6, #FFFAF0);
+  border-radius: 12px;
+  padding: 24px;
+  border-left: 4px solid #EA580C;
+}
+
+.notice-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.notice-list li {
+  padding: 12px 0 12px 24px;
+  color: #555;
+  line-height: 1.7;
+  position: relative;
+}
+
+.notice-list li::before {
+  content: '•';
+  position: absolute;
+  left: 0;
+  color: #F97316;
+  font-size: 1.5em;
+  line-height: 1;
+}
+
+.notice-list li:not(:last-child) {
+  border-bottom: 1px solid #FFE4CC;
+}
+
+/* 로딩 및 에러 */
+.loading,
+.error-message {
+  text-align: center;
+  color: #333;
+  font-size: 1.5em;
+  padding: 60px 20px;
+}
+
+.error-message {
+  background: rgba(231, 76, 60, 0.1);
+  border: 2px solid #e74c3c;
+  border-radius: 12px;
+  max-width: 600px;
+  margin: 40px auto 20px auto;
+  color: #e74c3c;
+}
+
+/* 반응형 디자인 */
+@media (max-width: 1024px) {
+  .portfolio-detail-container {
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .portfolio-detail-page {
+    padding: 20px 10px;
+  }
+
+  .header-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .back-button,
+  .download-button {
+    width: 100%;
+  }
+
+  .portfolio-detail-header {
+    padding: 24px;
+  }
+
+  .portfolio-detail-name {
+    font-size: 2em;
+  }
+
+  .section-heading {
+    font-size: 1.5em;
+  }
+
+  .composition-bar {
+    height: 40px;
+  }
+
+  .returns-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .return-value {
+    font-size: 2em;
+  }
+
+  .return-value.highlight {
+    font-size: 2.2em;
+  }
+
+  .stock-analysis-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .stock-analysis-percent {
+    margin-left: 0;
+  }
+}
+
+@media (max-width: 480px) {
+  .portfolio-detail-name {
+    font-size: 1.6em;
+  }
+
+  .portfolio-summary {
+    font-size: 1em;
+  }
+
+  .section-heading {
+    font-size: 1.3em;
+  }
+
+  .return-value {
+    font-size: 1.8em;
+  }
+
+  .stock-analysis-name {
+    font-size: 1.1em;
+  }
+}
