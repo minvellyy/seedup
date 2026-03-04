@@ -16,21 +16,9 @@ export const AuthProvider = ({ children }) => {
 
   // 컴포넌트 마운트 시 localStorage 초기화 (항상 로그아웃 상태로 시작)
   useEffect(() => {
-<<<<<<< HEAD
-    const userId = localStorage.getItem('user_id')
-    const email = localStorage.getItem('email')
-    const username = localStorage.getItem('username')
-    const investmentType = localStorage.getItem('investment_type')
-    
-    if (userId && email) {
-      setUser({ userId, email, username, investmentType })
-      setIsLoggedIn(true)
-    }
-=======
     localStorage.removeItem('user_id')
     localStorage.removeItem('email')
     localStorage.removeItem('username')
->>>>>>> develop
   }, [])
 
   const login = (userData) => {
