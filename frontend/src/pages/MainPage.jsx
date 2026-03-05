@@ -1,4 +1,6 @@
 import React, { useEffect } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 import './MainPage.css'
 import Hero from '../components/Hero/Hero'
 
@@ -83,6 +85,16 @@ const SmallIconWrap = ({ children }) => (
 )
 
 function MainPage() {
+  const navigate = useNavigate()
+  const { isLoggedIn } = useAuth()
+
+  // 로그인된 사용자는 대시보드로 리다이렉트
+  useEffect(() => {
+    if (isLoggedIn) {
+      navigate('/dashboard')
+    }
+  }, [isLoggedIn, navigate])
+
   useEffect(() => {
     const handleScroll = () => {
       const cards = document.querySelectorAll('[data-scroll-card]')
@@ -234,7 +246,7 @@ function MainPage() {
           </div>
 
           <div className="toss-text" data-scroll-fade>
-            <h2>간편하고 안전하게<br/>수수료는 평생 무료로,<br/>이런 투자 써보셨나요?</h2>
+            <h2>내 투자 상태,<br/>지금 바로 확인해보세요</h2>
           </div>
         </div>
       </section>
