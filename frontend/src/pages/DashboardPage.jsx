@@ -4,10 +4,11 @@ import './DashboardPage.css'
 
 const DashboardPage = () => {
   const navigate = useNavigate()
-  const [tradingTrends, setTradingTrends] = useState([])
+  const [investorTrading, setInvestorTrading] = useState({})
+  const [tradingMarketTab, setTradingMarketTab] = useState('KOSPI')
   const [marketWeather, setMarketWeather] = useState(null)
   const [marketIndices, setMarketIndices] = useState([])
-  const [stockRecommendations, setStockRecommendations] = useState([])
+  const [instrumentsStocks, setInstrumentsStocks] = useState([])
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [selectedMarket, setSelectedMarket] = useState('KOSPI')
@@ -15,11 +16,48 @@ const DashboardPage = () => {
   const [chatMessages, setChatMessages] = useState([])
   const [chatInput, setChatInput] = useState('')
 
-  const API_BASE_URL = 'http://127.0.0.1:8000'
+  const API_BASE_URL = ''
 
   useEffect(() => {
     fetchDashboardData()
   }, [selectedMarket])
+
+  // 실시간 주가 SSE 스트림 연결 (종목 로드 완료 후 1회 구독)
+  useEffect(() => {
+    if (instrumentsStocks.length === 0) return
+
+    const codes = instrumentsStocks.map(s => s.stock_code).join(',')
+    const es = new EventSource(`/api/stream/prices?codes=${codes}`)
+
+    es.onmessage = (e) => {
+      try {
+        const updates = JSON.parse(e.data)
+        setInstrumentsStocks(prev =>
+          prev.map(s => {
+            const upd = updates[s.stock_code]
+            if (!upd) return s
+            return {
+              ...s,
+              current_price: upd.current_price,
+              change:        upd.change,
+              change_rate:   upd.change_rate,
+              volume:        upd.volume,
+            }
+          })
+        )
+      } catch (err) {
+        console.warn('SSE 파싱 오류:', err)
+      }
+    }
+
+    es.onerror = () => {
+      console.warn('SSE 연결 오류 — 자동 재연결 대기 중')
+    }
+
+    return () => {
+      es.close()
+    }
+  }, [instrumentsStocks.length])   // 종목 수가 변할 때만 재구독
 
   const fetchDashboardData = async () => {
     setLoading(true)
@@ -27,19 +65,18 @@ const DashboardPage = () => {
     
     try {
       // 각 API를 개별적으로 처리하여 일부 실패해도 계속 진행
-      let trends = []
       let weather = null
       let indices = []
-      let stocks = []
       
-      // Trading Trends
+      // Investor Trading (당일)
+      let investorRows = []
       try {
-        const trendsRes = await fetch(`${API_BASE_URL}/api/dashboard/trading-trends?days=5`)
-        if (trendsRes.ok) {
-          trends = await trendsRes.json()
+        const invRes = await fetch(`${API_BASE_URL}/api/dashboard/investor-trading`)
+        if (invRes.ok) {
+          investorRows = await invRes.json()
         }
       } catch (e) {
-        console.warn('Failed to fetch trading trends:', e)
+        console.warn('Failed to fetch investor trading:', e)
       }
 
       // Market Weather
@@ -110,40 +147,26 @@ const DashboardPage = () => {
         ]
       }
 
-      // Stock Recommendations
+      // 실제 종목 주가 (instruments DB)
+      let instStocks = []
       try {
-        const stocksRes = await fetch(`${API_BASE_URL}/api/dashboard/stock-recommendations`)
-        if (stocksRes.ok) {
-          stocks = await stocksRes.json()
-        } else {
-          // 기본 추천 정보
-          stocks = [
-            {
-              stock_code: '005930',
-              stock_name: '삼성전자',
-              current_price: 75000,
-              recommendation_type: '보유',
-              reason: '시장 분석 중입니다.'
-            }
-          ]
+        const instRes = await fetch(`${API_BASE_URL}/api/instruments/stocks?limit=20`)
+        if (instRes.ok) {
+          instStocks = await instRes.json()
         }
       } catch (e) {
-        console.warn('Failed to fetch stock recommendations:', e)
-        stocks = [
-          {
-            stock_code: '005930',
-            stock_name: '삼성전자',
-            current_price: 75000,
-            recommendation_type: '보유',
-            reason: '시장 분석 중입니다.'
-          }
-        ]
+        console.warn('Failed to fetch instruments stocks:', e)
       }
 
-      setTradingTrends(trends)
+      // investorRows 배열 → {KOSPI: {...}, KOSDAQ: {...}} 딕셔너리로 변환
+      const invMap = {}
+      for (const row of investorRows) {
+        invMap[row.market] = row
+      }
+      setInvestorTrading(invMap)
       setMarketWeather(weather)
       setMarketIndices(indices)
-      setStockRecommendations(stocks)
+      setInstrumentsStocks(instStocks)
       
       // 백엔드 서버가 아예 응답이 없는 경우에만 에러 표시
       if (!weather && indices.length === 0 && stocks.length === 0) {
@@ -174,15 +197,7 @@ const DashboardPage = () => {
           date: new Date().toISOString().split('T')[0]
         }
       ])
-      setStockRecommendations([
-        {
-          stock_code: '005930',
-          stock_name: '삼성전자',
-          current_price: 75000,
-          recommendation_type: '보유',
-          reason: '백엔드 서버를 실행해주세요.'
-        }
-      ])
+      setInstrumentsStocks([])
       setError('백엔드 서버에 연결할 수 없습니다. 서버를 실행한 후 다시 시도해주세요.')
     } finally {
       setLoading(false)
@@ -335,37 +350,64 @@ const DashboardPage = () => {
 
           {/* 투자자별 매매동향 */}
           <div className="trading-trends-card card">
-            <h2>투자자별 매매동향 (최근 5일)</h2>
-            <div className="table-container">
-              <table className="trends-table">
-                <thead>
-                  <tr>
-                    <th>날짜</th>
-                    <th>시장</th>
-                    <th>기관 (억원)</th>
-                    <th>외국인 (억원)</th>
-                    <th>개인 (억원)</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {tradingTrends.slice(-10).map((trend, index) => (
-                    <tr key={index}>
-                      <td>{trend.date}</td>
-                      <td>{trend.market}</td>
-                      <td className={getChangeColor(trend.institution)}>
-                        {trend.institution > 0 ? '+' : ''}{trend.institution.toFixed(0)}
-                      </td>
-                      <td className={getChangeColor(trend.foreign)}>
-                        {trend.foreign > 0 ? '+' : ''}{trend.foreign.toFixed(0)}
-                      </td>
-                      <td className={getChangeColor(trend.individual)}>
-                        {trend.individual > 0 ? '+' : ''}{trend.individual.toFixed(0)}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="card-header">
+              <h2>투자자별 매매동향</h2>
+              <span className="trading-date">
+                {Object.values(investorTrading)[0]?.date ?? ''}
+              </span>
             </div>
+            {/* 시장 탭 */}
+            <div className="trading-market-tabs">
+              {['KOSPI', 'KOSDAQ'].map(m => (
+                <button
+                  key={m}
+                  className={`trading-tab${tradingMarketTab === m ? ' active' : ''}`}
+                  onClick={() => setTradingMarketTab(m)}
+                >{m}</button>
+              ))}
+            </div>
+            {/* 테이블 */}
+            {(() => {
+              const d = investorTrading[tradingMarketTab]
+              // 매도/매수: 양수 값을 그대로 표시, 0이면 데이터 없음('-')
+              const fmtSell = (v) => (v == null || Number(v) === 0) ? '-' : Number(v).toLocaleString('ko-KR')
+              const fmtBuy  = fmtSell
+              // 순매수: +/- 부호 포함
+              const fmtNet = (v) => {
+                if (v == null) return '-'
+                const n = Number(v)
+                return (n > 0 ? '+' : '') + n.toLocaleString('ko-KR', { minimumFractionDigits: 0 })
+              }
+              const rows = d ? [
+                { label: '기관(십억원)',   sell: d.institution_sell, buy: d.institution_buy, net: d.institution_net },
+                { label: '외국인(십억원)', sell: d.foreign_sell,     buy: d.foreign_buy,     net: d.foreign_net },
+                { label: '개인(십억원)',   sell: d.individual_sell,  buy: d.individual_buy,  net: d.individual_net },
+              ] : []
+              return (
+                <table className="investor-table">
+                  <thead>
+                    <tr>
+                      <th>구분</th>
+                      <th>매도</th>
+                      <th>매수</th>
+                      <th>순매수</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.length === 0 ? (
+                      <tr><td colSpan={4} style={{textAlign:'center',color:'#888',padding:'16px'}}>데이터 로딩 중...</td></tr>
+                    ) : rows.map((r, i) => (
+                      <tr key={i}>
+                        <td className="investor-label">{r.label}</td>
+                        <td>{fmtSell(r.sell)}</td>
+                        <td>{fmtBuy(r.buy)}</td>
+                        <td className={getChangeColor(r.net)}>{fmtNet(r.net)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )
+            })()}
           </div>
         </div>
 
@@ -380,21 +422,34 @@ const DashboardPage = () => {
               </button>
             </div>
             <div className="recommendations-list">
-              {stockRecommendations.map((stock) => (
-                <div key={stock.stock_code} className="recommendation-item">
+              {instrumentsStocks.length === 0 && (
+                <div style={{ padding: '16px', color: '#888', textAlign: 'center' }}>주가 데이터 로딩 중...</div>
+              )}
+              {instrumentsStocks.map((stock) => (
+                <div
+                  key={stock.stock_code}
+                  className="recommendation-item"
+                  style={{ cursor: 'pointer' }}
+                  onClick={() => navigate(`/stock/${stock.stock_code}`)}
+                >
                   <div className="recommendation-header">
-                    <h3>{stock.stock_name}</h3>
-                    <span className="stock-code">{stock.stock_code}</span>
+                    <h3>{stock.name}</h3>
+                    <span className="stock-code">{stock.exchange}</span>
                   </div>
                   <div className="recommendation-details">
                     <div className="stock-price">
                       {stock.current_price.toLocaleString()}원
                     </div>
-                    <div className={`recommendation-type ${stock.recommendation_type === '매수' ? 'buy' : 'hold'}`}>
-                      {stock.recommendation_type}
-                    </div>
+                    {stock.change_rate != null && (
+                      <div className={`change-badge ${stock.change_rate >= 0 ? 'up' : 'down'}`}>
+                        {stock.change_rate >= 0 ? '▲' : '▼'} {Math.abs(stock.change_rate).toFixed(2)}%
+                      </div>
+                    )}
                   </div>
-                  <p className="recommendation-reason">{stock.reason}</p>
+                  <p className="recommendation-reason" style={{ color: '#666', fontSize: 12 }}>
+                    {stock.price_date} 기준 &nbsp;|
+                    거래량 {stock.volume ? stock.volume.toLocaleString() : '-'}
+                  </p>
                 </div>
               ))}
             </div>

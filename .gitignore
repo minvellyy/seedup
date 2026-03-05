@@ -1,8 +1,17 @@
 ./env
-./vite
+frontend/dist/
 ./frontend/node_modules
 *.db
 backend/seedup.db
+# 한투 API 토큰/승인키 캐시 (access_token, approval_key 포함 — 커밋하지 않음)
+backend/.kis_token_cache
+backend/.kis_approval_cache
+# 임시 파일
+backend/1000
+# VS Code 로컬 설정
+.vscode/
+# Conda 환경 디렉토리
+.conda/
 node_modules/
 # Byte-compiled / optimized / DLL files
 __pycache__/

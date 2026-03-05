@@ -29,11 +29,11 @@ function SurveyPage() {
     // 설문 질문 초기화
     const initSurveyQuestions = async () => {
       try {
-        const response = await axios.post('http://localhost:8000/api/init-survey-questions');
+        const response = await axios.post('/api/init-survey-questions');
         console.log('설문 질문 초기화 결과:', response.data);
         
         // 실제로 질문이 생성되었는지 확인
-        const questionsResponse = await axios.get('http://localhost:8000/api/survey-questions');
+        const questionsResponse = await axios.get('/api/survey-questions');
         console.log('설문 질문 목록:', questionsResponse.data);
       } catch (error) {
         console.error('설문 질문 초기화 오류:', error);
@@ -178,7 +178,7 @@ function SurveyPage() {
         console.log('변환된 user_id (숫자):', userIdNumber);
         console.log('전송할 데이터:', { user_id: userIdNumber, answers: formattedAnswers });
 
-        const response = await axios.post('http://localhost:8000/api/survey', {
+        const response = await axios.post('/api/survey', {
           user_id: userIdNumber,
           answers: formattedAnswers
         });

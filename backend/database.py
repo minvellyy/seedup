@@ -1,10 +1,11 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from dotenv import load_dotenv
+from pathlib import Path
 import os
 
-# 1 .env 로드
-load_dotenv()
+# 1 .env 로드 (backend/.env 절대 경로)
+load_dotenv(dotenv_path=Path(__file__).parent / '.env')
 
 # 2. DATABASE_URL 생성
 DATABASE_URL = f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD')}@" \
