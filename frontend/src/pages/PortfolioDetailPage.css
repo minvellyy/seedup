@@ -479,3 +479,329 @@
     font-size: 1.1em;
   }
 }
+/* ── 새 API 연동 클래스 (pd-*) ── */
+
+/* 뒤로 가기 버튼 */
+.pd-back-btn {
+  background: white;
+  color: #333;
+  border: 2px solid #F97316;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 30px;
+  display: inline-block;
+}
+
+.pd-back-btn:hover {
+  background: #F97316;
+  color: white;
+}
+
+/* 헤더 배지 */
+.pd-header-badges {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 12px;
+  flex-wrap: wrap;
+}
+
+.pd-risk-grade {
+  display: inline-block;
+  background: linear-gradient(135deg, #EA580C, #F97316);
+  color: white;
+  padding: 5px 16px;
+  border-radius: 20px;
+  font-size: 1em;
+  font-weight: 700;
+}
+
+.pd-risk-tier {
+  display: inline-block;
+  background: #fff3e0;
+  color: #EA580C;
+  border: 1px solid #FDBA74;
+  padding: 5px 14px;
+  border-radius: 20px;
+  font-size: 0.95em;
+  font-weight: 600;
+}
+
+/* 섹션 */
+.pd-section {
+  background: white;
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+}
+
+.pd-section-heading {
+  font-size: 1.15em;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 16px 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #fff3e0;
+}
+
+/* 투자 금액 그리드 */
+.pd-amount-section {
+  background: linear-gradient(135deg, #fff8f0, #fff3e0);
+}
+
+.pd-amount-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 16px;
+}
+
+.pd-amount-card {
+  background: white;
+  border-radius: 12px;
+  padding: 18px 20px;
+  text-align: center;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+
+.pd-amount-card--invested {
+  border: 2px solid #F97316;
+}
+
+.pd-amount-label {
+  font-size: 0.82em;
+  color: #7f8c8d;
+  margin-bottom: 8px;
+}
+
+.pd-amount-value {
+  font-size: 1.25em;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+/* 편입 이유 */
+.pd-items-detail {
+  margin-top: 20px;
+  border-top: 1px solid #f0f0f0;
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pd-item-reason {
+  display: flex;
+  gap: 12px;
+  font-size: 0.9em;
+  align-items: flex-start;
+}
+
+.pd-item-reason strong {
+  min-width: 80px;
+  color: #EA580C;
+  font-weight: 600;
+}
+
+.pd-item-reason span {
+  color: #34495e;
+  line-height: 1.5;
+}
+
+/* 종목 배지 코드 */
+.legend-code {
+  font-size: 0.8em;
+  color: #aaa;
+  font-family: 'Courier New', monospace;
+}
+
+.legend-type {
+  font-size: 0.8em;
+  background: #f0f7ff;
+  color: #3B82F6;
+  padding: 2px 8px;
+  border-radius: 8px;
+}
+
+/* 매수 계획 테이블 */
+.pd-table-wrap {
+  overflow-x: auto;
+}
+
+.pd-buy-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.pd-buy-table th {
+  background: #fff3e0;
+  color: #EA580C;
+  padding: 10px 12px;
+  text-align: left;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.pd-buy-table td {
+  padding: 10px 12px;
+  border-bottom: 1px solid #f5f5f5;
+  vertical-align: top;
+}
+
+.pd-buy-table tr:hover td {
+  background: #fffaf5;
+}
+
+.pd-bp-name {
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.pd-bp-code {
+  font-size: 0.82em;
+  color: #aaa;
+  font-family: 'Courier New', monospace;
+}
+
+.pd-pos { color: #EA580C; font-weight: 700; }
+.pd-neg { color: #3B82F6; font-weight: 700; }
+
+.pd-rationale {
+  font-size: 0.85em;
+  color: #555;
+  max-width: 260px;
+  line-height: 1.5;
+}
+
+/* 백테스트 성과 그리드 */
+.pd-period {
+  font-size: 0.85em;
+  color: #7f8c8d;
+  margin: -8px 0 16px 0;
+}
+
+.pd-perf-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.pd-perf-card {
+  background: #f8f9fa;
+  border-radius: 12px;
+  padding: 18px 14px;
+  text-align: center;
+}
+
+.pd-perf-card--ret {
+  background: linear-gradient(135deg, #fff3e0, #ffe0cc);
+}
+
+.pd-perf-label {
+  font-size: 0.78em;
+  color: #7f8c8d;
+  margin-bottom: 8px;
+}
+
+.pd-perf-value {
+  font-size: 1.4em;
+  font-weight: 700;
+  color: #EA580C;
+}
+
+.pd-vol { color: #6B7280; }
+.pd-mdd { color: #3B82F6; }
+
+/* 몬테카를로 */
+.pd-mc-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin-bottom: 16px;
+}
+
+.pd-mc-card {
+  border-radius: 12px;
+  padding: 18px 14px;
+  text-align: center;
+}
+
+.pd-mc-bear { background: #EFF6FF; }
+.pd-mc-base { background: #F0FFF4; }
+.pd-mc-bull { background: #FFF7ED; }
+
+.pd-mc-label {
+  font-size: 0.8em;
+  color: #6B7280;
+  margin-bottom: 8px;
+}
+
+.pd-mc-value {
+  font-size: 1.5em;
+  font-weight: 700;
+  color: #2c3e50;
+}
+
+/* 해석 텍스트 */
+.pd-interpretation {
+  background: #fffaf5;
+  border-left: 4px solid #F97316;
+  border-radius: 0 10px 10px 0;
+  padding: 14px 18px;
+  font-size: 0.9em;
+  color: #2c3e50;
+  line-height: 1.65;
+}
+
+/* 유의사항 */
+.pd-notice-section {
+  background: #fafafa;
+  border: 1px solid #eee;
+}
+
+.pd-notice-list {
+  margin: 0;
+  padding-left: 22px;
+  list-style: disc;
+}
+
+.pd-notice-list li {
+  font-size: 0.88em;
+  color: #7f8c8d;
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+
+/* 에러 박스 */
+.pd-error-box {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  max-width: 500px;
+  margin: 60px auto;
+}
+
+.pd-error-box p {
+  color: #7f8c8d;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .pd-mc-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .pd-perf-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .pd-amount-grid {
+    grid-template-columns: 1fr;
+  }
+}

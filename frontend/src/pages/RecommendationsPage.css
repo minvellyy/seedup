@@ -324,6 +324,144 @@
   padding-top: 16px;
 }
 
+/* ── 새 API 연동 클래스 ── */
+
+/* 투자성향 배지 배너 */
+.rec-profile-banner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: linear-gradient(135deg, #EA580C, #F97316);
+  color: white;
+  border-radius: 12px;
+  padding: 14px 24px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+
+.rec-risk-grade {
+  font-size: 1.2em;
+  font-weight: 700;
+  background: rgba(255,255,255,0.25);
+  padding: 4px 14px;
+  border-radius: 20px;
+}
+
+.rec-risk-tier {
+  font-size: 1em;
+  font-weight: 600;
+}
+
+.rec-generated-at {
+  font-size: 0.85em;
+  opacity: 0.85;
+  margin-left: auto;
+}
+
+/* 시장 배지 */
+.rec-market-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #F97316, #EA580C);
+  color: white;
+  padding: 2px 10px;
+  border-radius: 12px;
+  font-size: 0.78em;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+}
+
+/* 추천 점수 바 */
+.rec-score-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 12px 0;
+}
+
+.rec-score-label {
+  font-size: 0.82em;
+  color: #7f8c8d;
+  white-space: nowrap;
+}
+
+.rec-score-bar-bg {
+  flex: 1;
+  height: 8px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.rec-score-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #F97316, #EA580C);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.rec-score-value {
+  font-size: 0.85em;
+  font-weight: 700;
+  color: #EA580C;
+  min-width: 28px;
+  text-align: right;
+}
+
+/* 지표 칩 */
+.rec-features {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin: 10px 0;
+}
+
+.rec-feature-chip {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff8f0;
+  border: 1px solid #FDBA74;
+  border-radius: 8px;
+  padding: 6px 10px;
+  font-size: 0.8em;
+  min-width: 70px;
+}
+
+.rec-feature-chip span {
+  color: #7f8c8d;
+  font-size: 0.9em;
+  margin-bottom: 2px;
+}
+
+.rec-feature-chip strong {
+  font-size: 1em;
+  font-weight: 700;
+}
+
+/* 추천 이유 목록 */
+.rec-reasons-list {
+  margin: 0;
+  padding-left: 18px;
+  list-style: disc;
+}
+
+.rec-reasons-list li {
+  font-size: 0.88em;
+  color: #34495e;
+  line-height: 1.5;
+  margin-bottom: 4px;
+}
+
+/* 상세 보기 링크 */
+.rec-detail-link {
+  display: inline-block;
+  color: #EA580C;
+  font-weight: 600;
+  font-size: 0.95em;
+  border-bottom: 1px solid #EA580C;
+  padding-bottom: 2px;
+}
+
 /* 반응형 디자인 */
 @media (max-width: 768px) {
   .recommendations-page {

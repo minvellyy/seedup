@@ -218,7 +218,7 @@ function InvestTypeSurveyPage({ onSubmit }) {
     // 백엔드에 투자성향 저장
     if (user && user.userId) {
       try {
-        const response = await fetch(`http://localhost:8000/api/users/${user.userId}/investment-type`, {
+        const response = await fetch(`/api/users/${user.userId}/investment-type`, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',

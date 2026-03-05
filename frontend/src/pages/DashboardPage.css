@@ -195,6 +195,71 @@
   background: #f8f9fa;
 }
 
+/* 투자자별 매매동향 — 당일 탭 UI */
+.trading-market-tabs {
+  display: flex;
+  gap: 4px;
+  margin: 8px 0 12px;
+}
+
+.trading-tab {
+  padding: 5px 14px;
+  border: 1px solid #dee2e6;
+  border-radius: 6px;
+  background: #f8f9fa;
+  color: #495057;
+  font-size: 0.85rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+
+.trading-tab.active {
+  background: #1d3557;
+  color: #fff;
+  border-color: #1d3557;
+}
+
+.trading-date {
+  font-size: 0.8rem;
+  color: #888;
+}
+
+.investor-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9rem;
+}
+
+.investor-table th {
+  background: #f8f9fa;
+  padding: 8px 12px;
+  text-align: right;
+  font-weight: 600;
+  border-bottom: 2px solid #dee2e6;
+  color: #495057;
+}
+
+.investor-table th:first-child {
+  text-align: left;
+}
+
+.investor-table td {
+  padding: 9px 12px;
+  border-bottom: 1px solid #f0f0f0;
+  text-align: right;
+}
+
+.investor-table .investor-label {
+  text-align: left;
+  font-weight: 500;
+  color: #333;
+}
+
+.investor-table tbody tr:hover {
+  background: #f8f9fa;
+}
+
 /* 색상 클래스 */
 .positive {
   color: #e74c3c;
@@ -296,6 +361,23 @@
 .recommendation-type.hold {
   background: #f39c12;
   color: white;
+}
+
+/* 종목 목록 등락 뱃지 */
+.change-badge {
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.change-badge.up {
+  background: #fff1eb;
+  color: #EA580C;
+}
+.change-badge.down {
+  background: #eff6ff;
+  color: #3B82F6;
 }
 
 .recommendation-reason {

@@ -5,3 +5,5 @@ pykrx
 pandas
 openai
 python-dotenv
+websockets>=12.0
+requests

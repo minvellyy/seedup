@@ -10,7 +10,17 @@ import json
 import uvicorn
 from datetime import datetime
 from routers import survey, dashboard, recommendations
+from routers.instruments import router as instruments_router
 from models import Base, SurveyQuestion
+
+# 종목/포트폴리오 추천 라우터 (core 패키지 없이도 서버 기동 가능)
+try:
+    from routers.stocks import router as stocks_router
+    from routers.portfolio import router as portfolio_router
+    _RECOMMEND_ROUTERS_AVAILABLE = True
+except Exception as _e:
+    print(f"[WARNING] 추천 라우터 로드 실패: {_e}")
+    _RECOMMEND_ROUTERS_AVAILABLE = False
 
 # Pydantic 모델 정의
 class SignupRequest(BaseModel):
@@ -102,6 +112,18 @@ async def startup_event():
         # 설문 질문 초기화
         print("Initializing survey questions...")
         init_survey_questions()
+
+        # KIS WebSocket 실시간 스트리밍 초기화
+        print("Initializing KIS WebSocket manager...")
+        try:
+            from kis_ws_client import init_manager
+            import os
+            is_mock = os.getenv("KIS_MOCK", "false").lower() == "true"
+            await init_manager([], is_mock=is_mock)
+            print("KIS WebSocket manager initialized!")
+        except Exception as ws_err:
+            print(f"KIS WebSocket init skipped: {ws_err}")
+
         print("Application startup complete!")
     except Exception as e:
         print(f"Error during startup: {str(e)}")
@@ -631,10 +653,19 @@ async def health():
         'message': 'SeedUp API Server is running'
     }
 
+from routers.stream import router as stream_router
+
 # Include routers
 app.include_router(survey.router, prefix="/survey", tags=["Survey"])
 app.include_router(dashboard.router)
 app.include_router(recommendations.router)
+app.include_router(instruments_router)   # /api/instruments/stocks, /etfs
+app.include_router(stream_router)        # /api/stream/prices
+
+# 종목/포트폴리오 추천 라우터 등록 (/api/v1/stocks, /api/v1/portfolio)
+if _RECOMMEND_ROUTERS_AVAILABLE:
+    app.include_router(stocks_router, prefix="/api/v1")
+    app.include_router(portfolio_router, prefix="/api/v1")
 
 if __name__ == '__main__':
     # FastAPI 앱 실행

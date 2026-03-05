@@ -532,3 +532,352 @@
   }
 }
 
+/* ── 새 StockDetailPage 클래스 ── */
+
+/* 뒤로 가기 버튼 */
+.sd-back-btn {
+  background: white;
+  color: #333;
+  border: 2px solid #F97316;
+  padding: 10px 20px;
+  border-radius: 25px;
+  font-size: 1em;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 30px;
+}
+
+.sd-back-btn:hover {
+  background: #F97316;
+  color: white;
+}
+
+/* 헤더 레이아웃 */
+.sd-header-left {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.sd-rank-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #F97316, #EA580C);
+  color: white;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.9em;
+  font-weight: 700;
+  width: fit-content;
+}
+
+.sd-ticker {
+  font-size: 1em;
+  color: #7f8c8d;
+  font-family: 'Courier New', monospace;
+}
+
+.sd-market-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #F97316, #EA580C);
+  color: white;
+  padding: 3px 12px;
+  border-radius: 14px;
+  font-size: 0.82em;
+  font-weight: 600;
+  width: fit-content;
+}
+
+.sd-risk-tier {
+  display: inline-block;
+  background: #fff3e0;
+  color: #EA580C;
+  border: 1px solid #FDBA74;
+  padding: 3px 10px;
+  border-radius: 12px;
+  font-size: 0.82em;
+  font-weight: 600;
+  width: fit-content;
+}
+
+/* 점수 박스 */
+.sd-score-box {
+  text-align: right;
+  min-width: 140px;
+}
+
+.sd-score-label {
+  font-size: 0.85em;
+  color: #7f8c8d;
+  margin-bottom: 4px;
+}
+
+.sd-score-large {
+  font-size: 2em;
+  font-weight: 700;
+  color: #EA580C;
+  line-height: 1.2;
+}
+
+.sd-score-bar-bg {
+  width: 100%;
+  height: 8px;
+  background: #f0f0f0;
+  border-radius: 4px;
+  overflow: hidden;
+  margin-top: 8px;
+}
+
+.sd-score-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #F97316, #EA580C);
+  border-radius: 4px;
+}
+
+/* 섹션 */
+.sd-section {
+  background: white;
+  border-radius: 14px;
+  padding: 24px;
+  margin-bottom: 24px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+}
+
+.sd-section-heading {
+  font-size: 1.15em;
+  font-weight: 700;
+  color: #2c3e50;
+  margin: 0 0 16px 0;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #fff3e0;
+}
+
+/* 지표 카드 그리드 */
+.sd-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 14px;
+}
+
+.sd-feature-card {
+  background: #fff8f0;
+  border: 1px solid #FDBA74;
+  border-radius: 12px;
+  padding: 14px 12px;
+  text-align: center;
+  cursor: default;
+  transition: box-shadow 0.2s;
+}
+
+.sd-feature-card:hover {
+  box-shadow: 0 4px 14px rgba(249,115,22,0.2);
+}
+
+.sd-feature-label {
+  font-size: 0.78em;
+  color: #7f8c8d;
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.sd-feature-value {
+  font-size: 1.15em;
+  font-weight: 700;
+}
+
+/* 설명 박스 */
+.sd-explanation-box {
+  background: #fffaf5;
+  border-left: 4px solid #F97316;
+  border-radius: 0 12px 12px 0;
+  padding: 16px 20px;
+  line-height: 1.7;
+  color: #2c3e50;
+  font-size: 0.95em;
+}
+
+/* 추천 이유 목록 */
+.sd-reasons-list {
+  margin: 0;
+  padding-left: 22px;
+  list-style: disc;
+}
+
+.sd-reasons-list li {
+  font-size: 0.95em;
+  color: #34495e;
+  line-height: 1.65;
+  margin-bottom: 8px;
+}
+
+/* 유의사항 */
+.sd-notice-section {
+  background: #fafafa;
+  border: 1px solid #eee;
+}
+
+.sd-notice-list {
+  margin: 0;
+  padding-left: 22px;
+  list-style: disc;
+}
+
+.sd-notice-list li {
+  font-size: 0.88em;
+  color: #7f8c8d;
+  line-height: 1.6;
+  margin-bottom: 6px;
+}
+
+/* 에러 박스 */
+.sd-error-box {
+  background: white;
+  border-radius: 16px;
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  max-width: 500px;
+  margin: 60px auto;
+}
+
+.sd-error-box p {
+  color: #7f8c8d;
+  margin-bottom: 20px;
+}
+
+/* 뒤로 버튼 */
+.sd-back-btn {
+  background: white;
+  color: #333;
+  border: 2px solid #F97316;
+  padding: 8px 18px;
+  border-radius: 25px;
+  font-size: 0.9em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  margin-bottom: 24px;
+  display: inline-block;
+}
+.sd-back-btn:hover { background: #F97316; color: white; }
+
+/* 로딩 */
+.sd-loading {
+  text-align: center;
+  padding: 80px 20px;
+  font-size: 16px;
+  color: #888;
+}
+
+/* 현재가 박스 */
+.sd-price-box {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 2px;
+}
+.sd-current-price {
+  font-size: 30px;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+.sd-change-badge {
+  font-size: 16px;
+  font-weight: 600;
+}
+.sd-price-date {
+  font-size: 12px;
+  color: #aaa;
+  margin-top: 2px;
+}
+
+/* 섹터 뱃지 */
+.sd-sector-badge {
+  background: #f3e8ff;
+  color: #7c3aed;
+  border-radius: 4px;
+  padding: 2px 8px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+/* 추천 점수 바 (인라인) */
+.sd-score-row-outer {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: white;
+  border-radius: 12px;
+  padding: 14px 20px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.sd-score-label { font-size: 13px; color: #555; white-space: nowrap; }
+.sd-score-bar-bg { flex: 1; height: 10px; background: #f0f0f0; border-radius: 5px; overflow: hidden; }
+.sd-score-bar-fill { height: 100%; background: linear-gradient(90deg, #F97316, #FB923C); border-radius: 5px; transition: width 0.6s ease; }
+.sd-score-value { font-size: 15px; font-weight: 700; color: #F97316; white-space: nowrap; }
+
+/* 차트 래퍼 */
+.sd-chart-wrap {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+  overflow: hidden;
+}
+.sd-chart-yaxis {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 11px;
+  color: #aaa;
+  text-align: right;
+  padding: 4px 0;
+  min-width: 60px;
+}
+
+/* 가격 테이블 */
+.sd-table-wrap { overflow-x: auto; }
+.sd-price-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.sd-price-table th {
+  padding: 8px 12px;
+  background: #fafafa;
+  border-bottom: 2px solid #eee;
+  font-weight: 600;
+  color: #555;
+  text-align: left;
+}
+.sd-price-table td {
+  padding: 8px 12px;
+  border-bottom: 1px solid #f3f3f3;
+}
+.sd-price-table tbody tr:hover { background: #fffaf0; }
+
+/* 추천이유 리스트 (새 스타일) */
+.sd-reasons-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.sd-reasons-list li {
+  background: #fff7ed;
+  border-left: 3px solid #F97316;
+  padding: 10px 14px;
+  border-radius: 0 8px 8px 0;
+  font-size: 14px;
+  color: #444;
+}
+
+@media (max-width: 768px) {
+  .sd-features-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .sd-price-box { align-items: flex-start; }
+  .stock-detail-header { flex-direction: column; gap: 16px; }
+  .sd-current-price { font-size: 22px; }
+}
