@@ -113,12 +113,19 @@ def generate_fin_structured_report(ticker: str, as_of: str) -> str:
         ticker: 종목코드 (예: '005930')
         as_of: 기준일 YYYY-MM-DD (예: '2024-12-31')
     """
+    try:
+        _target_year = int(str(as_of)[:4])
+    except (ValueError, TypeError):
+        from datetime import date
+        _target_year = date.today().year - 1  # 직전 회계연도
+    _base_year = _target_year - 1
+
     cmd = [
         sys.executable, "-m", "scripts.run_full_auto_structured",
         "--ticker", str(ticker).zfill(6),
         "--as_of", str(as_of),
-        "--target_year", "2024",
-        "--base_year", "2023",
+        "--target_year", str(_target_year),
+        "--base_year", str(_base_year),
         "--fs_div", "CONSOL",
     ]
     proc = subprocess.run(cmd, capture_output=True, text=True, cwd=str(_FIN_MODEL_DIR))

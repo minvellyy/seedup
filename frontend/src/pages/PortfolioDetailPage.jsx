@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import html2pdf from 'html2pdf.js'
 import './PortfolioDetailPage.css'
@@ -33,6 +33,8 @@ function PortfolioDetailPage() {
 
   const [aiStatus, setAiStatus] = useState(Object.keys(passedAiData).length > 0 ? 'done' : 'idle')
   const [aiData, setAiData] = useState(passedAiData)
+  const [riskStatus, setRiskStatus] = useState('idle')
+  const [riskAnalysis, setRiskAnalysis] = useState(null)
   const cardRef = useRef(null)
 
   const handlePdf = () => {
@@ -96,6 +98,34 @@ function PortfolioDetailPage() {
       clearTimeout(timer)
     }
   }
+
+  const runRiskAnalysis = async () => {
+    const riskItems = sortedItems.map(i => ({ ticker: i.ticker, name: i.name }))
+    if (!riskItems.length) return
+    setRiskStatus('loading')
+    const controller = new AbortController()
+    const timer = setTimeout(() => controller.abort(), 180000)
+    try {
+      const res = await fetch('/api/dashboard/portfolio-risk-analysis', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ items: riskItems, risk_tier: risk_tier || '' }),
+        signal: controller.signal,
+      })
+      if (!res.ok) throw new Error(await res.text())
+      setRiskAnalysis(await res.json())
+      setRiskStatus('done')
+    } catch (e) {
+      console.warn('리스크 분석 실패:', e)
+      setRiskStatus(e.name === 'AbortError' ? 'timeout' : 'error')
+    } finally {
+      clearTimeout(timer)
+    }
+  }
+
+  useEffect(() => {
+    if (sortedItems.length > 0) runRiskAnalysis()
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
     <div className="portfolio-detail-page">
@@ -201,7 +231,22 @@ function PortfolioDetailPage() {
                 {/* 오른쪽: 리스크 */}
                 <div className="pd-col">
                   <div className="pd-section-label">리스크</div>
-                  {quant_signals.risk?.weighted_vol_3m_pct != null ? (
+                  {riskStatus === 'loading' && (
+                    <p className="pd-status-msg">⏳ AI 리스크 분석 중...</p>
+                  )}
+                  {riskStatus === 'done' && riskAnalysis ? (
+                    <>
+                      <div className="pd-risk-summary">{riskAnalysis.risk_summary}</div>
+                      <div className="pd-signal-items">
+                        {(riskAnalysis.per_stock || []).map(ps => (
+                          <div key={ps.ticker} className="pd-signal-item pd-risk-item">
+                            <span className="pd-signal-name">{ps.name}</span>
+                            <span className="pd-risk-text pd-neg">{ps.risk_text}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </>
+                  ) : riskStatus !== 'loading' && quant_signals.risk?.weighted_vol_3m_pct != null ? (
                     <>
                       <div className="pd-big-value pd-neg">
                         {quant_signals.risk.weighted_vol_3m_pct.toFixed(1)}%
@@ -218,7 +263,11 @@ function PortfolioDetailPage() {
                           ))}
                       </div>
                     </>
-                  ) : <p className="pd-no-data">데이터 없음</p>}
+                  ) : riskStatus === 'error' || riskStatus === 'timeout' ? (
+                    <p className="pd-no-data">리스크 분석을 불러오지 못했습니다.</p>
+                  ) : (
+                    <p className="pd-no-data">데이터 없음</p>
+                  )}
                 </div>
               </div>
               <div className="pd-divider" />
@@ -249,16 +298,23 @@ function PortfolioDetailPage() {
                 </div>
                 <div className="pd-col">
                   <div className="pd-section-label">리스크</div>
-                  <div className="pd-perf-boxes">
-                    <div className="pd-perf-box">
-                      <div className="pd-perf-box-label">연간 변동성</div>
-                      <div className="pd-perf-box-value pd-neg">{fmtPct(performance_3y.ann_vol_pct, false)}</div>
+                  {riskStatus === 'loading' && (
+                    <p className="pd-status-msg">⏳ AI 리스크 분석 중...</p>
+                  )}
+                  {riskStatus === 'done' && riskAnalysis ? (
+                    <div className="pd-risk-summary">{riskAnalysis.risk_summary}</div>
+                  ) : riskStatus !== 'loading' ? (
+                    <div className="pd-perf-boxes">
+                      <div className="pd-perf-box">
+                        <div className="pd-perf-box-label">연간 변동성</div>
+                        <div className="pd-perf-box-value pd-neg">{fmtPct(performance_3y.ann_vol_pct, false)}</div>
+                      </div>
+                      <div className="pd-perf-box">
+                        <div className="pd-perf-box-label">최대 낙폭(MDD)</div>
+                        <div className="pd-perf-box-value pd-neg">{fmtPct(performance_3y.mdd_pct, false)}</div>
+                      </div>
                     </div>
-                    <div className="pd-perf-box">
-                      <div className="pd-perf-box-label">최대 낙폭(MDD)</div>
-                      <div className="pd-perf-box-value pd-neg">{fmtPct(performance_3y.mdd_pct, false)}</div>
-                    </div>
-                  </div>
+                  ) : null}
                 </div>
               </div>
               <div className="pd-divider" />

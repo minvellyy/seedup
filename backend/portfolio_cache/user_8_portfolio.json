@@ -1,196 +1,237 @@
 {
-  "saved_at": "2026-03-10T03:40:20.326711",
+  "saved_at": "2026-03-10T08:08:07.963420",
   "portfolios": [
     {
       "portfolio_label": "균형 추천형",
       "portfolio_style": "balanced",
-      "portfolio_summary": "균형 추천형 포트폴리오는 재무 건전성과 방향성 신호를 조합하여 최적의 종목을 선택합니다.",
+      "portfolio_summary": "MC 1년 기대수익률: 하락 시나리오(P10) +35.7%, 중앙값(P50) +102.0%, 상승 시나리오(P90) +200.8%. 기대수익률 +0.0%, 연간변동성 0.0%.",
+      "risk_tier": "공격투자형",
       "portfolio_items": [
         {
-          "ticker": "437730",
-          "name": "삼현",
-          "weight_pct": 20.0,
-          "weight": 0.2,
+          "ticker": "005930",
+          "name": "삼성전자",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "재무 안정성이 높고 전반적인 점수가 양호하여 선정했습니다.",
-          "ai_fin_grade": "우수",
-          "ai_strengths": [
-            "높은 유동비율로 재무 안정성이 우수합니다.",
-            "전반적인 스코어가 높습니다."
-          ],
-          "ai_weaknesses": [
-            "성장성 관련 점수가 부재하여 다소 부족합니다."
-          ]
+          "selection_reason": "1년 수익률 +263.3% / 변동성 40.8% 으로 모멘텀 상위 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
         },
         {
-          "ticker": "081660",
-          "name": "미스토홀딩스",
-          "weight_pct": 20.0,
-          "weight": 0.2,
+          "ticker": "00680K",
+          "name": "미래에셋증권2우B",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "높은 수익성 점수를 가지고 있으며 성장성도 우수합니다.",
-          "ai_fin_grade": "우수",
-          "ai_strengths": [
-            "높은 운영 이익률을 보이고 있습니다.",
-            "성장 가능성이 있는 기업입니다."
-          ],
-          "ai_weaknesses": [
-            "안정성 지표가 다소 낮습니다."
-          ]
+          "selection_reason": "1년 수익률 +409.5% / 변동성 57.1% 으로 모멘텀 상위 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
         },
         {
-          "ticker": "161890",
-          "name": "한국콜마",
-          "weight_pct": 20.0,
-          "weight": 0.2,
+          "ticker": "005935",
+          "name": "삼성전자우",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "전반적인 성과 점수가 양호하고 안정성 점수가 좋습니다.",
-          "ai_fin_grade": "우수",
-          "ai_strengths": [
-            "높은 수익성 점수를 보입니다.",
-            "우수한 성장성을 가지고 있습니다."
-          ],
-          "ai_weaknesses": [
-            "안정성 측면에서 경쟁사 대비 낮습니다."
-          ]
+          "selection_reason": "1년 수익률 +184.0% / 변동성 38.0% 으로 모멘텀 상위 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
         },
         {
-          "ticker": "192820",
-          "name": "코스맥스",
-          "weight_pct": 20.0,
-          "weight": 0.2,
+          "ticker": "005380",
+          "name": "현대차",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "성장성과 안정성이 우수하여 선정되었습니다.",
-          "ai_fin_grade": "양호",
-          "ai_strengths": [
-            "높은 성장률을 기록하고 있습니다.",
-            "경쟁력 있는 시장 위치를 차지하고 있습니다."
-          ],
-          "ai_weaknesses": [
-            "안정성 점수가 다소 낮습니다."
-          ]
+          "selection_reason": "1년 수익률 +201.4% / 변동성 50.8% 으로 모멘텀 상위 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
         },
         {
-          "ticker": "004370",
-          "name": "농심",
-          "weight_pct": 20.0,
-          "weight": 0.2,
+          "ticker": "000660",
+          "name": "SK하이닉스",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "안정성이 높고 양호한 성과를 보이고 있습니다.",
-          "ai_fin_grade": "양호",
-          "ai_strengths": [
-            "높은 유동비율을 기록하고 있습니다.",
-            "부채비율이 낮아 안정적입니다."
-          ],
-          "ai_weaknesses": [
-            "성장성 점수가 낮습니다."
-          ]
+          "selection_reason": "1년 수익률 +399.7% / 변동성 56.6% 으로 모멘텀 상위 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "000720",
+          "name": "현대건설",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
+          "asset_type": "STOCK",
+          "selection_reason": "1년 수익률 +319.2% / 변동성 60.1% 으로 모멘텀 상위 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "006800",
+          "name": "미래에셋증권",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
+          "asset_type": "STOCK",
+          "selection_reason": "1년 수익률 +616.9% / 변동성 73.9% 으로 모멘텀 상위 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
         }
       ],
-      "risk_tier": "공격투자형",
+      "monte_carlo_1y": {
+        "n_simulations": 1000000,
+        "horizon_days": 252,
+        "p10_pct": 35.7,
+        "p50_pct": 102.0,
+        "p90_pct": 200.8,
+        "interpretation": "1년 후 기대 수익률(중앙값) 102.0%, 하락 시나리오(10%) 35.7%, 상승 시나리오(90%) 200.8%입니다."
+      },
       "quant_signals": {
         "short_term": {
-          "weighted_p_adj": 0.5817,
+          "weighted_p_adj": 0.4851,
           "items": [
             {
-              "ticker": "437730",
-              "name": "삼현",
-              "weight_pct": 20.0,
-              "p_adj": 0.5959
+              "ticker": "005930",
+              "name": "삼성전자",
+              "weight_pct": 14.3,
+              "p_adj": 0.4795
             },
             {
-              "ticker": "081660",
-              "name": "미스토홀딩스",
-              "weight_pct": 20.0,
-              "p_adj": 0.5899
+              "ticker": "00680K",
+              "name": "미래에셋증권2우B",
+              "weight_pct": 14.3,
+              "p_adj": null
             },
             {
-              "ticker": "161890",
-              "name": "한국콜마",
-              "weight_pct": 20.0,
-              "p_adj": 0.5816
+              "ticker": "005935",
+              "name": "삼성전자우",
+              "weight_pct": 14.3,
+              "p_adj": 0.4779
             },
             {
-              "ticker": "192820",
-              "name": "코스맥스",
-              "weight_pct": 20.0,
-              "p_adj": 0.5718
+              "ticker": "005380",
+              "name": "현대차",
+              "weight_pct": 14.3,
+              "p_adj": 0.5125
             },
             {
-              "ticker": "004370",
-              "name": "농심",
-              "weight_pct": 20.0,
-              "p_adj": 0.5692
+              "ticker": "000660",
+              "name": "SK하이닉스",
+              "weight_pct": 14.3,
+              "p_adj": 0.4961
+            },
+            {
+              "ticker": "000720",
+              "name": "현대건설",
+              "weight_pct": 14.3,
+              "p_adj": 0.486
+            },
+            {
+              "ticker": "006800",
+              "name": "미래에셋증권",
+              "weight_pct": 14.3,
+              "p_adj": 0.4586
             }
           ]
         },
         "medium_term": {
-          "weighted_ret_12m_pct": 6.34,
+          "weighted_ret_12m_pct": -6.7367,
           "items": [
             {
-              "ticker": "437730",
-              "name": "삼현",
-              "weight_pct": 20.0,
+              "ticker": "005930",
+              "name": "삼성전자",
+              "weight_pct": 14.3,
+              "ret_12m_pct": -27.42
+            },
+            {
+              "ticker": "00680K",
+              "name": "미래에셋증권2우B",
+              "weight_pct": 14.3,
               "ret_12m_pct": null
             },
             {
-              "ticker": "081660",
-              "name": "미스토홀딩스",
-              "weight_pct": 20.0,
-              "ret_12m_pct": 6.19
+              "ticker": "005935",
+              "name": "삼성전자우",
+              "weight_pct": 14.3,
+              "ret_12m_pct": -25.46
             },
             {
-              "ticker": "161890",
-              "name": "한국콜마",
-              "weight_pct": 20.0,
-              "ret_12m_pct": 3.18
+              "ticker": "005380",
+              "name": "현대차",
+              "weight_pct": 14.3,
+              "ret_12m_pct": 9.96
             },
             {
-              "ticker": "192820",
-              "name": "코스맥스",
-              "weight_pct": 20.0,
-              "ret_12m_pct": 22.72
+              "ticker": "000660",
+              "name": "SK하이닉스",
+              "weight_pct": 14.3,
+              "ret_12m_pct": 24.21
             },
             {
-              "ticker": "004370",
-              "name": "농심",
-              "weight_pct": 20.0,
-              "ret_12m_pct": -6.73
+              "ticker": "000720",
+              "name": "현대건설",
+              "weight_pct": 14.3,
+              "ret_12m_pct": -29.35
+            },
+            {
+              "ticker": "006800",
+              "name": "미래에셋증권",
+              "weight_pct": 14.3,
+              "ret_12m_pct": 7.64
             }
           ]
         },
         "risk": {
-          "weighted_vol_3m_pct": 59.154,
+          "weighted_vol_3m_pct": 37.8433,
           "items": [
             {
-              "ticker": "437730",
-              "name": "삼현",
-              "weight_pct": 20.0,
-              "vol_3m_pct": 120.9
+              "ticker": "005930",
+              "name": "삼성전자",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 36.68
             },
             {
-              "ticker": "081660",
-              "name": "미스토홀딩스",
-              "weight_pct": 20.0,
-              "vol_3m_pct": 29.03
+              "ticker": "00680K",
+              "name": "미래에셋증권2우B",
+              "weight_pct": 14.3,
+              "vol_3m_pct": null
             },
             {
-              "ticker": "161890",
-              "name": "한국콜마",
-              "weight_pct": 20.0,
-              "vol_3m_pct": 45.12
+              "ticker": "005935",
+              "name": "삼성전자우",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 35.29
             },
             {
-              "ticker": "192820",
-              "name": "코스맥스",
-              "weight_pct": 20.0,
-              "vol_3m_pct": 62.28
+              "ticker": "005380",
+              "name": "현대차",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 34.61
             },
             {
-              "ticker": "004370",
-              "name": "농심",
-              "weight_pct": 20.0,
-              "vol_3m_pct": 38.44
+              "ticker": "000660",
+              "name": "SK하이닉스",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 50.62
+            },
+            {
+              "ticker": "000720",
+              "name": "현대건설",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 28.11
+            },
+            {
+              "ticker": "006800",
+              "name": "미래에셋증권",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 41.75
             }
           ]
         }
@@ -198,160 +239,235 @@
     },
     {
       "portfolio_label": "모멘텀 집중형",
-      "portfolio_style": "momentum",
-      "portfolio_summary": "모멘텀 집중형 포트폴리오는 상승 확률이 높은 종목을 중심으로 구성되었습니다.",
+      "portfolio_style": "balanced",
+      "portfolio_summary": "MC 1년 기대수익률: 하락 시나리오(P10) +98.1%, 중앙값(P50) +212.2%, 상승 시나리오(P90) +392.2%. 기대수익률 +0.0%, 연간변동성 0.0%.",
+      "risk_tier": "공격투자형",
       "portfolio_items": [
         {
-          "ticker": "437730",
-          "name": "삼현",
-          "weight_pct": 25.0,
-          "weight": 0.25,
+          "ticker": "043260",
+          "name": "성호전자",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "높은 상승 확률과 안정성이 뛰어난 종목입니다.",
-          "ai_fin_grade": "우수",
-          "ai_strengths": [
-            "전반적인 스코어가 높습니다.",
-            "부채비율이 낮아 안정적입니다."
-          ],
-          "ai_weaknesses": [
-            "성장성 관련 점수가 부재하여 다소 부족합니다."
-          ]
+          "selection_reason": "1년 수익률 +2380.3% / 변동성 92.7% 으로 모멘텀 상위 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
         },
         {
-          "ticker": "081660",
-          "name": "미스토홀딩스",
-          "weight_pct": 25.0,
-          "weight": 0.25,
+          "ticker": "006800",
+          "name": "미래에셋증권",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "상승 확률이 상당히 높은 종목으로 선정하였습니다.",
-          "ai_fin_grade": "우수",
-          "ai_strengths": [
-            "높은 수익성과 성장성 점수를 보입니다.",
-            "운영 이익률이 뛰어납니다."
-          ],
-          "ai_weaknesses": [
-            "재무 안정성 지표가 낮습니다."
-          ]
+          "selection_reason": "1년 수익률 +616.9% / 변동성 73.9% 으로 모멘텀 상위 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
         },
         {
-          "ticker": "006280",
-          "name": "녹십자",
-          "weight_pct": 25.0,
-          "weight": 0.25,
+          "ticker": "032820",
+          "name": "우리기술",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "상승 확률이 높은 종목입니다.",
-          "ai_fin_grade": "양호",
-          "ai_strengths": [
-            "지난 12개월 동안 강력한 성과를 보였습니다.",
-            "상승 추세의 후방이 뛰어납니다."
-          ],
-          "ai_weaknesses": [
-            "재무지표 점수가 낮습니다."
-          ]
+          "selection_reason": "1년 수익률 +750.9% / 변동성 91.6% 으로 모멘텀 상위 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
         },
         {
-          "ticker": "174900",
-          "name": "앱클론",
-          "weight_pct": 25.0,
-          "weight": 0.25,
+          "ticker": "319400",
+          "name": "현대무벡스",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "상승 가능성이 보장된 종목입니다.",
-          "ai_fin_grade": "보통",
-          "ai_strengths": [
-            "상승확률이 높습니다.",
-            "가치가 저평가된 주식으로 판단합니다."
-          ],
-          "ai_weaknesses": [
-            "유동성이 높지 않아 거래가 쉽지 않을 수 있습니다."
-          ]
+          "selection_reason": "1년 수익률 +815.3% / 변동성 91.2% 으로 모멘텀 상위 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "187660",
+          "name": "현대ADM",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
+          "asset_type": "STOCK",
+          "selection_reason": "1년 수익률 +701.2% / 변동성 114.8% 으로 모멘텀 상위 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "00680K",
+          "name": "미래에셋증권2우B",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
+          "asset_type": "STOCK",
+          "selection_reason": "1년 수익률 +409.5% / 변동성 57.1% 으로 모멘텀 상위 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "038500",
+          "name": "삼표시멘트",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
+          "asset_type": "STOCK",
+          "selection_reason": "1년 수익률 +443.1% / 변동성 88.1% 으로 모멘텀 상위 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
         }
       ],
-      "risk_tier": "공격투자형",
+      "monte_carlo_1y": {
+        "n_simulations": 1000000,
+        "horizon_days": 252,
+        "p10_pct": 98.1,
+        "p50_pct": 212.2,
+        "p90_pct": 392.2,
+        "interpretation": "1년 후 기대 수익률(중앙값) 212.2%, 하락 시나리오(10%) 98.1%, 상승 시나리오(90%) 392.2%입니다."
+      },
       "quant_signals": {
         "short_term": {
-          "weighted_p_adj": 0.5868,
+          "weighted_p_adj": 0.443,
           "items": [
             {
-              "ticker": "437730",
-              "name": "삼현",
-              "weight_pct": 25.0,
-              "p_adj": 0.5959
+              "ticker": "043260",
+              "name": "성호전자",
+              "weight_pct": 14.3,
+              "p_adj": 0.4671
             },
             {
-              "ticker": "081660",
-              "name": "미스토홀딩스",
-              "weight_pct": 25.0,
-              "p_adj": 0.5899
+              "ticker": "006800",
+              "name": "미래에셋증권",
+              "weight_pct": 14.3,
+              "p_adj": 0.4586
             },
             {
-              "ticker": "006280",
-              "name": "녹십자",
-              "weight_pct": 25.0,
-              "p_adj": 0.5832
+              "ticker": "032820",
+              "name": "우리기술",
+              "weight_pct": 14.3,
+              "p_adj": 0.4077
             },
             {
-              "ticker": "174900",
-              "name": "앱클론",
-              "weight_pct": 25.0,
-              "p_adj": 0.5781
+              "ticker": "319400",
+              "name": "현대무벡스",
+              "weight_pct": 14.3,
+              "p_adj": 0.5211
+            },
+            {
+              "ticker": "187660",
+              "name": "현대ADM",
+              "weight_pct": 14.3,
+              "p_adj": 0.377
+            },
+            {
+              "ticker": "00680K",
+              "name": "미래에셋증권2우B",
+              "weight_pct": 14.3,
+              "p_adj": null
+            },
+            {
+              "ticker": "038500",
+              "name": "삼표시멘트",
+              "weight_pct": 14.3,
+              "p_adj": 0.4267
             }
           ]
         },
         "medium_term": {
-          "weighted_ret_12m_pct": 25.52,
+          "weighted_ret_12m_pct": -1.0633,
           "items": [
             {
-              "ticker": "437730",
-              "name": "삼현",
-              "weight_pct": 25.0,
+              "ticker": "043260",
+              "name": "성호전자",
+              "weight_pct": 14.3,
+              "ret_12m_pct": -20.72
+            },
+            {
+              "ticker": "006800",
+              "name": "미래에셋증권",
+              "weight_pct": 14.3,
+              "ret_12m_pct": 7.64
+            },
+            {
+              "ticker": "032820",
+              "name": "우리기술",
+              "weight_pct": 14.3,
+              "ret_12m_pct": 27.37
+            },
+            {
+              "ticker": "319400",
+              "name": "현대무벡스",
+              "weight_pct": 14.3,
+              "ret_12m_pct": -1.17
+            },
+            {
+              "ticker": "187660",
+              "name": "현대ADM",
+              "weight_pct": 14.3,
+              "ret_12m_pct": -12.7
+            },
+            {
+              "ticker": "00680K",
+              "name": "미래에셋증권2우B",
+              "weight_pct": 14.3,
               "ret_12m_pct": null
             },
             {
-              "ticker": "081660",
-              "name": "미스토홀딩스",
-              "weight_pct": 25.0,
-              "ret_12m_pct": 6.19
-            },
-            {
-              "ticker": "006280",
-              "name": "녹십자",
-              "weight_pct": 25.0,
-              "ret_12m_pct": 48.22
-            },
-            {
-              "ticker": "174900",
-              "name": "앱클론",
-              "weight_pct": 25.0,
-              "ret_12m_pct": 22.15
+              "ticker": "038500",
+              "name": "삼표시멘트",
+              "weight_pct": 14.3,
+              "ret_12m_pct": -6.8
             }
           ]
         },
         "risk": {
-          "weighted_vol_3m_pct": 62.3,
+          "weighted_vol_3m_pct": 54.0767,
           "items": [
             {
-              "ticker": "437730",
-              "name": "삼현",
-              "weight_pct": 25.0,
-              "vol_3m_pct": 120.9
+              "ticker": "043260",
+              "name": "성호전자",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 45.01
             },
             {
-              "ticker": "081660",
-              "name": "미스토홀딩스",
-              "weight_pct": 25.0,
-              "vol_3m_pct": 29.03
+              "ticker": "006800",
+              "name": "미래에셋증권",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 41.75
             },
             {
-              "ticker": "006280",
-              "name": "녹십자",
-              "weight_pct": 25.0,
-              "vol_3m_pct": 50.78
+              "ticker": "032820",
+              "name": "우리기술",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 50.81
             },
             {
-              "ticker": "174900",
-              "name": "앱클론",
-              "weight_pct": 25.0,
-              "vol_3m_pct": 48.49
+              "ticker": "319400",
+              "name": "현대무벡스",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 31.57
+            },
+            {
+              "ticker": "187660",
+              "name": "현대ADM",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 130.82
+            },
+            {
+              "ticker": "00680K",
+              "name": "미래에셋증권2우B",
+              "weight_pct": 14.3,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "038500",
+              "name": "삼표시멘트",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 24.5
             }
           ]
         }
@@ -359,160 +475,235 @@
     },
     {
       "portfolio_label": "안정 우선형",
-      "portfolio_style": "lowvol",
-      "portfolio_summary": "안정 우선형 포트폴리오는 재무 안정성이 우수한 종목을 중심으로 구성되었습니다.",
+      "portfolio_style": "balanced",
+      "portfolio_summary": "MC 1년 기대수익률: 하락 시나리오(P10) +26.2%, 중앙값(P50) +85.3%, 상승 시나리오(P90) +172.0%. 기대수익률 +0.0%, 연간변동성 0.0%.",
+      "risk_tier": "공격투자형",
       "portfolio_items": [
         {
-          "ticker": "058470",
-          "name": "리노공업",
-          "weight_pct": 25.0,
-          "weight": 0.25,
+          "ticker": "005930",
+          "name": "삼성전자",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "재무가 매우 안정적이며 뛰어난 수익성과 성장성을 기록했습니다.",
-          "ai_fin_grade": "탁월",
-          "ai_strengths": [
-            "운영 이익률이 매우 높습니다.",
-            "부채비율이 낮아 재무 안정성이 뛰어납니다."
-          ],
-          "ai_weaknesses": [
-            "작년 대비 성장이 저조할 수 있습니다."
-          ]
+          "selection_reason": "1년 수익률 +263.3% / 변동성 40.8% 으로 모멘텀 상위 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
         },
         {
-          "ticker": "021240",
-          "name": "코웨이",
-          "weight_pct": 25.0,
-          "weight": 0.25,
+          "ticker": "005935",
+          "name": "삼성전자우",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "재무 안정성이 우수하여 선정하였습니다.",
-          "ai_fin_grade": "우수",
-          "ai_strengths": [
-            "높은 수익성과 성장성 점수를 보입니다.",
-            "재무 안정성이 proven quality입니다."
-          ],
-          "ai_weaknesses": [
-            "중장기적인 성장이 제약될 수 있습니다."
-          ]
+          "selection_reason": "1년 수익률 +184.0% / 변동성 38.0% 으로 모멘텀 상위 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
         },
         {
-          "ticker": "051900",
-          "name": "LG생활건강",
-          "weight_pct": 25.0,
-          "weight": 0.25,
+          "ticker": "00680K",
+          "name": "미래에셋증권2우B",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "안정적 투자 성향에 적합한 종목입니다.",
-          "ai_fin_grade": "양호",
-          "ai_strengths": [
-            "부채가 적어 재무 안정성이 높습니다.",
-            "소비재 분야에서 안정성이 높습니다."
-          ],
-          "ai_weaknesses": [
-            "성장성 지표가 낮아 아쉬움이 남습니다."
-          ]
+          "selection_reason": "1년 수익률 +409.5% / 변동성 57.1% 으로 모멘텀 상위 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
         },
         {
-          "ticker": "096530",
-          "name": "씨젠",
-          "weight_pct": 25.0,
-          "weight": 0.25,
+          "ticker": "009150",
+          "name": "삼성전기",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "안정성이 좋고 부채비율이 낮습니다.",
-          "ai_fin_grade": "양호",
-          "ai_strengths": [
-            "높은 유동성과 안정성 기록.",
-            "재무지표가 양호하여 안정적입니다."
-          ],
-          "ai_weaknesses": [
-            "성장성 점수가 부재합니다."
-          ]
+          "selection_reason": "1년 수익률 +207.8% / 변동성 48.0% 으로 모멘텀 상위 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "005380",
+          "name": "현대차",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
+          "asset_type": "STOCK",
+          "selection_reason": "1년 수익률 +201.4% / 변동성 50.8% 으로 모멘텀 상위 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "000660",
+          "name": "SK하이닉스",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
+          "asset_type": "STOCK",
+          "selection_reason": "1년 수익률 +399.7% / 변동성 56.6% 으로 모멘텀 상위 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "316140",
+          "name": "우리금융지주",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
+          "asset_type": "STOCK",
+          "selection_reason": "1년 수익률 +119.1% / 변동성 30.3% 으로 모멘텀 상위 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
         }
       ],
-      "risk_tier": "공격투자형",
+      "monte_carlo_1y": {
+        "n_simulations": 1000000,
+        "horizon_days": 252,
+        "p10_pct": 26.2,
+        "p50_pct": 85.3,
+        "p90_pct": 172.0,
+        "interpretation": "1년 후 기대 수익률(중앙값) 85.3%, 하락 시나리오(10%) 26.2%, 상승 시나리오(90%) 172.0%입니다."
+      },
       "quant_signals": {
         "short_term": {
-          "weighted_p_adj": 0.5519,
+          "weighted_p_adj": 0.4868,
           "items": [
             {
-              "ticker": "058470",
-              "name": "리노공업",
-              "weight_pct": 25.0,
-              "p_adj": 0.5547
+              "ticker": "005930",
+              "name": "삼성전자",
+              "weight_pct": 14.3,
+              "p_adj": 0.4795
             },
             {
-              "ticker": "021240",
-              "name": "코웨이",
-              "weight_pct": 25.0,
-              "p_adj": 0.5544
+              "ticker": "005935",
+              "name": "삼성전자우",
+              "weight_pct": 14.3,
+              "p_adj": 0.4779
             },
             {
-              "ticker": "051900",
-              "name": "LG생활건강",
-              "weight_pct": 25.0,
-              "p_adj": 0.5532
+              "ticker": "00680K",
+              "name": "미래에셋증권2우B",
+              "weight_pct": 14.3,
+              "p_adj": null
             },
             {
-              "ticker": "096530",
-              "name": "씨젠",
-              "weight_pct": 25.0,
-              "p_adj": 0.5453
+              "ticker": "009150",
+              "name": "삼성전기",
+              "weight_pct": 14.3,
+              "p_adj": 0.4713
+            },
+            {
+              "ticker": "005380",
+              "name": "현대차",
+              "weight_pct": 14.3,
+              "p_adj": 0.5125
+            },
+            {
+              "ticker": "000660",
+              "name": "SK하이닉스",
+              "weight_pct": 14.3,
+              "p_adj": 0.4961
+            },
+            {
+              "ticker": "316140",
+              "name": "우리금융지주",
+              "weight_pct": 14.3,
+              "p_adj": 0.4833
             }
           ]
         },
         "medium_term": {
-          "weighted_ret_12m_pct": 0.69,
+          "weighted_ret_12m_pct": -3.3567,
           "items": [
             {
-              "ticker": "058470",
-              "name": "리노공업",
-              "weight_pct": 25.0,
-              "ret_12m_pct": -5.62
+              "ticker": "005930",
+              "name": "삼성전자",
+              "weight_pct": 14.3,
+              "ret_12m_pct": -27.42
             },
             {
-              "ticker": "021240",
-              "name": "코웨이",
-              "weight_pct": 25.0,
-              "ret_12m_pct": 20.54
+              "ticker": "005935",
+              "name": "삼성전자우",
+              "weight_pct": 14.3,
+              "ret_12m_pct": -25.46
             },
             {
-              "ticker": "051900",
-              "name": "LG생활건강",
-              "weight_pct": 25.0,
-              "ret_12m_pct": -13.72
+              "ticker": "00680K",
+              "name": "미래에셋증권2우B",
+              "weight_pct": 14.3,
+              "ret_12m_pct": null
             },
             {
-              "ticker": "096530",
-              "name": "씨젠",
-              "weight_pct": 25.0,
-              "ret_12m_pct": 1.56
+              "ticker": "009150",
+              "name": "삼성전기",
+              "weight_pct": 14.3,
+              "ret_12m_pct": -19.3
+            },
+            {
+              "ticker": "005380",
+              "name": "현대차",
+              "weight_pct": 14.3,
+              "ret_12m_pct": 9.96
+            },
+            {
+              "ticker": "000660",
+              "name": "SK하이닉스",
+              "weight_pct": 14.3,
+              "ret_12m_pct": 24.21
+            },
+            {
+              "ticker": "316140",
+              "name": "우리금융지주",
+              "weight_pct": 14.3,
+              "ret_12m_pct": 17.87
             }
           ]
         },
         "risk": {
-          "weighted_vol_3m_pct": 38.9025,
+          "weighted_vol_3m_pct": 37.33,
           "items": [
             {
-              "ticker": "058470",
-              "name": "리노공업",
-              "weight_pct": 25.0,
-              "vol_3m_pct": 47.35
+              "ticker": "005930",
+              "name": "삼성전자",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 36.68
             },
             {
-              "ticker": "021240",
-              "name": "코웨이",
-              "weight_pct": 25.0,
-              "vol_3m_pct": 33.38
+              "ticker": "005935",
+              "name": "삼성전자우",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 35.29
             },
             {
-              "ticker": "051900",
-              "name": "LG생활건강",
-              "weight_pct": 25.0,
-              "vol_3m_pct": 37.26
+              "ticker": "00680K",
+              "name": "미래에셋증권2우B",
+              "weight_pct": 14.3,
+              "vol_3m_pct": null
             },
             {
-              "ticker": "096530",
-              "name": "씨젠",
-              "weight_pct": 25.0,
-              "vol_3m_pct": 37.62
+              "ticker": "009150",
+              "name": "삼성전기",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 37.94
+            },
+            {
+              "ticker": "005380",
+              "name": "현대차",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 34.61
+            },
+            {
+              "ticker": "000660",
+              "name": "SK하이닉스",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 50.62
+            },
+            {
+              "ticker": "316140",
+              "name": "우리금융지주",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 28.84
             }
           ]
         }

@@ -158,6 +158,33 @@
   margin-top: 6px;
 }
 
+/* AI 리스크 자연어 분석 */
+.pd-risk-summary {
+  font-size: 12px;
+  color: #374151;
+  line-height: 1.7;
+  margin-top: 4px;
+  padding: 8px 10px;
+  background: #fef2f2;
+  border-left: 3px solid #ef4444;
+  border-radius: 4px;
+}
+
+.pd-risk-item {
+  align-items: flex-start !important;
+  flex-direction: column !important;
+  gap: 2px !important;
+  padding: 4px 0 !important;
+  border-bottom: 1px solid #f1f5f9;
+}
+
+.pd-risk-text {
+  font-size: 11px;
+  line-height: 1.5;
+  white-space: normal;
+}
+
+
 .pd-pos { color: #dc2626; }
 .pd-neg { color: #2563eb; }
 

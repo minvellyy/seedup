@@ -18,7 +18,7 @@ def get_survey_questions(db: Session = Depends(get_db)):
     return questions
 
 @router.post("/survey/answers")
-def save_survey_answer(answer: AnswerCreate, db: Session = Depends(get_db), user_id: int = 1):
+def save_survey_answer(answer: AnswerCreate, user_id: int, db: Session = Depends(get_db)):
     existing_answer = db.query(SurveyAnswer).filter_by(user_id=user_id, question_id=answer.question_id).first()
     if existing_answer:
         existing_answer.value_text = answer.value_text
@@ -37,7 +37,7 @@ def save_survey_answer(answer: AnswerCreate, db: Session = Depends(get_db), user
     return {"message": "Answer saved successfully"}
 
 @router.get("/survey/answers/me")
-def get_my_answers(db: Session = Depends(get_db), user_id: int = 1):
+def get_my_answers(user_id: int, db: Session = Depends(get_db)):
     answers = db.query(SurveyAnswer).filter_by(user_id=user_id).all()
     result = []
     for answer in answers:

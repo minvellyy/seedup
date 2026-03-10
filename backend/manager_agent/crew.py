@@ -25,6 +25,7 @@ from manager_agent.tools.stock_direction_tool import (
 )
 from manager_agent.tools.unstructured_tool import read_unstructured_analysis
 from manager_agent.tools.investment_fit_tool import read_investment_fit_data
+from manager_agent.tools.news_tool import news_rag_search
 
 AnalysisMode = Literal["full", "signal", "fin", "summary", "stock_detail"]
 
@@ -125,9 +126,9 @@ def run_manager_analysis(
         backstory=(
             "NLP와 텍스트 마이닝 전문가. 비정형 데이터에서 시장 센티멘트와 "
             "기업별 주요 이벤트를 파악하여 투자 의사결정 보조 정보를 제공한다. "
-            "현재 개발 중인 모듈을 담당하며, 데이터 미비 시 PENDING 상태를 명확히 보고한다."
+            "사전 분석 파일이 없으면 뉴스 RAG 검색으로 실시간 시장 맥락을 직접 수집한다."
         ),
-        tools=[read_unstructured_analysis],
+        tools=[read_unstructured_analysis, news_rag_search],
         llm=llm,
         verbose=True,
         allow_delegation=False,
@@ -223,21 +224,26 @@ def run_manager_analysis(
 
     t_unstr = Task(
         description=(
-            f"종목 {ticker}의 비정형(뉴스·공시·텍스트) 데이터 분석 결과를 조회하라.\n\n"
+            f"종목 {ticker}의 비정형(뉴스·공시·텍스트) 데이터를 분석하라.\n\n"
             "절차:\n"
-            "1) read_unstructured_analysis 툴로 데이터를 조회하라.\n"
-            "2) status가 'AVAILABLE'이면 센티멘트 점수와 주요 이슈를 요약하라.\n"
-            "3) status가 'PENDING'이면 아직 준비 중인 데이터임을 기록하라.\n"
-            "   → 이것은 오류가 아니라 추후 보완될 추가 분석 영역이다.\n"
-            "   → 재무·방향성 분석이 핵심이며, 비정형은 보너스 정보임을 인지하라."
+            "1) read_unstructured_analysis 툴로 사전 분석 파일을 조회하라.\n"
+            "2) status가 'AVAILABLE'이면 센티멘트 점수와 주요 이슈를 그대로 사용하라.\n"
+            "3) status가 'PENDING'이면 news_rag_search 툴로 해당 종목·산업 관련 뉴스를 검색하라.\n"
+            "   - 검색 질의 예시: 종목명, 주요 사업 키워드, 관련 산업 테마\n"
+            "   - 검색 결과에서 센티멘트, 핵심 리스크, 핵심 기회를 요약하라.\n"
+            "   - 이 경우 status는 'NEWS_RAG'로 기록하라.\n"
+            "4) 어떤 방법으로 수집했든 최종 결과를 아래 JSON 형식으로 정리하라."
         ),
         expected_output=(
             "비정형 분석 결과 JSON:\n"
             '{\n'
             '  "ticker": str,\n'
-            '  "status": "AVAILABLE"|"PENDING",\n'
+            '  "status": "AVAILABLE"|"NEWS_RAG"|"PENDING",\n'
             '  "sentiment_score": float|null,\n'
             '  "key_issues": [str],\n'
+            '  "news_themes": [str],\n'
+            '  "news_risks": [str],\n'
+            '  "news_opportunities": [str],\n'
             '  "last_updated": str|null\n'
             '}'
         ),
@@ -600,6 +606,7 @@ def run_manager_analysis(
 def run_portfolio_recommendation(
     llm: Any,
     user_risk_tier: str = "위험중립형",
+    user_profile_json: str | None = None,
 ) -> str:
     """
     방향성 신호(signal_pack) + 재무 데이터(structured_report)를 사용하여
@@ -633,9 +640,38 @@ def run_portfolio_recommendation(
         allow_delegation=False,
     )
 
+    # 유저 프로필 컨텍스트 구성
+    _profile_context = ""
+    if user_profile_json:
+        try:
+            import json as _json
+            _p = _json.loads(user_profile_json)
+            _survey = _p.get("survey", {})
+            _lines = []
+            _label_map = {
+                "INVEST_GOAL": "투자 목적",
+                "TARGET_HORIZON": "목표 시점",
+                "TARGET_AMOUNT": "목표 금액",
+                "CONTRIBUTION_TYPE": "투자 방식",
+                "LUMP_SUM_AMOUNT": "일시금 금액",
+                "MONTHLY_AMOUNT": "월 투자 금액",
+                "MAX_HOLDINGS": "최대 보유 종목 수",
+                "DIVIDEND_PREF": "배당 선호도",
+                "ACCOUNT_TYPE": "계좌 유형",
+            }
+            for code, label in _label_map.items():
+                val = _survey.get(code)
+                if val is not None:
+                    _lines.append(f"  - {label}: {val}")
+            if _lines:
+                _profile_context = "\n사용자 상세 정보:\n" + "\n".join(_lines) + "\n"
+        except Exception:
+            pass
+
     task = Task(
         description=(
-            f"사용자 투자성향: {user_risk_tier}\n\n"
+            f"사용자 투자성향: {user_risk_tier}\n"
+            f"{_profile_context}\n"
             "다음 절차로 3가지 스타일의 포트폴리오를 구성하라:\n\n"
             "1. get_top_direction_signals 툴로 stock 유형 상위 20개 종목을 조회하라.\n"
             "   (asset_type='stock', top_n=20)\n"
@@ -693,6 +729,195 @@ def run_portfolio_recommendation(
         process=Process.sequential,
         verbose=True,
         max_execution_time=300,
+    )
+
+    result = crew.kickoff()
+    return str(result)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 투자성향 맞춤 종목 Top5 추천 (CrewAI 기반)
+# ─────────────────────────────────────────────────────────────────────────────
+
+def run_stock_recommendation(
+    llm: Any,
+    user_risk_tier: str = "위험중립형",
+    user_profile_json: str | None = None,
+) -> str:
+    """
+    방향성 신호(signal_pack) + 재무 데이터(structured_report)를 사용하여
+    투자성향에 맞는 개별 종목 Top5를 추천합니다.
+
+    Returns
+    -------
+    str
+        JSON 객체 문자열 {"items": [...]}
+    """
+    stock_analyst = Agent(
+        role="AI 종목 발굴 애널리스트",
+        goal=(
+            f"{user_risk_tier} 투자자를 위해 방향성 신호와 재무 데이터를 분석하여 "
+            "최적 종목 Top5를 제시한다."
+        ),
+        backstory=(
+            "LightGBM 기반 주가 방향성 모델과 DART 재무 데이터를 결합해 "
+            "투자자 성향에 맞는 개별 종목을 발굴하는 퀀트 애널리스트. "
+            "모멘텀, 재무 건전성, 리스크를 투자성향에 따라 가중하여 최적 종목을 선정한다."
+        ),
+        tools=[
+            get_top_direction_signals,
+            read_stock_direction_signal,
+            read_fin_structured_report,
+        ],
+        llm=llm,
+        verbose=True,
+        allow_delegation=False,
+    )
+
+    # 유저 프로필 컨텍스트 구성
+    _profile_context = ""
+    if user_profile_json:
+        try:
+            import json as _json
+            _p = _json.loads(user_profile_json)
+            _survey = _p.get("survey", {})
+            _label_map = {
+                "INVEST_GOAL": "투자 목적",
+                "TARGET_HORIZON": "목표 시점",
+                "TARGET_AMOUNT": "목표 금액",
+                "CONTRIBUTION_TYPE": "투자 방식",
+                "MAX_HOLDINGS": "최대 보유 종목 수",
+                "DIVIDEND_PREF": "배당 선호도",
+            }
+            _lines = [
+                f"  - {lbl}: {_survey[code]}"
+                for code, lbl in _label_map.items()
+                if _survey.get(code)
+            ]
+            if _lines:
+                _profile_context = "\n사용자 상세 정보:\n" + "\n".join(_lines) + "\n"
+        except Exception:
+            pass
+
+    # 투자성향별 선정 기준
+    _tier_guidance = {
+        "공격투자형":  "p_adj가 가장 높은(상승 확률 최상위) 종목 5개를 우선 선정하라. 재무 리스크는 감수 가능하다.",
+        "적극투자형":  "p_adj 상위 종목 중 재무 데이터가 있으면 overall_grade '양호' 이상 종목을 우선하라.",
+        "위험중립형":  "p_adj와 재무 건전성(overall_grade)을 균형 있게 반영하여 5개를 선정하라.",
+        "안전추구형":  "재무 데이터가 있는 종목 중 overall_grade '우수' 또는 '양호' 종목을 우선하고, p_adj는 참고만 하라.",
+        "안정형":      "재무 '우수' 등급 이상을 최우선. p_adj보다 안정성(낮은 rank_overall 변동)을 중시하라.",
+    }
+    guidance = _tier_guidance.get(user_risk_tier, _tier_guidance["위험중립형"])
+
+    task = Task(
+        description=(
+            f"사용자 투자성향: {user_risk_tier}\n"
+            f"{_profile_context}\n"
+            f"[선정 기준] {guidance}\n\n"
+            "다음 절차로 종목 Top5를 선정하라:\n\n"
+            "1. get_top_direction_signals 툴로 stock 유형 상위 25개 종목을 조회하라.\n"
+            "   (asset_type='stock', top_n=25)\n"
+            "2. 상위 10개 종목에 대해 read_fin_structured_report 툴로 재무 데이터를 조회하라.\n"
+            "   ⚠️ NOT_FOUND 오류가 나도 멈추지 말고, 해당 종목은 ai_fin_grade='정보없음'으로 처리하라.\n"
+            f"3. 위 [선정 기준]에 따라 투자성향 '{user_risk_tier}'에 최적인 종목 5개를 선정하라.\n"
+            "4. 각 종목의 선정 이유(reasons 리스트, 2~3개)와 종합 설명(explanation)을 한국어로 작성하라.\n"
+        ),
+        expected_output=(
+            "반드시 아래 JSON 객체 형식으로만 출력하라. 마크다운 코드블록 없이 JSON만.\n\n"
+            "{\n"
+            '  "items": [\n'
+            '    {\n'
+            '      "rank": 1,\n'
+            '      "ticker": "005930",\n'
+            '      "name": "삼성전자",\n'
+            '      "market": "KOSPI",\n'
+            '      "p_adj": 0.82,\n'
+            '      "rank_overall": 2,\n'
+            '      "ai_fin_grade": "양호",\n'
+            '      "reasons": ["최근 상승 신호 강함", "재무 건전성 우수"],\n'
+            '      "explanation": "종합 설명 1~2문장"\n'
+            '    }\n'
+            '  ]\n'
+            "}\n"
+        ),
+        agent=stock_analyst,
+    )
+
+    crew = Crew(
+        agents=[stock_analyst],
+        tasks=[task],
+        process=Process.sequential,
+        verbose=True,
+        max_execution_time=240,
+    )
+
+    result = crew.kickoff()
+    return str(result)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# MC 모델 선정 결과 설명 전용 에이전트 (선정은 하지 않고 설명만 작성)
+# ─────────────────────────────────────────────────────────────────────────────
+
+def run_mc_explanation_agent(
+    llm: Any,
+    mc_items_json: str,
+    user_risk_tier: str = "위험중립형",
+    mode: str = "stock",  # "stock" | "portfolio"
+) -> str:
+    """
+    몬테카를로 모델이 이미 선정한 종목/포트폴리오에 대해
+    방향성 신호 + 재무 데이터를 조회하여 자연어 설명을 추가합니다.
+
+    ⚠️ 이 에이전트는 선정 결과를 변경하지 않습니다. 설명 텍스트만 반환합니다.
+
+    Returns
+    -------
+    str
+        JSON 배열 문자열 [{"ticker": "005930", "explanation": "..."}, ...]
+    """
+    explainer = Agent(
+        role="AI 퀀트 리포터",
+        goal=(
+            "몬테카를로 모델이 이미 선정한 종목에 대해 LightGBM 방향성 신호와 재무 데이터를 확인하여 "
+            "투자자가 이해할 수 있는 한국어 설명을 작성한다."
+        ),
+        backstory=(
+            "퀀트 모델의 수치 결과를 투자자 친화적인 언어로 해석하는 전문 애널리스트. "
+            "MC 모델이 선정한 종목은 그대로 유지하고, 방향성 신호와 재무 지표를 근거로 "
+            "왜 이 종목이 해당 투자성향에 적합한지 설명한다."
+        ),
+        tools=[read_stock_direction_signal, read_fin_structured_report],
+        llm=llm,
+        verbose=True,
+        allow_delegation=False,
+    )
+
+    task = Task(
+        description=(
+            f"사용자 투자성향: {user_risk_tier}\n\n"
+            f"몬테카를로 모델 선정 결과 (변경 불가):\n{mc_items_json}\n\n"
+            "위 각 종목에 대해 순서대로 수행하라:\n"
+            "1. read_stock_direction_signal 툴로 방향성 신호(p_adj, rank_overall)를 조회하라.\n"
+            "2. read_fin_structured_report 툴로 재무 데이터(overall_grade, 수익성, 안정성)를 조회하라.\n"
+            "   NOT_FOUND여도 멈추지 말고 다음 종목으로 진행하라.\n"
+            "3. MC 결과(p10/p50/p90)와 방향성 신호, 재무 데이터를 종합하여\n"
+            f"   {user_risk_tier} 투자자에게 이 종목이 왜 적합한지 2~3문장으로 설명하라.\n"
+            "⚠️ 종목 목록, 순위, ticker는 절대 변경하지 마라. 설명 텍스트만 작성하라.\n"
+        ),
+        expected_output=(
+            "반드시 아래 JSON 배열 형식으로만 출력하라. 마크다운 코드블록 없이 JSON만.\n\n"
+            '[{"ticker": "005930", "explanation": "설명 2~3문장"}, ...]\n'
+        ),
+        agent=explainer,
+    )
+
+    crew = Crew(
+        agents=[explainer],
+        tasks=[task],
+        process=Process.sequential,
+        verbose=True,
+        max_execution_time=180,
     )
 
     result = crew.kickoff()

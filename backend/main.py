@@ -1,3 +1,6 @@
+import os
+os.environ.setdefault("CREWAI_TELEMETRY_OPT_OUT", "true")  # "Would you like to view your execution traces?" 프롬프트 방지
+
 from fastapi import FastAPI, HTTPException, Query, Depends
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel

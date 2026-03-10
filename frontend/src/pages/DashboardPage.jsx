@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import './DashboardPage.css'
@@ -14,6 +14,7 @@ const DashboardPage = () => {
   const [recStocks, setRecStocks] = useState([])      // 추천 top3 + 실시간 주가
   const [multiPortfolios, setMultiPortfolios] = useState([])  // 3종 포트폴리오
   const [pfRecsUpdatedAt, setPfRecsUpdatedAt] = useState(null)  // last fetch timestamp
+  const [stockRecsUpdatedAt, setStockRecsUpdatedAt] = useState(null)  // 종목 분석 완료 시각
   const [stockRecsLoading, setStockRecsLoading] = useState(false)
   const [pfRecsLoading, setPfRecsLoading] = useState(false)
   const [recRequested, setRecRequested] = useState(false)  // 사용자가 추천 버튼을 누른 적 있는지
@@ -32,15 +33,24 @@ const DashboardPage = () => {
 
   useEffect(() => {
     if (!user?.userId) return
-    // 추천은 사용자가 버튼을 누를 때만 실행 (자동 실행 없음)
+    // 페이지 진입 시 캐시된 추천 결과가 있으면 자동으로 불러옴 (refresh=false)
+    fetchStockRecs(user.userId, false)
+    fetchPortfolioRecs(user.userId, false)
   }, [user])
 
-  // 실시간 주가 SSE 스트림 연결 (종목 로드 완료 후 1회 구독)
-  useEffect(() => {
-    if (instrumentsStocks.length === 0) return
+  // 실시간 주가 SSE 스트림 — instrumentsStocks + recStocks 통합 구독
+  const esRef = useRef(null)
+  const subscribedCodesRef = useRef('')
 
-    const codes = instrumentsStocks.map(s => s.stock_code).join(',')
-    const es = new EventSource(`/api/stream/prices?codes=${codes}`)
+  const connectSSE = useCallback((allCodes) => {
+    const codeStr = allCodes.join(',')
+    if (!codeStr || codeStr === subscribedCodesRef.current) return
+    subscribedCodesRef.current = codeStr
+
+    if (esRef.current) esRef.current.close()
+
+    const es = new EventSource(`/api/stream/prices?codes=${codeStr}`)
+    esRef.current = es
 
     es.onmessage = (e) => {
       try {
@@ -49,13 +59,14 @@ const DashboardPage = () => {
           prev.map(s => {
             const upd = updates[s.stock_code]
             if (!upd) return s
-            return {
-              ...s,
-              current_price: upd.current_price,
-              change:        upd.change,
-              change_rate:   upd.change_rate,
-              volume:        upd.volume,
-            }
+            return { ...s, current_price: upd.current_price, change: upd.change, change_rate: upd.change_rate, volume: upd.volume }
+          })
+        )
+        setRecStocks(prev =>
+          prev.map(s => {
+            const upd = updates[s.stock_code]
+            if (!upd) return s
+            return { ...s, current_price: upd.current_price, change_rate: upd.change_rate, volume: upd.volume }
           })
         )
       } catch (err) {
@@ -66,17 +77,33 @@ const DashboardPage = () => {
     es.onerror = () => {
       console.warn('SSE 연결 오류 — 자동 재연결 대기 중')
     }
+  }, [])
 
-    return () => {
-      es.close()
-    }
-  }, [instrumentsStocks.length])   // 종목 수가 변할 때만 재구독
+  // instrumentsStocks 또는 recStocks가 바뀌면 구독 목록 갱신
+  useEffect(() => {
+    const instCodes = instrumentsStocks.map(s => s.stock_code)
+    const recCodes  = recStocks.map(s => s.stock_code)
+    const merged    = [...new Set([...instCodes, ...recCodes])]
+    if (merged.length === 0) return
+    connectSSE(merged)
+  }, [instrumentsStocks.length, recStocks.length, connectSSE])
+
+  // 언마운트 시 SSE 닫기
+  useEffect(() => {
+    return () => { if (esRef.current) esRef.current.close() }
+  }, [])
 
   const fetchStockRecs = async (userId, refresh = false) => {
     setRecRequested(true)
     setStockRecsLoading(true)
     try {
       const srRes = await fetch(`${API_BASE_URL}/api/dashboard/stock-recommendations?user_id=${userId}&refresh=${refresh}`)
+      if (!srRes.ok) {
+        const detail = await srRes.json().catch(() => ({}))
+        const msg = detail?.detail || `오류 코드: ${srRes.status}`
+        if (refresh) alert(`종목 분석 실패: ${msg}`)
+        return
+      }
       if (srRes.ok) {
         const stockData = await srRes.json()
         const top3 = (stockData.items || []).slice(0, 3)
@@ -105,9 +132,12 @@ const DashboardPage = () => {
             }))
           }
           setRecStocks(newStocks)
+          if (refresh) setStockRecsUpdatedAt(new Date().toISOString())
+          else setStockRecsUpdatedAt(stockData.generated_at || new Date().toISOString())
         }
       }
     } catch (e) {
+      if (refresh) alert('종목 분석 중 오류가 발생했습니다. 다시 시도해주세요.')
       console.warn('종목 추천 fetch 실패:', e)
     } finally {
       setStockRecsLoading(false)
@@ -519,7 +549,17 @@ const DashboardPage = () => {
                 )}
               </div>
             </div>
-            <div className="recommendations-list">
+            {stockRecsUpdatedAt && (
+              <div style={{ padding: '0 16px 6px', color: '#aaa', fontSize: 11 }}>
+                마지막 분석: {new Date(stockRecsUpdatedAt).toLocaleString('ko-KR', { month:'numeric', day:'numeric', hour:'2-digit', minute:'2-digit' })}
+              </div>
+            )}
+            <div className="recommendations-list" style={{ position: 'relative' }}>
+              {stockRecsLoading && recStocks.length > 0 && (
+                <div style={{ position: 'absolute', inset: 0, background: 'rgba(255,255,255,0.7)', display: 'flex', alignItems: 'center', justifyContent: 'center', zIndex: 10, borderRadius: 8 }}>
+                  <span className="dash-analysis-spinner" style={{ width: 20, height: 20, marginRight: 8 }} />분석 중...
+                </div>
+              )}
               {stockRecsLoading && recStocks.length === 0 ? (
                 <div style={{ padding: '16px', color: '#888', textAlign: 'center' }}>종목 분석 중...</div>
               ) : (recStocks.length > 0 ? recStocks : instrumentsStocks.slice(0, 3)).length === 0 ? (
