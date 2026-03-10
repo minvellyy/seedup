@@ -12,6 +12,7 @@ import InvestTypeSurveyPage from './pages/InvestTypeSurveyPage'
 import RecommendationsPage from './pages/RecommendationsPage'
 import StockDetailPage from './pages/StockDetailPage'
 import PortfolioDetailPage from './pages/PortfolioDetailPage'
+import MyPage from './pages/MyPage'
 import './App.css'
 
 function App() {
@@ -31,6 +32,7 @@ function App() {
             <Route path="/recommendations" element={<RecommendationsPage />} />
             <Route path="/stock/:stockCode" element={<StockDetailPage />} />
             <Route path="/portfolio/:portfolioId" element={<PortfolioDetailPage />} />
+            <Route path="/mypage" element={<MyPage />} />
           </Routes>
         </div>
       </AuthProvider>
