@@ -15,6 +15,7 @@ function Header() {
     location.pathname === '/' || 
     location.pathname === '/dashboard' || 
     location.pathname === '/recommendations' ||
+    location.pathname === '/mypage' ||
     location.pathname.startsWith('/stock/') ||
     location.pathname.startsWith('/portfolio/')
   )
