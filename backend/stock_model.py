@@ -97,7 +97,7 @@ def _recommend_db(user_id: int, conn, koscom_score: int = 20) -> "StockRecommend
     placeholders = ",".join(["%s"] * len(iids))
 
     # 3. 최근 2년치 가격 데이터 일괄 조회
-    cutoff = (_date(2026, 3, 3) - _timedelta(days=730)).isoformat()
+    cutoff = (_date.today() - _timedelta(days=730)).isoformat()
     cur.execute(
         f"""
         SELECT instrument_id, price_date, close
@@ -114,7 +114,7 @@ def _recommend_db(user_id: int, conn, koscom_score: int = 20) -> "StockRecommend
         price_hist[r["instrument_id"]].append((r["price_date"], float(r["close"])))
 
     # 4. 지표 계산
-    ref_date = _date(2026, 3, 3)
+    ref_date = _date.today()
 
     def _closest_after(hist, target):
         """target 날짜 이후 첫 번째 종가를 반환(없으면 None)."""
@@ -178,8 +178,18 @@ def _recommend_db(user_id: int, conn, koscom_score: int = 20) -> "StockRecommend
     r1y_n = _rank_norm([s["ret_1y"] for s in scored])
     vol_n = _rank_norm([s["vol_ann"] for s in scored])  # 낮을수록 좋음 → 1-norm
 
+    # 투자성향별 가중치: (w_3m모멘텀, w_1y모멘텀, w_안정성)
+    _SCORING_WEIGHTS = {
+        "공격투자형": (0.50, 0.40, 0.10),
+        "적극투자형": (0.45, 0.40, 0.15),
+        "위험중립형": (0.35, 0.40, 0.25),
+        "안전추구형": (0.20, 0.30, 0.50),
+        "안정형":     (0.15, 0.25, 0.60),
+    }
+    w3m, w1y, wstab = _SCORING_WEIGHTS.get(risk_tier, (0.35, 0.40, 0.25))
+
     for i, s in enumerate(scored):
-        s["total_score"] = 0.35 * r3m_n[i] + 0.40 * r1y_n[i] + 0.25 * (1.0 - vol_n[i])
+        s["total_score"] = w3m * r3m_n[i] + w1y * r1y_n[i] + wstab * (1.0 - vol_n[i])
 
     scored.sort(key=lambda x: x["total_score"], reverse=True)
     top5 = scored[:5]

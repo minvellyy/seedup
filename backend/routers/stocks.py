@@ -20,6 +20,8 @@ _PKG_PATH = os.environ.get("DB_PKG_PATH")
 if _PKG_PATH and _PKG_PATH not in sys.path:
     sys.path.insert(0, os.path.abspath(_PKG_PATH))
 
+import json as _json
+import logging as _logging
 import pymysql
 from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException
@@ -34,6 +36,22 @@ from schemas import (  # noqa: E402
 from stock_model import get_stock_recommendations  # noqa: E402
 
 router = APIRouter(prefix="/stocks", tags=["stocks"])
+
+_CACHE_DIR = _Path(__file__).resolve().parent.parent / "portfolio_cache"
+_logger = _logging.getLogger(__name__)
+
+
+def _save_stock_rec_json(user_id: int, result: StockRecommendationResponse) -> None:
+    """종목 추천 결과를 portfolio_cache/user_{id}_stock_rec.json 에 저장합니다."""
+    try:
+        _CACHE_DIR.mkdir(parents=True, exist_ok=True)
+        path = _CACHE_DIR / f"user_{user_id}_stock_rec.json"
+        path.write_text(
+            _json.dumps(result.model_dump(mode="json"), ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+    except Exception as exc:
+        _logger.warning("종목 추천 JSON 저장 실패 (user_id=%s): %s", user_id, exc)
 
 
 def _get_db_conn():
@@ -68,7 +86,7 @@ def recommend_stocks(
     conn=Depends(_get_db_conn),
 ) -> StockRecommendationResponse:
     try:
-        return get_stock_recommendations(
+        result = get_stock_recommendations(
             user_id=req.user_id,
             conn=conn,
             koscom_score=req.koscom_score,
@@ -77,6 +95,8 @@ def recommend_stocks(
             explain_lang=req.explain_lang,
             explain_style=req.explain_style,
         )
+        _save_stock_rec_json(req.user_id, result)
+        return result
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
@@ -95,11 +115,13 @@ def recommend_stocks_get(
     conn=Depends(_get_db_conn),
 ) -> StockRecommendationResponse:
     try:
-        return get_stock_recommendations(
+        result = get_stock_recommendations(
             user_id=user_id,
             conn=conn,
             koscom_score=koscom_score,
         )
+        _save_stock_rec_json(user_id, result)
+        return result
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:

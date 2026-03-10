@@ -16,6 +16,45 @@ load_dotenv(dotenv_path=Path(__file__).parent.parent / '.env')
 _PF_CACHE_DIR = Path(__file__).parent.parent / "portfolio_cache"
 _PF_CACHE_DIR.mkdir(exist_ok=True)
 
+import logging as _logging
+_cache_logger = _logging.getLogger(__name__)
+
+
+def _json_default(obj):
+    """json.dumps 의 default 핸들러 — numpy/Pydantic/datetime 타입을 안전하게 변환합니다."""
+    # numpy 스칼라 / 배열
+    try:
+        import numpy as _np
+        if isinstance(obj, _np.integer):
+            return int(obj)
+        if isinstance(obj, _np.floating):
+            return float(obj)
+        if isinstance(obj, _np.ndarray):
+            return obj.tolist()
+    except ImportError:
+        pass
+    # datetime / date
+    from datetime import datetime as _dt, date as _d
+    if isinstance(obj, (_dt, _d)):
+        return obj.isoformat()
+    # Pydantic v2 모델
+    if hasattr(obj, "model_dump"):
+        return obj.model_dump(mode="json")
+    # Pydantic v1 모델
+    if hasattr(obj, "dict"):
+        return obj.dict()
+    return str(obj)
+
+
+def _safe_model_dump(obj) -> dict:
+    """Pydantic v1/v2 공통 dict 변환 — mode='json' 으로 JSON 직렬화 가능 보장."""
+    if hasattr(obj, "model_dump"):
+        try:
+            return obj.model_dump(mode="json")
+        except TypeError:
+            return obj.model_dump()
+    return obj.dict()
+
 
 def _pf_cache_path(user_id: int) -> Path:
     return _PF_CACHE_DIR / f"user_{user_id}_portfolio.json"
@@ -37,11 +76,12 @@ def _save_pf_cache(user_id: int, portfolios: list):
     try:
         data = {"saved_at": datetime.utcnow().isoformat(), "portfolios": portfolios}
         _pf_cache_path(user_id).write_text(
-            json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
+            json.dumps(data, ensure_ascii=False, indent=2, default=_json_default),
+            encoding="utf-8",
         )
+        _cache_logger.info("포트폴리오 캐시 저장 완료: user_%s_portfolio.json", user_id)
     except Exception as e:
-        import logging
-        logging.getLogger(__name__).warning("포트폴리오 캐시 저장 실패: %s", e)
+        _cache_logger.warning("포트폴리오 캐시 저장 실패 (user_id=%s): %s", user_id, e)
 
 
 # ── 종목 추천 파일 캐시 ──────────────────────────────────────────────────────────
@@ -65,11 +105,12 @@ def _save_stock_rec_cache(user_id: int, data: dict):
     try:
         payload = {"saved_at": datetime.utcnow().isoformat(), "data": data}
         _stock_rec_cache_path(user_id).write_text(
-            json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
+            json.dumps(payload, ensure_ascii=False, indent=2, default=_json_default),
+            encoding="utf-8",
         )
+        _cache_logger.info("종목 추천 캐시 저장 완료: user_%s_stock_rec.json", user_id)
     except Exception as e:
-        import logging
-        logging.getLogger(__name__).warning("종목 추천 캐시 저장 실패: %s", e)
+        _cache_logger.warning("종목 추천 캐시 저장 실패 (user_id=%s): %s", user_id, e)
 
 
 # ── 종목/포트폴리오 추천 모델 연결 ─────────────────────────────────────────────
@@ -81,6 +122,8 @@ try:
     from stock_model import get_stock_recommendations as _get_stock_rec                      # noqa: E402
     from portfolio_model import get_portfolio_recommendation as _get_portfolio_rec            # noqa: E402
     from portfolio_model import get_multi_portfolio_recommendations as _get_multi_pf_rec     # noqa: E402
+    from portfolio_model import recommend_stock_with_signals as _recommend_stock_mc          # noqa: E402
+    from portfolio_model import get_multi_portfolio_with_signals as _get_multi_pf_mc         # noqa: E402
     from schemas import (                                                                     # noqa: E402
         StockRecommendationResponse as _StockRecResponse,
         PortfolioRecommendationResponse as _PortfolioRecResponse,
@@ -94,6 +137,8 @@ except ImportError as _model_import_err:
 try:
     from manager_agent.crew import run_manager_analysis as _run_manager_analysis  # noqa: E402
     from manager_agent.crew import run_portfolio_recommendation as _run_portfolio_recommendation  # noqa: E402
+    from manager_agent.crew import run_stock_recommendation as _run_stock_recommendation          # noqa: E402
+    from manager_agent.crew import run_mc_explanation_agent as _run_mc_explanation_agent          # noqa: E402
     _CREW_AVAILABLE = True
 except Exception as _crew_err:
     _CREW_AVAILABLE = False
@@ -109,6 +154,52 @@ def _make_analysis_llm():
     except (ImportError, AttributeError):
         from langchain_openai import ChatOpenAI
         return ChatOpenAI(model=model.replace("openai/", ""))
+
+
+def _load_signal_fin_data(top_n: int = 25) -> tuple:
+    """
+    signal_pack_latest.csv와 fin_scores parquet을 직접 로드합니다.
+    Returns: (signal_tickers, fin_scores)
+      signal_tickers: [{ticker, name, market, p_adj, rank_overall}, ...] 상위 top_n
+      fin_scores: {ticker: {overall_grade, overall_score}}
+    """
+    signal_tickers = []
+    fin_scores: dict = {}
+    try:
+        import pandas as pd
+        from config import SIGNAL_PACK_PATH, FIN_MODEL_DIR  # type: ignore
+        from pathlib import Path as _Path
+
+        # signal pack
+        if SIGNAL_PACK_PATH.exists():
+            df = pd.read_csv(SIGNAL_PACK_PATH, dtype={"ticker": str})
+            df_stock = df[df["asset_type"] == "stock"].copy()
+            df_top = df_stock.sort_values("rank_overall").head(top_n)
+            for _, row in df_top.iterrows():
+                signal_tickers.append({
+                    "ticker": str(row["ticker"]).zfill(6),
+                    "name": str(row["name"]) if pd.notna(row.get("name")) else "",
+                    "market": "KOSPI",
+                    "p_adj": float(row["p_adj"]) if pd.notna(row.get("p_adj")) else 0.5,
+                    "rank_overall": int(row["rank_overall"]) if pd.notna(row.get("rank_overall")) else 999,
+                })
+
+        # fin scores parquet
+        parquet_path = _Path(FIN_MODEL_DIR) / "data" / "processed" / "fin_scores_v2_2024_CONSOL_with_mc_with_price.parquet"
+        if parquet_path.exists() and signal_tickers:
+            codes = {s["ticker"] for s in signal_tickers}
+            df_fin = pd.read_parquet(parquet_path)
+            df_sub = df_fin[df_fin["ticker"].astype(str).str.zfill(6).isin(codes)]
+            date_col = "as_of" if "as_of" in df_sub.columns else df_sub.columns[0]
+            for t, grp in df_sub.groupby("ticker"):
+                row = grp.sort_values(date_col).iloc[-1]
+                fin_scores[str(t).zfill(6)] = {
+                    "overall_grade": str(row.get("overall_grade") or "") or None,
+                    "overall_score": float(row["overall_score"]) if pd.notna(row.get("overall_score")) else None,
+                }
+    except Exception:
+        pass
+    return signal_tickers, fin_scores
 
 # OpenAI API 사용 (선택사항)
 try:
@@ -633,37 +724,119 @@ async def get_market_indices():
         raise HTTPException(status_code=502, detail="KIS 지수 조회 실패")
     return results
 
-@router.get("/stock-recommendations", response_model=_StockRecResponse if _MODELS_AVAILABLE else None)
+
+@router.get("/crew-status")
+async def get_crew_status():
+    """CrewAI 로드 상태 진단 엔드포인트."""
+    return {
+        "crew_available": _CREW_AVAILABLE,
+        "crew_error": _CREW_ERR_MSG if not _CREW_AVAILABLE else None,
+        "models_available": _MODELS_AVAILABLE,
+        "models_error": _MODELS_IMPORT_ERR if not _MODELS_AVAILABLE else None,
+        "has_run_stock_recommendation": _CREW_AVAILABLE and callable(globals().get("_run_stock_recommendation")),
+    }
+
+
+@router.get("/stock-recommendations")
 async def get_stock_recommendations_dashboard(
     user_id: int,
     koscom_score: int = 20,
     refresh: bool = False,
     conn=Depends(_get_db_conn_dep),
 ):
-    """사용자 투자성향 기반 종목 Top5 추천 (stock_model 연결).
+    """종목 Top5 추천.
 
-    - refresh=false(기본): 파일 캐시가 있으면 즉시 반환, 없을 때만 모델 실행
-    - refresh=true: 캐시를 무시하고 모델을 새로 실행한 뒤 캐시 갱신
+    실행 흐름:
+      1. Monte Carlo (주 모델) — LightGBM 신호 + 재무등급을 입력 받아 MC로 종목 선정
+      2. CrewAI 설명 에이전트 — 선정된 종목에 대해 방향성/재무 조회 후 설명문 추가
+      3. 폴백 — MC 모델 실패 시 DB 계량 모델 사용
+
+    - refresh=false(기본): 캐시 반환
+    - refresh=true: 재실행 후 캐시 갱신
     """
-    if not _MODELS_AVAILABLE:
-        raise HTTPException(status_code=503, detail=f"모델 로드 실패: {_MODELS_IMPORT_ERR}")
-
-    # ── 파일 캐시 읽기 (refresh=false 일 때만) ──────────────────────────────
+    # ── 파일 캐시 ──────────────────────────────────────────────────────────
     if not refresh:
         cached = _load_stock_rec_cache(user_id)
         if cached and cached.get("data"):
             return cached["data"]
 
+    # ── 사용자 투자성향 조회 ─────────────────────────────────────────────
+    inv_type = "위험중립형"
     try:
-        result = _get_stock_rec(user_id=user_id, conn=conn, koscom_score=koscom_score)
-        # 결과를 JSON 파일로 저장
-        result_dict = result.dict() if hasattr(result, "dict") else result.model_dump()
-        _save_stock_rec_cache(user_id, result_dict)
-        return result
-    except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"종목 추천 모델 오류: {e}")
+        cur = conn.cursor()
+        cur.execute("SELECT investment_type FROM users WHERE id = %s", (user_id,))
+        row = cur.fetchone()
+        if row and row.get("investment_type"):
+            inv_type = row["investment_type"]
+        else:
+            for score, lv in _KOSCOM_TO_INV:
+                if koscom_score >= score:
+                    inv_type = lv
+                    break
+    except Exception:
+        pass
+
+    # ── 1단계: 신호+재무 데이터 직접 로드 (빠름) ─────────────────────────
+    signal_tickers, fin_scores = _load_signal_fin_data(top_n=25)
+    signal_map = {s["ticker"]: s for s in signal_tickers}
+
+    # ── 2단계: Monte Carlo 주 모델로 종목 선정 ────────────────────────────
+    result_dict: dict | None = None
+    if signal_tickers and _MODELS_AVAILABLE:
+        try:
+            mc_rec = await asyncio.to_thread(
+                _recommend_stock_mc,
+                user_id, conn, signal_tickers, fin_scores, koscom_score,
+            )
+            result_dict = _safe_model_dump(mc_rec)
+        except Exception:
+            result_dict = None
+
+    # MC 모델 실패 → DB 계량 폴백
+    if result_dict is None:
+        if not _MODELS_AVAILABLE:
+            raise HTTPException(status_code=503, detail=f"모델 로드 실패: {_MODELS_IMPORT_ERR}")
+        try:
+            fb = await asyncio.to_thread(_get_stock_rec, user_id=user_id, conn=conn, koscom_score=koscom_score)
+            result_dict = _safe_model_dump(fb)
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"종목 추천 오류: {e}")
+
+    # ── 3단계: CrewAI 설명 에이전트 (선정 결과에 설명 추가) ──────────────
+    if _CREW_AVAILABLE and result_dict:
+        try:
+            mc_summary = json.dumps([
+                {
+                    "rank": it["rank"], "ticker": it["ticker"], "name": it["name"],
+                    "mc_p10": it["features"].get("vol_ann"),
+                    "mc_p50": round(float(it["features"].get("ret_1y") or 0) * 100, 1),
+                    "reasons": it.get("reasons", []),
+                }
+                for it in result_dict.get("items", [])
+            ], ensure_ascii=False)
+            llm = _make_analysis_llm()
+            exp_raw = await asyncio.wait_for(
+                asyncio.to_thread(_run_mc_explanation_agent,
+                                  llm=llm,
+                                  mc_items_json=mc_summary,
+                                  user_risk_tier=inv_type,
+                                  mode="stock"),
+                timeout=120.0,
+            )
+            try:
+                exp_list = json.loads(exp_raw) if isinstance(exp_raw, str) else exp_raw
+                if isinstance(exp_list, list):
+                    exp_map = {e["ticker"]: e.get("explanation", "") for e in exp_list if "ticker" in e}
+                    for it in result_dict["items"]:
+                        if it["ticker"] in exp_map and exp_map[it["ticker"]]:
+                            it["explanation"] = exp_map[it["ticker"]]
+            except Exception:
+                pass
+        except (asyncio.TimeoutError, Exception):
+            pass  # 설명 실패해도 MC 결과는 그대로 반환
+
+    _save_stock_rec_cache(user_id, result_dict)
+    return result_dict
 
 
 @router.get("/portfolio-recommendations", response_model=_PortfolioRecResponse if _MODELS_AVAILABLE else None)
@@ -816,12 +989,17 @@ async def get_portfolio_recommendations_ai(
     refresh: bool = False,
     conn=Depends(_get_db_conn_dep),
 ):
-    """CrewAI 기반 포트폴리오 추천.
+    """포트폴리오 추천.
 
-    - refresh=false(기본): 파일 캐시가 있으면 즉시 반환, 없을 때만 CrewAI 실행
-    - refresh=true: 파일 캐시를 무시하고 CrewAI를 새로 실행한 뒤 캐시 갱신
+    실행 흐름:
+      1. Monte Carlo (주 모델) — LightGBM 신호 + 재무등급 부스팅으로 3가지 포트폴리오 구성
+      2. CrewAI 설명 에이전트 — 선정 종목들에 자연어 설명 추가
+      3. 정량 지표 후처리 (_enrich_portfolio_quant_signals)
+
+    - refresh=false(기본): 캐시 반환
+    - refresh=true: 재실행 후 캐시 갱신
     """
-    # ── 파일 캐시 읽기 (refresh=false 일 때만) ──────────────────────────────
+    # ── 파일 캐시 ──────────────────────────────────────────────────────────
     if not refresh:
         cached = _load_pf_cache(user_id)
         if cached:
@@ -831,10 +1009,7 @@ async def get_portfolio_recommendations_ai(
                     pf["_cached_at"] = cached.get("saved_at")
                 return portfolios
 
-    if not _CREW_AVAILABLE:
-        raise HTTPException(status_code=503, detail=f"CrewAI 사용 불가: {_CREW_ERR_MSG}")
-
-    # 사용자 투자성향 조회
+    # ── 사용자 투자성향 ───────────────────────────────────────────────────
     inv_type = "위험중립형"
     try:
         cur = conn.cursor()
@@ -850,41 +1025,112 @@ async def get_portfolio_recommendations_ai(
     except Exception:
         pass
 
+    if not _MODELS_AVAILABLE:
+        raise HTTPException(status_code=503, detail=f"모델 로드 실패: {_MODELS_IMPORT_ERR}")
+
+    # ── 1단계: 신호+재무 데이터 직접 로드 ────────────────────────────────
+    signal_tickers, fin_scores = _load_signal_fin_data(top_n=25)
+    signal_map = {s["ticker"]: s for s in signal_tickers}
+    fin_map = {
+        ticker: {
+            "overall_grade": d.get("overall_grade"),
+            "overall_score": d.get("overall_score"),
+        }
+        for ticker, d in fin_scores.items()
+    }
+
+    # ── 2단계: Monte Carlo 주 모델로 3가지 포트폴리오 구성 ────────────────
     try:
-        llm = _make_analysis_llm()
-        # 동기 CrewAI 호출을 스레드 풀로 오프로드 (최대 180초 타임아웃)
-        try:
-            raw = await asyncio.wait_for(
-                asyncio.to_thread(_run_portfolio_recommendation, llm=llm, user_risk_tier=inv_type),
-                timeout=180.0,
-            )
-        except asyncio.TimeoutError:
-            raise HTTPException(status_code=504, detail="포트폴리오 AI 분석 타임아웃 (180초 초과). 잠시 후 다시 시도해주세요.")
-
-        # JSON 파싱 (LLM이 마크다운 코드블록으로 감쌀 경우 추출)
-        try:
-            portfolios = json.loads(raw) if isinstance(raw, str) else raw
-        except (json.JSONDecodeError, TypeError):
-            import re
-            m = re.search(r'\[[\s\S]+\]', raw or "")
-            portfolios = json.loads(m.group()) if m else []
-
-        if not isinstance(portfolios, list):
-            raise ValueError(f"Expected list, got {type(portfolios).__name__}: {str(portfolios)[:200]}")
-
-        # risk_tier 기본값 보완
-        for pf in portfolios:
-            pf.setdefault("risk_tier", inv_type)
-
-        # 단기 방향성·기대수익률·리스크 정량 지표 후처리 추가
-        portfolios = _enrich_portfolio_quant_signals(portfolios)
-
-        # ── 파일 캐시 저장 ──────────────────────────────────────────────────
-        _save_pf_cache(user_id, portfolios)
-
-        return portfolios
+        pf_results: list = await asyncio.to_thread(
+            _get_multi_pf_mc,
+            user_id, conn,
+            signal_map=signal_map,
+            fin_map=fin_map,
+        )
     except Exception as e:
-        raise HTTPException(status_code=500, detail=f"포트폴리오 AI 추천 오류: {e}")
+        raise HTTPException(status_code=500, detail=f"포트폴리오 MC 모델 오류: {e}")
+
+    # ── PortfolioRecommendationResponse → 프런트엔드 dict 변환 ────────────
+    _STYLE_MAP = {
+        "balanced": "균형 추천형",
+        "aggressive": "공격 성장형",
+        "conservative": "안전 추구형",
+    }
+    portfolios: list[dict] = []
+    for pf in pf_results:
+        pf_d = _safe_model_dump(pf)
+        sty = pf_d.get("portfolio_style", "balanced")
+        mc = pf_d.get("monte_carlo_1y") or {}
+        mc_summary = ""
+        if mc:
+            mc_summary = (
+                f"MC 1년 기대수익률: 하락 시나리오(P10) {mc.get('p10_pct', 0):+.1f}%, "
+                f"중앙값(P50) {mc.get('p50_pct', 0):+.1f}%, "
+                f"상승 시나리오(P90) {mc.get('p90_pct', 0):+.1f}%. "
+                f"기대수익률 {mc.get('mean_pct', 0):+.1f}%, 연간변동성 {mc.get('vol_ann_pct', 0):.1f}%."
+            )
+        portfolios.append({
+            "portfolio_label": pf_d.get("portfolio_label", _STYLE_MAP.get(sty, sty)),
+            "portfolio_style": sty,
+            "portfolio_summary": mc_summary or pf_d.get("portfolio_summary", ""),
+            "risk_tier": inv_type,
+            "portfolio_items": [
+                {
+                    "ticker": it.get("ticker", ""),
+                    "name": it.get("name", ""),
+                    "weight": it.get("weight", 0),
+                    "weight_pct": it.get("weight_pct", 0),
+                    "asset_type": it.get("asset_type", "STOCK"),
+                    "selection_reason": it.get("selection_reason") or it.get("explanation", ""),
+                    "ai_fin_grade": fin_map.get(it.get("ticker", ""), {}).get("overall_grade"),
+                    "ai_strengths": [],
+                    "ai_weaknesses": [],
+                }
+                for it in pf_d.get("portfolio_items", [])
+            ],
+            "monte_carlo_1y": mc,
+        })
+
+    # ── 3단계: CrewAI 설명 에이전트 (선정 종목 설명 보강) ────────────────
+    if _CREW_AVAILABLE and portfolios:
+        try:
+            all_tickers = list({
+                it["ticker"]
+                for pf in portfolios
+                for it in pf["portfolio_items"]
+            })
+            mc_items_for_exp = json.dumps([
+                {"ticker": t, "name": signal_map.get(t, {}).get("name", "")}
+                for t in all_tickers
+            ], ensure_ascii=False)
+            llm = _make_analysis_llm()
+            exp_raw = await asyncio.wait_for(
+                asyncio.to_thread(_run_mc_explanation_agent,
+                                  llm=llm,
+                                  mc_items_json=mc_items_for_exp,
+                                  user_risk_tier=inv_type,
+                                  mode="portfolio"),
+                timeout=120.0,
+            )
+            try:
+                exp_list = json.loads(exp_raw) if isinstance(exp_raw, str) else exp_raw
+                if isinstance(exp_list, list):
+                    exp_map = {e["ticker"]: e.get("explanation", "") for e in exp_list if "ticker" in e}
+                    for pf in portfolios:
+                        for it in pf["portfolio_items"]:
+                            t = it["ticker"]
+                            if t in exp_map and exp_map[t]:
+                                it["selection_reason"] = exp_map[t]
+            except Exception:
+                pass
+        except (asyncio.TimeoutError, Exception):
+            pass  # 설명 실패해도 MC 포트폴리오 결과 반환
+
+    # ── 4단계: 정량 지표 후처리 ──────────────────────────────────────────
+    portfolios = _enrich_portfolio_quant_signals(portfolios)
+
+    _save_pf_cache(user_id, portfolios)
+    return portfolios
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -979,3 +1225,156 @@ async def portfolio_ai_enrich(req: PortfolioAiEnrichRequest):
             results[t] = data
 
     return results
+
+
+# ── 포트폴리오 리스크 자연어 분석 ─────────────────────────────────────────────
+
+class PortfolioRiskItem(BaseModel):
+    ticker: str
+    name: str
+
+
+class PortfolioRiskRequest(BaseModel):
+    items: List[PortfolioRiskItem]
+    risk_tier: str = ""
+
+
+@router.post("/portfolio-risk-analysis")
+async def portfolio_risk_analysis(req: PortfolioRiskRequest):
+    """포트폴리오 편입 종목들의 리스크를 뉴스 RAG + LLM으로 자연어 분석합니다.
+
+    뉴스 RAG(ChromaDB)에서 각 종목의 리스크 관련 뉴스를 검색하고,
+    LLM이 전체 포트폴리오 리스크 요약 및 종목별 리스크를 한국어 자연어로 작성합니다.
+
+    Returns:
+        {
+          "risk_summary": str,           // 전체 포트폴리오 리스크 2-3문장 요약
+          "per_stock": [                  // 종목별 리스크 설명
+            {"ticker": str, "name": str, "risk_text": str}
+          ]
+        }
+    """
+    if not _CREW_AVAILABLE:
+        raise HTTPException(
+            status_code=503,
+            detail=f"CrewAI 매니저 에이전트를 사용할 수 없습니다: {_CREW_ERR_MSG}",
+        )
+
+    from crewai import Agent, Task, Crew
+    from concurrent.futures import ThreadPoolExecutor
+
+    items = req.items[:10]  # 최대 10개
+    risk_tier_label = f" ({req.risk_tier})" if req.risk_tier else ""
+
+    # ── 각 종목에 대한 뉴스 컨텍스트 수집 ──────────────────────────────────────
+    news_contexts: dict = {}
+    try:
+        from news_model.pipeline_news_analysis_mvp import search_news_context
+
+        def _fetch_news(item: PortfolioRiskItem):
+            query = f"{item.name} 리스크 위험 요인 시장 환경"
+            results = search_news_context(query, n_results=4)
+            snippets = []
+            for r in results:
+                doc = r.get("doc", "")
+                if doc:
+                    snippets.append(doc[:300])
+            return item.ticker, "\n".join(snippets) if snippets else "관련 뉴스 없음"
+
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            for ticker, ctx in pool.map(_fetch_news, items):
+                news_contexts[ticker] = ctx
+    except Exception as e:
+        _cache_logger.warning("뉴스 컨텍스트 수집 실패: %s", e)
+        for item in items:
+            news_contexts[item.ticker] = "뉴스 데이터를 불러올 수 없습니다."
+
+    # ── LLM 프롬프트용 뉴스 텍스트 구성 ─────────────────────────────────────────
+    news_block = ""
+    for item in items:
+        ctx = news_contexts.get(item.ticker, "관련 뉴스 없음")
+        news_block += (
+            f"\n## {item.name} ({item.ticker})\n"
+            f"{ctx}\n"
+        )
+
+    ticker_names = ", ".join(f"{item.name}({item.ticker})" for item in items)
+
+    # ── CrewAI 에이전트로 자연어 리스크 분석 ────────────────────────────────────
+    llm = _make_analysis_llm()
+    from crewai import Agent, Task, Crew
+
+    risk_analyst = Agent(
+        role="포트폴리오 리스크 분석 전문가",
+        goal=(
+            "포트폴리오에 편입된 종목들의 뉴스 데이터를 바탕으로 "
+            "투자자가 이해하기 쉬운 자연어 리스크 분석을 제공한다."
+        ),
+        backstory=(
+            "CFA 자격증을 보유한 리스크 전문가로, 뉴스와 시장 동향에서 "
+            "기업별 핵심 리스크를 추출하고 일반 투자자에게 쉽게 설명하는 데 특화되어 있다. "
+            "전문 용어 없이 누구나 이해할 수 있는 명확한 언어로 리스크를 전달한다."
+        ),
+        llm=llm,
+        verbose=False,
+        allow_delegation=False,
+    )
+
+    task_desc = (
+        f"다음 포트폴리오{risk_tier_label}에 편입된 종목들의 리스크를 분석하라.\n\n"
+        f"포트폴리오 종목: {ticker_names}\n\n"
+        f"[종목별 뉴스 컨텍스트]\n{news_block}\n\n"
+        "분석 지침:\n"
+        "1. 각 종목별로 뉴스 컨텍스트에서 주요 리스크 요인을 1-2문장으로 파악하라.\n"
+        "2. 전체 포트폴리오의 공통 리스크 테마(예: 환율, 금리, 글로벌 수요 등)를 파악하라.\n"
+        "3. 전문 용어는 쉽게 풀어서 설명하라.\n"
+        "4. 뉴스가 없으면 종목 일반 특성 기반으로 대략적 리스크를 언급하라.\n\n"
+        "반드시 아래 JSON 형식으로만 응답하라. 추가 설명 없이 JSON만 출력하라:\n"
+        "{\n"
+        '  "risk_summary": "전체 포트폴리오 리스크를 2-3문장으로 요약한 한국어 텍스트",\n'
+        '  "per_stock": [\n'
+        '    {"ticker": "종목코드", "name": "종목명", "risk_text": "해당 종목 리스크 1-2문장 한국어 설명"},\n'
+        "    ...\n"
+        "  ]\n"
+        "}"
+    )
+
+    task = Task(
+        description=task_desc,
+        expected_output=(
+            "포트폴리오 전체 리스크 요약과 종목별 리스크 설명이 담긴 JSON 문자열. "
+            "risk_summary(str)와 per_stock(list) 필드를 포함해야 한다."
+        ),
+        agent=risk_analyst,
+    )
+
+    crew = Crew(agents=[risk_analyst], tasks=[task], verbose=False)
+    raw = crew.kickoff()
+    raw_str = str(raw) if not isinstance(raw, str) else raw
+
+    # JSON 파싱
+    try:
+        import re as _re
+        m = _re.search(r'\{[\s\S]+\}', raw_str)
+        parsed = json.loads(m.group()) if m else {}
+    except (json.JSONDecodeError, AttributeError):
+        parsed = {}
+
+    # 파싱 실패 시 기본값
+    risk_summary = parsed.get("risk_summary") or raw_str[:500]
+    per_stock_raw = parsed.get("per_stock", [])
+
+    # 빠진 종목 보완
+    per_stock_tickers = {p.get("ticker") for p in per_stock_raw}
+    for item in items:
+        if item.ticker not in per_stock_tickers:
+            per_stock_raw.append({
+                "ticker": item.ticker,
+                "name": item.name,
+                "risk_text": "분석 데이터가 부족합니다.",
+            })
+
+    return {
+        "risk_summary": risk_summary,
+        "per_stock": per_stock_raw,
+    }

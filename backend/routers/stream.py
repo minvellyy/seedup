@@ -68,6 +68,24 @@ async def _price_event_generator(codes: list[str]) -> AsyncGenerator[str, None]:
         logger.debug("SSE 클라이언트 연결 종료")
 
 
+@router.get("/ws-status")
+async def ws_status():
+    """KIS WebSocket 연결 상태 확인용 디버그 엔드포인트."""
+    from kis_ws_client import get_manager, get_price_store
+    manager = get_manager()
+    store = get_price_store()
+    if manager is None:
+        return {"initialized": False}
+    return {
+        "initialized": True,
+        "running": manager._running,
+        "subscribed": sorted(manager._subscribed),
+        "pending": sorted(getattr(manager, "_pending_subscribe", set())),
+        "price_store_count": len(store),
+        "price_store_sample": {k: v for k, v in list(store.items())[:5]},
+    }
+
+
 @router.get("/prices")
 async def stream_prices(codes: str = ""):
     """실시간 주가 SSE 스트림.

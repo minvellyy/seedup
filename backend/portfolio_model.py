@@ -5,6 +5,7 @@ import sys
 import os
 from datetime import datetime, timedelta
 from typing import Any, Dict, List, Optional
+import numpy as _np
 
 # ── sys.path 설정 ─────────────────────────────────────────────────────────────
 _HERE = os.path.dirname(os.path.abspath(__file__))          # backend/
@@ -91,6 +92,8 @@ def _recommend_portfolio_db(
     total_assets_override: Optional[int] = None,
     scoring_style: str = "balanced",
     portfolio_label: str = "",
+    signal_map: Optional[dict] = None,   # {ticker: {p_adj, rank_overall}} - LightGBM 신호
+    fin_map: Optional[dict] = None,      # {ticker: {overall_grade}} - 재무 등급
 ) -> "PortfolioRecommendationResponse":
     """core 패키지 없이 DB 데이터만으로 포트폴리오를 구성합니다."""
     cur = conn.cursor()
@@ -150,7 +153,7 @@ def _recommend_portfolio_db(
 
 
     # ── 3. 가격 데이터 로딩 ───────────────────────────────────────────────
-    ref_date = _date(2026, 3, 3)
+    ref_date = _date.today()
     cutoff_3y = (ref_date - _timedelta(days=365 * 3 + 30)).isoformat()
 
     target_items = list(stocks) + list(etfs)
@@ -209,8 +212,21 @@ def _recommend_portfolio_db(
         r1 = _rn([b["ret_1y"] for b in buf])
         vl = _rn([b["vol_ann"] for b in buf])
         w3m, w1y, wvol = _SCORING_WEIGHTS.get(scoring_style, (0.35, 0.40, 0.25))
+        _FIN_GRADE_BOOST = {"우수": 0.08, "양호": 0.04, "보통": 0.0, "주의": -0.04}
         for i, b in enumerate(buf):
-            b["score"] = w3m * r3[i] + w1y * r1[i] + wvol * (1.0 - vl[i])
+            base = w3m * r3[i] + w1y * r1[i] + wvol * (1.0 - vl[i])
+            t = b["stock_code"]
+            # LightGBM 방향성 신호 보정 (보조)
+            sig_boost = 0.0
+            if signal_map and t in signal_map:
+                sig_boost = 0.10 * float(signal_map[t].get("p_adj", 0.5))
+            # 재무등급 보정 (보조)
+            fin_boost = 0.0
+            if fin_map and t in fin_map:
+                fin_boost = _FIN_GRADE_BOOST.get(fin_map[t].get("overall_grade"), 0.0)
+            b["score"] = base + sig_boost + fin_boost
+            b["p_adj"] = signal_map[t].get("p_adj") if signal_map and t in signal_map else None
+            b["fin_grade"] = fin_map[t].get("overall_grade") if fin_map and t in fin_map else None
         buf.sort(key=lambda x: x["score"], reverse=True)
         return buf[:top_n]
 
@@ -345,19 +361,16 @@ def _recommend_portfolio_db(
     if perf_metrics:
         mu = (perf_metrics.ann_return_pct / 100) / 252
         sigma = (perf_metrics.ann_vol_pct / 100) / _math.sqrt(252)
-        _random.seed(42)
-        sims = []
-        for _ in range(2000):
-            v = 1.0
-            for _ in range(252):
-                v *= (1 + _random.gauss(mu, sigma))
-            sims.append((v - 1) * 100)
-        sims.sort()
-        p10 = sims[int(0.10 * len(sims))]
-        p50 = sims[int(0.50 * len(sims))]
-        p90 = sims[int(0.90 * len(sims))]
+        _N_MC = 1_000_000
+        _rng = _np.random.default_rng(42)
+        # GBM 닫힌형: exp((μ-½σ²)·T + σ·√T·Z) - 1  (Z ~ N(0,1))
+        finals = (
+            _np.exp((mu - 0.5 * sigma**2) * 252
+                    + sigma * _np.sqrt(252) * _rng.standard_normal(_N_MC)) - 1
+        ) * 100
+        p10, p50, p90 = _np.percentile(finals, [10, 50, 90])
         mc_result = MonteCarloResult(
-            n_simulations=2000, horizon_days=252,
+            n_simulations=_N_MC, horizon_days=252,
             p10_pct=round(p10, 1), p50_pct=round(p50, 1), p90_pct=round(p90, 1),
             interpretation=(
                 f"1년 후 기대 수익률(중앙값) {p50:.1f}%, "
@@ -832,3 +845,196 @@ def get_multi_portfolio_recommendations(
         )
         results.append(pf)
     return results
+
+
+def get_multi_portfolio_with_signals(
+    user_id: int,
+    conn,
+    *,
+    koscom_score: int = 20,
+    total_assets_override: Optional[int] = None,
+    signal_map: Optional[dict] = None,
+    fin_map: Optional[dict] = None,
+) -> List[PortfolioRecommendationResponse]:
+    """LightGBM 신호 + 재무등급을 보조 근거로 사용하는 MC 포트폴리오 추천 (3가지 스타일)."""
+    results = []
+    for scoring_style in _MULTI_STYLES:
+        pf = _recommend_portfolio_db(
+            user_id=user_id,
+            conn=conn,
+            koscom_score=koscom_score,
+            total_assets_override=total_assets_override,
+            scoring_style=scoring_style,
+            signal_map=signal_map,
+            fin_map=fin_map,
+        )
+        results.append(pf)
+    return results
+
+
+def recommend_stock_with_signals(
+    user_id: int,
+    conn,
+    signal_tickers: list,
+    fin_scores: Optional[dict] = None,
+    koscom_score: int = 20,
+    top_n: int = 5,
+) -> "StockRecommendationResponse":
+    """
+    LightGBM 방향성 신호 종목을 후보로, 몬테카를로 시뮬레이션으로 최종 종목을 선정합니다.
+
+    선정 기준: MC 1년 기대수익률(주) + LightGBM p_adj(보조) + 재무등급(보조)
+    투자성향에 따라 세 가중치를 조정합니다.
+    """
+    from schemas import StockItem, StockFeatures, StockRecommendationResponse
+
+    cur = conn.cursor()
+
+    # 1. 사용자 투자성향
+    cur.execute("SELECT investment_type FROM users WHERE id = %s", (user_id,))
+    row = cur.fetchone()
+    if not row:
+        raise ValueError(f"user_id={user_id} 를 찾을 수 없습니다.")
+    inv_type = row.get("investment_type") or _koscom_to_inv_type(koscom_score)
+    risk_tier, risk_grade, _, _ = _RISK_MAP_PF.get(inv_type, ("위험중립형", "3등급", 0.7, 0.3))
+
+    if not signal_tickers:
+        raise ValueError("방향성 신호 종목 목록이 비어 있습니다.")
+
+    tickers_list = [s["ticker"] for s in signal_tickers]
+    sig_map = {s["ticker"]: s for s in signal_tickers}
+
+    # 2. DB에서 instrument_id 조회
+    ph = ",".join(["%s"] * len(tickers_list))
+    cur.execute(f"SELECT stock_code, instrument_id FROM instruments WHERE stock_code IN ({ph})", tickers_list)
+    iid_map = {r["stock_code"]: r["instrument_id"] for r in cur.fetchall()}
+    if not iid_map:
+        raise ValueError("DB에서 일치하는 종목을 찾을 수 없습니다.")
+
+    iids = list(iid_map.values())
+    iid_to_code = {v: k for k, v in iid_map.items()}
+    ref_dt = _date.today()
+    cutoff = (ref_dt - _timedelta(days=730)).isoformat()
+    ph2 = ",".join(["%s"] * len(iids))
+    cur.execute(
+        f"""
+        SELECT instrument_id, close
+        FROM market_prices
+        WHERE instrument_id IN ({ph2})
+          AND price_date >= %s AND close > 0
+        ORDER BY instrument_id, price_date
+        """,
+        iids + [cutoff],
+    )
+    price_hist: dict = _defaultdict(list)
+    for r in cur.fetchall():
+        code = iid_to_code.get(r["instrument_id"])
+        if code:
+            price_hist[code].append(float(r["close"]))
+
+    # 3. 투자성향별 가중치 (MC비중, 신호비중, 재무비중)
+    _W = {
+        "공격투자형": (0.55, 0.35, 0.10),
+        "적극투자형": (0.50, 0.30, 0.20),
+        "위험중립형": (0.40, 0.25, 0.35),
+        "안전추구형": (0.30, 0.20, 0.50),
+        "안정형":     (0.25, 0.15, 0.60),
+    }
+    w_mc, w_sig, w_fin = _W.get(risk_tier, (0.40, 0.25, 0.35))
+    # 보수 성향 → 하락(p10) 중시, 공격 성향 → 상승(p90) 중시
+    mc_key = "p10" if risk_tier in ("안전추구형", "안정형") else (
+        "p90" if risk_tier in ("공격투자형", "적극투자형") else "p50"
+    )
+    _FIN_GRADE_SCORE = {"우수": 1.0, "양호": 0.75, "보통": 0.50, "주의": 0.25}
+
+    # 4. 종목별 몬테카를로 시뮬레이션 (1,000,000경로 × GBM 닫힌형)
+    _N_MC = 1_000_000
+    _rng = _np.random.default_rng(42)
+    candidates = []
+    for ticker, closes in price_hist.items():
+        if len(closes) < 60:
+            continue
+        rets = [closes[i] / closes[i - 1] - 1 for i in range(1, len(closes))]
+        mu_d = sum(rets) / len(rets)
+        var_d = sum((r - mu_d) ** 2 for r in rets) / max(len(rets) - 1, 1)
+        sigma_d = _math.sqrt(var_d)
+
+        # GBM 닫힌형: exp((μ-½σ²)·252 + σ·√252·Z) - 1  (Z ~ N(0,1))
+        finals = (
+            _np.exp((mu_d - 0.5 * sigma_d**2) * 252
+                    + sigma_d * _np.sqrt(252) * _rng.standard_normal(_N_MC)) - 1
+        ) * 100
+        mc_p10, mc_p50, mc_p90 = _np.percentile(finals, [10, 50, 90])
+        mc_val = mc_p10 if mc_key == "p10" else (mc_p90 if mc_key == "p90" else mc_p50)
+
+        sig = sig_map.get(ticker, {})
+        fin = (fin_scores or {}).get(ticker, {})
+        fin_grade = fin.get("overall_grade")
+        candidates.append({
+            "ticker": ticker,
+            "name": sig.get("name", ""),
+            "market": sig.get("market", "KOSPI"),
+            "p_adj": float(sig.get("p_adj", 0.5)),
+            "rank_overall": int(sig.get("rank_overall", 999)),
+            "mc_p10": mc_p10, "mc_p50": mc_p50, "mc_p90": mc_p90, "mc_val": mc_val,
+            "ann_vol": sigma_d * _math.sqrt(252) * 100,
+            "ann_return": mu_d * 252 * 100,
+            "fin_grade": fin_grade,
+            "fin_score": _FIN_GRADE_SCORE.get(fin_grade, 0.50),
+        })
+
+    if not candidates:
+        raise ValueError("몬테카를로 시뮬레이션을 위한 충분한 가격 데이터가 없습니다.")
+
+    # 5. 정규화 후 종합 점수
+    def _rn(vals):
+        idxd = [(i, v) for i, v in enumerate(vals) if v is not None]
+        if len(idxd) < 2:
+            return [0.5] * len(vals)
+        srt = sorted(idxd, key=lambda x: x[1])
+        rm = {i: r / (len(srt) - 1) for r, (i, _) in enumerate(srt)}
+        return [rm.get(i, 0.5) for i in range(len(vals))]
+
+    mc_n  = _rn([c["mc_val"] for c in candidates])
+    sig_n = _rn([c["p_adj"]  for c in candidates])
+    for i, c in enumerate(candidates):
+        c["total_score"] = w_mc * mc_n[i] + w_sig * sig_n[i] + w_fin * c["fin_score"]
+    candidates.sort(key=lambda x: x["total_score"], reverse=True)
+    top = candidates[:top_n]
+
+    # 6. 응답 생성
+    mc_label = {"p10": "하락방어(10%)", "p50": "중앙값(50%)", "p90": "상승(90%)"}
+    items = []
+    for rank, c in enumerate(top, 1):
+        items.append(StockItem(
+            rank=rank,
+            ticker=c["ticker"],
+            name=c["name"],
+            market=c["market"],
+            total_score=round(c["total_score"], 4),
+            reasons=[
+                f"MC 1년 기대수익률({mc_label[mc_key]}) {c['mc_val']:+.1f}%",
+                f"LightGBM 상승확률 {c['p_adj']*100:.0f}% (전체 {c['rank_overall']}위)",
+                f"재무등급 {c['fin_grade'] or '정보없음'}",
+            ],
+            features=StockFeatures(
+                ret_3m=None, ret_6m=None,
+                ret_1y=round(c["mc_p50"] / 100, 4),
+                vol_ann=round(c["ann_vol"] / 100, 4),
+                beta=None, mdd=None,
+            ),
+            explanation=(
+                f"몬테카를로 시뮬레이션(2,000경로) 1년 기대수익률: "
+                f"하락(10%) {c['mc_p10']:+.1f}% / 중앙값 {c['mc_p50']:+.1f}% / 상승(90%) {c['mc_p90']:+.1f}%. "
+                f"LightGBM 방향성 모델 전체 {c['rank_overall']}위 (상승확률 {c['p_adj']*100:.0f}%). "
+                f"재무등급 {c['fin_grade'] or '정보없음'}."
+            ),
+        ))
+
+    return StockRecommendationResponse(
+        user_id=user_id,
+        risk_tier=risk_tier,
+        risk_grade=risk_grade,
+        generated_at=datetime.now().isoformat()[:19],
+        items=items,
+    )

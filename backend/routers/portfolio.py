@@ -22,6 +22,7 @@ if _PKG_PATH and _PKG_PATH not in sys.path:
 
 import pymysql
 import json as _json
+import logging as _logging
 from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -39,6 +40,27 @@ router = APIRouter(prefix="/portfolio", tags=["portfolio"])
 # ─── 캐시 전략 키 (portfolio_recommendations.strategy_name) ───────────────────
 _MULTI_CACHE_KEYS = ['pf_balanced', 'pf_momentum', 'pf_lowvol']
 _CACHE_TTL_MINUTES = 60
+_CACHE_DIR = _Path(__file__).resolve().parent.parent / "portfolio_cache"
+_logger = _logging.getLogger(__name__)
+
+
+def _save_portfolio_json(user_id: int, result) -> None:
+    """portfolio_cache/user_{id}_portfolio.json 에 저장합니다.
+    result는 PortfolioRecommendationResponse 또는 list[PortfolioRecommendationResponse]입니다.
+    """
+    try:
+        _CACHE_DIR.mkdir(parents=True, exist_ok=True)
+        path = _CACHE_DIR / f"user_{user_id}_portfolio.json"
+        if isinstance(result, list):
+            data = [r.model_dump(mode="json") for r in result]
+        else:
+            data = result.model_dump(mode="json")
+        path.write_text(
+            _json.dumps(data, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+    except Exception as exc:
+        _logger.warning("포트폴리오 JSON 저장 실패 (user_id=%s): %s", user_id, exc)
 
 
 def _get_db_conn():
@@ -125,7 +147,7 @@ def recommend_portfolio(
     conn=Depends(_get_db_conn),
 ) -> PortfolioRecommendationResponse:
     try:
-        return get_portfolio_recommendation(
+        result = get_portfolio_recommendation(
             user_id=req.user_id,
             conn=conn,
             koscom_score=req.koscom_score,
@@ -135,6 +157,8 @@ def recommend_portfolio(
             explain_lang=req.explain_lang,
             explain_style=req.explain_style,
         )
+        _save_portfolio_json(req.user_id, result)
+        return result
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
@@ -155,13 +179,15 @@ def recommend_portfolio_get(
     conn=Depends(_get_db_conn),
 ) -> PortfolioRecommendationResponse:
     try:
-        return get_portfolio_recommendation(
+        result = get_portfolio_recommendation(
             user_id=user_id,
             conn=conn,
             koscom_score=koscom_score,
             monthly_override=monthly_override,
             total_assets_override=total_assets_override,
         )
+        _save_portfolio_json(user_id, result)
+        return result
     except ValueError as e:
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
@@ -205,5 +231,8 @@ def recommend_portfolio_multi_get(
         # 캐시 저장 실패는 응답을 막지 않음
         import logging
         logging.getLogger(__name__).warning("포트폴리오 캐시 저장 실패: %s", e)
+
+    # ── 4. JSON 파일 저장 ─────────────────────────────────────────────────
+    _save_portfolio_json(user_id, result)
 
     return result

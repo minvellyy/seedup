@@ -57,5 +57,9 @@ UNSTRUCTURED_MODEL_DIR: Path = Path(
     os.getenv("UNSTRUCTURED_MODEL_DIR", str(CREWAI_ROOT / "unstructured_model"))
 )
 
+NEWS_MODEL_DIR: Path = Path(
+    os.getenv("NEWS_MODEL_DIR", str(CREWAI_ROOT / "news_model"))
+)
+
 # WORKSPACE_ROOT: 하위 호환성 (manager_agent 내부에서 참조)
 WORKSPACE_ROOT: Path = CREWAI_ROOT
