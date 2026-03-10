@@ -1,14 +1,114 @@
-from fastapi import APIRouter, HTTPException
+from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from typing import Dict, Any, List, Optional
 from datetime import datetime, timedelta
+import asyncio
 import json
 import os
+import sys
 import pymysql
 from pathlib import Path
 from dotenv import load_dotenv
 
 load_dotenv(dotenv_path=Path(__file__).parent.parent / '.env')
+
+# ── 포트폴리오 파일 캐시 경로 ───────────────────────────────────────────────────
+_PF_CACHE_DIR = Path(__file__).parent.parent / "portfolio_cache"
+_PF_CACHE_DIR.mkdir(exist_ok=True)
+
+
+def _pf_cache_path(user_id: int) -> Path:
+    return _PF_CACHE_DIR / f"user_{user_id}_portfolio.json"
+
+
+def _load_pf_cache(user_id: int):
+    """파일 캐시에서 포트폴리오를 읽어 반환합니다. 없으면 None."""
+    p = _pf_cache_path(user_id)
+    if p.exists():
+        try:
+            return json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return None
+
+
+def _save_pf_cache(user_id: int, portfolios: list):
+    """포트폴리오를 파일 캐시에 저장합니다."""
+    try:
+        data = {"saved_at": datetime.utcnow().isoformat(), "portfolios": portfolios}
+        _pf_cache_path(user_id).write_text(
+            json.dumps(data, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).warning("포트폴리오 캐시 저장 실패: %s", e)
+
+
+# ── 종목 추천 파일 캐시 ──────────────────────────────────────────────────────────
+def _stock_rec_cache_path(user_id: int) -> Path:
+    return _PF_CACHE_DIR / f"user_{user_id}_stock_rec.json"
+
+
+def _load_stock_rec_cache(user_id: int):
+    """파일 캐시에서 종목 추천을 읽어 반환합니다. 없으면 None."""
+    p = _stock_rec_cache_path(user_id)
+    if p.exists():
+        try:
+            return json.loads(p.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return None
+
+
+def _save_stock_rec_cache(user_id: int, data: dict):
+    """종목 추천을 파일 캐시에 저장합니다."""
+    try:
+        payload = {"saved_at": datetime.utcnow().isoformat(), "data": data}
+        _stock_rec_cache_path(user_id).write_text(
+            json.dumps(payload, ensure_ascii=False, indent=2), encoding="utf-8"
+        )
+    except Exception as e:
+        import logging
+        logging.getLogger(__name__).warning("종목 추천 캐시 저장 실패: %s", e)
+
+
+# ── 종목/포트폴리오 추천 모델 연결 ─────────────────────────────────────────────
+_BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if _BACKEND_DIR not in sys.path:
+    sys.path.insert(0, _BACKEND_DIR)
+
+try:
+    from stock_model import get_stock_recommendations as _get_stock_rec                      # noqa: E402
+    from portfolio_model import get_portfolio_recommendation as _get_portfolio_rec            # noqa: E402
+    from portfolio_model import get_multi_portfolio_recommendations as _get_multi_pf_rec     # noqa: E402
+    from schemas import (                                                                     # noqa: E402
+        StockRecommendationResponse as _StockRecResponse,
+        PortfolioRecommendationResponse as _PortfolioRecResponse,
+    )
+    _MODELS_AVAILABLE = True
+except ImportError as _model_import_err:
+    _MODELS_AVAILABLE = False
+    _MODELS_IMPORT_ERR = str(_model_import_err)
+
+# ── CrewAI 매니저 에이전트 연동 (crewai 없어도 서버 기동 가능) ─────────────────
+try:
+    from manager_agent.crew import run_manager_analysis as _run_manager_analysis  # noqa: E402
+    from manager_agent.crew import run_portfolio_recommendation as _run_portfolio_recommendation  # noqa: E402
+    _CREW_AVAILABLE = True
+except Exception as _crew_err:
+    _CREW_AVAILABLE = False
+    _CREW_ERR_MSG = str(_crew_err)
+
+
+def _make_analysis_llm():
+    """MANAGER_LLM_MODEL 환경변수 기반 LLM 객체 생성."""
+    model = os.getenv("MANAGER_LLM_MODEL", "openai/gpt-4o-mini")
+    try:
+        from crewai import LLM
+        return LLM(model=model)
+    except (ImportError, AttributeError):
+        from langchain_openai import ChatOpenAI
+        return ChatOpenAI(model=model.replace("openai/", ""))
 
 # OpenAI API 사용 (선택사항)
 try:
@@ -23,17 +123,17 @@ router = APIRouter(prefix="/api/dashboard", tags=["dashboard"])
 # { "index_KOSPI": {"data": {...}, "ts": float}, ... }
 _index_cache: dict = {}
 
-# ── pykrx 수급 캐시 (30분 TTL — 일별 데이터라 자주 변하지 않음) ──────────────
+# ── KIS 수급 캐시 (30분 TTL — 일별 데이터라 자주 변하지 않음) ─────────────────
 # { "trading_KOSPI": {"data": {...}, "ts": float}, ... }
 _trading_cache: dict = {}
 
 
-def _get_pykrx_trading(market_code: str) -> Dict:
-    """pykrx로 최근 영업일 투자자별 순매수 금액(원) 반환.
+def _get_kis_trading(market_code: str) -> Dict:
+    """KIS FHPTJ04040000으로 최근 영업일 투자자별 순매수 (억원) 반환.
 
     Returns:
         {"market": "코스피", "institution": float, "foreign": float, "individual": float,
-         "date": "YYYY-MM-DD"}
+         "date": "YYYY-MM-DD"}  단위: 억원
     """
     import time
     cache_key = f"trading_{market_code.upper()}"
@@ -41,48 +141,23 @@ def _get_pykrx_trading(market_code: str) -> Dict:
     if cached and time.time() - cached["ts"] < 1800:  # 30분 TTL
         return cached["data"]
 
-    try:
-        from pykrx import stock
-        import pandas as pd
+    from kis_client import get_investor_trading_history
+    rows = get_investor_trading_history(market_code, days=1)
+    if not rows:
+        raise ValueError(f"KIS 수급 데이터 없음 [{market_code}]")
 
-        today = datetime.today()
-        # 오늘 포함 최근 7일 조회 → 가장 최근 영업일 데이터 사용
-        fromdate = (today - timedelta(days=7)).strftime("%Y%m%d")
-        todate   = today.strftime("%Y%m%d")
-
-        df = stock.get_market_trading_value_by_date(fromdate, todate, market_code.upper())
-        if df is None or df.empty:
-            raise ValueError("pykrx 데이터 없음")
-
-        # 가장 최근 행 사용
-        row = df.iloc[-1]
-        latest_date = str(df.index[-1].date()) if hasattr(df.index[-1], 'date') else str(df.index[-1])
-
-        # 컬럼명 탐색 (버전마다 다를 수 있음)
-        def _find_col(df, candidates):
-            for c in candidates:
-                if c in df.columns:
-                    return float(row[c])
-            return 0.0
-
-        institution = _find_col(df, ["기관합계", "기관", "기관계"])
-        foreign     = _find_col(df, ["외국인합계", "외국인", "외국인계"])
-        individual  = _find_col(df, ["개인"])
-        market_name = "코스피" if market_code.upper() == "KOSPI" else "코스닥"
-
-        data = {
-            "market":     market_name,
-            "institution": institution,
-            "foreign":     foreign,
-            "individual":  individual,
-            "date":        latest_date,
-        }
-        _trading_cache[cache_key] = {"data": data, "ts": time.time()}
-        return data
-
-    except Exception as e:
-        print(f"pykrx 수급 조회 실패 [{market_code}]: {e}")
-        raise
+    row = rows[0]
+    market_name = "코스피" if market_code.upper() == "KOSPI" else "코스닥"
+    # get_investor_trading_history 반환 단위: 억원 → 원으로 변환 (기존 analyze_market_with_llm과 호환)
+    data = {
+        "market":      market_name,
+        "institution": row["institution"] * 1e8,
+        "foreign":     row["foreign"]     * 1e8,
+        "individual":  row["individual"]  * 1e8,
+        "date":        row["date"],
+    }
+    _trading_cache[cache_key] = {"data": data, "ts": time.time()}
+    return data
 
 # ── DB 연결 헬퍼 ──────────────────────────────────────────────────────────────
 def _db_conn():
@@ -95,6 +170,15 @@ def _db_conn():
         charset="utf8mb4",
         cursorclass=pymysql.cursors.DictCursor,
     )
+
+
+def _get_db_conn_dep():
+    """FastAPI Dependency: DB 연결 생성 후 요청이 끝나면 자동 닫음."""
+    conn = _db_conn()
+    try:
+        yield conn
+    finally:
+        conn.close()
 
 # Response Models
 class MarketWeatherResponse(BaseModel):
@@ -333,61 +417,29 @@ JSON 형식으로만 답변:
 @router.get("/trading-trends", response_model=List[TradingTrendResponse])
 async def get_trading_trends(days: int = 5):
     """투자자별 매매동향.
-    1순위: pykrx 실제 순매수 데이터 (억원)
-    2순위: DB 시장 수익률 기반 추정치 (pykrx KRX API 오류 시 fallback)
+    1순위: KRX 직접 HTTP 수급 데이터 (억원)
+    2순위: DB 시장 수익률 기반 추정치 (KRX API 오류 시 fallback)
     """
-    # ── 1순위: pykrx ────────────────────────────────────────────────────────
+    # ── 1순위: KIS FHPTJ04040000 히스토리 조회 ──────────────────────────────
     try:
-        from pykrx import stock as pykrx_stock
-
-        today = datetime.today()
-        fromdate = (today - timedelta(days=days * 2 + 5)).strftime("%Y%m%d")
-        todate   = today.strftime("%Y%m%d")
+        from kis_client import get_investor_trading_history
 
         results = []
         for market_code in ["KOSPI", "KOSDAQ"]:
             try:
-                df = pykrx_stock.get_market_trading_value_by_date(
-                    fromdate, todate, market_code
-                )
-                if df is None or df.empty:
-                    continue
-
-                def _col(candidates):
-                    for c in candidates:
-                        if c in df.columns:
-                            return c
-                    return None
-
-                inst_col = _col(["기관합계", "기관", "기관계"])
-                fore_col = _col(["외국인합계", "외국인", "외국인계"])
-                indi_col = _col(["개인"])
-
-                if not inst_col or not fore_col or not indi_col:
-                    continue
-
-                df = df.tail(days)
-                market_name = "KOSPI" if market_code == "KOSPI" else "KOSDAQ"
-                for idx, row in df.iterrows():
-                    date_str = str(idx.date()) if hasattr(idx, 'date') else str(idx)
-                    results.append({
-                        "date":        date_str,
-                        "market":      market_name,
-                        "institution": round(float(row[inst_col]) / 1e8, 2),
-                        "foreign":     round(float(row[fore_col]) / 1e8, 2),
-                        "individual":  round(float(row[indi_col]) / 1e8, 2),
-                    })
+                rows = get_investor_trading_history(market_code, days=days)
+                results.extend(rows)
             except Exception as e:
-                print(f"pykrx trading [{market_code}] 오류: {e}")
+                print(f"KIS trading history [{market_code}] 오류: {e}")
                 continue
 
         if results:
             results.sort(key=lambda x: (x["date"], x["market"]), reverse=True)
             return results[:days * 2]
 
-        print("pykrx 데이터 없음 → DB fallback")
+        print("KIS 수급 데이터 없음 → DB fallback")
     except Exception as e:
-        print(f"pykrx import 오류: {e}")
+        print(f"KIS 수급 조회 오류: {e}")
 
     # ── 2순위: DB 기반 추정 (fallback) ───────────────────────────────────────
     try:
@@ -476,8 +528,8 @@ async def get_trading_trends(days: int = 5):
 async def get_investor_trading_today():
     """당일 투자자별 매매동향 (KOSPI + KOSDAQ, 십억원).
 
-    KIS 시세 API(FHPTJ04030000) 기준 실시간 누적 값을 반환합니다.
-    매도/매수/순매수 모두 제공합니다.
+    KIS 일별 API(FHPTJ04040000) 기준 당일 누적 순매수를 반환합니다.
+    매도/매수는 미제공(0 반환) — 프론트엔드에서 '-'로 표시합니다.
     """
     from kis_client import get_investor_trading_best
     results: list = []
@@ -525,9 +577,9 @@ async def get_market_weather(market: str = "KOSPI"):
     pct = d["change_rate"]
     index_label = f"{d['market']} {d['index']:,.2f}pt ({pct:+.2f}%)"
 
-    # pykrx 실제 투자자별 수급 데이터 시도, 실패 시 등락률 프록시로 fallback
+    # KIS 투자자별 수급 데이터 시도, 실패 시 등락률 프록시로 fallback
     try:
-        trading_data = _get_pykrx_trading(market)
+        trading_data = _get_krx_trading(market)
         data_source = f"수급기준 {trading_data['date']}"
     except Exception:
         scale = pct * 1_000_000_000_000
@@ -581,50 +633,349 @@ async def get_market_indices():
         raise HTTPException(status_code=502, detail="KIS 지수 조회 실패")
     return results
 
-@router.get("/stock-recommendations", response_model=List[StockRecommendationResponse])
-async def get_stock_recommendations():
-    """종목 추천 목록 (더미 데이터)"""
-    # 실제로는 DB나 추천 알고리즘에서 가져와야 함
-    return [
-        {
-            "stock_code": "005930",
-            "stock_name": "삼성전자",
-            "current_price": 75000,
-            "recommendation_type": "매수",
-            "reason": "반도체 업황 개선 기대"
-        },
-        {
-            "stock_code": "000660",
-            "stock_name": "SK하이닉스",
-            "current_price": 145000,
-            "recommendation_type": "매수",
-            "reason": "HBM 수요 증가"
-        },
-        {
-            "stock_code": "035420",
-            "stock_name": "NAVER",
-            "current_price": 220000,
-            "recommendation_type": "보유",
-            "reason": "AI 서비스 확대"
-        }
-    ]
+@router.get("/stock-recommendations", response_model=_StockRecResponse if _MODELS_AVAILABLE else None)
+async def get_stock_recommendations_dashboard(
+    user_id: int,
+    koscom_score: int = 20,
+    refresh: bool = False,
+    conn=Depends(_get_db_conn_dep),
+):
+    """사용자 투자성향 기반 종목 Top5 추천 (stock_model 연결).
 
-@router.get("/portfolio-recommendations")
-async def get_portfolio_recommendations():
-    """포트폴리오 추천 목록 (더미 데이터)"""
-    return {
-        "portfolios": [
-            {
-                "name": "안정형 포트폴리오",
-                "stocks": ["005930", "000660", "051910"],
-                "expected_return": 8.5,
-                "risk_level": "낮음"
-            },
-            {
-                "name": "성장형 포트폴리오",
-                "stocks": ["035420", "035720", "068270"],
-                "expected_return": 15.2,
-                "risk_level": "중간"
+    - refresh=false(기본): 파일 캐시가 있으면 즉시 반환, 없을 때만 모델 실행
+    - refresh=true: 캐시를 무시하고 모델을 새로 실행한 뒤 캐시 갱신
+    """
+    if not _MODELS_AVAILABLE:
+        raise HTTPException(status_code=503, detail=f"모델 로드 실패: {_MODELS_IMPORT_ERR}")
+
+    # ── 파일 캐시 읽기 (refresh=false 일 때만) ──────────────────────────────
+    if not refresh:
+        cached = _load_stock_rec_cache(user_id)
+        if cached and cached.get("data"):
+            return cached["data"]
+
+    try:
+        result = _get_stock_rec(user_id=user_id, conn=conn, koscom_score=koscom_score)
+        # 결과를 JSON 파일로 저장
+        result_dict = result.dict() if hasattr(result, "dict") else result.model_dump()
+        _save_stock_rec_cache(user_id, result_dict)
+        return result
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"종목 추천 모델 오류: {e}")
+
+
+@router.get("/portfolio-recommendations", response_model=_PortfolioRecResponse if _MODELS_AVAILABLE else None)
+async def get_portfolio_recommendations_dashboard(
+    user_id: int,
+    koscom_score: int = 20,
+    conn=Depends(_get_db_conn_dep),
+):
+    """사용자 투자성향 기반 포트폴리오 추천 (portfolio_model 연결)."""
+    if not _MODELS_AVAILABLE:
+        raise HTTPException(status_code=503, detail=f"모델 로드 실패: {_MODELS_IMPORT_ERR}")
+    try:
+        return _get_portfolio_rec(user_id=user_id, conn=conn, koscom_score=koscom_score)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"포트폴리오 추천 모델 오류: {e}")
+
+
+@router.get("/portfolio-recommendations-multi")
+async def get_portfolio_recommendations_multi_dashboard(
+    user_id: int,
+    koscom_score: int = 20,
+    conn=Depends(_get_db_conn_dep),
+):
+    """균형/모멘텀/저변동 3가지 스타일 포트폴리오를 배열로 반환 (대시보드 미리보기용)."""
+    if not _MODELS_AVAILABLE:
+        raise HTTPException(status_code=503, detail=f"모델 로드 실패: {_MODELS_IMPORT_ERR}")
+    try:
+        return _get_multi_pf_rec(user_id=user_id, conn=conn, koscom_score=koscom_score)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"포트폴리오 멀티 추천 오류: {e}")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CrewAI 통합 포트폴리오 추천 (방향성 신호 + 재무 분석 + LLM 포트폴리오 구성)
+# ─────────────────────────────────────────────────────────────────────────────
+
+_KOSCOM_TO_INV = [(30, "공격투자형"), (25, "적극투자형"), (20, "위험중립형"), (15, "안전추구형"), (0, "안정형")]
+
+
+def _enrich_portfolio_quant_signals(portfolios: list) -> list:
+    """각 포트폴리오에 단기 방향성 신호(p_adj), 기대수익률(ret_12m), 리스크(vol_3m)를 추가합니다.
+    signal_pack_latest.csv 와 fin_scores parquet 에서 가중평균을 계산합니다."""
+    import math
+
+    try:
+        import pandas as pd
+        from config import SIGNAL_PACK_PATH, FIN_MODEL_DIR
+
+        _parquet_path = Path(FIN_MODEL_DIR) / "data" / "processed" / "fin_scores_v2_2024_CONSOL_with_mc_with_price.parquet"
+
+        # signal_pack 로드 (ticker를 6자리 zfill로 통일)
+        sig_latest = None
+        if Path(SIGNAL_PACK_PATH).exists():
+            sig_df = pd.read_csv(SIGNAL_PACK_PATH, dtype={"ticker": str})
+            sig_df["ticker"] = sig_df["ticker"].str.zfill(6)
+            sig_latest = sig_df.sort_values("date").groupby("ticker", as_index=False).last()
+
+        # fin parquet 로드 (최신 as_of 기준으로 1행만)
+        fin_latest = None
+        if _parquet_path.exists():
+            fin_df = pd.read_parquet(_parquet_path)
+            fin_df["ticker"] = fin_df["ticker"].astype(str).str.zfill(6)
+            fin_latest = fin_df.sort_values("as_of").groupby("ticker", as_index=False).last()
+
+        def _safe(v):
+            """NaN/None → None, 나머지 float"""
+            if v is None:
+                return None
+            try:
+                f = float(v)
+                return None if math.isnan(f) else f
+            except (TypeError, ValueError):
+                return None
+
+        for pf in portfolios:
+            items = pf.get("portfolio_items", [])
+            if not items:
+                continue
+            total_weight = sum(it.get("weight_pct", 0) for it in items) or 100.0
+
+            st_items, mt_items, risk_items = [], [], []
+
+            for it in items:
+                t = str(it.get("ticker", "")).zfill(6)
+                w_pct = it.get("weight_pct", 0)
+                nm = it.get("name") or t
+
+                p_adj = ret_12m = vol_3m = None
+
+                if sig_latest is not None:
+                    row = sig_latest[sig_latest["ticker"] == t]
+                    if not row.empty:
+                        p_adj = _safe(row.iloc[0].get("p_adj"))
+
+                if fin_latest is not None:
+                    row = fin_latest[fin_latest["ticker"] == t]
+                    if not row.empty:
+                        ret_12m = _safe(row.iloc[0].get("ret_12m"))
+                        vol_3m  = _safe(row.iloc[0].get("vol_3m"))
+
+                st_items.append({"ticker": t, "name": nm, "weight_pct": w_pct,
+                                 "p_adj": round(p_adj, 4) if p_adj is not None else None})
+                mt_items.append({"ticker": t, "name": nm, "weight_pct": w_pct,
+                                 "ret_12m_pct": round(ret_12m * 100, 2) if ret_12m is not None else None})
+                risk_items.append({"ticker": t, "name": nm, "weight_pct": w_pct,
+                                   "vol_3m_pct": round(vol_3m * 100, 2) if vol_3m is not None else None})
+
+            def _wavg(lst, key):
+                pairs = [(it["weight_pct"] / total_weight, it[key]) for it in lst if it.get(key) is not None]
+                if not pairs:
+                    return None
+                tw = sum(w for w, _ in pairs)
+                return round(sum(w * v for w, v in pairs) / tw, 4) if tw > 0 else None
+
+            pf["quant_signals"] = {
+                "short_term": {
+                    "weighted_p_adj": _wavg(st_items, "p_adj"),
+                    "items": st_items,
+                },
+                "medium_term": {
+                    "weighted_ret_12m_pct": (_wavg(mt_items, "ret_12m_pct") or None) and
+                                            round((_wavg(mt_items, "ret_12m_pct") or 0), 2),
+                    "items": mt_items,
+                },
+                "risk": {
+                    "weighted_vol_3m_pct": (_wavg(risk_items, "vol_3m_pct") or None) and
+                                           round((_wavg(risk_items, "vol_3m_pct") or 0), 2),
+                    "items": risk_items,
+                },
             }
-        ]
-    }
+            # medium_term/risk wavg를 다시 계산(None 처리 버그 방지)
+            pf["quant_signals"]["medium_term"]["weighted_ret_12m_pct"] = _wavg(mt_items, "ret_12m_pct")
+            pf["quant_signals"]["risk"]["weighted_vol_3m_pct"] = _wavg(risk_items, "vol_3m_pct")
+
+    except Exception as _e:
+        import logging
+        logging.getLogger(__name__).warning("quant signal enrichment failed: %s", _e)
+
+    return portfolios
+
+
+@router.get("/portfolio-recommendations-ai")
+async def get_portfolio_recommendations_ai(
+    user_id: int,
+    koscom_score: int = 20,
+    refresh: bool = False,
+    conn=Depends(_get_db_conn_dep),
+):
+    """CrewAI 기반 포트폴리오 추천.
+
+    - refresh=false(기본): 파일 캐시가 있으면 즉시 반환, 없을 때만 CrewAI 실행
+    - refresh=true: 파일 캐시를 무시하고 CrewAI를 새로 실행한 뒤 캐시 갱신
+    """
+    # ── 파일 캐시 읽기 (refresh=false 일 때만) ──────────────────────────────
+    if not refresh:
+        cached = _load_pf_cache(user_id)
+        if cached:
+            portfolios = cached.get("portfolios", [])
+            if portfolios:
+                for pf in portfolios:
+                    pf["_cached_at"] = cached.get("saved_at")
+                return portfolios
+
+    if not _CREW_AVAILABLE:
+        raise HTTPException(status_code=503, detail=f"CrewAI 사용 불가: {_CREW_ERR_MSG}")
+
+    # 사용자 투자성향 조회
+    inv_type = "위험중립형"
+    try:
+        cur = conn.cursor()
+        cur.execute("SELECT investment_type FROM users WHERE id = %s", (user_id,))
+        row = cur.fetchone()
+        if row and row.get("investment_type"):
+            inv_type = row["investment_type"]
+        else:
+            for score, lv in _KOSCOM_TO_INV:
+                if koscom_score >= score:
+                    inv_type = lv
+                    break
+    except Exception:
+        pass
+
+    try:
+        llm = _make_analysis_llm()
+        # 동기 CrewAI 호출을 스레드 풀로 오프로드 (최대 180초 타임아웃)
+        try:
+            raw = await asyncio.wait_for(
+                asyncio.to_thread(_run_portfolio_recommendation, llm=llm, user_risk_tier=inv_type),
+                timeout=180.0,
+            )
+        except asyncio.TimeoutError:
+            raise HTTPException(status_code=504, detail="포트폴리오 AI 분석 타임아웃 (180초 초과). 잠시 후 다시 시도해주세요.")
+
+        # JSON 파싱 (LLM이 마크다운 코드블록으로 감쌀 경우 추출)
+        try:
+            portfolios = json.loads(raw) if isinstance(raw, str) else raw
+        except (json.JSONDecodeError, TypeError):
+            import re
+            m = re.search(r'\[[\s\S]+\]', raw or "")
+            portfolios = json.loads(m.group()) if m else []
+
+        if not isinstance(portfolios, list):
+            raise ValueError(f"Expected list, got {type(portfolios).__name__}: {str(portfolios)[:200]}")
+
+        # risk_tier 기본값 보완
+        for pf in portfolios:
+            pf.setdefault("risk_tier", inv_type)
+
+        # 단기 방향성·기대수익률·리스크 정량 지표 후처리 추가
+        portfolios = _enrich_portfolio_quant_signals(portfolios)
+
+        # ── 파일 캐시 저장 ──────────────────────────────────────────────────
+        _save_pf_cache(user_id, portfolios)
+
+        return portfolios
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"포트폴리오 AI 추천 오류: {e}")
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# CrewAI 매니저 에이전트 기반 포트폴리오 종목 AI 분석 강화
+# ─────────────────────────────────────────────────────────────────────────────
+
+class PortfolioAiEnrichRequest(BaseModel):
+    tickers: List[str]
+    mode: str = "fin"   # "fin" (재무분석) | "signal" (방향성)
+
+
+@router.post("/portfolio-ai-enrich")
+async def portfolio_ai_enrich(req: PortfolioAiEnrichRequest):
+    """포트폴리오 편입 종목들에 대해 manager_agent AI 분석을 실행합니다.
+
+    - mode='fin'    : fin_structured_model 재무 데이터 + LLM 해석 (강점/약점)
+    - mode='signal' : stock_direction_model LightGBM 방향성 신호 + LLM 해석
+
+    Returns:
+        { ticker: { selection_reason, signal_strength?, fin_grade?, ai_analysis } }
+    """
+    if not _CREW_AVAILABLE:
+        raise HTTPException(
+            status_code=503,
+            detail=f"CrewAI 매니저 에이전트를 사용할 수 없습니다: {_CREW_ERR_MSG}",
+        )
+
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+
+    mode = req.mode if req.mode in ("fin", "signal") else "fin"
+    tickers = list(dict.fromkeys(req.tickers))[:12]  # 중복 제거, 최대 12개
+
+    def _analyze(ticker: str) -> tuple:
+        try:
+            llm = _make_analysis_llm()
+            raw = _run_manager_analysis(
+                llm=llm,
+                ticker=ticker,
+                mode=mode,
+                context_description="포트폴리오 추천 화면 — 편입 종목 재무·방향성 분석",
+            )
+            try:
+                parsed = json.loads(raw) if isinstance(raw, str) else raw
+            except (json.JSONDecodeError, TypeError):
+                # LLM이 JSON 블록으로 감싼 경우 추출 시도
+                import re
+                m = re.search(r'\{[\s\S]+\}', raw or "")
+                parsed = json.loads(m.group()) if m else {"raw": raw}
+
+            if mode == "fin":
+                strengths = parsed.get("strengths", [])
+                weaknesses = parsed.get("weaknesses", [])
+                parts = []
+                if strengths:
+                    parts.append(strengths[0])
+                if weaknesses:
+                    parts.append(f"리스크: {weaknesses[0]}")
+                selection_reason = " / ".join(parts) if parts else "AI 재무 분석 완료"
+                result = {
+                    "selection_reason": selection_reason,
+                    "fin_grade": parsed.get("overall_grade"),
+                    "fin_score": parsed.get("overall_score"),
+                    "strengths": parsed.get("strengths", []),
+                    "weaknesses": parsed.get("weaknesses", []),
+                    "key_metrics": parsed.get("key_metrics"),
+                    "ai_analysis": parsed,
+                }
+            else:  # signal
+                signal = parsed.get("signal_strength", "")
+                interp = parsed.get("interpretation", "")
+                selection_reason = f"[{signal}] {interp}" if signal else "AI 방향성 분석 완료"
+                result = {
+                    "selection_reason": selection_reason,
+                    "signal_strength": signal,
+                    "p_up": parsed.get("p_up"),
+                    "regime": parsed.get("regime"),
+                    "ai_analysis": parsed,
+                }
+            return ticker, result
+        except Exception as exc:
+            return ticker, {"error": str(exc), "selection_reason": None}
+
+    results: dict = {}
+    with ThreadPoolExecutor(max_workers=3) as pool:
+        futures = {pool.submit(_analyze, t): t for t in tickers}
+        for future in as_completed(futures, timeout=120):
+            try:
+                t, data = future.result(timeout=110)
+            except Exception as exc:
+                t = futures[future]
+                data = {"error": f"타임아웃 또는 분석 실패: {exc}", "selection_reason": None}
+            results[t] = data
+
+    return results

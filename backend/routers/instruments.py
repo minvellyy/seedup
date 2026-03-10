@@ -142,16 +142,28 @@ def list_stocks(
     exchange: Optional[str] = Query(None, description="KOSPI | KOSDAQ"),
     limit: int = Query(100, le=500),
     search: Optional[str] = Query(None, description="종목명 검색"),
+    codes: Optional[str] = Query(None, description="쉼표로 구분된 종목코드 목록 (예: 005930,000660)"),
 ):
     """STOCK 목록.
     종목 기본정보는 DB, 현재가는 KIS API 병렬 조회 (5분 TTL 캐시 적용).
+    codes 파라미터로 특정 종목코드만 조회 가능.
     """
     # ── 1. DB에서 종목 기본 정보 조회 ────────────────────────────────────────
     conn = _db()
     try:
         cur = conn.cursor()
-        where = ["asset_type = 'STOCK'", "price_status = 'ACTIVE'"]
+        where = ["asset_type = 'STOCK'"]
         params: list = []
+
+        # codes 파라미터가 있으면 해당 종목코드만 조회 (price_status 무관)
+        if codes:
+            code_list = [c.strip() for c in codes.split(',') if c.strip()]
+            if code_list:
+                placeholders = ','.join(['%s'] * len(code_list))
+                where.append(f"stock_code IN ({placeholders})")
+                params.extend(code_list)
+        else:
+            where.append("price_status = 'ACTIVE'")
 
         if exchange:
             where.append("exchange = %s")

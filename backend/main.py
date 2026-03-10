@@ -22,6 +22,14 @@ except Exception as _e:
     print(f"[WARNING] 추천 라우터 로드 실패: {_e}")
     _RECOMMEND_ROUTERS_AVAILABLE = False
 
+# CrewAI 분석 라우터 (crewai 패키지 없이도 서버 기동 가능)
+try:
+    from routers.analysis import router as analysis_router
+    _ANALYSIS_ROUTER_AVAILABLE = True
+except Exception as _e:
+    print(f"[WARNING] 분석 라우터 로드 실패: {_e}")
+    _ANALYSIS_ROUTER_AVAILABLE = False
+
 # Pydantic 모델 정의
 class SignupRequest(BaseModel):
     email: str
@@ -666,6 +674,9 @@ app.include_router(stream_router)        # /api/stream/prices
 if _RECOMMEND_ROUTERS_AVAILABLE:
     app.include_router(stocks_router, prefix="/api/v1")
     app.include_router(portfolio_router, prefix="/api/v1")
+
+if _ANALYSIS_ROUTER_AVAILABLE:
+    app.include_router(analysis_router, prefix="/api/v1")
 
 if __name__ == '__main__':
     # FastAPI 앱 실행

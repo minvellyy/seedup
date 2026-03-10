@@ -404,15 +404,92 @@ def get_investor_trading_daily(market: str = "KOSPI") -> Dict:
     }
 
 
-# ── 투자자 데이터 (시세 우선, 실패 시 일별 fallback) ──────────────────────────
+# ── 투자자 데이터 (일별 API 우선) ────────────────────────────────────────────
 def get_investor_trading_best(market: str = "KOSPI") -> Dict:
-    """get_investor_trading (시세) 우선, 실패 시 get_investor_trading_daily 사용."""
+    """당일 투자자별 매매동향 반환.
+
+    FHPTJ04040000 (일별 API)를 1순위로 사용한다.
+    - KOSPI·KOSDAQ 모두 정확한 순매수(net) 제공.
+    - 매도/매수 세부 데이터는 동 API에서 미제공 → 0으로 반환(프론트에서 '-' 표시).
+
+    NOTE: FHPTJ04030000 (시세 시간별 API)는 FID_INPUT_ISCD=999 시 특정
+          업종코드(섹터)의 데이터를 반환하여 시장 전체 합계와 불일치하므로 사용 안 함.
+    """
     try:
-        result = get_investor_trading(market)
-        # 모든 값이 0이면 빈 데이터 → 일별 재시도
-        if result["institution_net"] == 0 and result["foreign_net"] == 0:
-            raise ValueError("empty snapshot")
-        return result
-    except Exception:
         return get_investor_trading_daily(market)
+    except Exception:
+        # fallback: 시세 API (부정확하지만 데이터 없음보다 나음)
+        try:
+            return get_investor_trading(market)
+        except Exception:
+            raise ValueError(f"투자자 데이터 조회 실패 [{market}]")
+
+
+def get_investor_trading_history(market: str = "KOSPI", days: int = 20) -> list:
+    """KIS FHPTJ04040000으로 투자자별 매매동향 히스토리 조회.
+
+    Args:
+        market: "KOSPI" 또는 "KOSDAQ"
+        days:   최근 N 영업일 (최대 300)
+
+    Returns:
+        [{"date": "YYYY-MM-DD", "market": str,
+          "institution": float, "foreign": float, "individual": float}, ...]
+        단위: 억원 (1e8원). 최신순 정렬.
+    """
+    today_ymd = datetime.today().strftime("%Y%m%d")
+    # days보다 넉넉하게 조회 (공휴일·주말 포함하므로 *2+10 여유)
+    from_dt = (datetime.today() - timedelta(days=days * 2 + 10)).strftime("%Y%m%d")
+
+    is_kosdaq = market.upper() == "KOSDAQ"
+    iscd  = "1001" if is_kosdaq else "0001"
+    iscd1 = "KSQ"  if is_kosdaq else "KSP"
+
+    r = requests.get(
+        f"{BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-investor-daily-by-market",
+        headers=_headers("FHPTJ04040000"),
+        params={
+            "FID_COND_MRKT_DIV_CODE": "U",
+            "FID_INPUT_ISCD":         iscd,
+            "FID_INPUT_DATE_1":       from_dt,
+            "FID_INPUT_ISCD_1":       iscd1,
+            "FID_INPUT_DATE_2":       today_ymd,
+            "FID_INPUT_ISCD_2":       iscd,
+        },
+        timeout=15,
+    )
+    r.raise_for_status()
+    data = r.json()
+
+    if data.get("rt_cd") != "0":
+        raise ValueError(f"KIS 투자자 히스토리 오류 [{market}]: {data.get('msg1', '')}")
+
+    output = data.get("output", [])
+    if not output:
+        raise ValueError(f"KIS 투자자 히스토리 없음 [{market}]")
+
+    results = []
+    for row in output[:days]:   # 최신순이므로 앞에서 days개 취득
+        raw_date = row.get("stck_bsop_date", "")
+        if len(raw_date) == 8:
+            date_str = f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:]}"
+        else:
+            date_str = raw_date
+
+        def _to_eok(field: str) -> float:
+            """백만원 → 억원 (÷100), 소수 2자리."""
+            try:
+                return round(float(row.get(field, 0) or 0) / 100, 2)
+            except (ValueError, TypeError):
+                return 0.0
+
+        results.append({
+            "date":        date_str,
+            "market":      market.upper(),
+            "institution": _to_eok("orgn_ntby_tr_pbmn"),
+            "foreign":     _to_eok("frgn_ntby_tr_pbmn"),
+            "individual":  _to_eok("prsn_ntby_tr_pbmn"),
+        })
+
+    return results
 

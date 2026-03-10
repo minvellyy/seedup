@@ -1,0 +1,9 @@
+model:
+  objective: "binary"
+  learning_rate: 0.05
+  num_leaves: 63
+  n_estimators: 1200
+  subsample: 0.8
+  colsample_bytree: 0.8
+  min_child_samples: 50
+  reg_lambda: 1.0

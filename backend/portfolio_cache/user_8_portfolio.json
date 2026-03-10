@@ -1,0 +1,522 @@
+{
+  "saved_at": "2026-03-10T03:40:20.326711",
+  "portfolios": [
+    {
+      "portfolio_label": "균형 추천형",
+      "portfolio_style": "balanced",
+      "portfolio_summary": "균형 추천형 포트폴리오는 재무 건전성과 방향성 신호를 조합하여 최적의 종목을 선택합니다.",
+      "portfolio_items": [
+        {
+          "ticker": "437730",
+          "name": "삼현",
+          "weight_pct": 20.0,
+          "weight": 0.2,
+          "asset_type": "STOCK",
+          "selection_reason": "재무 안정성이 높고 전반적인 점수가 양호하여 선정했습니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [
+            "높은 유동비율로 재무 안정성이 우수합니다.",
+            "전반적인 스코어가 높습니다."
+          ],
+          "ai_weaknesses": [
+            "성장성 관련 점수가 부재하여 다소 부족합니다."
+          ]
+        },
+        {
+          "ticker": "081660",
+          "name": "미스토홀딩스",
+          "weight_pct": 20.0,
+          "weight": 0.2,
+          "asset_type": "STOCK",
+          "selection_reason": "높은 수익성 점수를 가지고 있으며 성장성도 우수합니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [
+            "높은 운영 이익률을 보이고 있습니다.",
+            "성장 가능성이 있는 기업입니다."
+          ],
+          "ai_weaknesses": [
+            "안정성 지표가 다소 낮습니다."
+          ]
+        },
+        {
+          "ticker": "161890",
+          "name": "한국콜마",
+          "weight_pct": 20.0,
+          "weight": 0.2,
+          "asset_type": "STOCK",
+          "selection_reason": "전반적인 성과 점수가 양호하고 안정성 점수가 좋습니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [
+            "높은 수익성 점수를 보입니다.",
+            "우수한 성장성을 가지고 있습니다."
+          ],
+          "ai_weaknesses": [
+            "안정성 측면에서 경쟁사 대비 낮습니다."
+          ]
+        },
+        {
+          "ticker": "192820",
+          "name": "코스맥스",
+          "weight_pct": 20.0,
+          "weight": 0.2,
+          "asset_type": "STOCK",
+          "selection_reason": "성장성과 안정성이 우수하여 선정되었습니다.",
+          "ai_fin_grade": "양호",
+          "ai_strengths": [
+            "높은 성장률을 기록하고 있습니다.",
+            "경쟁력 있는 시장 위치를 차지하고 있습니다."
+          ],
+          "ai_weaknesses": [
+            "안정성 점수가 다소 낮습니다."
+          ]
+        },
+        {
+          "ticker": "004370",
+          "name": "농심",
+          "weight_pct": 20.0,
+          "weight": 0.2,
+          "asset_type": "STOCK",
+          "selection_reason": "안정성이 높고 양호한 성과를 보이고 있습니다.",
+          "ai_fin_grade": "양호",
+          "ai_strengths": [
+            "높은 유동비율을 기록하고 있습니다.",
+            "부채비율이 낮아 안정적입니다."
+          ],
+          "ai_weaknesses": [
+            "성장성 점수가 낮습니다."
+          ]
+        }
+      ],
+      "risk_tier": "공격투자형",
+      "quant_signals": {
+        "short_term": {
+          "weighted_p_adj": 0.5817,
+          "items": [
+            {
+              "ticker": "437730",
+              "name": "삼현",
+              "weight_pct": 20.0,
+              "p_adj": 0.5959
+            },
+            {
+              "ticker": "081660",
+              "name": "미스토홀딩스",
+              "weight_pct": 20.0,
+              "p_adj": 0.5899
+            },
+            {
+              "ticker": "161890",
+              "name": "한국콜마",
+              "weight_pct": 20.0,
+              "p_adj": 0.5816
+            },
+            {
+              "ticker": "192820",
+              "name": "코스맥스",
+              "weight_pct": 20.0,
+              "p_adj": 0.5718
+            },
+            {
+              "ticker": "004370",
+              "name": "농심",
+              "weight_pct": 20.0,
+              "p_adj": 0.5692
+            }
+          ]
+        },
+        "medium_term": {
+          "weighted_ret_12m_pct": 6.34,
+          "items": [
+            {
+              "ticker": "437730",
+              "name": "삼현",
+              "weight_pct": 20.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "081660",
+              "name": "미스토홀딩스",
+              "weight_pct": 20.0,
+              "ret_12m_pct": 6.19
+            },
+            {
+              "ticker": "161890",
+              "name": "한국콜마",
+              "weight_pct": 20.0,
+              "ret_12m_pct": 3.18
+            },
+            {
+              "ticker": "192820",
+              "name": "코스맥스",
+              "weight_pct": 20.0,
+              "ret_12m_pct": 22.72
+            },
+            {
+              "ticker": "004370",
+              "name": "농심",
+              "weight_pct": 20.0,
+              "ret_12m_pct": -6.73
+            }
+          ]
+        },
+        "risk": {
+          "weighted_vol_3m_pct": 59.154,
+          "items": [
+            {
+              "ticker": "437730",
+              "name": "삼현",
+              "weight_pct": 20.0,
+              "vol_3m_pct": 120.9
+            },
+            {
+              "ticker": "081660",
+              "name": "미스토홀딩스",
+              "weight_pct": 20.0,
+              "vol_3m_pct": 29.03
+            },
+            {
+              "ticker": "161890",
+              "name": "한국콜마",
+              "weight_pct": 20.0,
+              "vol_3m_pct": 45.12
+            },
+            {
+              "ticker": "192820",
+              "name": "코스맥스",
+              "weight_pct": 20.0,
+              "vol_3m_pct": 62.28
+            },
+            {
+              "ticker": "004370",
+              "name": "농심",
+              "weight_pct": 20.0,
+              "vol_3m_pct": 38.44
+            }
+          ]
+        }
+      }
+    },
+    {
+      "portfolio_label": "모멘텀 집중형",
+      "portfolio_style": "momentum",
+      "portfolio_summary": "모멘텀 집중형 포트폴리오는 상승 확률이 높은 종목을 중심으로 구성되었습니다.",
+      "portfolio_items": [
+        {
+          "ticker": "437730",
+          "name": "삼현",
+          "weight_pct": 25.0,
+          "weight": 0.25,
+          "asset_type": "STOCK",
+          "selection_reason": "높은 상승 확률과 안정성이 뛰어난 종목입니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [
+            "전반적인 스코어가 높습니다.",
+            "부채비율이 낮아 안정적입니다."
+          ],
+          "ai_weaknesses": [
+            "성장성 관련 점수가 부재하여 다소 부족합니다."
+          ]
+        },
+        {
+          "ticker": "081660",
+          "name": "미스토홀딩스",
+          "weight_pct": 25.0,
+          "weight": 0.25,
+          "asset_type": "STOCK",
+          "selection_reason": "상승 확률이 상당히 높은 종목으로 선정하였습니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [
+            "높은 수익성과 성장성 점수를 보입니다.",
+            "운영 이익률이 뛰어납니다."
+          ],
+          "ai_weaknesses": [
+            "재무 안정성 지표가 낮습니다."
+          ]
+        },
+        {
+          "ticker": "006280",
+          "name": "녹십자",
+          "weight_pct": 25.0,
+          "weight": 0.25,
+          "asset_type": "STOCK",
+          "selection_reason": "상승 확률이 높은 종목입니다.",
+          "ai_fin_grade": "양호",
+          "ai_strengths": [
+            "지난 12개월 동안 강력한 성과를 보였습니다.",
+            "상승 추세의 후방이 뛰어납니다."
+          ],
+          "ai_weaknesses": [
+            "재무지표 점수가 낮습니다."
+          ]
+        },
+        {
+          "ticker": "174900",
+          "name": "앱클론",
+          "weight_pct": 25.0,
+          "weight": 0.25,
+          "asset_type": "STOCK",
+          "selection_reason": "상승 가능성이 보장된 종목입니다.",
+          "ai_fin_grade": "보통",
+          "ai_strengths": [
+            "상승확률이 높습니다.",
+            "가치가 저평가된 주식으로 판단합니다."
+          ],
+          "ai_weaknesses": [
+            "유동성이 높지 않아 거래가 쉽지 않을 수 있습니다."
+          ]
+        }
+      ],
+      "risk_tier": "공격투자형",
+      "quant_signals": {
+        "short_term": {
+          "weighted_p_adj": 0.5868,
+          "items": [
+            {
+              "ticker": "437730",
+              "name": "삼현",
+              "weight_pct": 25.0,
+              "p_adj": 0.5959
+            },
+            {
+              "ticker": "081660",
+              "name": "미스토홀딩스",
+              "weight_pct": 25.0,
+              "p_adj": 0.5899
+            },
+            {
+              "ticker": "006280",
+              "name": "녹십자",
+              "weight_pct": 25.0,
+              "p_adj": 0.5832
+            },
+            {
+              "ticker": "174900",
+              "name": "앱클론",
+              "weight_pct": 25.0,
+              "p_adj": 0.5781
+            }
+          ]
+        },
+        "medium_term": {
+          "weighted_ret_12m_pct": 25.52,
+          "items": [
+            {
+              "ticker": "437730",
+              "name": "삼현",
+              "weight_pct": 25.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "081660",
+              "name": "미스토홀딩스",
+              "weight_pct": 25.0,
+              "ret_12m_pct": 6.19
+            },
+            {
+              "ticker": "006280",
+              "name": "녹십자",
+              "weight_pct": 25.0,
+              "ret_12m_pct": 48.22
+            },
+            {
+              "ticker": "174900",
+              "name": "앱클론",
+              "weight_pct": 25.0,
+              "ret_12m_pct": 22.15
+            }
+          ]
+        },
+        "risk": {
+          "weighted_vol_3m_pct": 62.3,
+          "items": [
+            {
+              "ticker": "437730",
+              "name": "삼현",
+              "weight_pct": 25.0,
+              "vol_3m_pct": 120.9
+            },
+            {
+              "ticker": "081660",
+              "name": "미스토홀딩스",
+              "weight_pct": 25.0,
+              "vol_3m_pct": 29.03
+            },
+            {
+              "ticker": "006280",
+              "name": "녹십자",
+              "weight_pct": 25.0,
+              "vol_3m_pct": 50.78
+            },
+            {
+              "ticker": "174900",
+              "name": "앱클론",
+              "weight_pct": 25.0,
+              "vol_3m_pct": 48.49
+            }
+          ]
+        }
+      }
+    },
+    {
+      "portfolio_label": "안정 우선형",
+      "portfolio_style": "lowvol",
+      "portfolio_summary": "안정 우선형 포트폴리오는 재무 안정성이 우수한 종목을 중심으로 구성되었습니다.",
+      "portfolio_items": [
+        {
+          "ticker": "058470",
+          "name": "리노공업",
+          "weight_pct": 25.0,
+          "weight": 0.25,
+          "asset_type": "STOCK",
+          "selection_reason": "재무가 매우 안정적이며 뛰어난 수익성과 성장성을 기록했습니다.",
+          "ai_fin_grade": "탁월",
+          "ai_strengths": [
+            "운영 이익률이 매우 높습니다.",
+            "부채비율이 낮아 재무 안정성이 뛰어납니다."
+          ],
+          "ai_weaknesses": [
+            "작년 대비 성장이 저조할 수 있습니다."
+          ]
+        },
+        {
+          "ticker": "021240",
+          "name": "코웨이",
+          "weight_pct": 25.0,
+          "weight": 0.25,
+          "asset_type": "STOCK",
+          "selection_reason": "재무 안정성이 우수하여 선정하였습니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [
+            "높은 수익성과 성장성 점수를 보입니다.",
+            "재무 안정성이 proven quality입니다."
+          ],
+          "ai_weaknesses": [
+            "중장기적인 성장이 제약될 수 있습니다."
+          ]
+        },
+        {
+          "ticker": "051900",
+          "name": "LG생활건강",
+          "weight_pct": 25.0,
+          "weight": 0.25,
+          "asset_type": "STOCK",
+          "selection_reason": "안정적 투자 성향에 적합한 종목입니다.",
+          "ai_fin_grade": "양호",
+          "ai_strengths": [
+            "부채가 적어 재무 안정성이 높습니다.",
+            "소비재 분야에서 안정성이 높습니다."
+          ],
+          "ai_weaknesses": [
+            "성장성 지표가 낮아 아쉬움이 남습니다."
+          ]
+        },
+        {
+          "ticker": "096530",
+          "name": "씨젠",
+          "weight_pct": 25.0,
+          "weight": 0.25,
+          "asset_type": "STOCK",
+          "selection_reason": "안정성이 좋고 부채비율이 낮습니다.",
+          "ai_fin_grade": "양호",
+          "ai_strengths": [
+            "높은 유동성과 안정성 기록.",
+            "재무지표가 양호하여 안정적입니다."
+          ],
+          "ai_weaknesses": [
+            "성장성 점수가 부재합니다."
+          ]
+        }
+      ],
+      "risk_tier": "공격투자형",
+      "quant_signals": {
+        "short_term": {
+          "weighted_p_adj": 0.5519,
+          "items": [
+            {
+              "ticker": "058470",
+              "name": "리노공업",
+              "weight_pct": 25.0,
+              "p_adj": 0.5547
+            },
+            {
+              "ticker": "021240",
+              "name": "코웨이",
+              "weight_pct": 25.0,
+              "p_adj": 0.5544
+            },
+            {
+              "ticker": "051900",
+              "name": "LG생활건강",
+              "weight_pct": 25.0,
+              "p_adj": 0.5532
+            },
+            {
+              "ticker": "096530",
+              "name": "씨젠",
+              "weight_pct": 25.0,
+              "p_adj": 0.5453
+            }
+          ]
+        },
+        "medium_term": {
+          "weighted_ret_12m_pct": 0.69,
+          "items": [
+            {
+              "ticker": "058470",
+              "name": "리노공업",
+              "weight_pct": 25.0,
+              "ret_12m_pct": -5.62
+            },
+            {
+              "ticker": "021240",
+              "name": "코웨이",
+              "weight_pct": 25.0,
+              "ret_12m_pct": 20.54
+            },
+            {
+              "ticker": "051900",
+              "name": "LG생활건강",
+              "weight_pct": 25.0,
+              "ret_12m_pct": -13.72
+            },
+            {
+              "ticker": "096530",
+              "name": "씨젠",
+              "weight_pct": 25.0,
+              "ret_12m_pct": 1.56
+            }
+          ]
+        },
+        "risk": {
+          "weighted_vol_3m_pct": 38.9025,
+          "items": [
+            {
+              "ticker": "058470",
+              "name": "리노공업",
+              "weight_pct": 25.0,
+              "vol_3m_pct": 47.35
+            },
+            {
+              "ticker": "021240",
+              "name": "코웨이",
+              "weight_pct": 25.0,
+              "vol_3m_pct": 33.38
+            },
+            {
+              "ticker": "051900",
+              "name": "LG생활건강",
+              "weight_pct": 25.0,
+              "vol_3m_pct": 37.26
+            },
+            {
+              "ticker": "096530",
+              "name": "씨젠",
+              "weight_pct": 25.0,
+              "vol_3m_pct": 37.62
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
