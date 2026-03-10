@@ -21,6 +21,7 @@ if _PKG_PATH and _PKG_PATH not in sys.path:
     sys.path.insert(0, os.path.abspath(_PKG_PATH))
 
 import pymysql
+import json as _json
 from dotenv import load_dotenv
 from fastapi import APIRouter, Depends, HTTPException
 
@@ -31,9 +32,13 @@ from schemas import (  # noqa: E402
     UserSurveyRequest,
     PortfolioRecommendationResponse,
 )
-from portfolio_model import get_portfolio_recommendation  # noqa: E402
+from portfolio_model import get_portfolio_recommendation, get_multi_portfolio_recommendations  # noqa: E402
 
 router = APIRouter(prefix="/portfolio", tags=["portfolio"])
+
+# ─── 캐시 전략 키 (portfolio_recommendations.strategy_name) ───────────────────
+_MULTI_CACHE_KEYS = ['pf_balanced', 'pf_momentum', 'pf_lowvol']
+_CACHE_TTL_MINUTES = 60
 
 
 def _get_db_conn():
@@ -52,6 +57,58 @@ def _get_db_conn():
         yield conn
     finally:
         conn.close()
+
+
+def _load_multi_cache(user_id: int, conn) -> list | None:
+    """DB에서 1시간 이내 캐시된 3종 포트폴리오를 읽어 반환. 없으면 None."""
+    cur = conn.cursor()
+    cur.execute(
+        """
+        SELECT strategy_name, strategy_content
+        FROM portfolio_recommendations
+        WHERE user_id = %s
+          AND strategy_name IN ('pf_balanced', 'pf_momentum', 'pf_lowvol')
+          AND created_at >= DATE_SUB(NOW(), INTERVAL %s MINUTE)
+        ORDER BY FIELD(strategy_name, 'pf_balanced', 'pf_momentum', 'pf_lowvol')
+        """,
+        (user_id, _CACHE_TTL_MINUTES),
+    )
+    rows = cur.fetchall()
+    if len(rows) < 3:
+        return None
+    found = {r['strategy_name'] for r in rows}
+    if not all(k in found for k in _MULTI_CACHE_KEYS):
+        return None
+    result = []
+    for r in rows:
+        content = r['strategy_content']
+        if isinstance(content, str):
+            content = _json.loads(content)
+        result.append(PortfolioRecommendationResponse.model_validate(content))
+    return result
+
+
+def _save_multi_cache(user_id: int, conn, rec_list: list) -> None:
+    """기존 캐시를 삭제하고 새 3종 포트폴리오를 DB에 저장합니다."""
+    cur = conn.cursor()
+    cur.execute(
+        """
+        DELETE FROM portfolio_recommendations
+        WHERE user_id = %s
+          AND strategy_name IN ('pf_balanced', 'pf_momentum', 'pf_lowvol')
+        """,
+        (user_id,),
+    )
+    for key, rec in zip(_MULTI_CACHE_KEYS, rec_list):
+        content_json = _json.dumps(rec.model_dump(mode='json'), ensure_ascii=False)
+        cur.execute(
+            """
+            INSERT INTO portfolio_recommendations
+                (user_id, strategy_name, strategy_content, state)
+            VALUES (%s, %s, %s, 'ACTIVE')
+            """,
+            (user_id, key, content_json),
+        )
 
 
 @router.post(
@@ -109,3 +166,44 @@ def recommend_portfolio_get(
         raise HTTPException(status_code=404, detail=str(e))
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"포트폴리오 모델 오류: {e}")
+
+
+@router.get(
+    "/recommend-multi/{user_id}",
+    response_model=list[PortfolioRecommendationResponse],
+    summary="3종 스타일 포트폴리오 추천 (GET)",
+    description="안정 중시형 / 균형 성장형 / 수익 추구형 3가지 포트폴리오를 배열로 반환합니다. 1시간 동안 DB에 캐싱됩니다.",
+)
+def recommend_portfolio_multi_get(
+    user_id: int,
+    koscom_score: int = 20,
+    total_assets_override: int = None,
+    conn=Depends(_get_db_conn),
+) -> list[PortfolioRecommendationResponse]:
+    # ── 1. 캐시 확인 ───────────────────────────────────────────────────────
+    cached = _load_multi_cache(user_id, conn)
+    if cached is not None:
+        return cached
+
+    # ── 2. 캐시 없음 → 새로 계산 ──────────────────────────────────────────
+    try:
+        result = get_multi_portfolio_recommendations(
+            user_id=user_id,
+            conn=conn,
+            koscom_score=koscom_score,
+            total_assets_override=total_assets_override,
+        )
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"포트폴리오 모델 오류: {e}")
+
+    # ── 3. 결과를 DB에 저장 (캐시) ─────────────────────────────────────────
+    try:
+        _save_multi_cache(user_id, conn, result)
+    except Exception as e:
+        # 캐시 저장 실패는 응답을 막지 않음
+        import logging
+        logging.getLogger(__name__).warning("포트폴리오 캐시 저장 실패: %s", e)
+
+    return result

@@ -134,3 +134,4 @@ class PortfolioRecommendationResponse(BaseModel):
     performance_3y: Optional[PerformanceMetrics] = None
     monte_carlo_1y: Optional[MonteCarloResult] = None
     overall_summary: str
+    portfolio_label: str = ""

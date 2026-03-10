@@ -1,14 +1,22 @@
 import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../contexts/AuthContext'
 import './DashboardPage.css'
 
 const DashboardPage = () => {
   const navigate = useNavigate()
+  const { user } = useAuth()
   const [investorTrading, setInvestorTrading] = useState({})
   const [tradingMarketTab, setTradingMarketTab] = useState('KOSPI')
   const [marketWeather, setMarketWeather] = useState(null)
   const [marketIndices, setMarketIndices] = useState([])
   const [instrumentsStocks, setInstrumentsStocks] = useState([])
+  const [recStocks, setRecStocks] = useState([])      // 추천 top3 + 실시간 주가
+  const [multiPortfolios, setMultiPortfolios] = useState([])  // 3종 포트폴리오
+  const [pfRecsUpdatedAt, setPfRecsUpdatedAt] = useState(null)  // last fetch timestamp
+  const [stockRecsLoading, setStockRecsLoading] = useState(false)
+  const [pfRecsLoading, setPfRecsLoading] = useState(false)
+  const [recRequested, setRecRequested] = useState(false)  // 사용자가 추천 버튼을 누른 적 있는지
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [selectedMarket, setSelectedMarket] = useState('KOSPI')
@@ -21,6 +29,11 @@ const DashboardPage = () => {
   useEffect(() => {
     fetchDashboardData()
   }, [selectedMarket])
+
+  useEffect(() => {
+    if (!user?.userId) return
+    // 추천은 사용자가 버튼을 누를 때만 실행 (자동 실행 없음)
+  }, [user])
 
   // 실시간 주가 SSE 스트림 연결 (종목 로드 완료 후 1회 구독)
   useEffect(() => {
@@ -58,6 +71,80 @@ const DashboardPage = () => {
       es.close()
     }
   }, [instrumentsStocks.length])   // 종목 수가 변할 때만 재구독
+
+  const fetchStockRecs = async (userId, refresh = false) => {
+    setRecRequested(true)
+    setStockRecsLoading(true)
+    try {
+      const srRes = await fetch(`${API_BASE_URL}/api/dashboard/stock-recommendations?user_id=${userId}&refresh=${refresh}`)
+      if (srRes.ok) {
+        const stockData = await srRes.json()
+        const top3 = (stockData.items || []).slice(0, 3)
+        const codeParam = top3.map(i => i.ticker).join(',')
+        if (codeParam) {
+          let newStocks
+          try {
+            const priceRes = await fetch(`${API_BASE_URL}/api/instruments/stocks?codes=${codeParam}&limit=3`)
+            const priceList = priceRes.ok ? await priceRes.json() : []
+            const priceMap = Object.fromEntries(priceList.map(s => [s.stock_code, s]))
+            newStocks = top3.map(item => ({
+              stock_code:    item.ticker,
+              name:          item.name,
+              exchange:      item.market,
+              current_price: priceMap[item.ticker]?.current_price ?? 0,
+              change_rate:   priceMap[item.ticker]?.change_rate ?? null,
+              price_date:    priceMap[item.ticker]?.price_date ?? '',
+              volume:        priceMap[item.ticker]?.volume ?? null,
+              rank:          item.rank,
+            }))
+          } catch (e) {
+            console.warn('recStocks 주가 fetch 실패:', e)
+            newStocks = top3.map(item => ({
+              stock_code: item.ticker, name: item.name, exchange: item.market,
+              current_price: 0, change_rate: null, price_date: '', volume: null, rank: item.rank,
+            }))
+          }
+          setRecStocks(newStocks)
+        }
+      }
+    } catch (e) {
+      console.warn('종목 추천 fetch 실패:', e)
+    } finally {
+      setStockRecsLoading(false)
+    }
+  }
+
+  const fetchPortfolioRecs = async (userId, refresh = false) => {
+    setPfRecsLoading(true)
+    const controller = new AbortController()
+    // 190초 후 자동 중단 (백엔드 타임아웃 180초 + 여유 10초)
+    const timeoutId = setTimeout(() => controller.abort(), 190000)
+    try {
+      const prRes = await fetch(
+        `${API_BASE_URL}/api/dashboard/portfolio-recommendations-ai?user_id=${userId}&refresh=${refresh}`,
+        { signal: controller.signal }
+      )
+      if (prRes.ok) {
+        const newPortfolios = await prRes.json()
+        setMultiPortfolios(newPortfolios)
+        const cachedAt = newPortfolios?.[0]?._cached_at
+        setPfRecsUpdatedAt(cachedAt || new Date().toISOString())
+      } else {
+        const detail = await prRes.json().catch(() => ({}))
+        const msg = detail?.detail || `오류 코드: ${prRes.status}`
+        alert(`포트폴리오 분석 실패: ${msg}`)
+      }
+    } catch (e) {
+      if (e.name === 'AbortError') {
+        alert('포트폴리오 AI 분석이 시간 초과되었습니다. 잠시 후 다시 시도해주세요.')
+      } else {
+        console.warn('포트폴리오 추천 fetch 실패:', e)
+      }
+    } finally {
+      clearTimeout(timeoutId)
+      setPfRecsLoading(false)
+    }
+  }
 
   const fetchDashboardData = async () => {
     setLoading(true)
@@ -417,69 +504,165 @@ const DashboardPage = () => {
           <div className="recommendations-card card">
             <div className="card-header">
               <h2>종목 추천</h2>
-              <button className="detail-button" onClick={() => navigate('/recommendations')}>
-                상세보기 →
-              </button>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <button
+                  className="dash-analysis-btn"
+                  onClick={() => user?.userId && fetchStockRecs(user.userId, true)}
+                  disabled={stockRecsLoading || !user?.userId}
+                >
+                  {stockRecsLoading ? <><span className="dash-analysis-spinner" />분석 중...</> : '종목 분석'}
+                </button>
+                {recStocks.length > 0 && (
+                  <button className="detail-button" onClick={() => navigate('/recommendations')}>
+                    상세보기 →
+                  </button>
+                )}
+              </div>
             </div>
             <div className="recommendations-list">
-              {instrumentsStocks.length === 0 && (
-                <div style={{ padding: '16px', color: '#888', textAlign: 'center' }}>주가 데이터 로딩 중...</div>
-              )}
-              {instrumentsStocks.map((stock) => (
-                <div
-                  key={stock.stock_code}
-                  className="recommendation-item"
-                  style={{ cursor: 'pointer' }}
-                  onClick={() => navigate(`/stock/${stock.stock_code}`)}
-                >
-                  <div className="recommendation-header">
-                    <h3>{stock.name}</h3>
-                    <span className="stock-code">{stock.exchange}</span>
-                  </div>
-                  <div className="recommendation-details">
-                    <div className="stock-price">
-                      {stock.current_price.toLocaleString()}원
+              {stockRecsLoading && recStocks.length === 0 ? (
+                <div style={{ padding: '16px', color: '#888', textAlign: 'center' }}>종목 분석 중...</div>
+              ) : (recStocks.length > 0 ? recStocks : instrumentsStocks.slice(0, 3)).length === 0 ? (
+                <div style={{ padding: '16px', color: '#888', textAlign: 'center' }}>추천 종목 없음</div>
+              ) : (
+                (recStocks.length > 0 ? recStocks : instrumentsStocks.slice(0, 3)).map((stock) => (
+                  <div
+                    key={stock.stock_code}
+                    className="recommendation-item"
+                    style={{ cursor: 'pointer' }}
+                    onClick={() => navigate(`/stock/${stock.stock_code}`)}
+                  >
+                    <div className="recommendation-header">
+                      <h3>{stock.name}</h3>
+                      <span className="stock-code">{stock.exchange}</span>
                     </div>
-                    {stock.change_rate != null && (
-                      <div className={`change-badge ${stock.change_rate >= 0 ? 'up' : 'down'}`}>
-                        {stock.change_rate >= 0 ? '▲' : '▼'} {Math.abs(stock.change_rate).toFixed(2)}%
+                    <div className="recommendation-details">
+                      <div className="stock-price">
+                        {stock.current_price ? stock.current_price.toLocaleString() + '원' : '-'}
                       </div>
-                    )}
+                      {stock.change_rate != null && (
+                        <div className={`change-badge ${stock.change_rate >= 0 ? 'up' : 'down'}`}>
+                          {stock.change_rate >= 0 ? '▲' : '▼'} {Math.abs(stock.change_rate).toFixed(2)}%
+                        </div>
+                      )}
+                    </div>
+                    <p className="recommendation-reason" style={{ color: '#666', fontSize: 12 }}>
+                      {stock.price_date} 기준 &nbsp;|
+                      거래량 {stock.volume ? stock.volume.toLocaleString() : '-'}
+                    </p>
                   </div>
-                  <p className="recommendation-reason" style={{ color: '#666', fontSize: 12 }}>
-                    {stock.price_date} 기준 &nbsp;|
-                    거래량 {stock.volume ? stock.volume.toLocaleString() : '-'}
-                  </p>
-                </div>
-              ))}
+                ))
+              )}
             </div>
           </div>
 
-          {/* 포트폴리오 추천 */}
-          <div className="portfolio-card card">
-            <div className="card-header">
-              <h2>포트폴리오 추천</h2>
-              <button className="detail-button" onClick={() => navigate('/portfolio')}>
-                상세보기 →
-              </button>
-            </div>
-            <div className="portfolio-list">
-              <div className="portfolio-item">
-                <h3>안정형 포트폴리오</h3>
-                <div className="portfolio-info">
-                  <span className="expected-return">예상 수익률: 8.5%</span>
-                  <span className="risk-level low">리스크: 낮음</span>
+          {/* 포트폴리오 추천 — 단일 카드 (종목 추천과 동일한 구조) */}
+          {(() => {
+            const BLUE_PALETTE = ['#1E3A8A','#2D5BB5','#2563EB','#3B82F6','#60A5FA','#93C5FD','#BAD4F5','#DBEAFE']
+            const getColor = (idx) => BLUE_PALETTE[Math.min(idx, BLUE_PALETTE.length - 1)]
+            const RISK_COLOR = { '안정형': '#27ae60', '중립형': '#f39c12', '공격형': '#e74c3c' }
+            const fmtPct = (v) => v == null ? '-' : `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`
+            return (
+              <div className="recommendations-card card">
+                <div className="card-header">
+                  <h2>포트폴리오 추천</h2>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                    {pfRecsUpdatedAt && !pfRecsLoading && (
+                      <span style={{ fontSize: 11, color: '#999' }}>
+                        {new Date(pfRecsUpdatedAt).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })} 기준
+                      </span>
+                    )}
+                    {multiPortfolios.length > 0 && !pfRecsLoading && (
+                      <span style={{ fontSize: 11, color: '#2563EB', fontWeight: 600 }}>✨ AI 분석 포함</span>
+                    )}
+                    <button
+                      className="dash-analysis-btn"
+                      disabled={pfRecsLoading || !user?.userId}
+                      onClick={() => user?.userId && fetchPortfolioRecs(user.userId, true)}
+                    >
+                      {pfRecsLoading ? <><span className="dash-analysis-spinner" />분석 중...</> : '포트폴리오 분석'}
+                    </button>
+                  </div>
+                </div>
+                <div className="recommendations-list">
+                  {pfRecsLoading && multiPortfolios.length === 0 ? (
+                    <div style={{ padding: '16px', color: '#888', textAlign: 'center' }}>AI 포트폴리오 구성 중...</div>
+                  ) : multiPortfolios.length === 0 ? (
+                    <div style={{ padding: '16px', color: '#888', textAlign: 'center', fontSize: 13 }}>
+                      포트폴리오 분석 버튼을 눌러 AI 추천 포트폴리오를 받아보세요
+                    </div>
+                  ) : (
+                    multiPortfolios.map((pf, pfIdx) => {
+                      const items = [...(pf.portfolio_items || [])].sort((a, b) => b.weight_pct - a.weight_pct)
+                      const perf = pf.performance_3y
+                      const riskLabel = pf.portfolio_label || pf.risk_tier || ''
+                      const accentColor = RISK_COLOR[riskLabel] || '#3498db'
+                      return (
+                        <div
+                          key={pfIdx}
+                          className="recommendation-item"
+                          style={{ cursor: 'pointer', borderLeft: `3px solid ${accentColor}` }}
+                          onClick={() => navigate('/portfolio/recommendation', { state: { portfolioData: pf } })}
+                        >
+                          <div className="recommendation-header">
+                            <h3 style={{ color: accentColor }}>
+                              포트폴리오 {pfIdx + 1} :&nbsp;
+                              <span style={{ color: '#2c3e50', fontWeight: 600 }}>{riskLabel}</span>
+                            </h3>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
+                              {perf && (
+                                <span style={{
+                                  fontSize: 11, fontWeight: 700,
+                                  color: perf.ann_return_pct >= 0 ? '#e74c3c' : '#3B82F6',
+                                  background: perf.ann_return_pct >= 0 ? '#fff1eb' : '#eff6ff',
+                                  padding: '2px 8px', borderRadius: 10,
+                                }}>
+                                  3Y {fmtPct(perf.ann_return_pct)}
+                                </span>
+                              )}
+                              <span style={{ fontSize: 14, color: '#bbb' }}>›</span>
+                            </div>
+                          </div>
+                          <p className="recommendation-reason" style={{ color: '#888', fontSize: 12, marginBottom: 8 }}>
+                            ↳ {pf.portfolio_summary || (pf.overall_summary ? pf.overall_summary.split('. ')[0] : '추천 근거 없음')}
+                          </p>
+                          {/* 비중 막대 */}
+                          <div style={{ display: 'flex', height: 6, borderRadius: 4, overflow: 'hidden', marginBottom: 8 }}>
+                            {items.map((item, idx) => (
+                              <div key={item.ticker}
+                                title={`${item.name} ${item.weight_pct.toFixed(1)}%`}
+                                style={{ width: `${item.weight_pct}%`, background: getColor(idx) }}
+                              />
+                            ))}
+                            {items.reduce((s, i) => s + i.weight_pct, 0) < 100 && (
+                              <div style={{ flex: 1, background: '#E2E8F0' }} />
+                            )}
+                          </div>
+                          {/* 상위 종목 태그 */}
+                          <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
+                            {items.slice(0, 3).map((item) => (
+                              <span key={item.ticker} style={{
+                                fontSize: 11, padding: '2px 7px', borderRadius: 10,
+                                background: '#f0f4ff', color: '#2563EB', fontWeight: 600,
+                              }}>
+                                {item.name} {item.weight_pct.toFixed(0)}%
+                                {item.ai_fin_grade && <span style={{ color: '#888', fontWeight: 400, marginLeft: 3 }}>({item.ai_fin_grade})</span>}
+                              </span>
+                            ))}
+                            {items.length > 3 && (
+                              <span style={{ fontSize: 11, color: '#999' }}>+{items.length - 3}개</span>
+                            )}
+                          </div>
+                        </div>
+                      )
+                    })
+                  )}
                 </div>
               </div>
-              <div className="portfolio-item">
-                <h3>성장형 포트폴리오</h3>
-                <div className="portfolio-info">
-                  <span className="expected-return">예상 수익률: 15.2%</span>
-                  <span className="risk-level medium">리스크: 중간</span>
-                </div>
-              </div>
-            </div>
-          </div>
+            )
+          })()}
+
+
         </div>
       </div>
 

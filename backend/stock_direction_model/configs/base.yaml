@@ -1,0 +1,15 @@
+paths:
+  data_dir: "data"
+  models_dir: "models"
+  outputs_dir: "data/outputs"
+
+run:
+  horizons: [5, 10]
+  seed: 42
+
+label:
+  market_neutral_th: 0.01
+  stock_excess: true
+
+features:
+  lookbacks: [1,2,3,5,10,20]

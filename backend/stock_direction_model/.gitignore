@@ -1,0 +1,30 @@
+# 환경변수 / 시크릿
+.env
+.env.*
+!.env.example
+
+# 대용량 데이터 파일
+data/raw/*
+!data/raw/.gitkeep
+data/processed/*
+!data/processed/.gitkeep
+data/outputs/*
+!data/outputs/.gitkeep
+models/*
+!models/.gitkeep
+logs/*
+!logs/.gitkeep
+*.parquet
+*.joblib
+*.pkl
+*.csv
+
+# Python 캐시
+__pycache__/
+*.py[cod]
+*.pyc
+
+# 빌드 / 패키징
+dist/
+build/
+*.egg-info/

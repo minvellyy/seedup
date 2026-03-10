@@ -91,3 +91,60 @@ async def stream_prices(codes: str = ""):
         media_type="text/event-stream",
         headers=headers,
     )
+
+
+@router.get("/test-inject")
+async def test_inject_prices(codes: str = ""):
+    """장 마감 시 테스트용 — _price_store에 1초마다 랜덤 변동 주가를 주입.
+
+    브라우저에서 /api/stream/prices?codes=... 를 열어둔 상태에서
+    /api/stream/test-inject?codes=005930,000660 을 호출하면
+    10초간 0.5~1% 범위의 랜덤 가격 변동을 시뮬레이션한다.
+    """
+    import random
+    from kis_ws_client import get_price_store, get_manager
+    from kis_client import get_current_price
+
+    code_list = [c.strip() for c in codes.split(",") if c.strip()]
+    if not code_list:
+        return {"error": "codes 파라미터 필요 (예: ?codes=005930,000660)"}
+
+    store = get_price_store()
+
+    # 현재가 기준 초기값 로드 (store에 없으면 KIS REST API로 가져옴)
+    for code in code_list:
+        if code not in store:
+            try:
+                info = get_current_price(code)
+                store[code] = {
+                    "stock_code":    code,
+                    "current_price": int(info["current_price"]),
+                    "change":        info["change"],
+                    "change_rate":   info["change_rate"],
+                    "volume":        info.get("volume", 0),
+                }
+            except Exception:
+                store[code] = {
+                    "stock_code": code, "current_price": 50000,
+                    "change": 0.0, "change_rate": 0.0, "volume": 0,
+                }
+
+    # 10회 × 1초 = 10초간 변동 주입
+    injected = []
+    for _ in range(10):
+        await asyncio.sleep(1)
+        for code in code_list:
+            base = store[code]["current_price"]
+            delta_rate = random.uniform(-0.005, 0.005)   # ±0.5%
+            new_price  = max(1, round(base * (1 + delta_rate) / 100) * 100)
+            change     = new_price - base
+            store[code] = {
+                "stock_code":    code,
+                "current_price": new_price,
+                "change":        float(change),
+                "change_rate":   round(change / base * 100, 2),
+                "volume":        store[code].get("volume", 0) + random.randint(100, 5000),
+            }
+        injected.append({c: store[c]["current_price"] for c in code_list})
+
+    return {"message": f"{len(code_list)}개 종목 10초 시뮬레이션 완료", "history": injected}

@@ -15,6 +15,8 @@ function RecommendationsPage() {
   const [stockData, setStockData] = useState(null)
   const [portfolioData, setPortfolioData] = useState(null)
   const [loading, setLoading] = useState(true)
+  const [stockLoading, setStockLoading] = useState(false)
+  const [portfolioLoading, setPortfolioLoading] = useState(false)
   const [error, setError] = useState(null)
   const navigate = useNavigate()
   const { user } = useAuth()
@@ -49,6 +51,34 @@ function RecommendationsPage() {
     }
   }
 
+  const refreshStocks = async () => {
+    if (!user?.userId || stockLoading) return
+    try {
+      setStockLoading(true)
+      const res = await fetch(`/api/v1/stocks/recommend/${user.userId}`)
+      if (!res.ok) throw new Error(`종목 분석 오류 (${res.status})`)
+      setStockData(await res.json())
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setStockLoading(false)
+    }
+  }
+
+  const refreshPortfolio = async () => {
+    if (!user?.userId || portfolioLoading) return
+    try {
+      setPortfolioLoading(true)
+      const res = await fetch(`/api/v1/portfolio/recommend/${user.userId}`)
+      if (!res.ok) throw new Error(`포트폴리오 분석 오류 (${res.status})`)
+      setPortfolioData(await res.json())
+    } catch (err) {
+      console.error(err)
+    } finally {
+      setPortfolioLoading(false)
+    }
+  }
+
   if (loading) return (
     <div className="recommendations-page">
       <div className="loading">추천 데이터를 불러오는 중...</div>
@@ -79,7 +109,18 @@ function RecommendationsPage() {
 
         {/* ── 종목 추천 섹션 ── */}
         <section className="stocks-section">
-          <h1 className="section-title">종목 Top {stockData?.items?.length ?? 0}</h1>
+          <div className="section-title-row">
+            <h1 className="section-title">종목 Top {stockData?.items?.length ?? 0}</h1>
+            <button
+              className="analysis-btn"
+              onClick={refreshStocks}
+              disabled={stockLoading}
+            >
+              {stockLoading ? (
+                <><span className="analysis-btn-spinner" />분석 중...</>
+              ) : '종목 분석'}
+            </button>
+          </div>
           <p className="section-subtitle">투자성향 기반 개별 종목 추천</p>
 
           <div className="stocks-list">
@@ -154,7 +195,18 @@ function RecommendationsPage() {
 
         {/* ── 포트폴리오 추천 섹션 ── */}
         <section className="portfolios-section">
-          <h1 className="section-title">나의 맞춤 포트폴리오</h1>
+          <div className="section-title-row">
+            <h1 className="section-title">나의 맞춤 포트폴리오</h1>
+            <button
+              className="analysis-btn"
+              onClick={refreshPortfolio}
+              disabled={portfolioLoading}
+            >
+              {portfolioLoading ? (
+                <><span className="analysis-btn-spinner" />분석 중...</>
+              ) : '포트폴리오 분석'}
+            </button>
+          </div>
           <p className="section-subtitle">투자성향·설문 기반 최적 구성</p>
 
           {portfolioData && (

@@ -1,0 +1,10 @@
+pandas
+numpy
+pyarrow
+pyyaml
+scikit-learn
+lightgbm
+tqdm
+crewai
+crewai-tools
+python-dotenv

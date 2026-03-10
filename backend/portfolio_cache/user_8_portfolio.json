@@ -1,0 +1,556 @@
+{
+  "saved_at": "2026-03-10T01:14:44.454892",
+  "portfolios": [
+    {
+      "portfolio_label": "균형 추천형",
+      "portfolio_style": "balanced",
+      "portfolio_summary": "재무 데이터와 방향성 신호를 결합하여 건전성이 우수한 종목을 중심으로 구성했습니다. 강력한 신호를 가진 종목들로 균형 잡힌 포트폴리오를 마련했습니다.",
+      "portfolio_items": [
+        {
+          "ticker": "058470",
+          "name": "리노공업",
+          "weight_pct": 20.0,
+          "weight": 0.2,
+          "asset_type": "STOCK",
+          "selection_reason": "재무 건전성이 매우 우수하며, 수익성 측면에서도 높은 점수를 기록하고 있습니다.",
+          "ai_fin_grade": "탁월",
+          "ai_strengths": [
+            "높은 수익성 지표",
+            "우수한 안정성"
+          ],
+          "ai_weaknesses": [
+            "단기 수익률 하락"
+          ]
+        },
+        {
+          "ticker": "021240",
+          "name": "코웨이",
+          "weight_pct": 20.0,
+          "weight": 0.2,
+          "asset_type": "STOCK",
+          "selection_reason": "강력한 성장성과 안정성을 보여줍니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [
+            "높은 수익성",
+            "꾸준한 매출 성장"
+          ],
+          "ai_weaknesses": [
+            "부채 비율이 다소 높은 편"
+          ]
+        },
+        {
+          "ticker": "437730",
+          "name": "삼현",
+          "weight_pct": 20.0,
+          "weight": 0.2,
+          "asset_type": "STOCK",
+          "selection_reason": "안정성과 성장성에서 좋은 평가를 받고 있습니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [
+            "높은 안정성 지표",
+            "양호한 수익성"
+          ],
+          "ai_weaknesses": [
+            "상대적으로 낮은 성장성"
+          ]
+        },
+        {
+          "ticker": "081660",
+          "name": "미스토홀딩스",
+          "weight_pct": 20.0,
+          "weight": 0.2,
+          "asset_type": "STOCK",
+          "selection_reason": "수익성과 성장성을 고루 갖추고 있습니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [
+            "양호한 성장성",
+            "상대적으로 높은 수익성"
+          ],
+          "ai_weaknesses": [
+            "안정성이 낮은 편"
+          ]
+        },
+        {
+          "ticker": "018260",
+          "name": "삼성에스디에스",
+          "weight_pct": 20.0,
+          "weight": 0.2,
+          "asset_type": "STOCK",
+          "selection_reason": "정기적인 수익성을 보여주며, 안정성과 성장성도 갖추고 있습니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [
+            "안정적인 수익성",
+            "양호한 성장 지표"
+          ],
+          "ai_weaknesses": [
+            "전반적인 성장세 저조"
+          ]
+        }
+      ],
+      "risk_tier": "공격투자형",
+      "quant_signals": {
+        "short_term": {
+          "weighted_p_adj": null,
+          "items": [
+            {
+              "ticker": "058470",
+              "name": "리노공업",
+              "weight_pct": 20.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "021240",
+              "name": "코웨이",
+              "weight_pct": 20.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "437730",
+              "name": "삼현",
+              "weight_pct": 20.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "081660",
+              "name": "미스토홀딩스",
+              "weight_pct": 20.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "018260",
+              "name": "삼성에스디에스",
+              "weight_pct": 20.0,
+              "p_adj": null
+            }
+          ]
+        },
+        "medium_term": {
+          "weighted_ret_12m_pct": null,
+          "items": [
+            {
+              "ticker": "058470",
+              "name": "리노공업",
+              "weight_pct": 20.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "021240",
+              "name": "코웨이",
+              "weight_pct": 20.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "437730",
+              "name": "삼현",
+              "weight_pct": 20.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "081660",
+              "name": "미스토홀딩스",
+              "weight_pct": 20.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "018260",
+              "name": "삼성에스디에스",
+              "weight_pct": 20.0,
+              "ret_12m_pct": null
+            }
+          ]
+        },
+        "risk": {
+          "weighted_vol_3m_pct": null,
+          "items": [
+            {
+              "ticker": "058470",
+              "name": "리노공업",
+              "weight_pct": 20.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "021240",
+              "name": "코웨이",
+              "weight_pct": 20.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "437730",
+              "name": "삼현",
+              "weight_pct": 20.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "081660",
+              "name": "미스토홀딩스",
+              "weight_pct": 20.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "018260",
+              "name": "삼성에스디에스",
+              "weight_pct": 20.0,
+              "vol_3m_pct": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "portfolio_label": "모멘텀 집중형",
+      "portfolio_style": "momentum",
+      "portfolio_summary": "상승 확률이 높은 종목 위주로 구성하여 모멘텀 투자에 적합한 포트폴리오를 마련했습니다.",
+      "portfolio_items": [
+        {
+          "ticker": "437730",
+          "name": "삼현",
+          "weight_pct": 25.0,
+          "weight": 0.25,
+          "asset_type": "STOCK",
+          "selection_reason": "상승 확률이 높고, 분기 수익성도 우수하여 주요 모멘텀 종목으로 적합합니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [
+            "높은 상승 확률",
+            "양호한 재무 상태"
+          ],
+          "ai_weaknesses": [
+            "성장성이 상대적으로 낮음"
+          ]
+        },
+        {
+          "ticker": "081660",
+          "name": "미스토홀딩스",
+          "weight_pct": 25.0,
+          "weight": 0.25,
+          "asset_type": "STOCK",
+          "selection_reason": "강력한 모멘텀을 지닌 종목으로, 안정적인 수익성 또한 라이센스 확보 기회가 높습니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [
+            "높은 상승 확률",
+            "우수한 재무 지표"
+          ],
+          "ai_weaknesses": [
+            "상대적으로 안정성이 낮음"
+          ]
+        },
+        {
+          "ticker": "006280",
+          "name": "녹십자",
+          "weight_pct": 20.0,
+          "weight": 0.2,
+          "asset_type": "STOCK",
+          "selection_reason": "상승 가능성이 크며 지속적인 성장을 목표로 하고 있습니다.",
+          "ai_fin_grade": "양호",
+          "ai_strengths": [
+            "낮은 부채 비율",
+            "안정적인 매출력"
+          ],
+          "ai_weaknesses": [
+            "수익성 지표가 낮음"
+          ]
+        },
+        {
+          "ticker": "192820",
+          "name": "코스맥스",
+          "weight_pct": 15.0,
+          "weight": 0.15,
+          "asset_type": "STOCK",
+          "selection_reason": "상승 가능성이 높고, 기업 성장성 또한 꿈꿀 수 있습니다.",
+          "ai_fin_grade": "양호",
+          "ai_strengths": [
+            "높은 성장 가능성",
+            "상대적으로 저렴한 멀티플"
+          ],
+          "ai_weaknesses": [
+            "자본 비용이 높음"
+          ]
+        },
+        {
+          "ticker": "161890",
+          "name": "한국콜마",
+          "weight_pct": 15.0,
+          "weight": 0.15,
+          "asset_type": "STOCK",
+          "selection_reason": "지속적인 성장이 이뤄지고 있으며, 시장 내 경쟁력을 갖추고 있습니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [
+            "시장 점유율 증가",
+            "수익성 개선"
+          ],
+          "ai_weaknesses": [
+            "신규 사업리스크"
+          ]
+        }
+      ],
+      "risk_tier": "공격투자형",
+      "quant_signals": {
+        "short_term": {
+          "weighted_p_adj": null,
+          "items": [
+            {
+              "ticker": "437730",
+              "name": "삼현",
+              "weight_pct": 25.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "081660",
+              "name": "미스토홀딩스",
+              "weight_pct": 25.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "006280",
+              "name": "녹십자",
+              "weight_pct": 20.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "192820",
+              "name": "코스맥스",
+              "weight_pct": 15.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "161890",
+              "name": "한국콜마",
+              "weight_pct": 15.0,
+              "p_adj": null
+            }
+          ]
+        },
+        "medium_term": {
+          "weighted_ret_12m_pct": null,
+          "items": [
+            {
+              "ticker": "437730",
+              "name": "삼현",
+              "weight_pct": 25.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "081660",
+              "name": "미스토홀딩스",
+              "weight_pct": 25.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "006280",
+              "name": "녹십자",
+              "weight_pct": 20.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "192820",
+              "name": "코스맥스",
+              "weight_pct": 15.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "161890",
+              "name": "한국콜마",
+              "weight_pct": 15.0,
+              "ret_12m_pct": null
+            }
+          ]
+        },
+        "risk": {
+          "weighted_vol_3m_pct": null,
+          "items": [
+            {
+              "ticker": "437730",
+              "name": "삼현",
+              "weight_pct": 25.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "081660",
+              "name": "미스토홀딩스",
+              "weight_pct": 25.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "006280",
+              "name": "녹십자",
+              "weight_pct": 20.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "192820",
+              "name": "코스맥스",
+              "weight_pct": 15.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "161890",
+              "name": "한국콜마",
+              "weight_pct": 15.0,
+              "vol_3m_pct": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "portfolio_label": "안정 우선형",
+      "portfolio_style": "lowvol",
+      "portfolio_summary": "안정성을 중시하여 재무 상태가 우수한 종목을 중심으로 포트폴리오를 구성했습니다.",
+      "portfolio_items": [
+        {
+          "ticker": "483650",
+          "name": "달바글로벌",
+          "weight_pct": 25.0,
+          "weight": 0.25,
+          "asset_type": "STOCK",
+          "selection_reason": "재무 안정성이 높고, 현금 흐름 관리 또한 우수한 것으로 평가됩니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [
+            "높은 안정성 지표",
+            "견고한 현금 흐름"
+          ],
+          "ai_weaknesses": [
+            "수익성 지표가 부족함"
+          ]
+        },
+        {
+          "ticker": "051900",
+          "name": "LG생활건강",
+          "weight_pct": 25.0,
+          "weight": 0.25,
+          "asset_type": "STOCK",
+          "selection_reason": "우수한 안정성과 자본 구조를 가지고 있어 지속 가능한 경영이 가능합니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [
+            "높은 안정성",
+            "충분한 유동성"
+          ],
+          "ai_weaknesses": [
+            "성장 잠재력 부족"
+          ]
+        },
+        {
+          "ticker": "122870",
+          "name": "와이지엔터테인먼트",
+          "weight_pct": 25.0,
+          "weight": 0.25,
+          "asset_type": "STOCK",
+          "selection_reason": "경쟁업체 대비 안정성을 갖춘 종목으로 평가됩니다.",
+          "ai_fin_grade": "부진",
+          "ai_strengths": [
+            "높은 안정성",
+            "상대적으로 안정된 매출"
+          ],
+          "ai_weaknesses": [
+            "수익성 문제"
+          ]
+        },
+        {
+          "ticker": "069960",
+          "name": "현대백화점",
+          "weight_pct": 25.0,
+          "weight": 0.25,
+          "asset_type": "STOCK",
+          "selection_reason": "탄탄한 재무 상태와 효과적인 현금 유동성 관리를 가지고 있습니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [
+            "좋은 재무 구조",
+            "상대적인 낮은 부채 비율"
+          ],
+          "ai_weaknesses": [
+            "일부 사업 리스크"
+          ]
+        }
+      ],
+      "risk_tier": "공격투자형",
+      "quant_signals": {
+        "short_term": {
+          "weighted_p_adj": null,
+          "items": [
+            {
+              "ticker": "483650",
+              "name": "달바글로벌",
+              "weight_pct": 25.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "051900",
+              "name": "LG생활건강",
+              "weight_pct": 25.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "122870",
+              "name": "와이지엔터테인먼트",
+              "weight_pct": 25.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "069960",
+              "name": "현대백화점",
+              "weight_pct": 25.0,
+              "p_adj": null
+            }
+          ]
+        },
+        "medium_term": {
+          "weighted_ret_12m_pct": null,
+          "items": [
+            {
+              "ticker": "483650",
+              "name": "달바글로벌",
+              "weight_pct": 25.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "051900",
+              "name": "LG생활건강",
+              "weight_pct": 25.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "122870",
+              "name": "와이지엔터테인먼트",
+              "weight_pct": 25.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "069960",
+              "name": "현대백화점",
+              "weight_pct": 25.0,
+              "ret_12m_pct": null
+            }
+          ]
+        },
+        "risk": {
+          "weighted_vol_3m_pct": null,
+          "items": [
+            {
+              "ticker": "483650",
+              "name": "달바글로벌",
+              "weight_pct": 25.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "051900",
+              "name": "LG생활건강",
+              "weight_pct": 25.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "122870",
+              "name": "와이지엔터테인먼트",
+              "weight_pct": 25.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "069960",
+              "name": "현대백화점",
+              "weight_pct": 25.0,
+              "vol_3m_pct": null
+            }
+          ]
+        }
+      }
+    }
+  ]
+}

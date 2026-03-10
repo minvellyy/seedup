@@ -89,7 +89,11 @@ def get_approval_key() -> str:
 
 # ── 구독 메시지 생성 ───────────────────────────────────────────────────────────
 
-def _build_subscribe_msg(approval_key: str, stock_code: str, tr_type: str = "1") -> str:
+# 구독할 실시간 TR_ID 목록 (KRX 정규장 + NXT)
+_REALTIME_TR_IDS = ["H0STCNT0", "H0NXCNT0"]
+
+
+def _build_subscribe_msg(approval_key: str, stock_code: str, tr_id: str = "H0STCNT0", tr_type: str = "1") -> str:
     """tr_type '1'=구독, '2'=해제."""
     return json.dumps({
         "header": {
@@ -100,7 +104,7 @@ def _build_subscribe_msg(approval_key: str, stock_code: str, tr_type: str = "1")
         },
         "body": {
             "input": {
-                "tr_id": "H0STCNT0",
+                "tr_id": tr_id,
                 "tr_key": stock_code,
             }
         },
@@ -110,9 +114,9 @@ def _build_subscribe_msg(approval_key: str, stock_code: str, tr_type: str = "1")
 # ── 데이터 파싱 ────────────────────────────────────────────────────────────────
 
 def _parse_realtime(msg: str) -> Optional[Dict]:
-    """H0STCNT0 실시간 체결 메시지를 파싱해 dict 반환.
+    """H0STCNT0(KRX) / H0NXCNT0(NXT) 실시간 체결 메시지를 파싱해 dict 반환.
 
-    수신 형식: "0|H0STCNT0|NNN|<data>"
+    수신 형식: "0|<TR_ID>|NNN|<data>"
     data 필드(^ 구분):
         [0] MKSC_SHRN_ISCD 종목코드
         [2] STCK_PRPR      현재가
@@ -125,8 +129,8 @@ def _parse_realtime(msg: str) -> Optional[Dict]:
         parts = msg.split("|")
         if len(parts) < 4:
             return None
-        # 시스템 메시지(PINGPONG 등)는 무시
-        if parts[0] in ("0", "1") and parts[1] == "H0STCNT0":
+        # KRX 정규장(H0STCNT0) 또는 NXT(H0NXCNT0) 체결 메시지만 처리
+        if parts[0] in ("0", "1") and parts[1] in _REALTIME_TR_IDS:
             data = parts[3].split("^")
             if len(data) < 14:
                 return None
@@ -167,18 +171,14 @@ class KisWebSocketManager:
         self._subscribed:   Set[str]      = set()
         self._running       = False
         self._task: Optional[asyncio.Task] = None
+        self._invalid_key   = False
 
     # ── 공개 API ──────────────────────────────────────────────────────────────
 
     async def start(self, initial_codes: list[str]) -> None:
         """백그라운드 루프 시작."""
         self._running = True
-        try:
-            self._approval_key = get_approval_key()
-        except Exception as e:
-            logger.warning("approval_key 발급 실패: %s — WS 연결 생략", e)
-            return
-
+        # approval_key 초기 발급은 _run_loop 내에서 처리 (재연결 시도마다 갱신)
         self._task = asyncio.create_task(self._run_loop(initial_codes))
         logger.info("KIS WebSocket 백그라운드 태스크 시작")
 
@@ -189,7 +189,11 @@ class KisWebSocketManager:
 
     async def subscribe(self, codes: list[str]) -> None:
         """아직 구독 안 된 종목코드 추가 구독 요청 (큐로 전달)."""
-        new_codes = [c for c in codes if c not in self._subscribed]
+        # _subscribed는 이제 "{code}:{tr_id}" 형식 → 하나라도 미완이면 pending에 추가
+        new_codes = [
+            c for c in codes
+            if any(f"{c}:{tr_id}" not in self._subscribed for tr_id in _REALTIME_TR_IDS)
+        ]
         if new_codes:
             self._pending_subscribe = getattr(self, "_pending_subscribe", set())
             self._pending_subscribe.update(new_codes)
@@ -197,25 +201,48 @@ class KisWebSocketManager:
     # ── 내부 루프 ─────────────────────────────────────────────────────────────
 
     async def _run_loop(self, initial_codes: list[str]) -> None:
-        """연결 끊기면 5초 후 자동 재연결."""
+        """연결 끊기면 지수 백오프 후 자동 재연결.
+
+        구독할 종목이 없으면 연결을 시도하지 않고 대기한다.
+        실패 시 대기: 5 → 10 → 20 → 40 → 60초(최대) 반복.
+        """
         import websockets  # lazy import
 
         self._pending_subscribe: Set[str] = set(initial_codes)
+        self._invalid_key = False  # OPSP0011 수신 시 True
+        backoff = 5  # 초기 대기 시간(초)
 
         while self._running:
+            # ── 구독 종목이 없으면 연결하지 않고 대기 ─────────────────────────
+            if not self._pending_subscribe and not self._subscribed:
+                await asyncio.sleep(5)
+                continue
+
             try:
+                # 재연결마다 approval_key 갱신 (캐시 유효하면 재사용, 만료시 재발급)
+                if self._invalid_key:
+                    if _APPROVAL_FILE.exists():
+                        _APPROVAL_FILE.unlink()
+                    self._invalid_key = False
+                    logger.info("approval_key 캐시 초기화 후 재발급")
+                try:
+                    self._approval_key = get_approval_key()
+                except Exception as key_err:
+                    logger.warning("approval_key 발급 실패: %s — 30초 후 재시도", key_err)
+                    await asyncio.sleep(30)
+                    continue
+
                 logger.info("KIS WS 연결 시도: %s", self._ws_url)
                 async with websockets.connect(
                     self._ws_url,
-                    ping_interval=20,
-                    ping_timeout=10,
+                    ping_interval=None,   # KIS는 텍스트 기반 PINGPONG 사용 → 내장 ping 비활성화
+                    close_timeout=10,
                 ) as ws:
                     logger.info("KIS WS 연결 성공")
                     self._subscribed.clear()
                     self._ws = ws
+                    backoff = 5  # 연결 성공 시 백오프 초기화
 
-                    # 수신 루프 + 구독전송 루프를 병렬 실행
-                    # 어느 쪽이 예외로 끝나면 둘 다 취소
                     recv_task   = asyncio.create_task(self._recv_loop(ws))
                     sender_task = asyncio.create_task(self._sender_loop(ws))
                     try:
@@ -226,10 +253,16 @@ class KisWebSocketManager:
                         raise
 
             except Exception as e:
-                logger.warning("KIS WS 연결 오류: %s — 5초 후 재연결", e)
+                err_msg = str(e)
+                # "no close frame" 는 KIS가 TCP를 조용히 끊은 것 — DEBUG로 낮춤
+                if "no close frame" in err_msg:
+                    logger.debug("KIS WS 연결 종료 (no close frame) — %d초 후 재연결", backoff)
+                else:
+                    logger.warning("KIS WS 연결 오류: %s — %d초 후 재연결", e, backoff)
                 if not self._running:
                     break
-                await asyncio.sleep(5)
+                await asyncio.sleep(backoff)
+                backoff = min(backoff * 2, 60)  # 최대 60초
 
     async def _recv_loop(self, ws) -> None:
         """수신 전용 루프."""
@@ -243,7 +276,16 @@ class KisWebSocketManager:
 
             if raw.startswith("{"):
                 try:
-                    logger.debug("시스템 메시지: %s", json.loads(raw))
+                    sys_msg = json.loads(raw)
+                    msg_cd  = sys_msg.get("body", {}).get("msg_cd", "")
+                    rt_cd   = sys_msg.get("body", {}).get("rt_cd", "")
+                    if msg_cd == "OPSP0011" or (rt_cd == "1" and "invalid" in sys_msg.get("body", {}).get("msg1", "").lower()):
+                        logger.warning("approval_key 만료 감지 (OPSP0011) — 재연결 시 키 재발급 예약")
+                        self._invalid_key = True
+                        raise ConnectionError("invalid approval_key")
+                    logger.debug("시스템 메시지: %s", sys_msg)
+                except (ConnectionError, asyncio.CancelledError):
+                    raise
                 except Exception:
                     pass
                 continue
@@ -255,24 +297,41 @@ class KisWebSocketManager:
                 logger.debug("수신 %s: %s", code, parsed["current_price"])
 
     async def _sender_loop(self, ws) -> None:
-        """0.5초마다 pending 구독 요청을 WS로 전송하는 루프."""
+        """0.5초마다 pending 구독 요청을 WS로 전송, 30초마다 PINGPONG 하트비트 전송."""
+        last_ping = asyncio.get_event_loop().time()
         while self._running:
             await self._flush_pending(ws)
+            now = asyncio.get_event_loop().time()
+            if now - last_ping >= 30:
+                try:
+                    await ws.send("PINGPONG")
+                    last_ping = now
+                    logger.debug("KIS WS PINGPONG 전송")
+                except Exception:
+                    break  # WS 연결 끊김 → _run_loop에서 재연결
             await asyncio.sleep(0.5)
 
     async def _flush_pending(self, ws) -> None:
         pending: Set[str] = getattr(self, "_pending_subscribe", set())
         for code in list(pending):
-            if code not in self._subscribed:
-                try:
-                    msg = _build_subscribe_msg(self._approval_key, code)
-                    await ws.send(msg)
-                    self._subscribed.add(code)
-                    logger.info("KIS WS 구독: %s", code)
-                except Exception as e:
-                    logger.warning("구독 전송 실패 %s: %s", code, e)
-                    return  # WS 연결 문제 → _run_loop에서 재연결
-        pending.clear()
+            # KRX + NXT 두 TR_ID 모두 구독 (이미 완료된 것은 skip)
+            all_done = True
+            for tr_id in _REALTIME_TR_IDS:
+                sub_key = f"{code}:{tr_id}"
+                if sub_key not in self._subscribed:
+                    try:
+                        msg = _build_subscribe_msg(self._approval_key, code, tr_id=tr_id)
+                        await ws.send(msg)
+                        self._subscribed.add(sub_key)
+                        logger.info("KIS WS 구독: %s [%s]", code, tr_id)
+                    except Exception as e:
+                        logger.warning("구독 전송 실패 %s [%s]: %s", code, tr_id, e)
+                        return  # WS 연결 문제 → _run_loop에서 재연결
+                    all_done = False
+            if all_done:
+                pending.discard(code)
+        if not pending:
+            pending.clear()
 
 
 # ── 전역 접근자 ───────────────────────────────────────────────────────────────

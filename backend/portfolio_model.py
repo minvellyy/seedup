@@ -63,6 +63,18 @@ _RISK_MAP_PF = {
     "안정형":     ("안정형",      "5등급", 0.30, 0.70),
 }
 
+# 포트폴리오 스코어링 스타일별 가중치 (3m수익률, 1y수익률, 1-변동성)
+_SCORING_WEIGHTS = {
+    "balanced": (0.35, 0.40, 0.25),  # 균형 추천형 (기본)
+    "momentum": (0.50, 0.40, 0.10),  # 모멘텀 집중형
+    "lowvol":   (0.20, 0.40, 0.40),  # 안정 우선형
+}
+_SCORING_LABELS = {
+    "balanced": "균형 추천형",
+    "momentum": "모멘텀 집중형",
+    "lowvol":   "안정 우선형",
+}
+
 
 def _koscom_to_inv_type(score: int) -> str:
     for t, lv in [(30, "공격투자형"), (25, "적극투자형"), (20, "위험중립형"),
@@ -77,6 +89,8 @@ def _recommend_portfolio_db(
     conn,
     koscom_score: int = 20,
     total_assets_override: Optional[int] = None,
+    scoring_style: str = "balanced",
+    portfolio_label: str = "",
 ) -> "PortfolioRecommendationResponse":
     """core 패키지 없이 DB 데이터만으로 포트폴리오를 구성합니다."""
     cur = conn.cursor()
@@ -88,6 +102,8 @@ def _recommend_portfolio_db(
         raise ValueError(f"user_id={user_id} 를 찾을 수 없습니다.")
     inv_type = row.get("investment_type") or _koscom_to_inv_type(koscom_score)
     risk_tier, risk_grade, stock_wt, bond_wt = _RISK_MAP_PF.get(inv_type, ("위험중립형", "3등급", 0.7, 0.3))
+    if not portfolio_label:
+        portfolio_label = _SCORING_LABELS.get(scoring_style, "맞춤 포트폴리오")
 
     # 투자 가능 금액: survey_answers LUMP_SUM_AMOUNT or MONTHLY_AMOUNT
     if total_assets_override:
@@ -192,8 +208,9 @@ def _recommend_portfolio_db(
         r3 = _rn([b["ret_3m"] for b in buf])
         r1 = _rn([b["ret_1y"] for b in buf])
         vl = _rn([b["vol_ann"] for b in buf])
+        w3m, w1y, wvol = _SCORING_WEIGHTS.get(scoring_style, (0.35, 0.40, 0.25))
         for i, b in enumerate(buf):
-            b["score"] = 0.35 * r3[i] + 0.40 * r1[i] + 0.25 * (1.0 - vl[i])
+            b["score"] = w3m * r3[i] + w1y * r1[i] + wvol * (1.0 - vl[i])
         buf.sort(key=lambda x: x["score"], reverse=True)
         return buf[:top_n]
 
@@ -352,8 +369,14 @@ def _recommend_portfolio_db(
     # ── 9. 응답 조립 ──────────────────────────────────────────────────────
     actual_leftover = max(0, total_budget - total_invested)
     purchased_n = len(buy_plan)
+    style_desc = {
+        "balanced": "모멘텀·수익률·변동성 균형 기준",
+        "momentum": "단기 모멘텀 중심 종목 선별",
+        "lowvol":   "저변동·안정 수익 종목 중심",
+    }.get(scoring_style, "맞춤 기준")
     overall = (
         f"{risk_grade}({risk_tier}) 투자자를 위한 포트폴리오. "
+        f"종목 선별 방식: {style_desc}. "
         f"총 {purchased_n}개 종목 매수 (주식 {stock_n}개 · ETF {etf_n}개 중). "
         f"총 투자금 {total_budget:,}원 중 {total_invested:,}원 투자, 잔여 {actual_leftover:,}원."
     )
@@ -394,6 +417,7 @@ def _recommend_portfolio_db(
         performance_3y=perf_metrics,
         monte_carlo_1y=mc_result,
         overall_summary=overall,
+        portfolio_label=portfolio_label,
     )
 
 
@@ -775,3 +799,36 @@ def get_portfolio_recommendation(
         monte_carlo_1y=mc_result,
         overall_summary=overall,
     )
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 3종 스타일 멀티 포트폴리오 추천
+# ─────────────────────────────────────────────────────────────────────────────
+
+# 스코어링 스타일 순서 (균형 → 모멘텀 → 저변동)
+_MULTI_STYLES = [
+    "balanced",
+    "momentum",
+    "lowvol",
+]
+
+
+def get_multi_portfolio_recommendations(
+    user_id: int,
+    conn,
+    *,
+    koscom_score: int = 20,
+    total_assets_override: Optional[int] = None,
+) -> List[PortfolioRecommendationResponse]:
+    """동일 투자성향에서 3가지 스코어링 방식(균형/모멘텀/저변동)으로 포트폴리오를 구성해 반환합니다."""
+    results = []
+    for scoring_style in _MULTI_STYLES:
+        pf = _recommend_portfolio_db(
+            user_id=user_id,
+            conn=conn,
+            koscom_score=koscom_score,
+            total_assets_override=total_assets_override,
+            scoring_style=scoring_style,
+        )
+        results.append(pf)
+    return results
