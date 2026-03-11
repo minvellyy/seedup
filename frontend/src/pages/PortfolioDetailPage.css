@@ -52,7 +52,7 @@
 }
 .pd-section-label::before {
   content: "?";
-  color: #2563eb;
+  color: #10b981;
   font-size: 16px;
   line-height: 1;
 }
@@ -186,7 +186,7 @@
 
 
 .pd-pos { color: #dc2626; }
-.pd-neg { color: #2563eb; }
+.pd-neg { color: #10b981; }
 
 .pd-stock-list {
   display: flex;
@@ -298,7 +298,7 @@
 }
 .pd-signal-bar {
   height: 100%;
-  background: linear-gradient(90deg, #2563eb, #60a5fa);
+  background: linear-gradient(90deg, #10b981, #34d399);
   border-radius: 6px;
   transition: width 0.4s ease;
   max-width: 100%;

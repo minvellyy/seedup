@@ -113,6 +113,40 @@ def _save_stock_rec_cache(user_id: int, data: dict):
         _cache_logger.warning("종목 추천 캐시 저장 실패 (user_id=%s): %s", user_id, e)
 
 
+def _save_portfolio_to_db(user_id: int, conn, pf_results: list):
+    """포트폴리오 추천을 DB에 저장합니다 (히스토리 유지)."""
+    _MULTI_CACHE_KEYS = ['balanced', 'momentum', 'lowvol']
+    
+    cur = conn.cursor()
+    # 기존 ACTIVE 추천을 ARCHIVED로 변경
+    cur.execute(
+        """
+        UPDATE portfolio_recommendations
+        SET state = 'ARCHIVED'
+        WHERE user_id = %s
+          AND strategy_name IN ('balanced', 'momentum', 'lowvol')
+          AND state = 'ACTIVE'
+        """,
+        (user_id,),
+    )
+    
+    # 새 추천을 ACTIVE로 저장
+    for key, rec in zip(_MULTI_CACHE_KEYS, pf_results):
+        content_json = json.dumps(_safe_model_dump(rec), ensure_ascii=False, default=_json_default)
+        cur.execute(
+            """
+            INSERT INTO portfolio_recommendations
+                (user_id, strategy_name, strategy_content, state)
+            VALUES (%s, %s, %s, 'ACTIVE')
+            """,
+            (user_id, key, content_json),
+        )
+    
+    # 커밋하여 DB에 반영
+    conn.commit()
+    _cache_logger.info("포트폴리오 DB 저장 완료: user_id=%s", user_id)
+
+
 # ── 종목/포트폴리오 추천 모델 연결 ─────────────────────────────────────────────
 _BACKEND_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 if _BACKEND_DIR not in sys.path:
@@ -1130,7 +1164,80 @@ async def get_portfolio_recommendations_ai(
     portfolios = _enrich_portfolio_quant_signals(portfolios)
 
     _save_pf_cache(user_id, portfolios)
+    
+    # ── 5단계: DB에 히스토리 저장 ──────────────────────────────────────────
+    try:
+        _save_portfolio_to_db(user_id, conn, pf_results)
+    except Exception as e:
+        import traceback
+        _cache_logger.error("포트폴리오 DB 저장 실패 (user_id=%s): %s\n%s", user_id, e, traceback.format_exc())
+    
     return portfolios
+
+
+@router.get("/portfolio-history")
+async def get_portfolio_history(
+    user_id: int,
+    strategy_name: str = None,
+    state: str = None,
+    limit: int = 50,
+    conn=Depends(_get_db_conn_dep),
+):
+    """
+    포트폴리오 추천 히스토리를 조회합니다.
+    
+    Args:
+        user_id: 사용자 ID
+        strategy_name: 특정 전략명으로 필터링 (선택사항: balanced, momentum, lowvol)
+        state: 상태로 필터링 (ACTIVE, ARCHIVED 등, 선택사항)
+        limit: 최대 결과 개수 (기본값: 50)
+        
+    Returns:
+        포트폴리오 추천 히스토리 리스트 (최신순)
+    """
+    cur = conn.cursor()
+    
+    # 동적 쿼리 생성
+    query = """
+        SELECT id, user_id, strategy_name, strategy_content, state, 
+               created_at, updated_at
+        FROM portfolio_recommendations
+        WHERE user_id = %s
+    """
+    params = [user_id]
+    
+    if strategy_name:
+        query += " AND strategy_name = %s"
+        params.append(strategy_name)
+    
+    if state:
+        query += " AND state = %s"
+        params.append(state)
+    
+    query += " ORDER BY created_at DESC LIMIT %s"
+    params.append(limit)
+    
+    cur.execute(query, params)
+    rows = cur.fetchall()
+    
+    result = []
+    for row in rows:
+        content = row['strategy_content']
+        if isinstance(content, str):
+            content = json.loads(content)
+        
+        history_item = {
+            "id": row['id'],
+            "user_id": row['user_id'],
+            "strategy_name": row['strategy_name'],
+            "state": row['state'],
+            "created_at": row['created_at'].isoformat() if hasattr(row['created_at'], 'isoformat') else str(row['created_at']),
+            "updated_at": row['updated_at'].isoformat() if hasattr(row['updated_at'], 'isoformat') else str(row['updated_at']),
+            "recommendation": content,
+        }
+        result.append(history_item)
+    
+    return result
 
 
 # ─────────────────────────────────────────────────────────────────────────────
