@@ -1,5 +1,4 @@
 import os
-os.environ.setdefault("CREWAI_TELEMETRY_OPT_OUT", "true")  # "Would you like to view your execution traces?" 프롬프트 방지
 
 from fastapi import FastAPI, HTTPException, Query, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -15,6 +14,7 @@ from datetime import datetime
 from routers import survey, dashboard, recommendations
 from routers.instruments import router as instruments_router
 from models import Base, SurveyQuestion
+os.environ.setdefault("CREWAI_TELEMETRY_OPT_OUT", "true")
 
 # 종목/포트폴리오 추천 라우터 (core 패키지 없이도 서버 기동 가능)
 try:
@@ -315,19 +315,24 @@ async def get_user(user_id: int, db: Session = Depends(get_db)):
     """사용자 정보 조회 API"""
     try:
         result = db.execute(
-            text('SELECT id, email, created_at FROM users WHERE id = :user_id'),
+            text('SELECT id, email, username, name, phone, created_at FROM users WHERE id = :user_id'),
             {'user_id': user_id}
         )
         user = result.fetchone()
         
         if user:
+            user_data = {
+                'id': user[0],
+                'email': user[1],
+                'username': user[2],
+                'name': user[3],
+                'phone': user[4],
+                'created_at': str(user[5])
+            }
+            print(f"[GET_USER] user_id: {user_id}, phone: {user[4]}, data: {user_data}")
             return {
                 'success': True,
-                'user': {
-                    'id': user[0],
-                    'email': user[1],
-                    'created_at': str(user[2])
-                }
+                'user': user_data
             }
         else:
             raise HTTPException(
@@ -342,6 +347,70 @@ async def get_user(user_id: int, db: Session = Depends(get_db)):
         raise HTTPException(
             status_code=500,
             detail={'success': False, 'message': '사용자 조회 중 오류가 발생했습니다.'}
+        )
+
+@app.put('/api/users/{user_id}')
+async def update_user(user_id: int, data: dict, db: Session = Depends(get_db)):
+    """사용자 정보 수정 API"""
+    try:
+        print(f"[UPDATE_USER] user_id: {user_id}, data: {data}")
+        
+        # 업데이트할 필드 준비
+        update_fields = []
+        params = {'user_id': user_id}
+        
+        if 'name' in data:
+            update_fields.append('name = :name')
+            params['name'] = data['name']
+            print(f"[UPDATE_USER] name 업데이트: {data['name']}")
+        
+        if 'phone' in data:
+            update_fields.append('phone = :phone')
+            params['phone'] = data['phone']
+            print(f"[UPDATE_USER] phone 업데이트: {data['phone']}")
+        
+        if 'email' in data:
+            update_fields.append('email = :email')
+            params['email'] = data['email']
+            print(f"[UPDATE_USER] email 업데이트: {data['email']}")
+        
+        # 비밀번호 변경 처리
+        if 'newPassword' in data and data['newPassword']:
+            print(f"[UPDATE_USER] 비밀번호 변경 요청")
+            from passlib.context import CryptContext
+            pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+            hashed_password = pwd_context.hash(data['newPassword'])
+            update_fields.append('password = :password')
+            params['password'] = hashed_password
+        
+        if not update_fields:
+            print(f"[UPDATE_USER] 업데이트할 필드 없음")
+            return {'success': True, 'message': '업데이트할 정보가 없습니다.'}
+        
+        # SQL 쿼리 실행
+        query = f"UPDATE users SET {', '.join(update_fields)} WHERE id = :user_id"
+        print(f"[UPDATE_USER] SQL: {query}")
+        print(f"[UPDATE_USER] Params: {params}")
+        
+        db.execute(text(query), params)
+        db.commit()
+        
+        print(f"[UPDATE_USER] 성공!")
+        
+        return {
+            'success': True,
+            'message': '사용자 정보가 성공적으로 수정되었습니다.'
+        }
+    
+    except Exception as e:
+        db.rollback()
+        print(f"[UPDATE_USER] Error: {str(e)}")
+        print(f"[UPDATE_USER] Error type: {type(e).__name__}")
+        import traceback
+        traceback.print_exc()
+        raise HTTPException(
+            status_code=500,
+            detail={'success': False, 'message': f'사용자 정보 수정 중 오류: {str(e)}'}
         )
 
 @app.post('/api/survey')

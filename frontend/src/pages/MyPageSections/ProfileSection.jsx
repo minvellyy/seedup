@@ -1,18 +1,61 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { useAuth } from '../../contexts/AuthContext'
+import axios from 'axios'
 
 const ProfileSection = () => {
   const navigate = useNavigate()
+  const { user } = useAuth()
+  const [loading, setLoading] = useState(true)
   const [formData, setFormData] = useState({
-    name: '홍길동',
-    phone: '010-1234-5678',
-    email: 'seedup@example.com',
+    name: '',
+    phone: '',
+    email: '',
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
   })
 
   const [errors, setErrors] = useState({})
+
+  // 사용자 정보 가져오기
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!user?.userId) {
+        console.log('[ProfileSection] user.userId가 없음:', user)
+        setLoading(false)
+        return
+      }
+
+      try {
+        console.log('[ProfileSection] API 호출:', `http://localhost:8000/api/users/${user.userId}`)
+        const response = await fetch(`http://localhost:8000/api/users/${user.userId}`)
+        const data = await response.json()
+        
+        console.log('[ProfileSection] API 응답:', data)
+        
+        if (data.success && data.user) {
+          const userData = {
+            name: data.user.name || data.user.username || '',
+            phone: data.user.phone || '',
+            email: data.user.email || '',
+          }
+          console.log('[ProfileSection] 설정할 데이터:', userData)
+          
+          setFormData(prev => ({
+            ...prev,
+            ...userData
+          }))
+        }
+      } catch (error) {
+        console.error('사용자 정보 조회 실패:', error)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchUserData()
+  }, [user?.userId])
 
   const handleChange = (e) => {
     const { name, value } = e.target
@@ -56,16 +99,72 @@ const ProfileSection = () => {
     return Object.keys(newErrors).length === 0
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    if (validateForm()) {
-      alert('개인정보가 수정되었습니다')
-      console.log('수정된 정보:', formData)
+    if (!validateForm()) {
+      return
+    }
+
+    if (!user?.userId) {
+      alert('로그인이 필요합니다.')
+      return
+    }
+
+    try {
+      const updateData = {
+        name: formData.name,
+        phone: formData.phone,
+        email: formData.email,
+      }
+
+      // 비밀번호 변경이 있는 경우에만 추가
+      if (formData.newPassword) {
+        updateData.newPassword = formData.newPassword
+      }
+
+      const url = `http://localhost:8000/api/users/${user.userId}`
+      console.log('[UPDATE] 요청 데이터:', updateData)
+      console.log('[UPDATE] API URL:', url)
+
+      const response = await axios.put(url, updateData)
+      const data = response.data
+
+      console.log('[UPDATE] 응답 상태:', response.status)
+      console.log('[UPDATE] 응답 데이터:', data)
+
+      if (data.success) {
+        console.log('[UPDATE] 성공')
+        alert('개인정보가 수정되었습니다.')
+        // 비밀번호 필드 초기화
+        setFormData(prev => ({
+          ...prev,
+          currentPassword: '',
+          newPassword: '',
+          confirmPassword: '',
+        }))
+      } else {
+        console.error('[UPDATE] 실패:', data.message || data)
+        alert(data.message || '개인정보 수정에 실패했습니다.')
+      }
+    } catch (error) {
+      console.error('[UPDATE] 예외 발생:', error?.response?.data || error?.message || error)
+      alert('서버 요청 중 오류가 발생했습니다.')
     }
   }
 
   const handleRetakeSurvey = () => {
     navigate('/invest-type-survey')
+  }
+
+  if (loading) {
+    return (
+      <div className="section-content">
+        <h2 className="section-title">개인정보 관리</h2>
+        <div className="profile-card">
+          <p>로딩 중...</p>
+        </div>
+      </div>
+    )
   }
 
   return (
