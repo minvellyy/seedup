@@ -61,3 +61,31 @@ class SurveyAnswer(Base):
 
     user = relationship("User", back_populates="answers")
     question = relationship("SurveyQuestion", back_populates="answers")
+
+# ═══ 챗봇 관련 모델 ═══════════════════════════════════════════════════════════
+
+class ChatSession(Base):
+    """챗봇 대화 세션"""
+    __tablename__ = 'chat_sessions'
+    
+    id = Column(String(255), primary_key=True)  # UUID
+    user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'))
+    title = Column(String(255))  # 대화 제목 (첫 메시지 기반)
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+    
+    user = relationship("User")
+    messages = relationship("ChatMessage", back_populates="session", cascade="all, delete-orphan")
+
+class ChatMessage(Base):
+    """챗봇 대화 메시지"""
+    __tablename__ = 'chat_messages'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    session_id = Column(String(255), ForeignKey('chat_sessions.id', ondelete='CASCADE'))
+    role = Column(String(20), nullable=False)  # 'user', 'assistant', 'system'
+    content = Column(Text, nullable=False)
+    message_metadata = Column(Text)  # JSON 형태로 추가 정보 저장 (DB의 실제 컬럼명)
+    created_at = Column(DateTime, server_default=func.now())
+    
+    session = relationship("ChatSession", back_populates="messages")

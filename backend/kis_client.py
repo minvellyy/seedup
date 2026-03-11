@@ -21,7 +21,14 @@ from dotenv import load_dotenv
 # .env 로드 (backend/ 기준)
 load_dotenv(dotenv_path=Path(__file__).parent / ".env")
 
-BASE_URL = "https://openapi.koreainvestment.com:9443"
+# KIS API 서버 URL 설정 (모의투자 / 실거래 구분)
+IS_MOCK = os.getenv("KIS_MOCK", "false").lower() == "true"
+if IS_MOCK:
+    BASE_URL = "https://openapivts.koreainvestment.com:29443"  # 모의투자
+    print("[KIS] 모의투자 모드로 설정됨")
+else:
+    BASE_URL = "https://openapi.koreainvestment.com:9443"      # 실거래
+    print("[KIS] 실거래 모드로 설정됨")
 
 # 토큰 캐시 파일 경로 (project root 는 backend/ )
 _TOKEN_FILE = Path(__file__).parent / ".kis_token_cache"

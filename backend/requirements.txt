@@ -7,3 +7,9 @@ openai
 python-dotenv
 websockets>=12.0
 requests
+sqlalchemy
+pymysql
+mysql-connector-python
+cryptography
+aiofiles
+pathlib

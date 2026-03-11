@@ -37,6 +37,14 @@ except Exception as _e:
     print(f"[WARNING] 분석 라우터 로드 실패: {_e}")
     _ANALYSIS_ROUTER_AVAILABLE = False
 
+# 챗봇 라우터 (openai 패키지가 있어야 함)
+try:
+    from routers.chatbot import router as chatbot_router
+    _CHATBOT_ROUTER_AVAILABLE = True
+except Exception as _e:
+    print(f"[WARNING] 챗봇 라우터 로드 실패: {_e}")
+    _CHATBOT_ROUTER_AVAILABLE = False
+
 # Pydantic 모델 정의
 class SignupRequest(BaseModel):
     email: str
@@ -1036,6 +1044,10 @@ app.include_router(recommendations.router)
 app.include_router(instruments_router)   # /api/instruments/stocks, /etfs
 app.include_router(stream_router)        # /api/stream/prices
 app.include_router(holdings_router, prefix="/api")  # /api/holdings
+
+# 챗봇 라우터 등록
+if _CHATBOT_ROUTER_AVAILABLE:
+    app.include_router(chatbot_router)
 
 # 종목/포트폴리오 추천 라우터 등록 (/api/v1/stocks, /api/v1/portfolio)
 if _RECOMMEND_ROUTERS_AVAILABLE:
