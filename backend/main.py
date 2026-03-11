@@ -7,10 +7,14 @@ from sqlalchemy.orm import Session
 from sqlalchemy import text
 from database import engine, get_db, SessionLocal
 from typing import Optional, Dict, Any
+import asyncio
 import hashlib
 import json
+import logging
 import uvicorn
 from datetime import datetime
+
+logger = logging.getLogger("main")
 from routers import survey, dashboard, recommendations
 from routers.instruments import router as instruments_router
 from models import Base, SurveyQuestion
@@ -108,6 +112,220 @@ def init_survey_questions():
 
 app = FastAPI(title="SeedUp API Server")
 
+# ── DB 실시간 가격 동기화 백그라운드 태스크 ─────────────────────────────────
+
+# WebSocket price_store → DB 동기화 간격 (초, 기본 60초)
+_DB_SYNC_INTERVAL = int(os.getenv("DB_PRICE_SYNC_INTERVAL", "60"))
+# REST API 전체 종목 갱신 간격 (초, 기본 3시간)
+_DB_FULL_SYNC_INTERVAL = int(os.getenv("DB_FULL_PRICE_SYNC_INTERVAL", str(3 * 3600)))
+
+
+async def _db_price_sync_loop() -> None:
+    """WebSocket _price_store → instruments.last_price 주기적 벌크 업데이트 (60초 주기)."""
+    from kis_ws_client import get_price_store
+
+    while True:
+        await asyncio.sleep(_DB_SYNC_INTERVAL)
+        try:
+            store = get_price_store()
+            if not store:
+                continue
+
+            today = datetime.now().strftime("%Y-%m-%d")
+            db = SessionLocal()
+            try:
+                updated = 0
+                for code, price_data in store.items():
+                    db.execute(
+                        text(
+                            """
+                            UPDATE instruments
+                               SET last_price      = :price,
+                                   last_price_date = :date
+                             WHERE stock_code = :code
+                            """
+                        ),
+                        {
+                            "price": price_data["current_price"],
+                            "date":  today,
+                            "code":  code,
+                        },
+                    )
+                    updated += 1
+                db.commit()
+                logger.info("DB 가격 동기화 완료 (WS): %d개 종목", updated)
+            except Exception as e:
+                db.rollback()
+                logger.error("DB 가격 동기화 오류: %s", e)
+            finally:
+                db.close()
+        except Exception as e:
+            logger.error("DB 가격 동기화 루프 오류: %s", e)
+
+
+async def _db_full_price_sync(skip_ws_codes: set = None) -> int:
+    """KIS REST API로 모든 ACTIVE 종목의 현재가를 조회해 DB를 갱신한다.
+
+    skip_ws_codes: WebSocket으로 이미 수신 중인 종목코드 집합 (선택)
+    Returns: 업데이트된 종목 수
+    """
+    from concurrent.futures import ThreadPoolExecutor, as_completed
+    from kis_client import get_current_price
+
+    db = SessionLocal()
+    try:
+        rows = db.execute(
+            text("SELECT stock_code FROM instruments WHERE asset_type IN ('STOCK', 'ETF') AND price_status = 'ACTIVE'")
+        ).fetchall()
+    finally:
+        db.close()
+
+    all_codes = [r[0] for r in rows if r[0]]
+    # WebSocket 수신 중인 종목은 건너뜀 (이미 60초 루프에서 갱신)
+    if skip_ws_codes:
+        target_codes = [c for c in all_codes if c not in skip_ws_codes]
+    else:
+        target_codes = all_codes
+
+    if not target_codes:
+        return 0
+
+    today = datetime.now().strftime("%Y-%m-%d")
+    results: dict = {}
+
+    # KIS REST API rate limit 고려: 최대 10 병렬, 배치 간 0.1초 대기
+    max_workers = min(10, len(target_codes))
+    loop = asyncio.get_event_loop()
+    with ThreadPoolExecutor(max_workers=max_workers) as pool:
+        future_map = {pool.submit(get_current_price, code): code for code in target_codes}
+        for fut in as_completed(future_map):
+            code = future_map[fut]
+            try:
+                data = fut.result()
+                results[code] = data["current_price"]
+            except Exception as e:
+                logger.debug("REST 가격 조회 실패 [%s]: %s", code, e)
+
+    if not results:
+        return 0
+
+    db = SessionLocal()
+    try:
+        for code, price in results.items():
+            db.execute(
+                text(
+                    """
+                    UPDATE instruments
+                       SET last_price      = :price,
+                           last_price_date = :date
+                     WHERE stock_code = :code
+                    """
+                ),
+                {"price": price, "date": today, "code": code},
+            )
+        db.commit()
+        logger.info("DB 전체 가격 갱신 완료 (REST): %d / %d개 종목", len(results), len(target_codes))
+        return len(results)
+    except Exception as e:
+        db.rollback()
+        logger.error("DB 전체 가격 갱신 오류: %s", e)
+        return 0
+    finally:
+        db.close()
+
+
+async def _db_full_price_sync_loop() -> None:
+    """REST API로 WS 미구독 종목(STOCK+ETF)을 주기적으로 갱신 (기본 3시간 주기, 시작 시 즉시 1회 실행)."""
+    from kis_ws_client import get_price_store
+
+    # 서버 시작 직후 즉시 1회 실행
+    await asyncio.sleep(5)  # WebSocket 연결 안정화 대기
+    logger.info("DB 전체 가격 갱신 시작 (초기 실행, STOCK+ETF)...")
+    ws_codes = set(get_price_store().keys())
+    updated = await _db_full_price_sync(skip_ws_codes=ws_codes)
+    logger.info("DB 전체 가격 갱신 초기 실행 완료: %d개", updated)
+
+    while True:
+        await asyncio.sleep(_DB_FULL_SYNC_INTERVAL)
+        try:
+            ws_codes = set(get_price_store().keys())
+            await _db_full_price_sync(skip_ws_codes=ws_codes)
+        except Exception as e:
+            logger.error("DB 전체 가격 갱신 루프 오류: %s", e)
+
+
+async def _discover_new_etfs_loop() -> None:
+    """pykrx로 KRX 신규 상장 ETF를 주기적으로 발견해 DB에 등록.\n\n    - 시작 시 30초 후 즉시 1회 실행
+    - 이후 매일 1회 (기본 24시간, DB_ETF_DISCOVER_INTERVAL 환경변수로 조정)
+    """
+    _DISCOVER_INTERVAL = int(os.getenv("DB_ETF_DISCOVER_INTERVAL", str(24 * 3600)))
+
+    await asyncio.sleep(30)
+    while True:
+        try:
+            logger.info("ETF 목록 조회 시작 (네이버 금융)...")
+            loop = asyncio.get_event_loop()
+            from kis_client import get_etf_list_from_krx
+            krx_etfs = await loop.run_in_executor(None, get_etf_list_from_krx)
+
+            if not krx_etfs:
+                logger.debug("KRX ETF 목록 비어 있음 — 다음 주기에 재실행")
+            else:
+                db = SessionLocal()
+                try:
+                    existing = {r[0] for r in db.execute(
+                        text("SELECT stock_code FROM instruments WHERE asset_type = 'ETF'")
+                    ).fetchall()}
+
+                    new_etfs = [e for e in krx_etfs if e["stock_code"] not in existing]
+                    today = datetime.now().strftime("%Y-%m-%d")
+
+                    added = 0
+                    for etf in new_etfs:
+                        try:
+                            # KIS REST로 현재가 조회
+                            from kis_client import get_current_price
+                            price_data = await loop.run_in_executor(None, get_current_price, etf["stock_code"])
+                            price = price_data["current_price"]
+                        except Exception:
+                            price = 0.0
+
+                        db.execute(
+                            text("""
+                                INSERT INTO instruments
+                                    (stock_code, name, exchange, asset_type, price_status,
+                                     last_price, last_price_date)
+                                VALUES
+                                    (:code, :name, :exchange, 'ETF', 'ACTIVE',
+                                     :price, :date)
+                            """),
+                            {
+                                "code":     etf["stock_code"],
+                                "name":     etf["name"] or etf["stock_code"],
+                                "exchange": etf["exchange"],
+                                "price":    price,
+                                "date":     today,
+                            },
+                        )
+                        added += 1
+                        await asyncio.sleep(0.1)  # KIS rate limit 방지
+
+                    db.commit()
+                    if added:
+                        logger.info("신규 ETF %d개 DB 등록 완료", added)
+                    else:
+                        logger.info("KRX ETF 확인 완료 — 신규 상장 없음 (DB: %d개)", len(existing))
+                except Exception as e:
+                    db.rollback()
+                    logger.error("ETF 발견 오류: %s", e)
+                finally:
+                    db.close()
+        except Exception as e:
+            logger.error("ETF 발견 루프 오류: %s", e)
+
+        await asyncio.sleep(_DISCOVER_INTERVAL)
+
+
 # 앱 시작 시 설문 질문 초기화
 @app.on_event("startup")
 async def startup_event():
@@ -129,11 +347,41 @@ async def startup_event():
         try:
             from kis_ws_client import init_manager
             import os
+
+            # DB instruments 테이블에서 ACTIVE 종목코드 전체 로드
+            initial_codes: list = []
+            try:
+                db_session = SessionLocal()
+                rows = db_session.execute(
+                    text("""
+                        SELECT i.stock_code
+                        FROM instruments i
+                        LEFT JOIN (
+                            SELECT stock_code, COUNT(*) AS hold_count
+                            FROM user_holdings
+                            GROUP BY stock_code
+                        ) uh ON uh.stock_code = i.stock_code
+                        WHERE i.asset_type = 'STOCK' AND i.price_status = 'ACTIVE'
+                        ORDER BY COALESCE(uh.hold_count, 0) DESC
+                    """)
+                ).fetchall()
+                db_session.close()
+                initial_codes = [r[0] for r in rows if r[0]]
+                print(f"DB에서 {len(initial_codes)}개 ACTIVE 종목 로드 완료")
+            except Exception as db_err:
+                print(f"DB 종목 로드 실패 (빈 목록으로 시작): {db_err}")
+
             is_mock = os.getenv("KIS_MOCK", "false").lower() == "true"
-            await init_manager([], is_mock=is_mock)
-            print("KIS WebSocket manager initialized!")
+            await init_manager(initial_codes, is_mock=is_mock)
+            print(f"KIS WebSocket manager initialized! ({len(initial_codes)}개 종목 구독 등록)")
         except Exception as ws_err:
             print(f"KIS WebSocket init skipped: {ws_err}")
+
+        # DB 가격 동기화 백그라운드 태스크 시작
+        asyncio.create_task(_db_price_sync_loop())          # WS 40종목: 60초 주기
+        asyncio.create_task(_db_full_price_sync_loop())     # REST 전체: 3시간 주기 + 시작 즉시 1회
+        asyncio.create_task(_discover_new_etfs_loop())      # 신규 ETF 발견: 24시간 주기 + 시작 30초 후
+        print("DB 가격 동기화 백그라운드 태스크 시작 완료")
 
         print("Application startup complete!")
     except Exception as e:
@@ -150,6 +398,49 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+@app.post("/api/admin/sync-prices")
+async def sync_prices_now():
+    """instruments 테이블 가격을 즉시 동기화 (수동 트리거).
+
+    - WS price_store에 있는 종목: 즉시 DB 반영
+    - 나머지 전체 종목: KIS REST API로 일괄 조회 후 DB 반영
+    백그라운드로 실행되며 즉시 응답을 반환합니다.
+    """
+    from kis_ws_client import get_price_store
+    store = get_price_store()
+    today = datetime.now().strftime("%Y-%m-%d")
+
+    # WS 종목 즉시 반영
+    ws_updated = 0
+    if store:
+        db = SessionLocal()
+        try:
+            for code, price_data in store.items():
+                db.execute(
+                    text(
+                        "UPDATE instruments SET last_price = :price, last_price_date = :date WHERE stock_code = :code"
+                    ),
+                    {"price": price_data["current_price"], "date": today, "code": code},
+                )
+                ws_updated += 1
+            db.commit()
+        except Exception as e:
+            db.rollback()
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            db.close()
+
+    # REST 전체 종목 백그라운드로 실행
+    ws_codes = set(store.keys())
+    asyncio.create_task(_db_full_price_sync(skip_ws_codes=ws_codes))
+
+    return {
+        "message": "WS 종목 즉시 반영, REST 전체 종목 갱신은 백그라운드 실행 중",
+        "ws_updated": ws_updated,
+        "rest_target": "나머지 ACTIVE 종목 (백그라운드)",
+        "date": today,
+    }
 
 @app.get('/api/check_username')
 async def check_username(username: str = Query(..., description="Username to check"), db: Session = Depends(get_db)):

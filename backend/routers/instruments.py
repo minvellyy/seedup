@@ -66,6 +66,9 @@ def _db():
 # ── Pydantic 모델 ───────────────────────────────────────────────────────────
 class PricePoint(BaseModel):
     date: str
+    open: Optional[float] = None
+    high: Optional[float] = None
+    low: Optional[float] = None
     close: float
     volume: Optional[int] = None
 
@@ -276,7 +279,14 @@ def get_stock_detail(stock_code: str):
         hist = []  # 히스토리 실패 시 빈 배열로 폴백 (현재가는 표시)
 
     price_history = [
-        PricePoint(date=p["date"], close=p["close"], volume=p.get("volume"))
+        PricePoint(
+            date=p["date"],
+            open=p.get("open"),
+            high=p.get("high"),
+            low=p.get("low"),
+            close=p["close"],
+            volume=p.get("volume"),
+        )
         for p in hist
     ]
 
@@ -312,34 +322,142 @@ def get_stock_detail(stock_code: str):
     )
 
 
+@router.get("/stocks/{stock_code}/scores")
+def get_stock_scores(stock_code: str):
+    """종목 재무 점수 — fin_scores parquet 기반 빠른 조회. 레이더 차트용."""
+    import math
+    try:
+        import sys, os
+        _backend_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+        if _backend_dir not in sys.path:
+            sys.path.insert(0, _backend_dir)
+        from config import FIN_MODEL_DIR
+        parquet_path = (
+            FIN_MODEL_DIR / "data" / "processed"
+            / "fin_scores_v2_2024_CONSOL_with_mc_with_price.parquet"
+        )
+        if not parquet_path.exists():
+            return {"stock_code": stock_code, "available": False}
+
+        import pandas as pd
+        df = pd.read_parquet(parquet_path)
+        sub = df[df["ticker"].astype(str).str.zfill(6) == stock_code.zfill(6)]
+        if sub.empty:
+            return {"stock_code": stock_code, "available": False}
+
+        row = sub.sort_values("as_of").iloc[-1]
+
+        def _f(key):
+            try:
+                v = float(row[key]) if key in row.index else None
+                if v is None or math.isnan(v):
+                    return None
+                # Scale 0-1 percentile scores → 0-100
+                return round(v * 100, 1) if v <= 1.0 else round(v, 1)
+            except Exception:
+                return None
+
+        def _raw(key):
+            try:
+                v = float(row[key]) if key in row.index else None
+                return None if v is None or math.isnan(v) else round(v, 2)
+            except Exception:
+                return None
+
+        mc = _raw("market_cap") if "market_cap" in row.index else None
+
+        return {
+            "stock_code": stock_code,
+            "available": True,
+            "as_of": str(row["as_of"])[:10] if "as_of" in row.index else None,
+            "overall_score": _f("overall_score"),
+            "overall_grade": str(row["overall_grade"]) if "overall_grade" in row.index and row["overall_grade"] else None,
+            "radar": [
+                {"key": "profitability", "label": "수익성",  "score": _f("profitability_score")},
+                {"key": "growth",        "label": "성장성",  "score": _f("growth_score")},
+                {"key": "stability",     "label": "안정성",  "score": _f("stability_score")},
+                {"key": "cashflow",      "label": "현금흐름", "score": _f("cashflow_score")},
+                {"key": "valuation",     "label": "밸류에이션", "score": _f("valuation_score")},
+            ],
+            "market_cap": mc,
+        }
+    except Exception as exc:
+        return {"stock_code": stock_code, "available": False, "error": str(exc)}
+
+
 @router.get("/etfs", response_model=List[StockListItem])
-def list_etfs(limit: int = Query(50, le=200)):
-    """ETF 목록 (DB instruments.last_price 기준)."""
+def list_etfs(
+    limit: int = Query(50, le=500),
+    search: Optional[str] = Query(None, description="ETF명 검색"),
+):
+    """ETF 목록. 현재가는 KIS API 병렬 조회 (5분 TTL 캐시 적용)."""
     conn = _db()
     try:
         cur = conn.cursor()
+        where = ["asset_type = 'ETF'", "price_status = 'ACTIVE'"]
+        params: list = []
+        if search:
+            where.append("name LIKE %s")
+            params.append(f"%{search}%")
         cur.execute(
-            """
+            f"""
             SELECT stock_code, name, exchange, sector, asset_type,
                    last_price, last_price_date
             FROM instruments
-            WHERE asset_type = 'ETF' AND price_status = 'ACTIVE'
+            WHERE {' AND '.join(where)}
             ORDER BY last_price DESC
             LIMIT %s
             """,
-            (limit,),
+            params + [limit],
         )
-        return [
-            StockListItem(
-                stock_code=r["stock_code"],
-                name=r["name"],
-                exchange=r["exchange"] or "",
-                sector=r["sector"],
-                asset_type=r["asset_type"],
-                current_price=float(r["last_price"] or 0),
-                price_date=str(r["last_price_date"] or ""),
-            )
-            for r in cur.fetchall()
-        ]
+        rows = cur.fetchall()
     finally:
         conn.close()
+
+    # KIS API 병렬 현재가 조회 (5분 TTL 캐시)
+    etf_codes = [r["stock_code"] for r in rows]
+    live_prices: Dict[str, Dict] = {}
+    max_workers = min(10, len(etf_codes))
+    if max_workers > 0:
+        with ThreadPoolExecutor(max_workers=max_workers) as pool:
+            future_map = {pool.submit(_get_price_cached, c): c for c in etf_codes}
+            for fut in as_completed(future_map):
+                code = future_map[fut]
+                result = fut.result()
+                if result:
+                    live_prices[code] = result
+
+    result_list = []
+    for r in rows:
+        code = r["stock_code"]
+        live = live_prices.get(code)
+        if live:
+            curr       = float(live["current_price"])
+            prev_close = float(live["prev_close"]) if live.get("prev_close") else None
+            change     = float(live["change"]) if live.get("change") else None
+            chg_rate   = float(live["change_rate"]) if live.get("change_rate") else None
+            price_date = live.get("price_date") or str(r["last_price_date"] or "")
+            volume     = live.get("volume")
+        else:
+            curr       = float(r["last_price"] or 0)
+            prev_close = None
+            change     = None
+            chg_rate   = None
+            price_date = str(r["last_price_date"] or "")
+            volume     = None
+
+        result_list.append(StockListItem(
+            stock_code=code,
+            name=r["name"],
+            exchange=r["exchange"] or "",
+            sector=r["sector"],
+            asset_type=r["asset_type"],
+            current_price=curr,
+            prev_close=prev_close,
+            change=change,
+            change_rate=chg_rate,
+            price_date=price_date,
+            volume=volume,
+        ))
+
+    return result_list

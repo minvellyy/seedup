@@ -130,7 +130,7 @@ const DashboardPage = () => {
             const priceMap = Object.fromEntries(priceList.map(s => [s.stock_code, s]))
             newStocks = top3.map(item => ({
               stock_code:    item.ticker,
-              name:          item.name,
+              name:          item.name || priceMap[item.ticker]?.name || item.ticker,
               exchange:      item.market,
               current_price: priceMap[item.ticker]?.current_price ?? 0,
               change_rate:   priceMap[item.ticker]?.change_rate ?? null,
@@ -749,6 +749,49 @@ const DashboardPage = () => {
             const BLUE_PALETTE = ['#1E3A8A','#2D5BB5','#2563EB','#3B82F6','#60A5FA','#93C5FD','#BAD4F5','#DBEAFE']
             const getColor = (idx) => BLUE_PALETTE[Math.min(idx, BLUE_PALETTE.length - 1)]
             const RISK_COLOR = { '안정형': '#27ae60', '중립형': '#f39c12', '공격형': '#e74c3c' }
+            const TIER_SUMMARY = {
+              '안정형':    '🛡️ 원금 보존을 최우선으로, 안전하게 자산을 지키는 포트폴리오입니다.',
+              '안정추구형': '🛡️ 낮은 변동성으로 꾸준히 자산을 불려가는 안정형 포트폴리오입니다.',
+              '위험중립형': '⚖️ 안정성과 수익 가능성을 균형 있게 담은 포트폴리오입니다.',
+              '적극투자형': '📈 성장 가능성 높은 종목에 집중해 높은 수익을 노리는 포트폴리오입니다.',
+              '공격투자형': '🚀 강한 상승 모멘텀 종목으로 구성해 최대 수익을 추구하는 포트폴리오입니다.',
+            }
+            const INVEST_GOAL_LABEL_D = {
+              '노후 준비': '노후 준비', '은퇴 준비': '노후 준비',
+              '주택 마련': '내 집 마련', '집 구입': '내 집 마련',
+              '자산 증식': '자산 증식', '목돈 마련': '목돈 마련',
+              '여유 자금 운용': '여유 자금 운용', '자녀 교육': '자녀 교육 자금',
+            }
+            const buildCardSummary = (pf) => {
+              const ctx = pf.survey_context || {}
+              const tierIcon = { '안정형':'🛡️','안정추구형':'🛡️','위험중립형':'⚖️','적극투자형':'📈','공격투자형':'🚀' }[pf.risk_tier] || '📊'
+              const GOAL_LBL = {
+                '노후 준비':'노후 준비','은퇴 준비':'노후 준비',
+                '주택 마련':'내 집 마련','집 구입':'내 집 마련',
+                '자산 증식':'자산 증식','목돈 마련':'목돈 마련',
+                '여유 자금 운용':'여유 자금 운용','자녀 교육':'자녀 교육 자금',
+              }
+              const goal = ctx.INVEST_GOAL ? (GOAL_LBL[ctx.INVEST_GOAL] || ctx.INVEST_GOAL) : null
+              const horizon = ctx.TARGET_HORIZON || null
+              const lumpAmt = ctx.LUMP_SUM_AMOUNT ? parseInt(ctx.LUMP_SUM_AMOUNT, 10) : null
+              const monthlyAmt = ctx.MONTHLY_AMOUNT ? parseInt(ctx.MONTHLY_AMOUNT, 10) : null
+              const contribType = ctx.CONTRIBUTION_TYPE
+              const fmtKrw = (n) => n >= 100_000_000 ? `${(n/100_000_000).toFixed(0)}억 원` : `${(n/10_000).toFixed(0)}만 원`
+              const mc = pf.monte_carlo_1y
+              const retStr = mc?.p50_pct != null ? ` · 기대수익 ${mc.p50_pct >= 0 ? '+' : ''}${mc.p50_pct.toFixed(0)}%` : ''
+              const nItems = (pf.portfolio_items || []).length
+              const condParts = []
+              if (goal && horizon) condParts.push(`${goal}(${horizon})`)
+              else if (goal) condParts.push(goal)
+              else if (horizon) condParts.push(`${horizon} 목표`)
+              if (contribType === 'LUMP_SUM' && lumpAmt) condParts.push(`일시금 ${fmtKrw(lumpAmt)}`)
+              else if (contribType === 'DCA' && monthlyAmt) condParts.push(`월 ${fmtKrw(monthlyAmt)} 적립식`)
+              else if (monthlyAmt) condParts.push(`월 ${fmtKrw(monthlyAmt)}`)
+              else if (lumpAmt) condParts.push(fmtKrw(lumpAmt))
+              const pfDesc = `${pf.risk_tier} ${nItems}개 종목${retStr}`
+              if (condParts.length > 0) return `${tierIcon} ${condParts.join(' · ')}에 최적화된 ${pfDesc}`
+              return TIER_SUMMARY[pf.risk_tier] || `${tierIcon} ${pf.risk_tier} 성향에 맞게 구성된 포트폴리오입니다.`
+            }
             const fmtPct = (v) => v == null ? '-' : `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`
             return (
               <div className="recommendations-card card">
@@ -811,7 +854,7 @@ const DashboardPage = () => {
                             </div>
                           </div>
                           <p className="recommendation-reason" style={{ color: '#64748b', fontSize: '0.85rem', marginBottom: 10, lineHeight: 1.5 }}>
-                            {pf.portfolio_summary || (pf.overall_summary ? pf.overall_summary.split('. ')[0] : '추천 근거 없음')}
+                            {buildCardSummary(pf)}
                           </p>
                           {/* 비중 막대 */}
                           <div style={{ display: 'flex', height: 8, borderRadius: 6, overflow: 'hidden', marginBottom: 10 }}>

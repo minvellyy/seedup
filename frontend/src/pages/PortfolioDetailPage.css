@@ -1,5 +1,42 @@
 /* PortfolioDetailPage.css */
 
+/* ── 추천 이유 섹션 ─────────────────────────────────────────────────────────── */
+.pd-reason-section {}
+
+.pd-reason-cards {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.pd-reason-card {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px 16px;
+}
+
+.pd-reason-icon {
+  font-size: 20px;
+  line-height: 1.6;
+  flex-shrink: 0;
+}
+
+.pd-reason-para {
+  font-size: 13.5px;
+  color: #374151;
+  line-height: 1.85;
+  margin: 0;
+}
+
+.pd-reason-para strong {
+  color: #1e293b;
+  font-weight: 700;
+}
+
 .portfolio-detail-page {
   min-height: 100vh;
   background: #f5f6fa;
@@ -61,6 +98,14 @@
   font-size: 15px;
   color: #1e293b;
 }
+.pd-tier-summary {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1e293b;
+  margin-top: 6px;
+  margin-bottom: 2px;
+}
+
 .pd-summary-text {
   font-size: 13px;
   color: #64748b;
@@ -251,8 +296,8 @@
 .pd-stock-reason {
   font-size: 12px;
   color: #475569;
-  line-height: 1.5;
-  margin: 0 0 6px 0;
+  line-height: 1.7;
+  margin: 0;
 }
 .pd-stock-tags {
   display: flex;
