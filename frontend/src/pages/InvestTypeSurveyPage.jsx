@@ -42,8 +42,14 @@ const questions = [
         subOptions: ["1년 미만", "1년 이상 3년 미만", "3년 이상"],
       },
     ],
-    // 옵션(0~3) 선택 시 더할 점수 (너가 적어둔 의도 유지)
-    score: [0, 6, 6, 6],
+    // 중복 선택 시 최댓값만 사용 (합산X)
+    // 옵션점수 + 기간점수: ①0점, ②6점, ③3점, ④1점 + 기간(①1점, ②3점, ③5점)
+    score: [
+      [0],        // 옵션①: 경험없음 (0점)
+      [7, 9, 11], // 옵션②: 6점 + 기간(1점, 3점, 5점) = 7, 9, 11점
+      [4, 6, 8],  // 옵션③: 3점 + 기간(1점, 3점, 5점) = 4, 6, 8점
+      [2, 4, 6],  // 옵션④: 1점 + 기간(1점, 3점, 5점) = 2, 4, 6점
+    ],
   },
   {
     key: "q4",
@@ -66,7 +72,7 @@ const questions = [
       "20% 정도는 감당하지 않고 추가 매도도 가능해요.",
       "30% 정도 변동도 버틸 수 있고 그 이상의 변동도 가능해요.",
     ],
-    score: [5, 3, 2, 1],
+    score: [1, 3, 4, 5],
   },
   {
     key: "q6",
@@ -93,7 +99,7 @@ const questions = [
     text: "8. 고객님의 나이는 어떻게 되시나요?",
     type: "radio",
     options: ["20세 미만", "20~35세 미만", "35~50세 미만", "50~60세 미만", "60세 이상"],
-    score: [5, 4, 3, 2, 1],
+    score: [1, 3, 5, 2, 1],
   },
   {
     key: "q9",
@@ -182,14 +188,32 @@ function InvestTypeSurveyPage({ onSubmit }) {
 
       if (q.type === "nested-checkbox") {
         // a는 { [mainIdx]: subIdxOrNull }
+        // 3번 문항: 중복 선택 시 최댓값만 사용 (합산X)
         const selectedMainIdxs = Object.keys(a || {}).map((x) => Number(x));
+        let maxScore = 0;
+        
         for (const mainIdx of selectedMainIdxs) {
-          total += q.score?.[mainIdx] ?? 0;
-
-          // sub에 따른 가중치가 필요하면 여기서 추가하면 됨
-          // const subIdx = a[mainIdx];
-          // if (subIdx !== null && subIdx !== undefined) total += ...;
+          let currentScore = 0;
+          
+          // score가 2차원 배열인 경우 (q3)
+          if (Array.isArray(q.score?.[mainIdx])) {
+            const subIdx = a[mainIdx];
+            // subOptions가 없는 경우 (옵션0: 경험없음)
+            if (subIdx === null || subIdx === undefined) {
+              currentScore = q.score[mainIdx][0] ?? 0;
+            } else {
+              // subOptions가 있는 경우, subIdx를 사용
+              currentScore = q.score[mainIdx][subIdx] ?? 0;
+            }
+          } else {
+            // 1차원 배열인 경우 (기존 방식)
+            currentScore = q.score?.[mainIdx] ?? 0;
+          }
+          
+          maxScore = Math.max(maxScore, currentScore);
         }
+        
+        total += maxScore;
       }
     }
 
