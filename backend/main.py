@@ -243,7 +243,8 @@ async def signup(data: SignupRequest, db: Session = Depends(get_db)):
                 'message': '회원가입이 완료되었습니다.',
                 'user_id': user_id,
                 'email': email,
-                'username': username
+                'username': username,
+                'name': name
             }
 
         except HTTPException:
@@ -276,7 +277,7 @@ async def login(data: LoginRequest, db: Session = Depends(get_db)):
 
         # username으로 사용자 검색
         result = db.execute(
-            text('SELECT id, email, username, password, investment_type FROM users WHERE username = :username'),
+            text('SELECT id, email, username, password, investment_type, name FROM users WHERE username = :username'),
             {'username': username}
         )
         user = result.fetchone()
@@ -292,7 +293,8 @@ async def login(data: LoginRequest, db: Session = Depends(get_db)):
                     'user_id': user[0],
                     'email': user[1],
                     'username': user[2],
-                    'investment_type': user[4]  # 투자성향 추가
+                    'investment_type': user[4],  # 투자성향 추가
+                    'name': user[5] if len(user) > 5 else None  # 이름 추가
                 }
         
         # 사용자가 없거나 비밀번호가 일치하지 않는 경우
@@ -377,11 +379,11 @@ async def update_user(user_id: int, data: dict, db: Session = Depends(get_db)):
         # 비밀번호 변경 처리
         if 'newPassword' in data and data['newPassword']:
             print(f"[UPDATE_USER] 비밀번호 변경 요청")
-            from passlib.context import CryptContext
-            pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-            hashed_password = pwd_context.hash(data['newPassword'])
+            import hashlib
+            # SHA256 해시 사용 (로그인과 동일한 방식)
+            password_hash = hashlib.sha256(data['newPassword'].encode('utf-8')).hexdigest()
             update_fields.append('password = :password')
-            params['password'] = hashed_password
+            params['password'] = password_hash
         
         if not update_fields:
             print(f"[UPDATE_USER] 업데이트할 필드 없음")
@@ -734,6 +736,7 @@ async def health():
     }
 
 from routers.stream import router as stream_router
+from routers.holdings import router as holdings_router
 
 # Include routers
 app.include_router(survey.router, prefix="/survey", tags=["Survey"])
@@ -741,6 +744,7 @@ app.include_router(dashboard.router)
 app.include_router(recommendations.router)
 app.include_router(instruments_router)   # /api/instruments/stocks, /etfs
 app.include_router(stream_router)        # /api/stream/prices
+app.include_router(holdings_router, prefix="/api")  # /api/holdings
 
 # 종목/포트폴리오 추천 라우터 등록 (/api/v1/stocks, /api/v1/portfolio)
 if _RECOMMEND_ROUTERS_AVAILABLE:
