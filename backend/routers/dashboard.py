@@ -190,9 +190,10 @@ def _make_analysis_llm():
         return ChatOpenAI(model=model.replace("openai/", ""))
 
 
-def _load_signal_fin_data(top_n: int = 25) -> tuple:
+def _load_signal_fin_data(top_n: int = 25, conn=None) -> tuple:
     """
     signal_pack_latest.csv와 fin_scores parquet을 직접 로드합니다.
+    conn 제공 시 DB instruments 에 존재하는 종목만 포함 (상위 top_n).
     Returns: (signal_tickers, fin_scores)
       signal_tickers: [{ticker, name, market, p_adj, rank_overall}, ...] 상위 top_n
       fin_scores: {ticker: {overall_grade, overall_score}}
@@ -204,15 +205,38 @@ def _load_signal_fin_data(top_n: int = 25) -> tuple:
         from config import SIGNAL_PACK_PATH, FIN_MODEL_DIR  # type: ignore
         from pathlib import Path as _Path
 
+        # DB 종목코드 집합 (conn 있을 때만)
+        # DB 종목코드 + 이름 (conn 있을 때만)
+        db_codes: set | None = None
+        db_name_map: dict = {}
+        if conn is not None:
+            try:
+                _cur = conn.cursor()
+                _cur.execute("SELECT stock_code, name FROM instruments WHERE asset_type='STOCK'")
+                for r in _cur.fetchall():
+                    code = r[0] if isinstance(r, tuple) else r['stock_code']
+                    name = r[1] if isinstance(r, tuple) else r['name']
+                    db_name_map[code] = name
+                db_codes = set(db_name_map.keys())
+            except Exception:
+                db_codes = None
+
         # signal pack
         if SIGNAL_PACK_PATH.exists():
             df = pd.read_csv(SIGNAL_PACK_PATH, dtype={"ticker": str})
             df_stock = df[df["asset_type"] == "stock"].copy()
+            # DB 유니버스로 제한 (매칭 없으면 필터 생략)
+            if db_codes:
+                df_filtered = df_stock[df_stock["ticker"].str.zfill(6).isin(db_codes)]
+                if not df_filtered.empty:
+                    df_stock = df_filtered
             df_top = df_stock.sort_values("rank_overall").head(top_n)
             for _, row in df_top.iterrows():
+                ticker = str(row["ticker"]).zfill(6)
+                csv_name = str(row["name"]) if pd.notna(row.get("name")) else ""
                 signal_tickers.append({
-                    "ticker": str(row["ticker"]).zfill(6),
-                    "name": str(row["name"]) if pd.notna(row.get("name")) else "",
+                    "ticker": ticker,
+                    "name": csv_name or db_name_map.get(ticker, ""),
                     "market": "KOSPI",
                     "p_adj": float(row["p_adj"]) if pd.notna(row.get("p_adj")) else 0.5,
                     "rank_overall": int(row["rank_overall"]) if pd.notna(row.get("rank_overall")) else 999,
@@ -811,7 +835,7 @@ async def get_stock_recommendations_dashboard(
         pass
 
     # ── 1단계: 신호+재무 데이터 직접 로드 (빠름) ─────────────────────────
-    signal_tickers, fin_scores = _load_signal_fin_data(top_n=25)
+    signal_tickers, fin_scores = _load_signal_fin_data(top_n=25, conn=conn)
     signal_map = {s["ticker"]: s for s in signal_tickers}
 
     # ── 2단계: Monte Carlo 주 모델로 종목 선정 ────────────────────────────
@@ -1043,8 +1067,9 @@ async def get_portfolio_recommendations_ai(
                     pf["_cached_at"] = cached.get("saved_at")
                 return portfolios
 
-    # ── 사용자 투자성향 ───────────────────────────────────────────────────
+    # ── 사용자 투자성향 + 설문 컨텍스트 ────────────────────────────────────
     inv_type = "위험중립형"
+    survey_ctx: dict = {}
     try:
         cur = conn.cursor()
         cur.execute("SELECT investment_type FROM users WHERE id = %s", (user_id,))
@@ -1056,6 +1081,28 @@ async def get_portfolio_recommendations_ai(
                 if koscom_score >= score:
                     inv_type = lv
                     break
+        # 설문 응답 로드 (개인화 추천 이유에 활용)
+        cur.execute("""
+            SELECT sq.code,
+                   sa.value_text, sa.value_number, sa.value_choice
+            FROM survey_answers sa
+            JOIN survey_questions sq ON sa.question_id = sq.id
+            WHERE sa.user_id = %s
+              AND sq.code IN (
+                'INVEST_GOAL','TARGET_HORIZON','TARGET_AMOUNT',
+                'CONTRIBUTION_TYPE','LUMP_SUM_AMOUNT','MONTHLY_AMOUNT',
+                'MAX_HOLDINGS','DIVIDEND_PREF','ACCOUNT_TYPE'
+              )
+        """, (user_id,))
+        for r in cur.fetchall():
+            code = r["code"]
+            val = (
+                r.get("value_choice")
+                or r.get("value_text")
+                or (str(int(r["value_number"])) if r.get("value_number") else None)
+            )
+            if val:
+                survey_ctx[code] = val
     except Exception:
         pass
 
@@ -1063,7 +1110,7 @@ async def get_portfolio_recommendations_ai(
         raise HTTPException(status_code=503, detail=f"모델 로드 실패: {_MODELS_IMPORT_ERR}")
 
     # ── 1단계: 신호+재무 데이터 직접 로드 ────────────────────────────────
-    signal_tickers, fin_scores = _load_signal_fin_data(top_n=25)
+    signal_tickers, fin_scores = _load_signal_fin_data(top_n=25, conn=conn)
     signal_map = {s["ticker"]: s for s in signal_tickers}
     fin_map = {
         ticker: {
@@ -1123,6 +1170,7 @@ async def get_portfolio_recommendations_ai(
                 for it in pf_d.get("portfolio_items", [])
             ],
             "monte_carlo_1y": mc,
+            "survey_context": survey_ctx,
         })
 
     # ── 3단계: CrewAI 설명 에이전트 (선정 종목 설명 보강) ────────────────
@@ -1164,14 +1212,34 @@ async def get_portfolio_recommendations_ai(
     portfolios = _enrich_portfolio_quant_signals(portfolios)
 
     _save_pf_cache(user_id, portfolios)
-    
+
     # ── 5단계: DB에 히스토리 저장 ──────────────────────────────────────────
     try:
         _save_portfolio_to_db(user_id, conn, pf_results)
     except Exception as e:
         import traceback
         _cache_logger.error("포트폴리오 DB 저장 실패 (user_id=%s): %s\n%s", user_id, e, traceback.format_exc())
-    
+
+    # ── 개별 종목 저장 (추천 빈도 집계용) ────────────────────────────────
+    try:
+        cur = conn.cursor()
+        for pf in portfolios:
+            for it in pf.get("portfolio_items", []):
+                ticker = it.get("ticker")
+                if not ticker:
+                    continue
+                cur.execute(
+                    """
+                    INSERT INTO portfolio_recommendations
+                        (user_id, strategy_name, stock_code, state)
+                    VALUES (%s, %s, %s, 'ACTIVE')
+                    """,
+                    (user_id, "stock_pick", ticker),
+                )
+        conn.commit()
+    except Exception as _db_err:
+        _cache_logger.warning("개별 종목 DB 저장 실패 (user_id=%s): %s", user_id, _db_err)
+
     return portfolios
 
 
@@ -1246,7 +1314,8 @@ async def get_portfolio_history(
 
 class PortfolioAiEnrichRequest(BaseModel):
     tickers: List[str]
-    mode: str = "fin"   # "fin" (재무분석) | "signal" (방향성)
+    mode: str = "fin"   # "fin" (재무분석) | "signal" (방향성) | "news" (뉴스 기반 선정 근거)
+    items: List[dict] = []  # [{"ticker": str, "name": str}, ...] — mode='news'에서 활용
 
 
 @router.post("/portfolio-ai-enrich")
@@ -1267,9 +1336,137 @@ async def portfolio_ai_enrich(req: PortfolioAiEnrichRequest):
 
     from concurrent.futures import ThreadPoolExecutor, as_completed
 
-    mode = req.mode if req.mode in ("fin", "signal") else "fin"
+    mode = req.mode if req.mode in ("fin", "signal", "news") else "fin"
     tickers = list(dict.fromkeys(req.tickers))[:12]  # 중복 제거, 최대 12개
 
+    # ── news 모드: 뉴스 RAG + CrewAI 배치 처리 ───────────────────────────────
+    if mode == "news":
+        ticker_to_name = {it.get("ticker", ""): it.get("name", it.get("ticker", ""))
+                         for it in (req.items or [])}
+        for t in tickers:
+            if t not in ticker_to_name:
+                ticker_to_name[t] = t
+
+        # 1) 뉴스 컨텍스트 병렬 수집
+        news_contexts: dict = {}
+        try:
+            from news_model.pipeline_news_analysis_mvp import search_news_context
+
+            def _fetch_news_for_ticker(ticker: str) -> tuple:
+                name = ticker_to_name.get(ticker, ticker)
+                query = f"{name} 사업 실적 전망 호재 뉴스"
+                try:
+                    results = search_news_context(query, n_results=5)
+                    snippets = [r.get("doc", "")[:300] for r in results if r.get("doc")]
+                except Exception:
+                    snippets = []
+                return ticker, "\n".join(snippets) if snippets else "관련 뉴스 없음"
+
+            with ThreadPoolExecutor(max_workers=4) as pool:
+                for ticker, ctx in pool.map(_fetch_news_for_ticker, tickers):
+                    news_contexts[ticker] = ctx
+        except Exception as e:
+            _cache_logger.warning("뉴스 컨텍스트 수집 실패: %s", e)
+            for t in tickers:
+                news_contexts[t] = "뉴스 데이터를 불러올 수 없습니다."
+
+        # 2) LLM 프롬프트용 뉴스 블록 구성
+        news_block = ""
+        for t in tickers:
+            name = ticker_to_name.get(t, t)
+            ctx = news_contexts.get(t, "관련 뉴스 없음")
+            news_block += f"\n## {name} ({t})\n{ctx}\n"
+
+        ticker_names_str = ", ".join(
+            f"{ticker_to_name.get(t, t)}({t})" for t in tickers
+        )
+
+        # 3) CrewAI 에이전트로 종목별 선정 근거 생성
+        narratives_map: dict = {}
+        try:
+            from crewai import Agent, Task, Crew
+
+            llm = _make_analysis_llm()
+            news_analyst = Agent(
+                role="주식 뉴스 분석 전문가",
+                goal=(
+                    "포트폴리오에 편입된 각 종목이 왜 선정됐는지를 "
+                    "최신 뉴스 근거 기반으로 투자 입문자가 이해할 수 있도록 자연어로 설명한다."
+                ),
+                backstory=(
+                    "증권사 리서치 전문가로, 각 기업의 사업부별 뉴스와 시장 동향을 분석하여 "
+                    "어떤 사업부·제품이 어떤 이유로 성장하고 있는지, 어떤 촉매제가 주가 상승을 이끄는지를 "
+                    "쉬운 말로 일반 투자자에게 설명하는 데 특화되어 있다."
+                ),
+                llm=llm,
+                verbose=False,
+                allow_delegation=False,
+            )
+
+            task_desc = (
+                f"다음 포트폴리오 편입 종목들에 대해 '왜 이 종목이 선정됐는가'를 뉴스 근거 기반으로 설명하라.\n\n"
+                f"종목 목록: {ticker_names_str}\n\n"
+                f"[종목별 뉴스 컨텍스트]\n{news_block}\n\n"
+                "작성 지침:\n"
+                "1. 각 종목별로 뉴스에서 확인되는 주요 호재(어떤 사업부·제품·이벤트)를 구체적으로 언급하라.\n"
+                "2. 투자 입문자도 이해할 수 있도록 전문용어 없이 2-3문장으로 설명하라.\n"
+                "3. 뉴스가 없는 경우 종목의 일반적 특징과 편입 의미를 설명하라.\n"
+                "4. 모든 설명은 반드시 한국어로 작성하라.\n\n"
+                "반드시 아래 JSON 형식으로만 응답하라. 추가 설명 없이 JSON만 출력하라:\n"
+                "{\n"
+                '  "narratives": [\n'
+                '    {"ticker": "종목코드", "narrative": "왜 이 종목이 선정됐는지 2-3문장 한국어 설명"},\n'
+                "    ...\n"
+                "  ]\n"
+                "}"
+            )
+
+            task = Task(
+                description=task_desc,
+                expected_output=(
+                    "각 편입 종목에 대해 뉴스 기반 선정 근거가 담긴 JSON 문자열. "
+                    "narratives(list) 필드를 포함해야 한다."
+                ),
+                agent=news_analyst,
+            )
+
+            crew = Crew(agents=[news_analyst], tasks=[task], verbose=False)
+            raw = crew.kickoff()
+            raw_str = str(raw) if not isinstance(raw, str) else raw
+
+            try:
+                import re as _re
+                m = _re.search(r'\{[\s\S]+\}', raw_str)
+                parsed_crew = json.loads(m.group()) if m else {}
+            except (json.JSONDecodeError, AttributeError):
+                parsed_crew = {}
+
+            narratives_map = {
+                n.get("ticker"): n.get("narrative", "")
+                for n in parsed_crew.get("narratives", [])
+            }
+        except Exception as crew_err:
+            _cache_logger.error("뉴스 CrewAI 분석 실패: %s", crew_err)
+
+        news_results: dict = {}
+        for t in tickers:
+            name = ticker_to_name.get(t, t)
+            ctx_snippet = news_contexts.get(t, "")
+            if narratives_map.get(t):
+                narrative = narratives_map[t]
+            elif ctx_snippet and ctx_snippet not in ("관련 뉴스 없음", "뉴스 데이터를 불러올 수 없습니다."):
+                # CrewAI 실패 시 뉴스 첫 문장만 fallback으로 사용
+                first_line = ctx_snippet.strip().split("\n")[0][:200]
+                narrative = f"{name}: {first_line}"
+            else:
+                narrative = f"{name}에 대한 뉴스 데이터가 충분하지 않습니다. 재무 실적 및 시장 모멘텀을 바탕으로 선정되었습니다."
+            news_results[t] = {
+                "narrative": narrative,
+                "selection_reason": narrative,
+            }
+        return news_results
+
+    # ── fin / signal 모드: 종목별 병렬 처리 ────────────────────────────────────
     def _analyze(ticker: str) -> tuple:
         try:
             llm = _make_analysis_llm()

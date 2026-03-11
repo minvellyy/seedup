@@ -1,31 +1,31 @@
 {
-  "saved_at": "2026-03-11T02:44:29.085580",
+  "saved_at": "2026-03-11T06:16:53.744406",
   "portfolios": [
     {
       "portfolio_label": "균형 추천형",
       "portfolio_style": "balanced",
-      "portfolio_summary": "MC 1년 기대수익률: 하락 시나리오(P10) +15.8%, 중앙값(P50) +65.9%, 상승 시나리오(P90) +137.7%. 기대수익률 +0.0%, 연간변동성 0.0%.",
+      "portfolio_summary": "MC 1년 기대수익률: 하락 시나리오(P10) +8.5%, 중앙값(P50) +48.3%, 상승 시나리오(P90) +102.8%. 기대수익률 +0.0%, 연간변동성 0.0%.",
       "risk_tier": "공격투자형",
       "portfolio_items": [
-        {
-          "ticker": "005930",
-          "name": "삼성전자",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "삼성전자는 재무적으로 안정성이 높고, 전체 클리프 점수가 '우수'에 해당하여 안정적인 수익성과 성장이 기대됩니다. 최근 3개월 동안의 상승 확률이 약 48%로, 공격적 투자자의 포트폴리오에 적합합니다.",
-          "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
         {
           "ticker": "058470",
           "name": "리노공업",
           "weight": 0.1429,
           "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "리노공업은 55%의 상승 확률을 보이며, 우수한 수익성과 높은 안정성을 가지고 있어 공격 투자자에게 매우 매력적인 선택입니다.",
-          "ai_fin_grade": "탁월",
+          "selection_reason": "매우 높은 수익성 점수(97.29)와 안정성(98.24)을 갖추고 있어 공격 투자자에게 최적의 선택입니다. 성장성도 양호하며, 높은 상승 확률(p_adj 55.47%)을 보입니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "005930",
+          "name": "삼성전자",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
+          "asset_type": "STOCK",
+          "selection_reason": "이 종목은 공격 투자자에게 적합합니다. 전체 성과 점수는 58.92로 양호하며, 수익성 및 안정성 지표가 긍정적입니다. 성장성도 괜찮고, 상승 확률(p_adj 47.95%)이 좋습니다.",
+          "ai_fin_grade": null,
           "ai_strengths": [],
           "ai_weaknesses": []
         },
@@ -35,7 +35,7 @@
           "weight": 0.1429,
           "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "1년 수익률 +410.1% / 변동성 57.1% 으로 모멘텀 상위 편입",
+          "selection_reason": "해당 종목에 대한 정보를 찾을 수 없어 분석할 수 없습니다.",
           "ai_fin_grade": null,
           "ai_strengths": [],
           "ai_weaknesses": []
@@ -46,8 +46,19 @@
           "weight": 0.1429,
           "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "삼성전자 우선주는 상승 확률이 약 48%로 안정적인 편입니다. 재무 지표에서 우수한 수익성과 안정성을 보여 공격 투자자에게 유망한 선택이 될 수 있습니다.",
+          "selection_reason": "이 종목은 공격 투자자에게 적합합니다. 전체 성과 점수는 58.76이며, 수익성 점수가 72.04로 높아서 안정적인 투자처로 추천됩니다. 상승 가능성도 좋습니다.",
           "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "004170",
+          "name": "신세계",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
+          "asset_type": "STOCK",
+          "selection_reason": "이 종목은 공격 투자자에게 그리 매력적이지 않습니다. 안정성이 낮고 성장 가능성이 떨어지며, 수익성 점수도 낮아 위험이 큽니다.",
+          "ai_fin_grade": "양호",
           "ai_strengths": [],
           "ai_weaknesses": []
         },
@@ -57,7 +68,7 @@
           "weight": 0.1429,
           "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "현대글로비스는 최근 상승 확률이 48%로 긍정적인 매력이 있으나, 재무 평가 점수가 '보통'으로 낮아 공격적인 투자자에게는 조심스러운 접근이 필요합니다.",
+          "selection_reason": "이 종목은 공격 투자자에게 적합하지 않습니다. 전체 성과 점수는 29.33으로 낮으며, 수익성 지표가 부정적이며(ROA -0.81%) 성장성 점수는 31.75로 만족스럽지 않습니다. 전반적으로 높은 위험과 낮은 가능성을 보여줍니다.",
           "ai_fin_grade": null,
           "ai_strengths": [],
           "ai_weaknesses": []
@@ -68,18 +79,7 @@
           "weight": 0.1429,
           "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "현대차는 최근 상승 확률이 51%로 이를 기반으로 공격 투자자에게 적합한 투자 기회가 될 수 있습니다. 전체 재무 점수는 '양호'로 양호한 성장이 기대됩니다.",
-          "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
-        {
-          "ticker": "006800",
-          "name": "미래에셋증권",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "미래에셋대우는 상승 확률이 46%로 다소 낮습니다. 재무 성과도 미미하여 매우 공격적인 투자자에게는 적합하지 않을 수 있습니다.",
+          "selection_reason": "이 종목은 공격 투자자에게 적합합니다. 전체 성과 점수는 53.80. 수익성 점수(67.12)가 높아 안정적인 성장이 가능할 것으로 보입니다.",
           "ai_fin_grade": null,
           "ai_strengths": [],
           "ai_weaknesses": []
@@ -88,36 +88,36 @@
       "monte_carlo_1y": {
         "n_simulations": 1000000,
         "horizon_days": 252,
-        "p10_pct": 15.8,
-        "p50_pct": 65.9,
-        "p90_pct": 137.7,
-        "interpretation": "1년 후 기대 수익률(중앙값) 65.9%, 하락 시나리오(10%) 15.8%, 상승 시나리오(90%) 137.7%입니다."
+        "p10_pct": 8.5,
+        "p50_pct": 48.3,
+        "p90_pct": 102.8,
+        "interpretation": "1년 후 기대 수익률(중앙값) 48.3%, 하락 시나리오(10%) 8.5%, 상승 시나리오(90%) 102.8%입니다."
       },
       "survey_context": {
         "INVEST_GOAL": "자산증식",
-        "TARGET_HORIZON": "5년 후",
+        "TARGET_HORIZON": "3년 후",
         "TARGET_AMOUNT": "100000000",
         "CONTRIBUTION_TYPE": "LUMP_SUM",
-        "LUMP_SUM_AMOUNT": "10000000",
+        "LUMP_SUM_AMOUNT": "50000000",
         "MAX_HOLDINGS": "10",
         "DIVIDEND_PREF": "MID",
         "ACCOUNT_TYPE": "일반"
       },
       "quant_signals": {
         "short_term": {
-          "weighted_p_adj": 0.4949,
+          "weighted_p_adj": 0.5118,
           "items": [
-            {
-              "ticker": "005930",
-              "name": "삼성전자",
-              "weight_pct": 14.3,
-              "p_adj": 0.4795
-            },
             {
               "ticker": "058470",
               "name": "리노공업",
               "weight_pct": 14.3,
               "p_adj": 0.5547
+            },
+            {
+              "ticker": "005930",
+              "name": "삼성전자",
+              "weight_pct": 14.3,
+              "p_adj": 0.4795
             },
             {
               "ticker": "00680K",
@@ -132,6 +132,12 @@
               "p_adj": 0.4779
             },
             {
+              "ticker": "004170",
+              "name": "신세계",
+              "weight_pct": 14.3,
+              "p_adj": 0.56
+            },
+            {
               "ticker": "000720",
               "name": "현대건설",
               "weight_pct": 14.3,
@@ -142,29 +148,23 @@
               "name": "현대차",
               "weight_pct": 14.3,
               "p_adj": 0.5125
-            },
-            {
-              "ticker": "006800",
-              "name": "미래에셋증권",
-              "weight_pct": 14.3,
-              "p_adj": 0.4586
             }
           ]
         },
         "medium_term": {
-          "weighted_ret_12m_pct": -11.7083,
+          "weighted_ret_12m_pct": -17.025,
           "items": [
-            {
-              "ticker": "005930",
-              "name": "삼성전자",
-              "weight_pct": 14.3,
-              "ret_12m_pct": -27.42
-            },
             {
               "ticker": "058470",
               "name": "리노공업",
               "weight_pct": 14.3,
               "ret_12m_pct": -5.62
+            },
+            {
+              "ticker": "005930",
+              "name": "삼성전자",
+              "weight_pct": 14.3,
+              "ret_12m_pct": -27.42
             },
             {
               "ticker": "00680K",
@@ -179,6 +179,12 @@
               "ret_12m_pct": -25.46
             },
             {
+              "ticker": "004170",
+              "name": "신세계",
+              "weight_pct": 14.3,
+              "ret_12m_pct": -24.26
+            },
+            {
               "ticker": "000720",
               "name": "현대건설",
               "weight_pct": 14.3,
@@ -189,29 +195,23 @@
               "name": "현대차",
               "weight_pct": 14.3,
               "ret_12m_pct": 9.96
-            },
-            {
-              "ticker": "006800",
-              "name": "미래에셋증권",
-              "weight_pct": 14.3,
-              "ret_12m_pct": 7.64
             }
           ]
         },
         "risk": {
-          "weighted_vol_3m_pct": 37.2983,
+          "weighted_vol_3m_pct": 35.8083,
           "items": [
-            {
-              "ticker": "005930",
-              "name": "삼성전자",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 36.68
-            },
             {
               "ticker": "058470",
               "name": "리노공업",
               "weight_pct": 14.3,
               "vol_3m_pct": 47.35
+            },
+            {
+              "ticker": "005930",
+              "name": "삼성전자",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 36.68
             },
             {
               "ticker": "00680K",
@@ -226,6 +226,12 @@
               "vol_3m_pct": 35.29
             },
             {
+              "ticker": "004170",
+              "name": "신세계",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 32.81
+            },
+            {
               "ticker": "000720",
               "name": "현대건설",
               "weight_pct": 14.3,
@@ -236,12 +242,6 @@
               "name": "현대차",
               "weight_pct": 14.3,
               "vol_3m_pct": 34.61
-            },
-            {
-              "ticker": "006800",
-              "name": "미래에셋증권",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 41.75
             }
           ]
         }
@@ -250,16 +250,27 @@
     {
       "portfolio_label": "모멘텀 집중형",
       "portfolio_style": "balanced",
-      "portfolio_summary": "MC 1년 기대수익률: 하락 시나리오(P10) +98.1%, 중앙값(P50) +212.2%, 상승 시나리오(P90) +392.2%. 기대수익률 +0.0%, 연간변동성 0.0%.",
+      "portfolio_summary": "MC 1년 기대수익률: 하락 시나리오(P10) +43.5%, 중앙값(P50) +132.1%, 상승 시나리오(P90) +275.7%. 기대수익률 +0.0%, 연간변동성 0.0%.",
       "risk_tier": "공격투자형",
       "portfolio_items": [
+        {
+          "ticker": "058470",
+          "name": "리노공업",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
+          "asset_type": "STOCK",
+          "selection_reason": "매우 높은 수익성 점수(97.29)와 안정성(98.24)을 갖추고 있어 공격 투자자에게 최적의 선택입니다. 성장성도 양호하며, 높은 상승 확률(p_adj 55.47%)을 보입니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
         {
           "ticker": "043260",
           "name": "성호전자",
           "weight": 0.1429,
           "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "LG전자는 상승 확률이 약 47%로 투자자에게 긍정적인 신호를 제공합니다. 그러나 재무 데이터에서 안정성 점수가 낮아 공격 투자자에게 다소 리스크가 있는 종목입니다.",
+          "selection_reason": "입급 투자자에게 적합하지 않은 종목으로, 수익성(63.74)은 양호하나 성장성이 제한적이고 전반적인 평가는 낮습니다.",
           "ai_fin_grade": null,
           "ai_strengths": [],
           "ai_weaknesses": []
@@ -270,7 +281,7 @@
           "weight": 0.1429,
           "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "미래에셋대우는 상승 확률이 46%로 다소 낮습니다. 재무 성과도 미미하여 매우 공격적인 투자자에게는 적합하지 않을 수 있습니다.",
+          "selection_reason": "이 종목은 투자의 안정성이 낮고 수익성이 저조하여 공격 투자자에게 추천하기 어려운 종목입니다.",
           "ai_fin_grade": null,
           "ai_strengths": [],
           "ai_weaknesses": []
@@ -281,7 +292,7 @@
           "weight": 0.1429,
           "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "우리기술은 상승 확률이 40%로 낮은 편입니다. 재무 데이터에서도 불리하여 공격 투자형에는 적합하지 않습니다.",
+          "selection_reason": "이 종목은 투자자에게 적합하지 않습니다. 수익성 점수가 낮고(ROA -2.07%), 성장성도 18.45로 미흡합니다. 전반적으로 위험한 투자입니다.",
           "ai_fin_grade": null,
           "ai_strengths": [],
           "ai_weaknesses": []
@@ -292,7 +303,7 @@
           "weight": 0.1429,
           "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "현대ADM의 경우 상승 확률이 37%로 낮은 편이며, 재무 데이터도 부정적이어서 공격 투자자에게는 적합하지 않습니다.",
+          "selection_reason": "이 종목은 낮은 전체 성과 점수(15.58)와 심각한 수익성 문제를 안고 있어 공격 투자자에게 부적합합니다. 부채 비율이 높고(3.37) 성장 가능성도 낮아서 높은 위험을 동반합니다.",
           "ai_fin_grade": null,
           "ai_strengths": [],
           "ai_weaknesses": []
@@ -303,7 +314,7 @@
           "weight": 0.1429,
           "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "현대미포조선은 상승 확률이 52%로, 특히 성장성이 우수하여 공격 투자자에게 매력적입니다. 전체 점수가 '우수'에 해당하여 기대 수익률이 높을 것으로 예상됩니다.",
+          "selection_reason": "공격 투자자에게 적합한 종목입니다. 성장성 점수가 87.94로 매우 높고, 안정성도 괜찮습니다(53.19). 수익률이 안정적이고 상승 가능성(p_adj 52.11%)이 매우 높습니다.",
           "ai_fin_grade": null,
           "ai_strengths": [],
           "ai_weaknesses": []
@@ -314,18 +325,7 @@
           "weight": 0.1429,
           "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "1년 수익률 +410.1% / 변동성 57.1% 으로 모멘텀 상위 편입",
-          "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
-        {
-          "ticker": "038500",
-          "name": "삼표시멘트",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "보광산업은 약 43%의 상승 확률을 보이지만 재무 안정성 지표는 낮아 공격 투자자에게는 아쉬움이 존재합니다.",
+          "selection_reason": "해당 종목에 대한 정보를 찾을 수 없어 분석할 수 없습니다.",
           "ai_fin_grade": null,
           "ai_strengths": [],
           "ai_weaknesses": []
@@ -334,25 +334,31 @@
       "monte_carlo_1y": {
         "n_simulations": 1000000,
         "horizon_days": 252,
-        "p10_pct": 98.1,
-        "p50_pct": 212.2,
-        "p90_pct": 392.2,
-        "interpretation": "1년 후 기대 수익률(중앙값) 212.2%, 하락 시나리오(10%) 98.1%, 상승 시나리오(90%) 392.2%입니다."
+        "p10_pct": 43.5,
+        "p50_pct": 132.1,
+        "p90_pct": 275.7,
+        "interpretation": "1년 후 기대 수익률(중앙값) 132.1%, 하락 시나리오(10%) 43.5%, 상승 시나리오(90%) 275.7%입니다."
       },
       "survey_context": {
         "INVEST_GOAL": "자산증식",
-        "TARGET_HORIZON": "5년 후",
+        "TARGET_HORIZON": "3년 후",
         "TARGET_AMOUNT": "100000000",
         "CONTRIBUTION_TYPE": "LUMP_SUM",
-        "LUMP_SUM_AMOUNT": "10000000",
+        "LUMP_SUM_AMOUNT": "50000000",
         "MAX_HOLDINGS": "10",
         "DIVIDEND_PREF": "MID",
         "ACCOUNT_TYPE": "일반"
       },
       "quant_signals": {
         "short_term": {
-          "weighted_p_adj": 0.443,
+          "weighted_p_adj": 0.4644,
           "items": [
+            {
+              "ticker": "058470",
+              "name": "리노공업",
+              "weight_pct": 14.3,
+              "p_adj": 0.5547
+            },
             {
               "ticker": "043260",
               "name": "성호전자",
@@ -388,18 +394,18 @@
               "name": "미래에셋증권2우B",
               "weight_pct": 14.3,
               "p_adj": null
-            },
-            {
-              "ticker": "038500",
-              "name": "삼표시멘트",
-              "weight_pct": 14.3,
-              "p_adj": 0.4267
             }
           ]
         },
         "medium_term": {
-          "weighted_ret_12m_pct": -1.0633,
+          "weighted_ret_12m_pct": -0.8667,
           "items": [
+            {
+              "ticker": "058470",
+              "name": "리노공업",
+              "weight_pct": 14.3,
+              "ret_12m_pct": -5.62
+            },
             {
               "ticker": "043260",
               "name": "성호전자",
@@ -435,18 +441,18 @@
               "name": "미래에셋증권2우B",
               "weight_pct": 14.3,
               "ret_12m_pct": null
-            },
-            {
-              "ticker": "038500",
-              "name": "삼표시멘트",
-              "weight_pct": 14.3,
-              "ret_12m_pct": -6.8
             }
           ]
         },
         "risk": {
-          "weighted_vol_3m_pct": 54.0767,
+          "weighted_vol_3m_pct": 57.885,
           "items": [
+            {
+              "ticker": "058470",
+              "name": "리노공업",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 47.35
+            },
             {
               "ticker": "043260",
               "name": "성호전자",
@@ -482,12 +488,6 @@
               "name": "미래에셋증권2우B",
               "weight_pct": 14.3,
               "vol_3m_pct": null
-            },
-            {
-              "ticker": "038500",
-              "name": "삼표시멘트",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 24.5
             }
           ]
         }
@@ -500,12 +500,23 @@
       "risk_tier": "공격투자형",
       "portfolio_items": [
         {
+          "ticker": "058470",
+          "name": "리노공업",
+          "weight": 0.1429,
+          "weight_pct": 14.3,
+          "asset_type": "STOCK",
+          "selection_reason": "매우 높은 수익성 점수(97.29)와 안정성(98.24)을 갖추고 있어 공격 투자자에게 최적의 선택입니다. 성장성도 양호하며, 높은 상승 확률(p_adj 55.47%)을 보입니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
           "ticker": "005930",
           "name": "삼성전자",
           "weight": 0.1429,
           "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "삼성전자는 재무적으로 안정성이 높고, 전체 클리프 점수가 '우수'에 해당하여 안정적인 수익성과 성장이 기대됩니다. 최근 3개월 동안의 상승 확률이 약 48%로, 공격적 투자자의 포트폴리오에 적합합니다.",
+          "selection_reason": "이 종목은 공격 투자자에게 적합합니다. 전체 성과 점수는 58.92로 양호하며, 수익성 및 안정성 지표가 긍정적입니다. 성장성도 괜찮고, 상승 확률(p_adj 47.95%)이 좋습니다.",
           "ai_fin_grade": null,
           "ai_strengths": [],
           "ai_weaknesses": []
@@ -516,19 +527,8 @@
           "weight": 0.1429,
           "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "삼성전자 우선주는 상승 확률이 약 48%로 안정적인 편입니다. 재무 지표에서 우수한 수익성과 안정성을 보여 공격 투자자에게 유망한 선택이 될 수 있습니다.",
+          "selection_reason": "이 종목은 공격 투자자에게 적합합니다. 전체 성과 점수는 58.76이며, 수익성 점수가 72.04로 높아서 안정적인 투자처로 추천됩니다. 상승 가능성도 좋습니다.",
           "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
-        {
-          "ticker": "058470",
-          "name": "리노공업",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "리노공업은 55%의 상승 확률을 보이며, 우수한 수익성과 높은 안정성을 가지고 있어 공격 투자자에게 매우 매력적인 선택입니다.",
-          "ai_fin_grade": "탁월",
           "ai_strengths": [],
           "ai_weaknesses": []
         },
@@ -538,8 +538,8 @@
           "weight": 0.1429,
           "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "신세계는 상승 확률이 56%로 매우 긍정적입니다. 그러나 재무 점수는 '보통'으로 안정성에서 다소 불안한 요소가 있어 주의가 필요합니다.",
-          "ai_fin_grade": "보통",
+          "selection_reason": "이 종목은 공격 투자자에게 그리 매력적이지 않습니다. 안정성이 낮고 성장 가능성이 떨어지며, 수익성 점수도 낮아 위험이 큽니다.",
+          "ai_fin_grade": "양호",
           "ai_strengths": [],
           "ai_weaknesses": []
         },
@@ -549,7 +549,7 @@
           "weight": 0.1429,
           "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "1년 수익률 +410.1% / 변동성 57.1% 으로 모멘텀 상위 편입",
+          "selection_reason": "해당 종목에 대한 정보를 찾을 수 없어 분석할 수 없습니다.",
           "ai_fin_grade": null,
           "ai_strengths": [],
           "ai_weaknesses": []
@@ -560,7 +560,7 @@
           "weight": 0.1429,
           "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "현대차는 최근 상승 확률이 51%로 이를 기반으로 공격 투자자에게 적합한 투자 기회가 될 수 있습니다. 전체 재무 점수는 '양호'로 양호한 성장이 기대됩니다.",
+          "selection_reason": "이 종목은 공격 투자자에게 적합합니다. 전체 성과 점수는 53.80. 수익성 점수(67.12)가 높아 안정적인 성장이 가능할 것으로 보입니다.",
           "ai_fin_grade": null,
           "ai_strengths": [],
           "ai_weaknesses": []
@@ -571,7 +571,7 @@
           "weight": 0.1429,
           "weight_pct": 14.3,
           "asset_type": "STOCK",
-          "selection_reason": "삼성정밀화학은 상승 확률이 약 47%로 평균적인 수준이나, 안정성이 떨어져 공격적인 투자자의 포트폴리오에는 위험이 따릅니다.",
+          "selection_reason": "이 종목은 강력한 성장성(61.20)과 안정성(68.65) 점수를 가지고 있어 공격 투자자에게 적합합니다. 수익성 지표 또한 안정적이며(ROA 6.65%), 상승 가능성(p_adj 47.13%)이 있습니다.",
           "ai_fin_grade": null,
           "ai_strengths": [],
           "ai_weaknesses": []
@@ -587,10 +587,10 @@
       },
       "survey_context": {
         "INVEST_GOAL": "자산증식",
-        "TARGET_HORIZON": "5년 후",
+        "TARGET_HORIZON": "3년 후",
         "TARGET_AMOUNT": "100000000",
         "CONTRIBUTION_TYPE": "LUMP_SUM",
-        "LUMP_SUM_AMOUNT": "10000000",
+        "LUMP_SUM_AMOUNT": "50000000",
         "MAX_HOLDINGS": "10",
         "DIVIDEND_PREF": "MID",
         "ACCOUNT_TYPE": "일반"
@@ -599,6 +599,12 @@
         "short_term": {
           "weighted_p_adj": 0.5093,
           "items": [
+            {
+              "ticker": "058470",
+              "name": "리노공업",
+              "weight_pct": 14.3,
+              "p_adj": 0.5547
+            },
             {
               "ticker": "005930",
               "name": "삼성전자",
@@ -610,12 +616,6 @@
               "name": "삼성전자우",
               "weight_pct": 14.3,
               "p_adj": 0.4779
-            },
-            {
-              "ticker": "058470",
-              "name": "리노공업",
-              "weight_pct": 14.3,
-              "p_adj": 0.5547
             },
             {
               "ticker": "004170",
@@ -647,6 +647,12 @@
           "weighted_ret_12m_pct": -15.35,
           "items": [
             {
+              "ticker": "058470",
+              "name": "리노공업",
+              "weight_pct": 14.3,
+              "ret_12m_pct": -5.62
+            },
+            {
               "ticker": "005930",
               "name": "삼성전자",
               "weight_pct": 14.3,
@@ -657,12 +663,6 @@
               "name": "삼성전자우",
               "weight_pct": 14.3,
               "ret_12m_pct": -25.46
-            },
-            {
-              "ticker": "058470",
-              "name": "리노공업",
-              "weight_pct": 14.3,
-              "ret_12m_pct": -5.62
             },
             {
               "ticker": "004170",
@@ -694,6 +694,12 @@
           "weighted_vol_3m_pct": 37.4467,
           "items": [
             {
+              "ticker": "058470",
+              "name": "리노공업",
+              "weight_pct": 14.3,
+              "vol_3m_pct": 47.35
+            },
+            {
               "ticker": "005930",
               "name": "삼성전자",
               "weight_pct": 14.3,
@@ -704,12 +710,6 @@
               "name": "삼성전자우",
               "weight_pct": 14.3,
               "vol_3m_pct": 35.29
-            },
-            {
-              "ticker": "058470",
-              "name": "리노공업",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 47.35
             },
             {
               "ticker": "004170",

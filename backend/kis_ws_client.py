@@ -29,12 +29,16 @@ _APPKEY    = os.getenv("APP_KEY", "").strip()
 _SECRETKEY = os.getenv("APP_SECRET", "").strip()
 _IS_MOCK   = os.getenv("KIS_MOCK", "false").lower() == "true"
 
+# KIS WebSocket 1연결당 최대 구독 종목 수 (기본 40, 계정 등급에 따라 조정)
+_MAX_SUBSCRIPTIONS = int(os.getenv("KIS_MAX_SUBSCRIPTIONS", "40"))
+
 # WebSocket URL
 _WS_URL_REAL = "ws://ops.koreainvestment.com:21000"
 _WS_URL_MOCK = "ws://ops.koreainvestment.com:31000"
 
 # approval_key 캐시 파일
 _APPROVAL_FILE = Path(__file__).parent / ".kis_approval_cache"
+_approval_lock = __import__("threading").Lock()  # 다중 Worker 동시 재발급 방지
 
 # ── 전역 상태 ──────────────────────────────────────────────────────────────────
 _price_store: Dict[str, Dict] = {}   # { "005930": {"current_price": 75000, ...} }
@@ -67,30 +71,51 @@ def _save_approval_to_file(key: str) -> None:
         pass
 
 
-def get_approval_key() -> str:
-    """WebSocket 접속용 approval_key 발급(파일캐시 1일)."""
-    cached = _load_approval_from_file()
-    if cached:
-        return cached
+def get_approval_key(force_refresh: bool = False) -> str:
+    """WebSocket 접속용 approval_key 발급(파일캐시 1일).
 
-    url = "https://openapi.koreainvestment.com:9443/oauth2/Approval"
-    body = {
-        "grant_type": "client_credentials",
-        "appkey": _APPKEY,
-        "secretkey": _SECRETKEY,   # appsecret 아님!
-    }
-    resp = requests.post(url, json=body, timeout=10)
-    resp.raise_for_status()
-    key = resp.json()["approval_key"]
-    _save_approval_to_file(key)
-    logger.info("KIS approval_key 발급 완료")
-    return key
+    force_refresh=True 이면 캐시를 무시하고 새로 발급 (OPSP0011 감지 시 사용).
+    Lock으로 다중 Worker 동시 재발급을 방지한다.
+    """
+    # Lock 없이 빠른 읽기 (force_refresh 아닌 경우)
+    if not force_refresh:
+        cached = _load_approval_from_file()
+        if cached:
+            return cached
+
+    with _approval_lock:
+        # lock 획득 후 재확인 — 다른 Worker가 이미 갱신했을 수 있음
+        if not force_refresh:
+            cached = _load_approval_from_file()
+            if cached:
+                return cached
+        else:
+            # 강제 갱신: 캐시 파일 삭제
+            if _APPROVAL_FILE.exists():
+                try:
+                    _APPROVAL_FILE.unlink()
+                except Exception:
+                    pass
+
+        url = "https://openapi.koreainvestment.com:9443/oauth2/Approval"
+        body = {
+            "grant_type": "client_credentials",
+            "appkey": _APPKEY,
+            "secretkey": _SECRETKEY,   # appsecret 아님!
+        }
+        resp = requests.post(url, json=body, timeout=10)
+        resp.raise_for_status()
+        key = resp.json()["approval_key"]
+        _save_approval_to_file(key)
+        logger.info("KIS approval_key 발급 완료")
+        return key
 
 
 # ── 구독 메시지 생성 ───────────────────────────────────────────────────────────
 
-# 구독할 실시간 TR_ID 목록 (KRX 정규장 + NXT)
-_REALTIME_TR_IDS = ["H0STCNT0", "H0NXCNT0"]
+# 구독할 실시간 TR_ID 목록
+# H0NXCNT0(넥스트레이드 NXT)는 별도 권한 필요 + 미운영 시간대에 연결 강제 종료됨 → 제외
+_REALTIME_TR_IDS = ["H0STCNT0"]
 
 
 def _build_subscribe_msg(approval_key: str, stock_code: str, tr_id: str = "H0STCNT0", tr_type: str = "1") -> str:
@@ -220,13 +245,12 @@ class KisWebSocketManager:
 
             try:
                 # 재연결마다 approval_key 갱신 (캐시 유효하면 재사용, 만료시 재발급)
-                if self._invalid_key:
-                    if _APPROVAL_FILE.exists():
-                        _APPROVAL_FILE.unlink()
+                need_force = self._invalid_key
+                if need_force:
                     self._invalid_key = False
-                    logger.info("approval_key 캐시 초기화 후 재발급")
+                    logger.info("approval_key 만료 감지 — 강제 재발급 요청")
                 try:
-                    self._approval_key = get_approval_key()
+                    self._approval_key = get_approval_key(force_refresh=need_force)
                 except Exception as key_err:
                     logger.warning("approval_key 발급 실패: %s — 30초 후 재시도", key_err)
                     await asyncio.sleep(30)
@@ -239,7 +263,15 @@ class KisWebSocketManager:
                     close_timeout=10,
                 ) as ws:
                     logger.info("KIS WS 연결 성공")
+                    # 재연결 시: 기존 구독 목록을 pending에 복원한 뒤 subscribed 초기화
+                    # (flush_pending이 pending을 비워버리므로, subscribed에서 복원해야 재구독됨)
+                    prev_codes = {s.split(":")[0] for s in self._subscribed}
                     self._subscribed.clear()
+                    self._limit_reached = False  # 재연결 시 한도 플래그 초기화
+                    if prev_codes:
+                        self._pending_subscribe = getattr(self, "_pending_subscribe", set())
+                        self._pending_subscribe.update(prev_codes)
+                        logger.info("재연결 — %d개 종목 재구독 예약", len(prev_codes))
                     self._ws = ws
                     backoff = 5  # 연결 성공 시 백오프 초기화
 
@@ -254,9 +286,14 @@ class KisWebSocketManager:
 
             except Exception as e:
                 err_msg = str(e)
+                # OPSP0011(approval_key 만료)은 키 재발급 후 즉시 재연결
+                if "invalid approval_key" in err_msg:
+                    backoff = 3
                 # "no close frame" 는 KIS가 TCP를 조용히 끊은 것 — DEBUG로 낮춤
-                if "no close frame" in err_msg:
+                elif "no close frame" in err_msg:
                     logger.debug("KIS WS 연결 종료 (no close frame) — %d초 후 재연결", backoff)
+                elif "did not receive a valid HTTP response" in err_msg:
+                    logger.debug("KIS WS 연결 실패 (HTTP 응답 없음) — %d초 후 재연결", backoff)
                 else:
                     logger.warning("KIS WS 연결 오류: %s — %d초 후 재연결", e, backoff)
                 if not self._running:
@@ -277,13 +314,30 @@ class KisWebSocketManager:
             if raw.startswith("{"):
                 try:
                     sys_msg = json.loads(raw)
-                    msg_cd  = sys_msg.get("body", {}).get("msg_cd", "")
-                    rt_cd   = sys_msg.get("body", {}).get("rt_cd", "")
-                    if msg_cd == "OPSP0011" or (rt_cd == "1" and "invalid" in sys_msg.get("body", {}).get("msg1", "").lower()):
-                        logger.warning("approval_key 만료 감지 (OPSP0011) — 재연결 시 키 재발급 예약")
+                    body    = sys_msg.get("body", {})
+                    msg_cd  = body.get("msg_cd", "")
+                    rt_cd   = body.get("rt_cd", "")
+                    msg1    = body.get("msg1", "")
+
+                    # OPSP0011 만 approval_key 만료로 처리
+                    if msg_cd == "OPSP0011":
+                        logger.debug("approval_key 만료 감지 (OPSP0011) — 재연결 시 키 재발급 예약")
                         self._invalid_key = True
                         raise ConnectionError("invalid approval_key")
-                    logger.debug("시스템 메시지: %s", sys_msg)
+
+                    # OPSP0008: 구독 한도 초과 — 플래그 세우고 더 이상 구독 시도 안 함
+                    if msg_cd == "OPSP0008":
+                        logger.info(
+                            "KIS WS 구독 한도 초과 (OPSP0008) — 현재 %d개 구독 중 (최대 %d). "
+                            "추가 구독 중단. KIS_MAX_SUBSCRIPTIONS 환경변수로 한도를 줄이세요.",
+                            len(self._subscribed) // len(_REALTIME_TR_IDS),
+                            _MAX_SUBSCRIPTIONS,
+                        )
+                        self._limit_reached = True
+                    elif rt_cd == "1":
+                        logger.warning("KIS WS 구독 오류 응답 [%s]: %s", msg_cd, msg1)
+                    else:
+                        logger.debug("시스템 메시지: %s", sys_msg)
                 except (ConnectionError, asyncio.CancelledError):
                     raise
                 except Exception:
@@ -314,7 +368,19 @@ class KisWebSocketManager:
     async def _flush_pending(self, ws) -> None:
         pending: Set[str] = getattr(self, "_pending_subscribe", set())
         for code in list(pending):
-            # KRX + NXT 두 TR_ID 모두 구독 (이미 완료된 것은 skip)
+            # 구독 한도 초과 시 남은 pending을 모두 버림
+            if getattr(self, "_limit_reached", False):
+                pending.clear()
+                return
+            # 한도 체크: 구독 전 현재 구독 수 확인
+            current_count = len(self._subscribed) // max(len(_REALTIME_TR_IDS), 1)
+            if current_count >= _MAX_SUBSCRIPTIONS:
+                logger.info(
+                    "KIS WS 구독 한도 도달 (%d/%d) — 나머지 %d개 종목 구독 생략",
+                    current_count, _MAX_SUBSCRIPTIONS, len(pending),
+                )
+                pending.clear()
+                return
             all_done = True
             for tr_id in _REALTIME_TR_IDS:
                 sub_key = f"{code}:{tr_id}"
@@ -324,14 +390,96 @@ class KisWebSocketManager:
                         await ws.send(msg)
                         self._subscribed.add(sub_key)
                         logger.info("KIS WS 구독: %s [%s]", code, tr_id)
+                        await asyncio.sleep(0.05)  # 종목 간 전송 간격 (과부하 방지)
                     except Exception as e:
-                        logger.warning("구독 전송 실패 %s [%s]: %s", code, tr_id, e)
-                        return  # WS 연결 문제 → _run_loop에서 재연결
-                    all_done = False
+                        logger.warning("구독 전송 실패 %s [%s]: %s — 해당 종목 구독 건너뜀", code, tr_id, e)
+                        # 실패한 sub_key를 subscribed에 추가해 무한 재시도 방지
+                        self._subscribed.add(sub_key)
+                        all_done = False
+                        # WS 연결 자체가 끊긴 경우 즉시 중단
+                        if "close frame" in str(e) or "connection" in str(e).lower():
+                            return
+                    else:
+                        all_done = False  # 방금 구독 완료 → pending에서 제거 대기
             if all_done:
                 pending.discard(code)
         if not pending:
             pending.clear()
+
+
+# ── KisWebSocketPool (다중 연결 풀) ──────────────────────────────────────────
+
+class KisWebSocketPool:
+    """KisWebSocketManager를 여러 개 생성해 40개 한도를 초과하는 종목을 커버한다.
+
+    초기 종목 목록을 _MAX_SUBSCRIPTIONS 단위로 분할해 각 연결에 분배하고,
+    이후 subscribe() 호출 시 여유 있는 연결에 추가하거나 새 연결을 생성한다.
+    모든 연결은 공유 _price_store에 체결가를 저장한다.
+    """
+
+    def __init__(self, is_mock: bool = False):
+        self._is_mock = is_mock
+        self._workers: list[KisWebSocketManager] = []
+
+    async def start(self, initial_codes: list[str]) -> None:
+        if not initial_codes:
+            logger.info("KIS WebSocket Pool: 초기 종목 없음 — subscribe() 호출 시 연결 생성")
+            return
+        chunks = [
+            initial_codes[i: i + _MAX_SUBSCRIPTIONS]
+            for i in range(0, len(initial_codes), _MAX_SUBSCRIPTIONS)
+        ]
+        for chunk in chunks:
+            w = KisWebSocketManager(is_mock=self._is_mock)
+            self._workers.append(w)
+            await w.start(chunk)
+        logger.info(
+            "KIS WebSocket Pool 시작: %d개 연결, 총 %d개 종목 구독",
+            len(self._workers), len(initial_codes),
+        )
+
+    async def stop(self) -> None:
+        for w in self._workers:
+            await w.stop()
+        self._workers.clear()
+
+    async def subscribe(self, codes: list[str]) -> None:
+        """요청된 코드들을 여유 연결에 분배, 모자라면 새 연결 생성."""
+        remaining = list(codes)
+
+        # 기존 workers에 여유 용량 채우기
+        for w in self._workers:
+            if not remaining:
+                break
+            current = len(w._subscribed) // max(len(_REALTIME_TR_IDS), 1)
+            capacity = _MAX_SUBSCRIPTIONS - current
+            if capacity > 0:
+                to_sub = remaining[:capacity]
+                remaining = remaining[capacity:]
+                await w.subscribe(to_sub)
+
+        # 남은 종목은 새 연결 생성
+        while remaining:
+            chunk = remaining[:_MAX_SUBSCRIPTIONS]
+            remaining = remaining[_MAX_SUBSCRIPTIONS:]
+            w = KisWebSocketManager(is_mock=self._is_mock)
+            self._workers.append(w)
+            await w.start(chunk)
+            logger.info(
+                "KIS WebSocket Pool: 새 연결 추가 (총 %d개 연결)",
+                len(self._workers),
+            )
+
+    @property
+    def worker_count(self) -> int:
+        return len(self._workers)
+
+    @property
+    def total_subscribed(self) -> int:
+        return sum(
+            len(w._subscribed) // max(len(_REALTIME_TR_IDS), 1)
+            for w in self._workers
+        )
 
 
 # ── 전역 접근자 ───────────────────────────────────────────────────────────────

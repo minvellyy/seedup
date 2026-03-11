@@ -1,4 +1,4 @@
-﻿import os
+import os
 import re
 import json
 import time
@@ -7,7 +7,6 @@ import hashlib
 import argparse
 import urllib.parse
 from datetime import datetime, timedelta
-from pathlib import Path
 from difflib import get_close_matches, SequenceMatcher
 
 import requests
@@ -20,7 +19,7 @@ from openai import OpenAI
 load_dotenv()
 
 # =========================================================
-# ?섍꼍?ㅼ젙
+# 환경설정
 # =========================================================
 
 OPENAI_MODEL = os.getenv("OPENAI_MODEL", "gpt-4o-mini")
@@ -34,103 +33,100 @@ DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_NAME = os.getenv("DB_NAME")
 
-CHROMA_PATH = os.getenv(
-    "CHROMA_PATH",
-    str(Path(__file__).resolve().parent / "chroma_db")
-)
+CHROMA_PATH = os.getenv("CHROMA_PATH", "./chroma_db")
 
 ANALYSIS_VERSION = "news_mvp_v2_dedup"
 
-# 理쒓렐 硫곗튌移?湲곗궗? ?좎궗??鍮꾧탳?좎?
+# 최근 며칠치 기사와 유사도 비교할지
 DEDUP_LOOKBACK_DAYS = 3
 
-# ?쒕ぉ/蹂몃Ц ?좎궗???꾧퀎移?
+# 제목/본문 유사도 임계치
 TITLE_SIM_THRESHOLD = 0.92
 BODY_SIM_THRESHOLD = 0.88
 
 DEFAULT_QUERIES = [
-    "誘멸뎅 ?곗? 湲덈━",
-    "?먮떖???섏쑉",
-    "?좉?",
-    "以묎뎅 ?뚮퉬 ?뚮났",
-    "諛섎룄泥??낇솴",
+    "미국 연준 금리",
+    "원달러 환율",
+    "유가",
+    "중국 소비 회복",
+    "반도체 업황",
     "HBM",
-    "諛섎룄泥??꾧났??,
-    "AI 諛섎룄泥??쒖옣",
-    "2李⑥쟾吏 ?낇솴",
-    "?묎레??,
-    "諛붿씠???낇솴",
+    "반도체 후공정",
+    "AI 반도체 시장",
+    "2차전지 업황",
+    "양극재",
+    "바이오 업황",
     "CDMO",
-    "?먯쟾 ?섏＜",
-    "?먯쟾 湲곗옄??,
-    "濡쒕큸 ?곗뾽",
-    "?붿옣??ODM",
-    "議곗꽑 湲곗옄??,
-    "諛⑹궛 ?섏텧",
-    "?곗＜??났",
-    "?명꽣???뚮옯??,
-    "?대씪?곕뱶 ?곗뾽"
+    "원전 수주",
+    "원전 기자재",
+    "로봇 산업",
+    "화장품 ODM",
+    "조선 기자재",
+    "방산 수출",
+    "우주항공",
+    "인터넷 플랫폼",
+    "클라우드 산업"
 ]
 
-# ?먯쑀 異붿텧 ???뺢퇋?붿슜 taxonomy
+# 자유 추출 후 정규화용 taxonomy
 CANONICAL_THEMES = [
-    "諛섎룄泥?, "AI諛섎룄泥?, "HBM", "硫붾え由?, "諛섎룄泥??꾧났??, "?좊━湲고뙋", "?뚯슫?쒕━",
-    "2李⑥쟾吏", "?묎레??, "?뚭레??, "?꾪빐吏?, "遺꾨━留?, "?먮같?곕━", "?꾧퀬泥대같?곕━",
-    "諛붿씠??, "諛붿씠?ㅼ쓽?쏀뭹", "諛붿씠?ㅼ떆諛??, "CDMO", "?쒖빟", "?섎즺湲곌린",
-    "湲덉쑖", "???, "利앷텒", "蹂댄뿕", "移대뱶",
-    "?명꽣??, "?뚮옯??, "AI", "?대씪?곕뱶", "寃뚯엫",
-    "?붿옣??, "?붿옣?늀DM", "酉고떚",
-    "?먯쟾", "?먯쟾湲곗옄??, "?꾨젰湲곌린",
-    "濡쒕큸", "濡쒕큸遺??, "?먮룞??,
-    "議곗꽑", "議곗꽑湲곗옄??, "LNG",
-    "諛⑹궛", "?곗＜??났", "??났?곗＜遺??,
-    "嫄댁꽕", "嫄댁꽕湲곌퀎", "遺?숈궛",
-    "?먮꼫吏", "?쒖뼇愿?, "?띾젰", "?섏냼", "?뺤쑀",
-    "?뚮퉬??, "?좏넻", "?앺뭹", "?ы뻾", "硫댁꽭",
-    "?먮룞李?, "?먮룞李⑤???, "?꾧린李?
+    "반도체", "AI반도체", "HBM", "메모리", "반도체 후공정", "유리기판", "파운드리",
+    "2차전지", "양극재", "음극재", "전해질", "분리막", "폐배터리", "전고체배터리",
+    "바이오", "바이오의약품", "바이오시밀러", "CDMO", "제약", "의료기기",
+    "금융", "은행", "증권", "보험", "카드",
+    "인터넷", "플랫폼", "AI", "클라우드", "게임",
+    "화장품", "화장품ODM", "뷰티",
+    "원전", "원전기자재", "전력기기",
+    "로봇", "로봇부품", "자동화",
+    "조선", "조선기자재", "LNG",
+    "방산", "우주항공", "항공우주부품",
+    "건설", "건설기계", "부동산",
+    "에너지", "태양광", "풍력", "수소", "정유",
+    "소비재", "유통", "식품", "여행", "면세",
+    "자동차", "자동차부품", "전기차"
 ]
 
 THEME_SYNONYMS = {
-    "怨좊???룺 硫붾え由?: "HBM",
-    "怨좊???룺硫붾え由?: "HBM",
-    "ai 硫붾え由?: "AI諛섎룄泥?,
-    "ai ?쒕쾭": "AI諛섎룄泥?,
-    "?⑦궎吏?: "諛섎룄泥??꾧났??,
-    "?꾧났??: "諛섎룄泥??꾧났??,
-    "odm": "?붿옣?늀DM",
-    "肄붿뒪硫뷀떛": "?붿옣??,
-    "cosmetic": "?붿옣??,
-    "bank": "???,
+    "고대역폭 메모리": "HBM",
+    "고대역폭메모리": "HBM",
+    "ai 메모리": "AI반도체",
+    "ai 서버": "AI반도체",
+    "패키징": "반도체 후공정",
+    "후공정": "반도체 후공정",
+    "odm": "화장품ODM",
+    "코스메틱": "화장품",
+    "cosmetic": "화장품",
+    "bank": "은행",
     "cdmo": "CDMO",
-    "bio": "諛붿씠??,
+    "bio": "바이오",
 }
 
 CANONICAL_EVENTS = [
-    "湲덈━?명븯", "湲덈━?몄긽", "?섏쑉?곸듅", "?섏쑉?섎씫", "?좉?湲됰벑", "?좉??섎씫",
-    "?ㅼ쟻媛쒖꽑", "?ㅼ쟻遺吏?, "?섏＜?뺣?", "怨듦툒李⑥쭏", "怨듦툒留앸텋??, "怨듦툒留앹옱??,
-    "?뺤콉吏??, "洹쒖젣媛뺥솕", "利앹꽕", "媛먯궛", "?섏슂利앷?", "?섏슂?뷀솕",
-    "?뚯뾽", "?몄“由ъ뒪??, "以묎뎅?뚮퉬?뚮났", "湲곗닠媛쒕컻", "?묒궛媛쒖떆"
+    "금리인하", "금리인상", "환율상승", "환율하락", "유가급등", "유가하락",
+    "실적개선", "실적부진", "수주확대", "공급차질", "공급망불안", "공급망재편",
+    "정책지원", "규제강화", "증설", "감산", "수요증가", "수요둔화",
+    "파업", "노조리스크", "중국소비회복", "기술개발", "양산개시"
 ]
 
 EVENT_SYNONYMS = {
-    "湲덈━ ?명븯": "湲덈━?명븯",
-    "湲덈━ ?몄긽": "湲덈━?몄긽",
-    "?섏쑉 ?곸듅": "?섏쑉?곸듅",
-    "?섏쑉 ?섎씫": "?섏쑉?섎씫",
-    "?좉? 湲됰벑": "?좉?湲됰벑",
-    "?좉? ?섎씫": "?좉??섎씫",
-    "?ㅼ쟻 媛쒖꽑": "?ㅼ쟻媛쒖꽑",
-    "?ㅼ쟻 遺吏?: "?ㅼ쟻遺吏?,
-    "?섏＜ ?뺣?": "?섏＜?뺣?",
-    "怨듦툒留?遺덉븞": "怨듦툒留앸텋??,
-    "怨듦툒留??ы렪": "怨듦툒留앹옱??,
-    "?뺤콉 吏??: "?뺤콉吏??,
-    "洹쒖젣 媛뺥솕": "洹쒖젣媛뺥솕",
-    "?섏슂 利앷?": "?섏슂利앷?",
-    "?섏슂 ?뷀솕": "?섏슂?뷀솕",
-    "?묒궛 ?쒖옉": "?묒궛媛쒖떆",
-    "?묒궛 媛쒖떆": "?묒궛媛쒖떆",
-    "?몄“ 由ъ뒪??: "?몄“由ъ뒪??,
+    "금리 인하": "금리인하",
+    "금리 인상": "금리인상",
+    "환율 상승": "환율상승",
+    "환율 하락": "환율하락",
+    "유가 급등": "유가급등",
+    "유가 하락": "유가하락",
+    "실적 개선": "실적개선",
+    "실적 부진": "실적부진",
+    "수주 확대": "수주확대",
+    "공급망 불안": "공급망불안",
+    "공급망 재편": "공급망재편",
+    "정책 지원": "정책지원",
+    "규제 강화": "규제강화",
+    "수요 증가": "수요증가",
+    "수요 둔화": "수요둔화",
+    "양산 시작": "양산개시",
+    "양산 개시": "양산개시",
+    "노조 리스크": "노조리스크",
 }
 
 client = OpenAI()
@@ -138,7 +134,7 @@ chroma_client = chromadb.PersistentClient(path=CHROMA_PATH)
 news_analysis_index = chroma_client.get_or_create_collection(name="news_analysis_index")
 
 # =========================================================
-# ?좏떥
+# 유틸
 # =========================================================
 
 def get_mysql():
@@ -177,12 +173,12 @@ def normalize_text(text: str) -> str:
 def is_korean_text(text: str) -> bool:
     if not text:
         return False
-    return bool(re.search(r"[媛-??", text))
+    return bool(re.search(r"[가-힣]", text))
 
 
 def is_meaningful_article(title: str, body: str, min_body_len: int = 60) -> bool:
     """
-    ?덈Т 吏㏃? ?띾낫/?쒖꽭 湲곗궗 ?쒓굅??
+    너무 짧은 속보/시세 기사 제거용
     """
     title = normalize_text(title)
     body = normalize_text(body)
@@ -191,29 +187,29 @@ def is_meaningful_article(title: str, body: str, min_body_len: int = 60) -> bool
         return False
 
     noisy_patterns = [
-        r"^\[?띾낫\]",
-        r"留덇컧$",
-        r"?μ쨷$",
-        r"?ㅼ쟾??",
-        r"?ㅽ썑??",
-        r"醫낃?$",
+        r"^\[속보\]",
+        r"마감$",
+        r"장중$",
+        r"오전장$",
+        r"오후장$",
+        r"종가$",
     ]
 
-    # ?쒕ぉ???덈Т 吏㏐퀬 body??吏㏃쑝硫??쒓굅
+    # 제목이 너무 짧고 body도 짧으면 제거
     if len(title) < 12 and len(body) < 80:
         return False
 
     for p in noisy_patterns:
         if re.search(p, title):
-            # ?띾낫?쇰룄 body媛 異⑸텇??湲몃㈃ ?대┫ ???덉?留?
-            # MVP?먯꽑 蹂댁닔?곸쑝濡??쒓굅
+            # 속보라도 body가 충분히 길면 살릴 수 있지만,
+            # MVP에선 보수적으로 제거
             return False
 
     return True
 
 def normalize_title_for_dedup(title: str) -> str:
     title = normalize_text(title).lower()
-    title = re.sub(r"[^媛-?즑-z0-9 ]", "", title)
+    title = re.sub(r"[^가-힣a-z0-9 ]", "", title)
     title = re.sub(r"\s+", " ", title).strip()
     return title
 
@@ -301,7 +297,7 @@ def get_embedding(text: str):
 
 
 # =========================================================
-# ?ㅽ궎留?
+# 스키마
 # =========================================================
 
 def init_db():
@@ -355,16 +351,16 @@ def init_db():
 
     conn.commit()
     conn.close()
-    print("??init-db ?꾨즺")
+    print("✅ init-db 완료")
 
 
 # =========================================================
-# ?댁뒪 ?섏쭛
+# 뉴스 수집
 # =========================================================
 
 def fetch_naver_news(query, days_back=90, max_items=300):
     if not NAVER_CLIENT_ID or not NAVER_CLIENT_SECRET:
-        raise ValueError("NAVER_CLIENT_ID / NAVER_CLIENT_SECRET ?섍꼍蹂?섍? ?꾩슂?⑸땲??")
+        raise ValueError("NAVER_CLIENT_ID / NAVER_CLIENT_SECRET 환경변수가 필요합니다.")
 
     headers = {
         "X-Naver-Client-Id": NAVER_CLIENT_ID,
@@ -403,16 +399,16 @@ def fetch_naver_news(query, days_back=90, max_items=300):
                 title = normalize_text(item.get("title", ""))
                 desc = normalize_text(item.get("description", ""))
 
-                # ?쒓뎅??湲곗궗留??섏쭛
+                # 한국어 기사만 수집
                 if not is_korean_text(title):
                     continue
 
-                # ?덈Т 吏㏃? 湲곗궗/?띾낫 ?쒓굅
+                # 너무 짧은 기사/속보 제거
                 if not is_meaningful_article(title, desc, min_body_len=60):
                     continue
 
-                news_id = md5_hash(link)  # 留곹겕 以묐났 ?쒓굅
-                content_hash = build_content_hash(title, desc)  # ?댁슜 ?댁떆 以묐났 ?쒓굅
+                news_id = md5_hash(link)  # 링크 중복 제거
+                content_hash = build_content_hash(title, desc)  # 내용 해시 중복 제거
                 dedup_key = normalize_title_for_dedup(title)
 
                 all_news.append({
@@ -440,19 +436,19 @@ def fetch_naver_news(query, days_back=90, max_items=300):
 
 
 # =========================================================
-# 以묐났 ?쒓굅
+# 중복 제거
 # =========================================================
 
 def find_duplicate_news(conn, news):
     """
-    ?곗꽑?쒖쐞:
-    1) 留곹겕 湲곕컲 以묐났: news_id
-    2) ?댁슜 ?댁떆 湲곕컲 以묐났: content_hash
-    3) ?쒕ぉ/?댁슜 ?좎궗??湲곕컲 ?쇰━ 以묐났
+    우선순위:
+    1) 링크 기반 중복: news_id
+    2) 내용 해시 기반 중복: content_hash
+    3) 제목/내용 유사도 기반 논리 중복
     """
     cur = conn.cursor(dictionary=True)
 
-    # 1. 留곹겕 湲곕컲 以묐났 (news_id)
+    # 1. 링크 기반 중복 (news_id)
     cur.execute("""
         SELECT news_id
         FROM news_raw
@@ -467,7 +463,7 @@ def find_duplicate_news(conn, news):
             "dedup_method": "news_id"
         }
 
-    # 2. content_hash 湲곕컲 以묐났
+    # 2. content_hash 기반 중복
     cur.execute("""
         SELECT news_id
         FROM news_raw
@@ -482,7 +478,7 @@ def find_duplicate_news(conn, news):
             "dedup_method": "content_hash"
         }
     
-    # 2.5 dedup_key ?숈씪 湲곗궗 ?곗꽑 寃??
+    # 2.5 dedup_key 동일 기사 우선 검사
     cur.execute("""
         SELECT news_id, title, body_or_desc, published_at
         FROM news_raw
@@ -499,7 +495,7 @@ def find_duplicate_news(conn, news):
             "dedup_method": "dedup_key"
         }
 
-    # 3. ?쒕ぉ/?댁슜 ?좎궗??湲곕컲 ?쇰━ 以묐났
+    # 3. 제목/내용 유사도 기반 논리 중복
     published_dt = datetime.strptime(news["published_at"], "%Y-%m-%d %H:%M:%S")
     from_dt = (published_dt - timedelta(days=DEDUP_LOOKBACK_DAYS)).strftime("%Y-%m-%d %H:%M:%S")
 
@@ -589,49 +585,49 @@ def save_news_raw(news_list):
     conn.commit()
     conn.close()
 
-    print(f"  ??????꾨즺: 珥?{inserted_count}嫄?/ 以묐났 ?뚮옒洹?{duplicate_count}嫄?)
+    print(f"  ↳ 저장 완료: 총 {inserted_count}건 / 중복 플래그 {duplicate_count}건")
     return inserted_count
 
 
 # =========================================================
-# ?먯쑀 異붿텧 湲곕컲 ?댁뒪 遺꾩꽍
+# 자유 추출 기반 뉴스 분석
 # =========================================================
 
 def llm_analyze_news_freeform(title, body):
     prompt = f"""
-?덈뒗 湲덉쑖 ?댁뒪 鍮꾩젙???곗씠??遺꾩꽍湲곕떎.
-?꾨옒 ?댁뒪瑜??쎄퀬, ?ъ옄 遺꾩꽍???쒖슜?????덈룄濡?援ъ“?뷀븯??
-?꾨낫 ?ъ쟾???섏〈?섏? 留먭퀬 ?댁뒪 ?댁슜??洹쇨굅???먯쑀濡?쾶 異붿텧?섎씪.
-諛섎뱶??JSON留?異쒕젰?섎씪.
+너는 금융 뉴스 비정형 데이터 분석기다.
+아래 뉴스를 읽고, 투자 분석에 활용할 수 있도록 구조화하라.
+후보 사전에 의존하지 말고 뉴스 내용에 근거해 자유롭게 추출하라.
+반드시 JSON만 출력하라.
 
-洹쒖튃:
-1) mentioned_entities: ?щ엺, 湲곗뾽, 湲곌?, ?쒗뭹, 援?? ???듭떖 紐낆궗
-2) companies: 湲곗뾽紐낅쭔
-3) organizations: ?뺣?/湲곌?/?⑥껜/?몄“/?묓쉶/援?? 湲곌? ??
-4) themes: ?ъ옄/?곗뾽 愿?먯쓽 ?뚮쭏
-5) industries: ?곗뾽/?낆쥌
-6) events: ?쒖옣/?곗뾽 ?대깽??
+규칙:
+1) mentioned_entities: 사람, 기업, 기관, 제품, 국가 등 핵심 명사
+2) companies: 기업명만
+3) organizations: 정부/기관/단체/노조/협회/국가 기관 등
+4) themes: 투자/산업 관점의 테마
+5) industries: 산업/업종
+6) events: 시장/산업 이벤트
 7) sentiment: positive / negative / neutral
 8) importance_score: 0~1
-   ?꾨옒 湲곗??쇰줈 ?됯??섎씪.
-   - 0.9 ~ 1.0: ?쒖옣 ?꾨컲?????곹뼢??以????덈뒗 嫄곗떆/?뺤콉/吏?뺥븰 ?댁뒪
-   - 0.7 ~ 0.89: ?뱀젙 ?곗뾽 ?꾨컲???곹뼢??二쇰뒗 ?낇솴/怨듦툒留??섏슂/洹쒖젣 蹂??
-   - 0.5 ~ 0.69: 媛쒕퀎 湲곗뾽 ?먮뒗 ?쇰? ?곗뾽???섎? ?덈뒗 ?댁뒪
-   - 0.3 ~ 0.49: ?쇰컲 ?뺣낫??湲곗궗, ?곹뼢 踰붿쐞媛 ?쒗븳?곸씤 ?댁뒪
-   - 0.0 ~ 0.29: ?⑥닚 ?띾낫??諛섎났???섎?媛 ?쏀븳 湲곗궗
-9) risk_points: 由ъ뒪???붿젏 由ъ뒪??
-10) opportunity_points: 湲고쉶 ?붿젏 由ъ뒪??
-11) article_summary: 2臾몄옣 ?대궡 ?붿빟
-12) JSON ???띿뒪??湲덉?
-13) importance_score??湲곗궗???쒖옣 ?곹뼢 踰붿쐞? ?곗뾽 ?뚭툒??湲곗??쇰줈 ?됯??섍퀬, ?⑥닚 湲곗궗 湲몄씠???먭레?곸씤 ?쒗쁽留뚯쑝濡??믨쾶 二쇱? 留?寃?
+   아래 기준으로 평가하라.
+   - 0.9 ~ 1.0: 시장 전반에 큰 영향을 줄 수 있는 거시/정책/지정학 뉴스
+   - 0.7 ~ 0.89: 특정 산업 전반에 영향을 주는 업황/공급망/수요/규제 변화
+   - 0.5 ~ 0.69: 개별 기업 또는 일부 산업에 의미 있는 뉴스
+   - 0.3 ~ 0.49: 일반 정보성 기사, 영향 범위가 제한적인 뉴스
+   - 0.0 ~ 0.29: 단순 홍보성/반복성/의미가 약한 기사
+9) risk_points: 리스크 요점 리스트
+10) opportunity_points: 기회 요점 리스트
+11) article_summary: 2문장 이내 요약
+12) JSON 외 텍스트 금지
+13) importance_score는 기사의 시장 영향 범위와 산업 파급력 기준으로 평가하고, 단순 기사 길이나 자극적인 표현만으로 높게 주지 말 것
 
-?댁뒪 ?쒕ぉ:
+뉴스 제목:
 {title}
 
-?댁뒪 ?댁슜:
+뉴스 내용:
 {body}
 
-異쒕젰 ?뺤떇:
+출력 형식:
 {{
   "mentioned_entities": [],
   "companies": [],
@@ -756,7 +752,7 @@ def save_news_analysis(news_id, analysis):
 
 
 # =========================================================
-# Chroma ?몃뜳??
+# Chroma 인덱싱
 # =========================================================
 
 def index_news_analysis(news_row, analysis):
@@ -791,7 +787,7 @@ def index_news_analysis(news_row, analysis):
 
 
 # =========================================================
-# 諛곗튂
+# 배치
 # =========================================================
 
 def collect_news(days_back=90, queries=None):
@@ -802,7 +798,7 @@ def collect_news(days_back=90, queries=None):
         news_list = fetch_naver_news(query, days_back=days_back, max_items=300)
         save_news_raw(news_list)
         all_rows.extend(news_list)
-        print(f"collected: {query} -> {len(news_list)}嫄?)
+        print(f"collected: {query} -> {len(news_list)}건")
         time.sleep(0.2)
 
     return all_rows
@@ -830,7 +826,7 @@ def get_unanalyzed_news(limit=500):
 
 def analyze_pending_news(limit=500):
     rows = get_unanalyzed_news(limit=limit)
-    print(f"pending analysis (non-duplicate only): {len(rows)}嫄?)
+    print(f"pending analysis (non-duplicate only): {len(rows)}건")
 
     for i, row in enumerate(rows, start=1):
         raw = llm_analyze_news_freeform(row["title"], row["body_or_desc"])
@@ -858,7 +854,7 @@ def prune_old_news(retention_days=90):
 
     if not old_ids:
         conn.close()
-        print("??젣??90??珥덇낵 ?댁뒪 ?놁쓬")
+        print("삭제할 90일 초과 뉴스 없음")
         return
 
     placeholders = ",".join(["%s"] * len(old_ids))
@@ -877,19 +873,19 @@ def prune_old_news(retention_days=90):
         except Exception:
             pass
 
-    print(f"??90??珥덇낵 ?댁뒪 ??젣 ?꾨즺: {len(old_ids)}嫄?)
+    print(f"✅ 90일 초과 뉴스 삭제 완료: {len(old_ids)}건")
 
 
 def daily_batch(days_back=90, retention_days=90):
-    print("?? daily-batch ?쒖옉")
+    print("🚀 daily-batch 시작")
     collect_news(days_back=days_back)
     analyze_pending_news(limit=1000)
     prune_old_news(retention_days=retention_days)
-    print("??daily-batch ?꾨즺")
+    print("✅ daily-batch 완료")
 
 
 # =========================================================
-# 議고쉶??
+# 조회용
 # =========================================================
 
 def search_news_context(query, n_results=5):
@@ -908,7 +904,7 @@ def search_news_context(query, n_results=5):
         return [{"doc": d, "meta": m} for d, m in zip(docs, metas)]
 
     except Exception as e:
-        print("寃???ㅻ쪟:", e)
+        print("검색 오류:", e)
         return []
 
 
@@ -959,7 +955,7 @@ def main():
 
     else:
         print("""
-?ъ슜 ?덉떆:
+사용 예시:
   python pipeline_news_analysis_mvp.py init-db
   python pipeline_news_analysis_mvp.py collect --days-back 90
   python pipeline_news_analysis_mvp.py analyze-pending --limit 300
