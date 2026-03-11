@@ -9,10 +9,10 @@ const MyPage = () => {
   const [activeSection, setActiveSection] = useState('profile')
 
   const menuItems = [
-    { key: 'profile', label: '개인정보 관리', icon: '👤' },
-    { key: 'holdings', label: '보유 주식 내역 등록', icon: '📊' },
-    { key: 'portfolio', label: '내 포트폴리오', icon: '💼' },
-    { key: 'history', label: '추천 전략 히스토리', icon: '📋' },
+    { key: 'profile', label: '개인정보 관리'},
+    { key: 'holdings', label: '보유 주식 내역 등록'},
+    { key: 'portfolio', label: '내 포트폴리오'},
+    { key: 'history', label: '추천 전략 히스토리'},
   ]
 
   const renderSection = () => {

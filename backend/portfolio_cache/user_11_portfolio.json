@@ -1,0 +1,556 @@
+{
+  "saved_at": "2026-03-10T05:46:05.488409",
+  "portfolios": [
+    {
+      "portfolio_label": "균형 추천형",
+      "portfolio_style": "balanced",
+      "portfolio_summary": "균형 추천형 포트폴리오는 재무 데이터와 방향성 신호를 결합하여 안정성과 성장성을 고려한 균형 잡힌 투자 방식을 제공합니다.",
+      "portfolio_items": [
+        {
+          "ticker": "005930",
+          "name": "삼성전자",
+          "weight_pct": 20.0,
+          "weight": 0.2,
+          "asset_type": "STOCK",
+          "selection_reason": "재무 상태와 방향성 신호 모두가 양호하여 안정적 성장 가능성이 높습니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [
+            "강력한 시장 점유율 보유",
+            "매출 성장 지속"
+          ],
+          "ai_weaknesses": [
+            "글로벌 공급망 이슈에 노출"
+          ]
+        },
+        {
+          "ticker": "005380",
+          "name": "현대차",
+          "weight_pct": 20.0,
+          "weight": 0.2,
+          "asset_type": "STOCK",
+          "selection_reason": "자동차 산업의 전환기에 강력한 경쟁력을 보이고 있으며, 재무 지표가 긍정적입니다.",
+          "ai_fin_grade": "양호",
+          "ai_strengths": [
+            "전기차 시장 성장 잠재력",
+            "글로벌 브랜드 인지도"
+          ],
+          "ai_weaknesses": [
+            "원자재 가격 상승에 따른 압박"
+          ]
+        },
+        {
+          "ticker": "035720",
+          "name": "카카오",
+          "weight_pct": 20.0,
+          "weight": 0.2,
+          "asset_type": "STOCK",
+          "selection_reason": "디지털 전환이 가속화되는 사회에서 중요한 플랫폼을 보유하고 있습니다.",
+          "ai_fin_grade": "정보없음",
+          "ai_strengths": [
+            "강력한 데이터 기반 서비스 제공",
+            "사용자 증가세"
+          ],
+          "ai_weaknesses": [
+            "규제 리스크"
+          ]
+        },
+        {
+          "ticker": "005490",
+          "name": "아모레퍼시픽",
+          "weight_pct": 20.0,
+          "weight": 0.2,
+          "asset_type": "STOCK",
+          "selection_reason": "글로벌 뷰티 시장에서 다시 회복 중이며, 재무 데이터가 양호합니다.",
+          "ai_fin_grade": "양호",
+          "ai_strengths": [
+            "브랜드 인지도 높은 제품들",
+            "해외 시장 확대"
+          ],
+          "ai_weaknesses": [
+            "COVID-19로 인한 판매 감소"
+          ]
+        },
+        {
+          "ticker": "034730",
+          "name": "LG화학",
+          "weight_pct": 20.0,
+          "weight": 0.2,
+          "asset_type": "STOCK",
+          "selection_reason": "전지 사업의 성장이 기대되며, 재무 건전성이 양호합니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [
+            "전기차 배터리 시장 점유율 증가",
+            "R&D 투자 지속"
+          ],
+          "ai_weaknesses": [
+            "원가 불확실성"
+          ]
+        }
+      ],
+      "risk_tier": "위험중립형",
+      "quant_signals": {
+        "short_term": {
+          "weighted_p_adj": null,
+          "items": [
+            {
+              "ticker": "005930",
+              "name": "삼성전자",
+              "weight_pct": 20.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "005380",
+              "name": "현대차",
+              "weight_pct": 20.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "035720",
+              "name": "카카오",
+              "weight_pct": 20.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "005490",
+              "name": "아모레퍼시픽",
+              "weight_pct": 20.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "034730",
+              "name": "LG화학",
+              "weight_pct": 20.0,
+              "p_adj": null
+            }
+          ]
+        },
+        "medium_term": {
+          "weighted_ret_12m_pct": null,
+          "items": [
+            {
+              "ticker": "005930",
+              "name": "삼성전자",
+              "weight_pct": 20.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "005380",
+              "name": "현대차",
+              "weight_pct": 20.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "035720",
+              "name": "카카오",
+              "weight_pct": 20.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "005490",
+              "name": "아모레퍼시픽",
+              "weight_pct": 20.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "034730",
+              "name": "LG화학",
+              "weight_pct": 20.0,
+              "ret_12m_pct": null
+            }
+          ]
+        },
+        "risk": {
+          "weighted_vol_3m_pct": null,
+          "items": [
+            {
+              "ticker": "005930",
+              "name": "삼성전자",
+              "weight_pct": 20.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "005380",
+              "name": "현대차",
+              "weight_pct": 20.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "035720",
+              "name": "카카오",
+              "weight_pct": 20.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "005490",
+              "name": "아모레퍼시픽",
+              "weight_pct": 20.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "034730",
+              "name": "LG화학",
+              "weight_pct": 20.0,
+              "vol_3m_pct": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "portfolio_label": "모멘텀 집중형",
+      "portfolio_style": "momentum",
+      "portfolio_summary": "모멘텀 집중형 포트폴리오는 방향성 신호가 우수한 종목들을 중심으로 구성되어 시장의 변동성을 활용한 투자 방식을 추구합니다.",
+      "portfolio_items": [
+        {
+          "ticker": "005930",
+          "name": "삼성전자",
+          "weight_pct": 25.0,
+          "weight": 0.25,
+          "asset_type": "STOCK",
+          "selection_reason": "상승 확률이 높은 신호를 보여주며, 역사적으로 안정적인 성장을 해왔습니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [
+            "강력한 기술력",
+            "다양한 제품 라인업"
+          ],
+          "ai_weaknesses": [
+            "경쟁 심화"
+          ]
+        },
+        {
+          "ticker": "006400",
+          "name": "삼성SDI",
+          "weight_pct": 25.0,
+          "weight": 0.25,
+          "asset_type": "STOCK",
+          "selection_reason": "배터리 시장 성장과 함께 상승 가능성이 높아 주목받고 있습니다.",
+          "ai_fin_grade": "정보없음",
+          "ai_strengths": [
+            "전기차 및 ESS 수요 증가",
+            "R&D 투자 강화"
+          ],
+          "ai_weaknesses": [
+            "금속 가격 변동성"
+          ]
+        },
+        {
+          "ticker": "035420",
+          "name": "네이버",
+          "weight_pct": 25.0,
+          "weight": 0.25,
+          "asset_type": "STOCK",
+          "selection_reason": "디지털 경제의 중심에서 지속 가능한 성장이 기대됩니다.",
+          "ai_fin_grade": "양호",
+          "ai_strengths": [
+            "플랫폼 기반의 높은 성장 가능성",
+            "강력한 광고 매출"
+          ],
+          "ai_weaknesses": [
+            "광고 시장 의존도 높음"
+          ]
+        },
+        {
+          "ticker": "012330",
+          "name": "한국전력",
+          "weight_pct": 25.0,
+          "weight": 0.25,
+          "asset_type": "STOCK",
+          "selection_reason": "정부 정책에 발맞춘 성장 가능성이 높고 재무 상태 양호합니다.",
+          "ai_fin_grade": "양호",
+          "ai_strengths": [
+            "재생에너지 전환 기대",
+            "안정적 수익원"
+          ],
+          "ai_weaknesses": [
+            "규제 리스크"
+          ]
+        }
+      ],
+      "risk_tier": "위험중립형",
+      "quant_signals": {
+        "short_term": {
+          "weighted_p_adj": null,
+          "items": [
+            {
+              "ticker": "005930",
+              "name": "삼성전자",
+              "weight_pct": 25.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "006400",
+              "name": "삼성SDI",
+              "weight_pct": 25.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "035420",
+              "name": "네이버",
+              "weight_pct": 25.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "012330",
+              "name": "한국전력",
+              "weight_pct": 25.0,
+              "p_adj": null
+            }
+          ]
+        },
+        "medium_term": {
+          "weighted_ret_12m_pct": null,
+          "items": [
+            {
+              "ticker": "005930",
+              "name": "삼성전자",
+              "weight_pct": 25.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "006400",
+              "name": "삼성SDI",
+              "weight_pct": 25.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "035420",
+              "name": "네이버",
+              "weight_pct": 25.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "012330",
+              "name": "한국전력",
+              "weight_pct": 25.0,
+              "ret_12m_pct": null
+            }
+          ]
+        },
+        "risk": {
+          "weighted_vol_3m_pct": null,
+          "items": [
+            {
+              "ticker": "005930",
+              "name": "삼성전자",
+              "weight_pct": 25.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "006400",
+              "name": "삼성SDI",
+              "weight_pct": 25.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "035420",
+              "name": "네이버",
+              "weight_pct": 25.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "012330",
+              "name": "한국전력",
+              "weight_pct": 25.0,
+              "vol_3m_pct": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "portfolio_label": "안정 우선형",
+      "portfolio_style": "lowvol",
+      "portfolio_summary": "안정 우선형 포트폴리오는 안정성이 높은 종목으로 구성되어 투자자의 리스크를 최소화하고 꾸준한 수익을 추구합니다.",
+      "portfolio_items": [
+        {
+          "ticker": "004020",
+          "name": "대한항공",
+          "weight_pct": 20.0,
+          "weight": 0.2,
+          "asset_type": "STOCK",
+          "selection_reason": "장기적인 여행 수요 회복에 따라 안정적인 성장 가능성 전망입니다.",
+          "ai_fin_grade": "정보없음",
+          "ai_strengths": [
+            "글로벌 항공 시장 점유율",
+            "가격 상승 여지"
+          ],
+          "ai_weaknesses": [
+            "COVID-19 영향 지속"
+          ]
+        },
+        {
+          "ticker": "003550",
+          "name": "LG전자",
+          "weight_pct": 20.0,
+          "weight": 0.2,
+          "asset_type": "STOCK",
+          "selection_reason": "소비자 가전 분야에서 견고한 브랜드 인지도를 가지고 있습니다.",
+          "ai_fin_grade": "양호",
+          "ai_strengths": [
+            "소비자 가전 제품의 다양성",
+            "글로벌 유통망"
+          ],
+          "ai_weaknesses": [
+            "경쟁 심화"
+          ]
+        },
+        {
+          "ticker": "086790",
+          "name": "하나금융지주",
+          "weight_pct": 20.0,
+          "weight": 0.2,
+          "asset_type": "STOCK",
+          "selection_reason": "재무 건전성이 뛰어나며, 안정적인 배당금으로 주목받고 있습니다.",
+          "ai_fin_grade": "우수",
+          "ai_strengths": [
+            "높은 배당수익률",
+            "강력한 자산 관리"
+          ],
+          "ai_weaknesses": [
+            "금리 하락에 따른 수익성 압박"
+          ]
+        },
+        {
+          "ticker": "001040",
+          "name": "SK텔레콤",
+          "weight_pct": 20.0,
+          "weight": 0.2,
+          "asset_type": "STOCK",
+          "selection_reason": "안정적인 통신 서비스 제공으로 대규모 고객 기반을 유지하고 있습니다.",
+          "ai_fin_grade": "양호",
+          "ai_strengths": [
+            "높은 고객 유지율",
+            "5G 서비스 성장 잠재력"
+          ],
+          "ai_weaknesses": [
+            "규제 리스크"
+          ]
+        },
+        {
+          "ticker": "006260",
+          "name": "신한지주",
+          "weight_pct": 20.0,
+          "weight": 0.2,
+          "asset_type": "STOCK",
+          "selection_reason": "안정적인 재무 상태와 더불어 강력한 경쟁력을 보유하고 있습니다.",
+          "ai_fin_grade": "정보없음",
+          "ai_strengths": [
+            "강력한 자산 기반",
+            "다양한 금융 서비스 제공"
+          ],
+          "ai_weaknesses": [
+            "금리 인상 압박 징후"
+          ]
+        }
+      ],
+      "risk_tier": "위험중립형",
+      "quant_signals": {
+        "short_term": {
+          "weighted_p_adj": null,
+          "items": [
+            {
+              "ticker": "004020",
+              "name": "대한항공",
+              "weight_pct": 20.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "003550",
+              "name": "LG전자",
+              "weight_pct": 20.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "086790",
+              "name": "하나금융지주",
+              "weight_pct": 20.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "001040",
+              "name": "SK텔레콤",
+              "weight_pct": 20.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "006260",
+              "name": "신한지주",
+              "weight_pct": 20.0,
+              "p_adj": null
+            }
+          ]
+        },
+        "medium_term": {
+          "weighted_ret_12m_pct": null,
+          "items": [
+            {
+              "ticker": "004020",
+              "name": "대한항공",
+              "weight_pct": 20.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "003550",
+              "name": "LG전자",
+              "weight_pct": 20.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "086790",
+              "name": "하나금융지주",
+              "weight_pct": 20.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "001040",
+              "name": "SK텔레콤",
+              "weight_pct": 20.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "006260",
+              "name": "신한지주",
+              "weight_pct": 20.0,
+              "ret_12m_pct": null
+            }
+          ]
+        },
+        "risk": {
+          "weighted_vol_3m_pct": null,
+          "items": [
+            {
+              "ticker": "004020",
+              "name": "대한항공",
+              "weight_pct": 20.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "003550",
+              "name": "LG전자",
+              "weight_pct": 20.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "086790",
+              "name": "하나금융지주",
+              "weight_pct": 20.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "001040",
+              "name": "SK텔레콤",
+              "weight_pct": 20.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "006260",
+              "name": "신한지주",
+              "weight_pct": 20.0,
+              "vol_3m_pct": null
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
