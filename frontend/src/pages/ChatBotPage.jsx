@@ -1,0 +1,469 @@
+import React, { useState, useEffect, useRef } from 'react'
+import { useAuth } from '../contexts/AuthContext'
+import axios from 'axios'
+import './ChatBotPage.css'
+
+// 메시지 포맷팅 컴포넌트
+const FormattedMessage = ({ content }) => {
+  const formatText = (text) => {
+    // 텍스트를 HTML로 변환하는 함수
+    let formatted = text
+      // 제목 처리 (## 제목)
+      .replace(/^##\s+(.+)$/gm, '<h3 class="chat-heading">$1</h3>')
+      // 굵은 글자 처리 (**굵은 글자**)
+      .replace(/\*\*([^*]+)\*\*/g, '<strong>$1</strong>')
+      // 불릿 포인트 처리 (- 항목 또는 • 항목)
+      .replace(/^[•\-]\s+(.+)$/gm, '<div class="chat-bullet">• $1</div>')
+      // 번호 목록 처리 (1. 항목)
+      .replace(/^(\d+)\.\s+(.+)$/gm, '<div class="chat-numbered">$1. $2</div>')
+      // 체크마크와 X 마크 처리
+      .replace(/✅\s*([^"\n]*)/g, '<div class="chat-check">✅ $1</div>')
+      .replace(/❌\s*([^"\n]*)/g, '<div class="chat-cross">❌ $1</div>')
+      .replace(/⚠️\s*([^"\n]*)/g, '<div class="chat-warning">⚠️ $1</div>')
+      // 별점 처리
+      .replace(/⭐/g, '<span class="chat-star">⭐</span>')
+      // 줄바꿈 처리
+      .replace(/\n/g, '<br>')
+    
+    return formatted
+  }
+
+  return (
+    <div 
+      className="formatted-message" 
+      dangerouslySetInnerHTML={{ __html: formatText(content) }}
+    />
+  )
+}
+
+const ChatBotPage = () => {
+  const { user, isLoggedIn } = useAuth()
+  const [messages, setMessages] = useState([])
+  const [inputValue, setInputValue] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  const [isLoadingSessions, setIsLoadingSessions] = useState(false)  // 세션 로딩 상태 추가
+  const [currentSessionId, setCurrentSessionId] = useState(null)
+  const [sessions, setSessions] = useState([])
+  const [error, setError] = useState(null)
+  const messagesEndRef = useRef(null)
+
+  // 상수 정의로 한글 문자열 분리
+  const NEW_CHAT_TITLE = "새로운 대화"
+  const LOADING_MESSAGE = "🔄 대화 기록 로딩 중..."
+  const FIRST_CHAT_MESSAGE = "💬 첫 번째 대화를 시작해보세요!"
+  const AUTO_SAVE_MESSAGE = "대화 내용이 자동으로 저장됩니다"
+  const LOGIN_REQUIRED_MESSAGE = "🔑 로그인하면 대화 기록을 저장하고 관리할 수 있습니다"
+  const LOCALE_KR = "ko-KR"
+
+  // 디버깅: 사용자 상태 확인
+  useEffect(() => {
+    console.log('ChatBot - User:', user)
+    console.log('ChatBot - IsLoggedIn:', isLoggedIn)
+  }, [user, isLoggedIn])
+
+  // 스크롤을 맨 아래로 이동
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' })
+  }
+
+  useEffect(() => {
+    scrollToBottom()
+  }, [messages])
+
+  // 컴포넌트 마운트 시 마지막 세션 복원
+  useEffect(() => {
+    if (isLoggedIn && user?.userId) {
+      const lastSessionId = localStorage.getItem(`lastSessionId_${user.userId}`)
+      if (lastSessionId) {
+        setCurrentSessionId(lastSessionId)
+        console.log('마지막 세션 복원:', lastSessionId)
+      }
+    }
+  }, [isLoggedIn, user?.userId])
+
+  // 컴포넌트 마운트 시 세션 목록 로드 및 가장 최근 대화 자동 로드
+  useEffect(() => {
+    if (user?.userId) {  // user.userId 사용
+      loadSessions(true) // autoLoadLatest = true
+    }
+  }, [user])
+
+  // 세션 목록 로드
+  const loadSessions = async (autoLoadLatest = false) => {
+    try {
+      setIsLoadingSessions(true)
+      // 사용자 ID 결정
+      let userId
+      if (isLoggedIn && user?.userId) {
+        userId = user.userId
+      } else {
+        userId = 999999 // 게스트 사용자
+      }
+      
+      console.log('세션 목록 로드 요청:', { userId, user, isLoggedIn })
+      const response = await axios.get(`/api/chat/sessions?user_id=${userId}`)
+      console.log('세션 목록 API 응답:', response.data)
+      
+      if (response.data.success) {
+        setSessions(response.data.sessions)
+        console.log('세션 목록 로드 성공:', response.data.sessions.length + '개')
+        console.log('세션 목록 내용:', response.data.sessions)
+        
+        // 가장 최근 세션 자동 로드
+        if (autoLoadLatest && response.data.sessions.length > 0) {
+          // 이미 복원된 세션이 있으면 그것을 우선, 없으면 가장 최근 세션
+          const targetSessionId = currentSessionId || response.data.sessions[0].id
+          const targetSession = response.data.sessions.find(s => s.id === targetSessionId) || response.data.sessions[0]
+          if (!messages.length || currentSessionId !== targetSession.id) { // 메시지가 비어있거나 다른 세션인 경우만 로드
+            console.log('세션 메시지 자동 로드:', targetSession.title)
+            await loadSessionMessages(targetSession.id)
+          }
+        }
+      } else {
+        console.log('세션 목록 로드 실패:', response.data.message || 'No sessions available')
+      }
+    } catch (err) {
+      console.error('세션 목록 로드 오류:', err)
+      setError("세션 목록을 불러올 수 없습니다")
+    } finally {
+      setIsLoadingSessions(false)
+    }
+  }
+
+  // 특정 세션의 메시지 로드
+  const loadSessionMessages = async (sessionId) => {
+    try {
+      // 사용자 ID 결정
+      let userId
+      if (isLoggedIn && user?.userId) {
+        userId = user.userId
+      } else {
+        userId = 999999 // 게스트 사용자
+      }
+      
+      console.log('메시지 로드 요청:', { sessionId, userId })
+      const response = await axios.get(`/api/chat/sessions/${sessionId}/messages?user_id=${userId}`)
+      if (response.data.success) {
+        setMessages(response.data.messages.map(msg => ({
+          id: msg.id,
+          role: msg.role,
+          content: msg.content,
+          timestamp: new Date(msg.created_at)
+        })))
+        setCurrentSessionId(sessionId)        
+        // 로그인한 사용자의 마지막 세션 ID 저장
+        if (isLoggedIn && user?.userId) {
+          localStorage.setItem(`lastSessionId_${user.userId}`, sessionId)
+        }        console.log('메시지 로드 성공:', response.data.messages.length)
+      } else {
+        console.log('메시지 로드:', response.data.message || 'No messages available')
+        setMessages([])
+      }
+    } catch (err) {
+      console.error('메시지 로드 오류:', err)
+      setError("메시지를 불러올 수 없습니다")
+    }
+  }
+
+  // 새 채팅 시작
+  const startNewChat = () => {
+    setMessages([])
+    setCurrentSessionId(null)
+    setError(null)
+    
+    // 로그인한 사용자의 마지막 세션 ID 삭제
+    if (isLoggedIn && user?.userId) {
+      localStorage.removeItem(`lastSessionId_${user.userId}`)
+    }
+  }
+
+  // 메시지 전송
+  const sendMessage = async (messageText = inputValue) => {
+    if (!messageText.trim()) return
+
+    // 사용자 정보 디버깅
+    console.log('ChatBot - 메시지 전송:', {
+      user,
+      isLoggedIn,
+      userId: user?.userId,  // user.userId 사용
+      messageText
+    })
+
+    // 사용자 ID 결정 (로그인한 사용자는 실제 ID, 게스트는 999999)
+    let userId
+    if (isLoggedIn && user?.userId) {  // user.userId 사용
+      userId = user.userId  // 로그인한 사용자의 실제 ID
+      console.log('로그인한 사용자 ID:', userId)
+    } else {
+      userId = 999999   // 게스트 사용자 ID
+      console.log('게스트 사용자 ID:', userId)
+    }
+
+    const userMessage = {
+      id: Date.now() + Math.random(),
+      role: 'user',
+      content: messageText.trim(),
+      timestamp: new Date()
+    }
+
+    setMessages(prev => [...prev, userMessage])
+    setInputValue('')
+    setIsLoading(true)
+    setError(null)
+
+    try {
+      // 일반 채팅 API 호출 (비스트리밍) - POST body에 user_id 포함
+      const response = await axios.post('/api/chat/send', {
+        user_id: userId,  // POST body에 user_id 포함
+        message: messageText.trim(),
+        session_id: currentSessionId
+      })
+
+      const assistantMessage = {
+        id: Date.now() + Math.random() + 1,
+        role: 'assistant',
+        content: response.data.message,
+        timestamp: new Date()
+      }
+
+      setMessages(prev => [...prev, assistantMessage])
+      
+      // 세션 ID 업데이트 및 목록 새로고침
+      if (!currentSessionId && response.data.session_id) {
+        console.log('새 세션 생성됨:', response.data.session_id)
+        setCurrentSessionId(response.data.session_id)
+        // 로그인한 사용자의 마지막 세션 ID 저장
+        if (isLoggedIn && user?.userId) {
+          localStorage.setItem(`lastSessionId_${user.userId}`, response.data.session_id)
+        }
+      }
+      
+      // 로그인한 사용자는 항상 세션 목록 새로고침 (세션 업데이트 반영)
+      if (isLoggedIn) {
+        console.log('세션 목록 새로고침 시작...')
+        setTimeout(() => {
+          loadSessions(false) // 지연 후 세션 목록 새로고침
+        }, 500) // 500ms 후 새로고침 (DB 저장 완료 대기)
+      }
+
+    } catch (err) {
+      console.error('메시지 전송 오류:', err)
+      setError("메시지 전송에 실패했습니다. 다시 시도해주세요.")
+      
+      // 오류 메시지 표시
+      const errorMessage = {
+        id: Date.now() + Math.random() + 1,
+        role: 'assistant',
+        content: err.response?.status === 404 ? 
+          "로그인이 필요한 서비스입니다. 로그인 후 이용해주세요." : 
+          "죄송합니다. 일시적인 오류가 발생했습니다. 잠시 후 다시 시도해주세요.",
+        timestamp: new Date(),
+        isError: true
+      }
+      setMessages(prev => [...prev, errorMessage])
+    } finally {
+      setIsLoading(false)
+    }
+  }
+
+  // 엔터키 처리
+  const handleKeyPress = (e) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault()
+      sendMessage()
+    }
+  }
+
+  // 시간 포맷팅
+  const formatTime = (timestamp) => {
+    return new Date(timestamp).toLocaleTimeString(LOCALE_KR, {
+      hour: '2-digit',
+      minute: '2-digit'
+    })
+  }
+
+  // 빠른 질문 목록
+  const quickQuestions = [
+    "내 포트폴리오 수익률은 어떤가요?",
+    "지금 어떤 종목을 매수하면 좋을까요?",
+    "삼성전자 주가 전망을 알려주세요",
+    "분산투자가 뭔가요?",
+    "리밸런싱이 필요한지 알려주세요"
+  ]
+
+  return (
+    <div className="chatbot-page">
+      <div className="chatbot-sidebar">
+        <div className="sidebar-header">
+          <div className="bot-icon">🤖</div>
+          <span>SEED UP</span>
+        </div>
+
+        <button className="new-chat-btn" onClick={startNewChat}>
+          ➕ 새 채팅
+        </button>
+
+        <div className="chat-sessions">
+          {isLoggedIn ? (
+            isLoadingSessions ? (
+              <div className="session-placeholder" style={{
+                padding: '20px',
+                textAlign: 'center',
+                color: '#666',
+                fontSize: '14px'
+              }}>
+                {LOADING_MESSAGE}
+              </div>
+            ) : sessions.length > 0 ? (
+              <ul className="session-list">
+                {sessions.map((session) => (
+                  <li 
+                    key={session.id}
+                    className={`session-item ${currentSessionId === session.id ? 'active' : ''}`}
+                    onClick={() => loadSessionMessages(session.id)}
+                  >
+                    <div className="session-title">{session.title || NEW_CHAT_TITLE}</div>
+                    <div className="session-time">
+                      {session.updated_at ? new Date(session.updated_at).toLocaleDateString(LOCALE_KR) : "N/A"}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <div className="session-placeholder" style={{
+                padding: '20px',
+                textAlign: 'center',
+                color: '#666',
+                fontSize: '14px'
+              }}>
+                {FIRST_CHAT_MESSAGE}<br />
+                <small style={{ color: '#999' }}>{AUTO_SAVE_MESSAGE}</small>
+              </div>
+            )
+          ) : (
+            <div className="session-placeholder" style={{
+              padding: '20px',
+              textAlign: 'center',
+              color: '#666',
+              fontSize: '14px'
+            }}>
+              {LOGIN_REQUIRED_MESSAGE}
+            </div>
+          )}
+        </div>
+      </div>
+
+
+      <div className="chatbot-main">
+        <div className="chat-header">
+          <div>
+            <div className="chat-title">투자 전문 AI 어시스턴트</div>
+            <div className="chat-subtitle">개인화된 투자 상담 및 포트폴리오 관리</div>
+          </div>
+          
+          <div className="user-info">
+            <div className="status-dot"></div>
+            <span>{user?.username || "게스트 사용자"}</span>
+            {!isLoggedIn && <span style={{fontSize: '12px', color: '#666'}}>(체험하기)</span>}
+          </div>
+        </div>
+
+        <div className="chat-messages">
+          <div className="messages-container">
+            {messages.length === 0 ? (
+              <div className="empty-chat">
+                <div className="empty-icon">💬</div>
+                <div className="empty-title">안녕하세요! 투자 전문 AI입니다</div>
+                <div className="empty-subtitle">
+                  포트폴리오 분석, 종목 추천, 투자 조언 등<br />
+                  무엇이든 물어보세요
+                </div>
+                
+                <div className="quick-questions">
+                  {quickQuestions.map((question, index) => (
+                    <button
+                      key={index}
+                      className="quick-question-btn"
+                      onClick={() => sendMessage(question)}
+                      disabled={isLoading}
+                    >
+                      {question}
+                    </button>
+                  ))}
+                </div>
+              </div>
+            ) : (
+              <>
+                {messages.map((message) => (
+                  <div key={message.id} className={`message ${message.role}`}>
+                    <div className="message-avatar">
+                      {message.role === 'user' ? (user?.username?.[0] || 'U') : '🤖'}
+                    </div>
+                    <div className="message-content">
+                      {message.role === 'assistant' ? (
+                        <FormattedMessage content={message.content} />
+                      ) : (
+                        message.content
+                      )}
+                      <div className="message-time">
+                        {formatTime(message.timestamp)}
+                      </div>
+                    </div>
+                  </div>
+                ))}
+                
+                {isLoading && (
+                  <div className="message assistant">
+                    <div className="message-avatar">🤖</div>
+                    <div className="message-content">
+                      <div className="typing-indicator">
+                        <div className="typing-dot"></div>
+                        <div className="typing-dot"></div>
+                        <div className="typing-dot"></div>
+                      </div>
+                    </div>
+                  </div>
+                )}
+              </>
+            )}
+            <div ref={messagesEndRef} />
+          </div>
+        </div>
+
+        <div className="chat-input">
+          <div className="input-container">
+            <input
+              type="text"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              onKeyPress={handleKeyPress}
+              placeholder={isLoggedIn ? "투자 관련 궁금한 것을 물어보세요..." : "로그인하면 개인화된 상담을 받을 수 있습니다"}
+              disabled={isLoading}
+            />
+          </div>
+          
+          <button
+            className="send-btn"
+            onClick={() => sendMessage()}
+            disabled={!inputValue.trim() || isLoading}
+          >
+            {isLoading ? '⏳' : '🚀'}
+          </button>
+        </div>
+
+        {error && (
+          <div className="error-message" style={{
+            padding: '10px 20px',
+            background: '#ffebee',
+            color: '#c62828',
+            textAlign: 'center'
+          }}>
+            {error}
+          </div>
+        )}
+      </div>
+    </div>
+  )
+}
+
+export default ChatBotPage

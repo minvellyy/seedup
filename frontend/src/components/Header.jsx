@@ -16,6 +16,7 @@ function Header() {
     location.pathname === '/dashboard' || 
     location.pathname === '/recommendations' ||
     location.pathname === '/mypage' ||
+    location.pathname === '/chat' ||
     location.pathname.startsWith('/stock/') ||
     location.pathname.startsWith('/portfolio/')
   )
@@ -128,7 +129,7 @@ function Header() {
               </button>
               <button 
                 className="nav-item"
-                onClick={() => handleNavClick('/chatbot')}
+                onClick={() => handleNavClick('/chat')}
               >
                 챗봇
               </button>

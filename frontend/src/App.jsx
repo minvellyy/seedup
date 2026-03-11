@@ -13,6 +13,7 @@ import RecommendationsPage from './pages/RecommendationsPage'
 import StockDetailPage from './pages/StockDetailPage'
 import PortfolioDetailPage from './pages/PortfolioDetailPage'
 import MyPage from './pages/MyPage'
+import ChatBotPage from './pages/ChatBotPage'
 import './App.css'
 
 function App() {
@@ -33,6 +34,7 @@ function App() {
             <Route path="/stock/:stockCode" element={<StockDetailPage />} />
             <Route path="/portfolio/:portfolioId" element={<PortfolioDetailPage />} />
             <Route path="/mypage" element={<MyPage />} />
+            <Route path="/chat" element={<ChatBotPage />} />
           </Routes>
         </div>
       </AuthProvider>
