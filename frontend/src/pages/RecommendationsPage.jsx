@@ -81,7 +81,10 @@ function RecommendationsPage() {
 
   if (loading) return (
     <div className="recommendations-page">
-      <div className="loading">추천 데이터를 불러오는 중...</div>
+      <div className="loading-container">
+        <div className="loading-spinner"></div>
+        <p>추천 데이터를 불러오는 중...</p>
+      </div>
     </div>
   )
   if (error) return (

@@ -70,21 +70,22 @@ const ChatBotPage = () => {
     scrollToBottom()
   }, [messages])
 
-  // 컴포넌트 마운트 시 마지막 세션 복원
+  // 컴포넌트 마운트 시 마지막 세션 복원 (비활성화 - 항상 새로운 대화로 시작)
   useEffect(() => {
-    if (isLoggedIn && user?.userId) {
-      const lastSessionId = localStorage.getItem(`lastSessionId_${user.userId}`)
-      if (lastSessionId) {
-        setCurrentSessionId(lastSessionId)
-        console.log('마지막 세션 복원:', lastSessionId)
-      }
-    }
+    // 초기 화면을 유지하기 위해 자동 복원 비활성화
+    // if (isLoggedIn && user?.userId) {
+    //   const lastSessionId = localStorage.getItem(`lastSessionId_${user.userId}`)
+    //   if (lastSessionId) {
+    //     setCurrentSessionId(lastSessionId)
+    //     console.log('마지막 세션 복원:', lastSessionId)
+    //   }
+    // }
   }, [isLoggedIn, user?.userId])
 
-  // 컴포넌트 마운트 시 세션 목록 로드 및 가장 최근 대화 자동 로드
+  // 컴포넌트 마운트 시 세션 목록 로드 (메시지는 로드하지 않음)
   useEffect(() => {
     if (user?.userId) {  // user.userId 사용
-      loadSessions(true) // autoLoadLatest = true
+      loadSessions(false) // autoLoadLatest = false - 초기 화면 유지
     }
   }, [user])
 
@@ -295,7 +296,16 @@ const ChatBotPage = () => {
     <div className="chatbot-page">
       <div className="chatbot-sidebar">
         <div className="sidebar-header">
-          <div className="bot-icon">🤖</div>
+          <div className="bot-icon">
+            <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M 50 75 Q 48 65, 47 55 Q 46 45, 48 38" fill="none" stroke="#5a9068" strokeWidth="6" strokeLinecap="round" />
+              <path d="M 48 38 Q 35 35, 25 28 Q 18 23, 16 18 Q 16 15, 19 14 Q 23 14, 28 18 Q 38 25, 48 38" fill="#5a9068" fillOpacity="0.95" stroke="#5a9068" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M 48 38 Q 38 32, 30 26" fill="none" stroke="#4a7a58" strokeWidth="2" strokeLinecap="round" opacity="0.6" />
+              <path d="M 48 38 Q 61 35, 71 28 Q 78 23, 80 18 Q 80 15, 77 14 Q 73 14, 68 18 Q 58 25, 48 38" fill="#5a9068" fillOpacity="0.95" stroke="#5a9068" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+              <path d="M 48 38 Q 58 32, 66 26" fill="none" stroke="#4a7a58" strokeWidth="2" strokeLinecap="round" opacity="0.6" />
+              <ellipse cx="50" cy="78" rx="8" ry="3.5" fill="#5a9068" opacity="0.85" />
+            </svg>
+          </div>
           <span>SEED UP</span>
         </div>
 
@@ -397,7 +407,16 @@ const ChatBotPage = () => {
                 {messages.map((message) => (
                   <div key={message.id} className={`message ${message.role}`}>
                     <div className="message-avatar">
-                      {message.role === 'user' ? (user?.username?.[0] || 'U') : '🤖'}
+                      {message.role === 'user' ? (user?.username?.[0] || 'U') : (
+                        <svg width="20" height="20" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M 50 75 Q 48 65, 47 55 Q 46 45, 48 38" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round" />
+                          <path d="M 48 38 Q 35 35, 25 28 Q 18 23, 16 18 Q 16 15, 19 14 Q 23 14, 28 18 Q 38 25, 48 38" fill="currentColor" fillOpacity="0.95" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M 48 38 Q 38 32, 30 26" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" opacity="0.6" />
+                          <path d="M 48 38 Q 61 35, 71 28 Q 78 23, 80 18 Q 80 15, 77 14 Q 73 14, 68 18 Q 58 25, 48 38" fill="currentColor" fillOpacity="0.95" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                          <path d="M 48 38 Q 58 32, 66 26" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" opacity="0.6" />
+                          <ellipse cx="50" cy="78" rx="8" ry="3.5" fill="currentColor" opacity="0.85" />
+                        </svg>
+                      )}
                     </div>
                     <div className="message-content">
                       {message.role === 'assistant' ? (
@@ -414,7 +433,16 @@ const ChatBotPage = () => {
                 
                 {isLoading && (
                   <div className="message assistant">
-                    <div className="message-avatar">🤖</div>
+                    <div className="message-avatar">
+                      <svg width="20" height="20" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M 50 75 Q 48 65, 47 55 Q 46 45, 48 38" fill="none" stroke="currentColor" strokeWidth="6" strokeLinecap="round" />
+                        <path d="M 48 38 Q 35 35, 25 28 Q 18 23, 16 18 Q 16 15, 19 14 Q 23 14, 28 18 Q 38 25, 48 38" fill="currentColor" fillOpacity="0.95" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M 48 38 Q 38 32, 30 26" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" opacity="0.6" />
+                        <path d="M 48 38 Q 61 35, 71 28 Q 78 23, 80 18 Q 80 15, 77 14 Q 73 14, 68 18 Q 58 25, 48 38" fill="currentColor" fillOpacity="0.95" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round" />
+                        <path d="M 48 38 Q 58 32, 66 26" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" opacity="0.6" />
+                        <ellipse cx="50" cy="78" rx="8" ry="3.5" fill="currentColor" opacity="0.85" />
+                      </svg>
+                    </div>
                     <div className="message-content">
                       <div className="typing-indicator">
                         <div className="typing-dot"></div>

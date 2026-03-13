@@ -17,6 +17,8 @@ function Header() {
     location.pathname === '/recommendations' ||
     location.pathname === '/mypage' ||
     location.pathname === '/chat' ||
+    location.pathname === '/support' ||
+    location.pathname === '/stocks' ||
     location.pathname.startsWith('/stock/') ||
     location.pathname.startsWith('/portfolio/')
   )
@@ -48,50 +50,15 @@ function Header() {
           </div>
           <nav className="nav-menu">
             <div className="nav-left">
-              <button 
-                className="nav-item disabled"
-                disabled
-              >
-                홈
-              </button>
-              <button 
-                className="nav-item disabled"
-                disabled
-              >
-                포트폴리오
-              </button>
-              <button 
-                className="nav-item disabled"
-                disabled
-              >
-                개별종목
-              </button>
-              <button 
-                className="nav-item disabled"
-                disabled
-              >
-                챗봇
-              </button>
-              <button 
-                className="nav-item disabled"
-                disabled
-              >
-                고객센터
-              </button>
+              <button className="nav-item disabled" disabled>홈</button>
+              <button className="nav-item disabled" disabled>포트폴리오</button>
+              <button className="nav-item disabled" disabled>개별종목</button>
+              <button className="nav-item disabled" disabled>챗봇</button>
+              <button className="nav-item disabled" disabled>고객센터</button>
             </div>
             <div className="nav-right">
-              <button 
-                className="nav-item disabled"
-                disabled
-              >
-                로그아웃
-              </button>
-              <button 
-                className="nav-item disabled"
-                disabled
-              >
-                마이페이지
-              </button>
+              <button className="nav-item disabled" disabled>로그아웃</button>
+              <button className="nav-item disabled" disabled>마이페이지</button>
             </div>
           </nav>
         </div>
@@ -109,50 +76,15 @@ function Header() {
           </div>
           <nav className="nav-menu">
             <div className="nav-left">
-              <button 
-                className="nav-item"
-                onClick={() => handleNavClick('/')}
-              >
-                홈
-              </button>
-              <button 
-                className="nav-item"
-                onClick={() => handleNavClick('/recommendations')}
-              >
-                포트폴리오
-              </button>
-              <button 
-                className="nav-item"
-                onClick={() => handleNavClick('/stocks')}
-              >
-                개별종목
-              </button>
-              <button 
-                className="nav-item"
-                onClick={() => handleNavClick('/chat')}
-              >
-                챗봇
-              </button>
-              <button 
-                className="nav-item"
-                onClick={() => handleNavClick('/support')}
-              >
-                고객센터
-              </button>
+              <button className="nav-item" onClick={() => handleNavClick('/')}>홈</button>
+              <button className="nav-item" onClick={() => handleNavClick('/recommendations')}>포트폴리오</button>
+              <button className="nav-item" onClick={() => handleNavClick('/stocks')}>개별종목</button>
+              <button className="nav-item" onClick={() => handleNavClick('/chat')}>챗봇</button>
+              <button className="nav-item" onClick={() => handleNavClick('/support')}>고객센터</button>
             </div>
             <div className="nav-right">
-              <button 
-                className="nav-item logout-btn"
-                onClick={handleLogout}
-              >
-                로그아웃
-              </button>
-              <button 
-                className="nav-item"
-                onClick={() => handleNavClick('/mypage')}
-              >
-                마이페이지
-              </button>
+              <button className="nav-item logout-btn" onClick={handleLogout}>로그아웃</button>
+              <button className="nav-item" onClick={() => handleNavClick('/mypage')}>마이페이지</button>
             </div>
           </nav>
         </div>
@@ -160,7 +92,7 @@ function Header() {
     )
   }
 
-  // 기본 네비게이션 바 (로그인 전/후)
+  // 기본 네비게이션 바 (로그인 전)
   return (
     <header className="header">
       <div className="header-container">

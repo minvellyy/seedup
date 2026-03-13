@@ -1,6 +1,6 @@
 .stock-detail-page {
   min-height: 100vh;
-  background: linear-gradient(135deg, #fffaf0 0%, #fff8e1 100%);
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
   padding: 40px 20px;
 }
 
@@ -9,35 +9,63 @@
   margin: 0 auto;
 }
 
+/* 뒤로 가기 버튼 */
 .back-button {
   background: white;
-  color: #333;
+  color: #F97316;
   border: 2px solid #F97316;
-  padding: 10px 20px;
-  border-radius: 25px;
+  padding: 12px 24px;
+  border-radius: 30px;
   font-size: 1em;
+  font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
   margin-bottom: 30px;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.1);
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.back-button::before {
+  content: '←';
+  font-size: 1.2em;
+  transition: transform 0.3s ease;
 }
 
 .back-button:hover {
   background: #F97316;
   color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.3);
+}
+
+.back-button:hover::before {
+  transform: translateX(-4px);
+}
+
+.back-button:active {
+  transform: translateY(0);
 }
 
 /* 헤더 */
 .stock-detail-header {
   background: white;
-  border-radius: 16px;
-  padding: 30px;
+  border-radius: 20px;
+  padding: 32px;
   margin-bottom: 30px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  border: 1px solid #f5f5f5;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
   flex-wrap: wrap;
-  gap: 20px;
+  gap: 24px;
+  transition: all 0.3s ease;
+}
+
+.stock-detail-header:hover {
+  box-shadow: 0 6px 30px rgba(0, 0, 0, 0.12);
 }
 
 .header-left {
@@ -123,16 +151,24 @@
 /* 차트 섹션 */
 .chart-section {
   background: white;
-  border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  border-radius: 20px;
+  padding: 32px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f5f5f5;
+  transition: all 0.3s ease;
+}
+
+.chart-section:hover {
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
 }
 
 .chart-container {
   background: #fafafa;
-  border-radius: 12px;
-  padding: 20px;
+  border-radius: 14px;
+  padding: 24px;
   position: relative;
+  border: 1px solid #f0f0f0;
 }
 
 .chart-labels {
@@ -564,40 +600,46 @@
   display: inline-block;
   background: linear-gradient(135deg, #F97316, #EA580C);
   color: white;
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.9em;
+  padding: 6px 16px;
+  border-radius: 24px;
+  font-size: 0.95em;
   font-weight: 700;
   width: fit-content;
+  box-shadow: 0 3px 12px rgba(249, 115, 22, 0.4);
+  letter-spacing: 0.3px;
 }
 
 .sd-ticker {
-  font-size: 1em;
+  font-size: 1.1em;
   color: #7f8c8d;
   font-family: 'Courier New', monospace;
+  font-weight: 600;
+  letter-spacing: 0.5px;
 }
 
 .sd-market-badge {
   display: inline-block;
   background: linear-gradient(135deg, #F97316, #EA580C);
   color: white;
-  padding: 3px 12px;
-  border-radius: 14px;
-  font-size: 0.82em;
+  padding: 5px 14px;
+  border-radius: 18px;
+  font-size: 0.85em;
   font-weight: 600;
   width: fit-content;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
 }
 
 .sd-risk-tier {
   display: inline-block;
   background: #fff3e0;
   color: #EA580C;
-  border: 1px solid #FDBA74;
-  padding: 3px 10px;
-  border-radius: 12px;
-  font-size: 0.82em;
-  font-weight: 600;
+  border: 2px solid #FDBA74;
+  padding: 5px 14px;
+  border-radius: 16px;
+  font-size: 0.85em;
+  font-weight: 700;
   width: fit-content;
+  letter-spacing: 0.2px;
 }
 
 /* 점수 박스 */
@@ -637,77 +679,145 @@
 /* 섹션 */
 .sd-section {
   background: white;
-  border-radius: 14px;
-  padding: 24px;
+  border-radius: 16px;
+  padding: 28px;
   margin-bottom: 24px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.07);
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.sd-section:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
 }
 
 .sd-section-heading {
-  font-size: 1.15em;
+  font-size: 1.2em;
   font-weight: 700;
-  color: #2c3e50;
-  margin: 0 0 16px 0;
-  padding-bottom: 10px;
+  color: #1a1a1a;
+  margin: 0 0 20px 0;
+  padding-bottom: 14px;
   border-bottom: 2px solid #fff3e0;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 /* 지표 카드 그리드 */
 .sd-features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
 }
 
 .sd-feature-card {
-  background: #fff8f0;
+  background: linear-gradient(135deg, #fffaf5 0%, #fff8f0 100%);
   border: 1px solid #FDBA74;
-  border-radius: 12px;
-  padding: 14px 12px;
+  border-radius: 14px;
+  padding: 18px 16px;
   text-align: center;
   cursor: default;
-  transition: box-shadow 0.2s;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.sd-feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #F97316, #EA580C);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
 }
 
 .sd-feature-card:hover {
-  box-shadow: 0 4px 14px rgba(249,115,22,0.2);
+  box-shadow: 0 6px 20px rgba(249,115,22,0.25);
+  transform: translateY(-4px);
+  border-color: #F97316;
+}
+
+.sd-feature-card:hover::before {
+  transform: scaleX(1);
 }
 
 .sd-feature-label {
-  font-size: 0.78em;
+  font-size: 0.8em;
   color: #7f8c8d;
-  margin-bottom: 8px;
-  font-weight: 500;
+  margin-bottom: 10px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
 }
 
 .sd-feature-value {
-  font-size: 1.15em;
+  font-size: 1.25em;
   font-weight: 700;
+  letter-spacing: -0.3px;
 }
 
 /* 설명 박스 */
 .sd-explanation-box {
-  background: #fffaf5;
-  border-left: 4px solid #F97316;
-  border-radius: 0 12px 12px 0;
-  padding: 16px 20px;
-  line-height: 1.7;
+  background: linear-gradient(135deg, #fffaf5 0%, #fff8f0 100%);
+  border-left: 5px solid #F97316;
+  border-radius: 0 16px 16px 0;
+  padding: 20px 24px;
+  line-height: 1.8;
   color: #2c3e50;
-  font-size: 0.95em;
+  font-size: 1em;
+  box-shadow: 0 2px 12px rgba(249, 115, 22, 0.08);
 }
 
 /* 추천 이유 목록 */
 .sd-reasons-list {
   margin: 0;
-  padding-left: 22px;
-  list-style: disc;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .sd-reasons-list li {
-  font-size: 0.95em;
-  color: #34495e;
-  line-height: 1.65;
-  margin-bottom: 8px;
+  background: linear-gradient(135deg, #fff7ed 0%, #fff5ea 100%);
+  border-left: 4px solid #F97316;
+  padding: 14px 18px;
+  border-radius: 0 12px 12px 0;
+  font-size: 0.98em;
+  color: #333;
+  line-height: 1.7;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.06);
+  transition: all 0.25s ease;
+  position: relative;
+}
+
+.sd-reasons-list li:hover {
+  transform: translateX(4px);
+  box-shadow: 0 4px 16px rgba(249, 115, 22, 0.15);
+  border-left-width: 6px;
+}
+
+.sd-reasons-list li::before {
+  content: '✓';
+  position: absolute;
+  left: -2px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 20px;
+  height: 20px;
+  background: #F97316;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 12px;
+  font-weight: bold;
 }
 
 /* 유의사항 */
@@ -760,6 +870,22 @@
 }
 .sd-back-btn:hover { background: #F97316; color: white; }
 
+/* 디버그 버튼 (개발용) */
+.sd-debug-btn {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #d1d5db;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.sd-debug-btn:hover {
+  background: #e5e7eb;
+  border-color: #9ca3af;
+}
+
 /* 로딩 */
 .sd-loading {
   text-align: center;
@@ -773,48 +899,161 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  gap: 2px;
+  gap: 4px;
 }
+
 .sd-current-price {
-  font-size: 30px;
-  font-weight: 700;
+  font-size: 34px;
+  font-weight: 800;
   color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  letter-spacing: -0.5px;
 }
+
+.sd-realtime-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  color: #EA580C;
+  background: rgba(234, 88, 12, 0.1);
+  padding: 5px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+.sd-realtime-badge::before {
+  content: '●';
+  font-size: 8px;
+  animation: blink 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.8;
+    transform: scale(0.98);
+  }
+}
+
+@keyframes blink {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.3;
+  }
+}
+
 .sd-change-badge {
-  font-size: 16px;
-  font-weight: 600;
+  font-size: 17px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 16px;
+  letter-spacing: -0.2px;
 }
+
 .sd-price-date {
   font-size: 12px;
-  color: #aaa;
-  margin-top: 2px;
+  color: #999;
+  margin-top: 4px;
+  font-weight: 500;
 }
 
 /* 섹터 뱃지 */
 .sd-sector-badge {
-  background: #f3e8ff;
+  background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
   color: #7c3aed;
-  border-radius: 4px;
-  padding: 2px 8px;
-  font-size: 12px;
-  font-weight: 500;
+  border-radius: 18px;
+  padding: 5px 14px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.15);
 }
 
 /* 추천 점수 바 (인라인) */
 .sd-score-row-outer {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 16px;
   background: white;
-  border-radius: 12px;
-  padding: 14px 20px;
+  border-radius: 16px;
+  padding: 18px 24px;
   margin-bottom: 20px;
-  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  box-shadow: 0 3px 12px rgba(0,0,0,0.08);
+  border: 1px solid #f5f5f5;
+  transition: all 0.3s ease;
 }
-.sd-score-label { font-size: 13px; color: #555; white-space: nowrap; }
-.sd-score-bar-bg { flex: 1; height: 10px; background: #f0f0f0; border-radius: 5px; overflow: hidden; }
-.sd-score-bar-fill { height: 100%; background: linear-gradient(90deg, #F97316, #FB923C); border-radius: 5px; transition: width 0.6s ease; }
-.sd-score-value { font-size: 15px; font-weight: 700; color: #F97316; white-space: nowrap; }
+
+.sd-score-row-outer:hover {
+  box-shadow: 0 6px 20px rgba(0,0,0,0.12);
+  transform: translateY(-2px);
+}
+
+.sd-score-label {
+  font-size: 14px;
+  color: #555;
+  white-space: nowrap;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.sd-score-bar-bg {
+  flex: 1;
+  height: 12px;
+  background: #f0f0f0;
+  border-radius: 8px;
+  overflow: hidden;
+  position: relative;
+}
+
+.sd-score-bar-bg::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(90deg, rgba(255,255,255,0) 0%, rgba(255,255,255,0.3) 50%, rgba(255,255,255,0) 100%);
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+.sd-score-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #F97316, #FB923C, #F97316);
+  background-size: 200% 100%;
+  border-radius: 8px;
+  transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.4);
+  animation: gradientShift 3s ease infinite;
+}
+
+@keyframes gradientShift {
+  0%, 100% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+}
+
+.sd-score-value {
+  font-size: 16px;
+  font-weight: 800;
+  color: #F97316;
+  white-space: nowrap;
+  letter-spacing: -0.3px;
+}
 
 /* 차트 래퍼 */
 .sd-chart-wrap {
@@ -885,16 +1124,44 @@
 /* ── 캔들스틱 차트 ─────────────────────────────────────────────────────── */
 .sd-candle-wrap {
   width: 100%;
+  background: white;
+  padding: 20px;
+  border-radius: 12px;
 }
+
 .sd-candle-minmax {
   display: flex;
   justify-content: space-between;
-  margin-top: 6px;
-  font-size: 12px;
+  margin-top: 10px;
+  font-size: 13px;
   font-weight: 600;
+  padding-top: 10px;
+  border-top: 1px solid #f0f0f0;
 }
-.sd-candle-high { color: #EA580C; }
-.sd-candle-low  { color: #3B82F6; }
+
+.sd-candle-high { 
+  color: #EA580C;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sd-candle-high::before {
+  content: '⬆';
+  font-size: 0.9em;
+}
+
+.sd-candle-low {
+  color: #3B82F6;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.sd-candle-low::before {
+  content: '⬇';
+  font-size: 0.9em;
+}
 
 /* ── 레이더 차트 래퍼 ──────────────────────────────────────────────────── */
 .sd-radar-wrap {
@@ -939,4 +1206,99 @@
   font-size: 13px;
   font-style: italic;
   margin: 0;
+}
+
+/* ── 일중 차트 (Intraday Chart) ─────────────────────────────────────────── */
+.sd-intraday-wrap {
+  width: 100%;
+  background: white;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.sd-intraday-wrap:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  transform: translateY(-2px);
+}
+
+.sd-intraday-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f5f5f5;
+}
+
+.sd-intraday-title {
+  font-size: 1.1em;
+  font-weight: 700;
+  color: #1a1a1a;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.sd-intraday-title::before {
+  content: '📈';
+  font-size: 1.2em;
+}
+
+.sd-intraday-change {
+  font-size: 1.05em;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 20px;
+  letter-spacing: -0.2px;
+}
+
+.sd-intraday-change.up {
+  color: #EA580C;
+  background: rgba(234, 88, 12, 0.08);
+}
+
+.sd-intraday-change.down {
+  color: #3B82F6;
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.sd-intraday-change .percent {
+  font-size: 0.9em;
+  font-weight: 600;
+}
+
+.sd-intraday-empty {
+  padding: 40px;
+  text-align: center;
+  color: #999;
+  font-size: 0.95em;
+}
+
+@media (max-width: 768px) {
+  .sd-intraday-wrap {
+    padding: 18px;
+    border-radius: 12px;
+  }
+  
+  .sd-intraday-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .sd-intraday-title {
+    font-size: 1em;
+  }
+  
+  .sd-intraday-change {
+    font-size: 0.95em;
+    padding: 5px 12px;
+  }
 }
