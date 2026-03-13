@@ -13,6 +13,122 @@ const fmtMcap  = (v) => {
   return `약 ${b.toFixed(0)}억원`
 }
 
+// ── 일중 차트 (FinanceDataReader) ─────────────────────────────────────────
+function IntradayChart({ data }) {
+  if (!data || !data.data || data.data.length < 2) {
+    return (
+      <div className="sd-intraday-empty">
+        <p>일중 데이터가 없습니다.</p>
+      </div>
+    )
+  }
+
+  const chartData = data.data
+  const W = 800, H = 180, padT = 12, padB = 28, padL = 4, padR = 4
+  const plotW = W - padL - padR
+  const plotH = H - padT - padB
+
+  const prices = chartData.map(d => d.close)
+  const minY = Math.min(...prices)
+  const maxY = Math.max(...prices)
+  const range = maxY - minY || 1
+
+  const sy = (v) => padT + plotH - ((v - minY) / range) * plotH
+  const n = chartData.length
+  const step = plotW / (n - 1)
+
+  // 라인 경로 생성
+  const linePath = chartData
+    .map((d, i) => {
+      const x = padL + i * step
+      const y = sy(d.close)
+      return `${i === 0 ? 'M' : 'L'}${x},${y}`
+    })
+    .join(' ')
+
+  // 날짜 레이블
+  const firstDate = chartData[0].date
+  const lastDate = chartData[chartData.length - 1].date
+  const midDate = chartData[Math.floor(n / 2)]?.date || ''
+
+  // 가격 변동
+  const firstPrice = prices[0]
+  const lastPrice = prices[prices.length - 1]
+  const priceChange = lastPrice - firstPrice
+  const changeRate = ((priceChange / firstPrice) * 100).toFixed(2)
+  const isUp = priceChange >= 0
+  const lineColor = isUp ? '#EA580C' : '#3B82F6'
+
+  return (
+    <div className="sd-intraday-wrap">
+      <div className="sd-intraday-header">
+        <span className="sd-intraday-title">최근 {data.period} 가격 추이</span>
+        <span className={`sd-intraday-change ${isUp ? 'up' : 'down'}`}>
+          {isUp ? '▲' : '▼'} {Math.abs(priceChange).toLocaleString()}원 ({isUp ? '+' : ''}{changeRate}%)
+        </span>
+      </div>
+      <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block' }}>
+        {/* 그라데이션 정의 */}
+        <defs>
+          <linearGradient id="lineGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stopColor={lineColor} stopOpacity="0.8" />
+            <stop offset="100%" stopColor={lineColor} stopOpacity="1" />
+          </linearGradient>
+          <filter id="shadow" x="-50%" y="-50%" width="200%" height="200%">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="2"/>
+            <feOffset dx="0" dy="2" result="offsetblur"/>
+            <feComponentTransfer>
+              <feFuncA type="linear" slope="0.3"/>
+            </feComponentTransfer>
+            <feMerge>
+              <feMergeNode/>
+              <feMergeNode in="SourceGraphic"/>
+            </feMerge>
+          </filter>
+        </defs>
+        
+        {/* Y축 */}
+        <line x1={padL} y1={padT} x2={padL} y2={H - padB} stroke="#e5e7eb" strokeWidth={1.5} />
+        <line x1={padL} y1={H - padB} x2={W - padR} y2={H - padB} stroke="#e5e7eb" strokeWidth={1.5} />
+        
+        {/* 가격 라인 */}
+        <path d={linePath} fill="none" stroke="url(#lineGradient)" strokeWidth={2.5} strokeLinecap="round" strokeLinejoin="round" filter="url(#shadow)" />
+        
+        {/* 데이터 포인트 */}
+        {chartData.map((d, i) => {
+          const x = padL + i * step
+          const y = sy(d.close)
+          return (
+            <g key={i}>
+              <circle cx={x} cy={y} r={4} fill="white" stroke={lineColor} strokeWidth={2} />
+              <circle cx={x} cy={y} r={2} fill={lineColor} />
+            </g>
+          )
+        })}
+        
+        {/* Y축 레이블 */}
+        <g>
+          <rect x={padL - 60} y={sy(maxY) - 12} width="55" height="24" rx="6" fill="white" stroke="#e5e7eb" strokeWidth="1"/>
+          <text x={padL - 32} y={sy(maxY)} fontSize={11} fill="#EA580C" textAnchor="middle" dominantBaseline="middle" fontWeight="600">
+            {maxY.toLocaleString()}
+          </text>
+        </g>
+        <g>
+          <rect x={padL - 60} y={sy(minY) - 12} width="55" height="24" rx="6" fill="white" stroke="#e5e7eb" strokeWidth="1"/>
+          <text x={padL - 32} y={sy(minY)} fontSize={11} fill="#3B82F6" textAnchor="middle" dominantBaseline="middle" fontWeight="600">
+            {minY.toLocaleString()}
+          </text>
+        </g>
+        
+        {/* X축 날짜 레이블 */}
+        <text x={padL} y={H - 5} fontSize={11} fill="#666" textAnchor="start" fontWeight="600">{firstDate}</text>
+        <text x={padL + plotW / 2} y={H - 5} fontSize={11} fill="#999" textAnchor="middle" fontWeight="500">{midDate}</text>
+        <text x={W - padR} y={H - 5} fontSize={11} fill="#666" textAnchor="end" fontWeight="600">{lastDate}</text>
+      </svg>
+    </div>
+  )
+}
+
 // ── 캔들스틱 차트 (SVG) ────────────────────────────────────────────────────
 function CandlestickChart({ data, days = 30 }) {
   if (!data || data.length < 2) return null
@@ -176,6 +292,36 @@ function StockDetailPage() {
   const [scores,           setScores]           = useState(null)
   const [analysis,         setAnalysis]         = useState(null)
   const [analysisLoading,  setAnalysisLoading]  = useState(false)
+  const [realtimePrice,    setRealtimePrice]    = useState(null) // 실시간 가격 데이터
+  const [intradayData,     setIntradayData]     = useState(null) // 일중 차트 데이터
+  const [wsStatus,         setWsStatus]         = useState(null) // WebSocket 상태 (디버그용)
+
+  // ── WebSocket 상태 확인 (디버그용) ──────────────────────────────────────
+  const checkWebSocketStatus = async () => {
+    try {
+      const res = await fetch('/api/stream/ws-status')
+      const data = await res.json()
+      setWsStatus(data)
+      console.log('[WebSocket 상태]', data)
+      alert(`WebSocket 초기화: ${data.initialized ? '성공' : '실패'}\n구독 종목: ${data.subscribed?.length || 0}개\n현재 종목(${stockCode}): ${data.subscribed?.includes(stockCode) ? '구독됨' : '미구독'}`)
+    } catch (err) {
+      console.error('WebSocket 상태 확인 실패:', err)
+      alert('WebSocket 상태 확인 실패')
+    }
+  }
+
+  // ── 테스트 가격 주입 (장 마감 시 테스트용) ────────────────────────────────
+  const injectTestPrices = async () => {
+    try {
+      const res = await fetch(`/api/stream/test-inject?codes=${stockCode}`)
+      const data = await res.json()
+      console.log('[테스트 주입]', data)
+      alert('10초간 테스트 가격 변동 시작 (콘솔 확인)')
+    } catch (err) {
+      console.error('테스트 주입 실패:', err)
+      alert('테스트 주입 실패')
+    }
+  }
 
   // ── 기본 데이터 & 점수 로드 ─────────────────────────────────────────────
   useEffect(() => {
@@ -190,6 +336,95 @@ function StockDetailPage() {
       setScores(sc)
       setLoading(false)
     }).catch(err => { setError(err.message); setLoading(false) })
+  }, [stockCode])
+
+  // ── 실시간 가격 스트림 (SSE) ──────────────────────────────────────────────
+  useEffect(() => {
+    if (!stockCode || loading) return
+
+    let eventSource = null
+    let reconnectTimer = null
+    let isActive = true
+
+    const connect = () => {
+      if (!isActive) return
+
+      try {
+        const url = `/api/stream/prices?codes=${stockCode}`
+        console.log('[실시간 가격] SSE 연결 시도:', url)
+        eventSource = new EventSource(url)
+        
+        eventSource.onopen = () => {
+          console.log('[실시간 가격] SSE 연결 성공:', stockCode)
+        }
+        
+        eventSource.onmessage = (event) => {
+          try {
+            const updates = JSON.parse(event.data)
+            console.log('[실시간 가격] 데이터 수신:', updates)
+            const priceData = updates[stockCode]
+            if (priceData) {
+              console.log('[실시간 가격] 가격 업데이트:', priceData)
+              setRealtimePrice(priceData)
+            }
+          } catch (err) {
+            console.warn('[실시간 가격] 파싱 오류:', err, event.data)
+          }
+        }
+
+        eventSource.onerror = (err) => {
+          console.warn('[실시간 가격] 연결 오류:', err)
+          if (eventSource) {
+            eventSource.close()
+          }
+          
+          // 5초 후 재연결 시도
+          if (isActive) {
+            reconnectTimer = setTimeout(() => {
+              console.log('[실시간 가격] 재연결 시도...')
+              connect()
+            }, 5000)
+          }
+        }
+      } catch (err) {
+        console.error('[실시간 가격] EventSource 생성 실패:', err)
+      }
+    }
+
+    connect()
+
+    return () => {
+      isActive = false
+      console.log('[실시간 가격] SSE 연결 종료')
+      if (eventSource) {
+        eventSource.close()
+      }
+      if (reconnectTimer) {
+        clearTimeout(reconnectTimer)
+      }
+    }
+  }, [stockCode, loading])
+
+  // ── 일중 차트 데이터 로드 (FinanceDataReader) ─────────────────────────
+  useEffect(() => {
+    if (!stockCode) return
+    
+    const fetchIntradayData = async () => {
+      try {
+        const response = await fetch(`/api/v1/stocks/intraday/${stockCode}?days=5`)
+        if (response.ok) {
+          const data = await response.json()
+          console.log('[일중 데이터] 로드 완료:', data)
+          setIntradayData(data)
+        } else {
+          console.warn('[일중 데이터] 로드 실패:', response.status)
+        }
+      } catch (err) {
+        console.warn('[일중 데이터] 조회 오류:', err)
+      }
+    }
+    
+    fetchIntradayData()
   }, [stockCode])
 
   // ── AI 분석 로드 (sessionStorage 캐시, 비동기) ─────────────────────────
@@ -247,7 +482,12 @@ function StockDetailPage() {
     </div>
   )
 
-  const isUp = (detail.change_rate ?? 0) >= 0
+  // 실시간 가격 데이터가 있으면 사용, 없으면 기본 데이터 사용
+  const currentPrice = realtimePrice?.current_price ?? detail.current_price
+  const change = realtimePrice?.change ?? detail.change
+  const changeRate = realtimePrice?.change_rate ?? detail.change_rate
+  
+  const isUp = (changeRate ?? 0) >= 0
 
   // ── 투자 원칙 적합도 데이터 ──────────────────────────────────────────────
   const fitScore = stockItem?.total_score != null
@@ -292,6 +532,18 @@ function StockDetailPage() {
 
         <button onClick={() => navigate(-1)} className="sd-back-btn">← 추천 목록으로</button>
 
+        {/* 디버그 버튼 (개발용 - 나중에 제거 가능) */}
+        {process.env.NODE_ENV === 'development' && (
+          <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
+            <button onClick={checkWebSocketStatus} className="sd-debug-btn">
+              🔍 WebSocket 상태 확인
+            </button>
+            <button onClick={injectTestPrices} className="sd-debug-btn">
+              🧪 테스트 가격 주입 (10초)
+            </button>
+          </div>
+        )}
+
         {/* ── 1. 헤더 ────────────────────────────────────────────── */}
         <div className="stock-detail-header">
           <div className="sd-header-left">
@@ -307,18 +559,31 @@ function StockDetailPage() {
             </div>
           </div>
           <div className="sd-price-box">
-            <div className="sd-current-price">{fmtPrice(detail.current_price)}</div>
-            {detail.change != null && (
+            <div className="sd-current-price">
+              {fmtPrice(currentPrice)}
+              {realtimePrice && (
+                <span className="sd-realtime-badge" title="실시간 업데이트">🔴 LIVE</span>
+              )}
+            </div>
+            {change != null && (
               <div className="sd-change-badge" style={{ color: isUp ? '#EA580C' : '#3B82F6' }}>
-                {isUp ? '▲' : '▼'} {Math.abs(detail.change).toLocaleString('ko-KR')}원
-                &nbsp;({detail.change_rate >= 0 ? '+' : ''}{Number(detail.change_rate).toFixed(2)}%)
+                {isUp ? '▲' : '▼'} {Math.abs(change).toLocaleString('ko-KR')}원
+                &nbsp;({changeRate >= 0 ? '+' : ''}{Number(changeRate).toFixed(2)}%)
               </div>
             )}
             <div className="sd-price-date">{detail.price_date} 기준</div>
           </div>
         </div>
 
-        {/* ── 2. 주가 차트 (최근 30일) ──────────────────────────── */}
+        {/* ── 2. 일중 차트 (FinanceDataReader) ──────────────────── */}
+        {intradayData && intradayData.data && intradayData.data.length > 0 && (
+          <section className="sd-section">
+            <h2 className="sd-section-heading">📈 최근 가격 추이 (FinanceDataReader)</h2>
+            <IntradayChart data={intradayData} />
+          </section>
+        )}
+
+        {/* ── 3. 주가 차트 (최근 30일) ──────────────────────────── */}
         {detail.price_history.length > 1 && (
           <section className="sd-section">
             <h2 className="sd-section-heading">주가 차트 (최근 30일)</h2>

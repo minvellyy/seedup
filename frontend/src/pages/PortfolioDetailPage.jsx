@@ -257,6 +257,7 @@ function PortfolioDetailPage() {
   const navigate = useNavigate()
   const { state } = useLocation()
   const portfolioData = state?.portfolioData
+  const [isLoading, setIsLoading] = useState(!portfolioData)
 
   const passedAiData = state?.aiEnrichData || (() => {
     const items = state?.portfolioData?.portfolio_items || []
@@ -277,6 +278,16 @@ function PortfolioDetailPage() {
   const [riskAnalysis, setRiskAnalysis] = useState(null)
   const cardRef = useRef(null)
 
+  // 데이터가 없을 때 3초 후에 로딩을 멈추고 에러 표시
+  useEffect(() => {
+    if (!portfolioData) {
+      const timer = setTimeout(() => {
+        setIsLoading(false)
+      }, 3000)
+      return () => clearTimeout(timer)
+    }
+  }, [portfolioData])
+
   const handlePdf = () => {
     const el = cardRef.current
     if (!el) return
@@ -287,6 +298,17 @@ function PortfolioDetailPage() {
       html2canvas: { scale: 2, useCORS: true, logging: false },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
     }).from(el).save()
+  }
+
+  if (isLoading) {
+    return (
+      <div className="portfolio-detail-page">
+        <div className="loading-container">
+          <div className="loading-spinner"></div>
+          <p>포트폴리오를 불러오는 중...</p>
+        </div>
+      </div>
+    )
   }
 
   if (!portfolioData) {

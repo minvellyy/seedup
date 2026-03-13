@@ -113,16 +113,26 @@ def _get_token(force_refresh: bool = False) -> str:
 
 
 def _kis_get(url: str, tr_id: str, params: Dict, retry: bool = True):
-    """KIS GET 요청 헬퍼. 500(토큰 만료) 시 토큰 갱신 후 1회 재시도."""
+    """KIS GET 요청 헬퍼. 500(토큰 만료) 시 토큰 갱신 후 1회 재시도.
+    
+    재시도 후에도 500 오류가 발생하면 HTTPError를 발생시킵니다.
+    """
     import logging as _logging
     _logger = _logging.getLogger("kis_client")
-    r = requests.get(url, headers=_headers(tr_id), params=params, timeout=10)
-    if r.status_code == 500 and retry:
-        _logger.warning("KIS 500 수신 — 토큰 갱신 후 재시도 (%s)", url)
-        _get_token(force_refresh=True)
+    
+    try:
         r = requests.get(url, headers=_headers(tr_id), params=params, timeout=10)
-    r.raise_for_status()
-    return r
+        if r.status_code == 500 and retry:
+            _logger.warning("KIS 500 수신 — 토큰 갱신 후 1회 재시도 (%s)", url)
+            _get_token(force_refresh=True)
+            r = requests.get(url, headers=_headers(tr_id), params=params, timeout=10)
+            if r.status_code == 500:
+                _logger.error("KIS 500 재시도 후에도 실패 — API 호출 중단 (%s)", url)
+        r.raise_for_status()
+        return r
+    except Exception as e:
+        _logger.debug("KIS API 요청 실패 [%s]: %s", url, e)
+        raise
 
 
 def _headers(tr_id: str) -> Dict[str, str]:

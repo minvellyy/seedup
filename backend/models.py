@@ -89,3 +89,22 @@ class ChatMessage(Base):
     created_at = Column(DateTime, server_default=func.now())
     
     session = relationship("ChatSession", back_populates="messages")
+
+# ═══ 고객센터 문의 관련 모델 ═══════════════════════════════════════════════════
+
+class CustomerInquiry(Base):
+    """고객센터 1:1 문의"""
+    __tablename__ = 'customer_inquiries'
+    
+    id = Column(Integer, primary_key=True, autoincrement=True)
+    user_id = Column(Integer, ForeignKey('users.id', ondelete='CASCADE'))
+    inquiry_type = Column(String(50), nullable=False)  # 문의 유형 (서비스 이용, 포트폴리오, 계정/로그인 등)
+    title = Column(String(200), nullable=False)  # 문의 제목
+    content = Column(Text, nullable=False)  # 문의 내용
+    status = Column(String(20), default='pending')  # 상태: pending(답변 대기), completed(답변 완료)
+    answer = Column(Text)  # 관리자 답변
+    answered_at = Column(DateTime)  # 답변 일시
+    created_at = Column(DateTime, server_default=func.now())
+    updated_at = Column(DateTime, server_default=func.now(), onupdate=func.now())
+    
+    user = relationship("User")

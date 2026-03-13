@@ -352,7 +352,7 @@ const HoldingsSection = () => {
                 className={`toggle-btn ${!showManualForm ? 'active' : ''}`}
                 onClick={() => setShowManualForm(false)}
               >
-                📸 MTS 캡처
+                📸 보유 주식 내역 캡처
               </button>
               <button
                 type="button"
@@ -383,7 +383,7 @@ const HoldingsSection = () => {
                     ) : (
                       <>
                         <div className="upload-icon">📷</div>
-                        <p className="upload-title">MTS 화면을 캡처하여 올려주세요</p>
+                        <p className="upload-title">보유 주식 내역을 캡처하여 올려주세요</p>
                         <p className="upload-hint">보유 종목 정보가 자동으로 입력됩니다</p>
                       </>
                     )}

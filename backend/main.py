@@ -243,15 +243,15 @@ async def _db_full_price_sync(skip_ws_codes: set = None) -> int:
 
 
 async def _db_full_price_sync_loop() -> None:
-    """REST API로 WS 미구독 종목(STOCK+ETF)을 주기적으로 갱신 (기본 3시간 주기, 시작 시 즉시 1회 실행)."""
+    """REST API로 WS 미구독 종목(STOCK+ETF)을 주기적으로 갱신 (기본 3시간 주기).
+    
+    NOTE: 시작 직후 즉시 실행을 비활성화했습니다. KIS API 호출량이 많아 500 오류가 발생할 수 있습니다.
+    필요시 주기적 갱신만 사용하거나, 더 긴 간격으로 설정하세요.
+    """
     from kis_ws_client import get_price_store
 
-    # 서버 시작 직후 즉시 1회 실행
-    await asyncio.sleep(5)  # WebSocket 연결 안정화 대기
-    logger.info("DB 전체 가격 갱신 시작 (초기 실행, STOCK+ETF)...")
-    ws_codes = set(get_price_store().keys())
-    updated = await _db_full_price_sync(skip_ws_codes=ws_codes)
-    logger.info("DB 전체 가격 갱신 초기 실행 완료: %d개", updated)
+    # 서버 시작 직후 즉시 실행하지 않음 (KIS API 500 오류 방지)
+    logger.info("DB 전체 가격 갱신: 첫 실행은 %d초 후에 시작됩니다.", _DB_FULL_SYNC_INTERVAL)
 
     while True:
         await asyncio.sleep(_DB_FULL_SYNC_INTERVAL)
@@ -1036,6 +1036,7 @@ async def health():
 
 from routers.stream import router as stream_router
 from routers.holdings import router as holdings_router
+from routers.inquiry import router as inquiry_router
 
 # Include routers
 app.include_router(survey.router, prefix="/survey", tags=["Survey"])
@@ -1044,6 +1045,7 @@ app.include_router(recommendations.router)
 app.include_router(instruments_router)   # /api/instruments/stocks, /etfs
 app.include_router(stream_router)        # /api/stream/prices
 app.include_router(holdings_router, prefix="/api")  # /api/holdings
+app.include_router(inquiry_router)       # /api/inquiries
 
 # 챗봇 라우터 등록
 if _CHATBOT_ROUTER_AVAILABLE:
