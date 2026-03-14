@@ -1,0 +1,30 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-06",
+        "brokerage": "대신증권",
+        "analyst_name": "이경연",
+        "report_title": "코리아 ‘프리미엄’의 전제조건"
+    },
+    "specific_data": {
+        "strategy_theme": "ESG 및 주주환원 정책",
+        "recommended_portfolio": [
+            "SK",
+            "HD현대",
+            "두산",
+            "LG",
+            "한화",
+            "CJ"
+        ],
+        "strategy_logic": [
+            "한국 자본시장이 선진국형으로 진화하는 과정",
+            "주주환원율의 구조적 상승",
+            "MSCI 선진국 지수 편입을 위한 지속적인 주주환원 레코드"
+        ],
+        "quant_factors": [
+            "배당수익률",
+            "주가 상승",
+            "자사주 매입 및 소각"
+        ]
+    }
+}

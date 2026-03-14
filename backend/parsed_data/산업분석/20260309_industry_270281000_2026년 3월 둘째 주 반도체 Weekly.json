@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-09",
+        "brokerage": "교보증권",
+        "analyst_name": "최보영",
+        "report_title": "2026년 3월 둘째 주 반도체 Weekly"
+    },
+    "specific_data": {
+        "sector_name": "반도체",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "삼성전자",
+            "SK하이닉스"
+        ],
+        "industry_trends": [
+            "중동 정세 불안에 따른 국내 시장 변동성 심화",
+            "2월 국내 반도체 수출액 252억 달러(YoY +161%)",
+            "브로드컴 호실적 발표"
+        ],
+        "risk_factors": [
+            "중동 정세 불안",
+            "고용 부진",
+            "유가 급등"
+        ]
+    }
+}

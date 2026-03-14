@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "하나증권",
+        "analyst_name": "유재선, 성무규",
+        "report_title": "일회성 비용에도 양호한 실적"
+    },
+    "specific_data": {
+        "company_name": "HD한국조선해양",
+        "ticker": "009540",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "일회성 비용에도 양호한 실적",
+            "목표주가 570,000원 유지",
+            "DPS 성장이 가능할 전망"
+        ],
+        "risk_factors": [
+            "해상 프로젝트 C/O 반영",
+            "추가 성과급 관련 일회성 비용",
+            "직전분기 인식한 HD현대미포 취소 보상금의 기저"
+        ],
+        "shareholder_structure": "에이치디현대 외 7 인 36.65%, 국민연금공단 6.80%"
+    }
+}

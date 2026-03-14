@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-05",
+        "brokerage": "삼성증권",
+        "analyst_name": "임은영, 김현지",
+        "report_title": "4Q25 Review 관세를 넘어선 EV 타이어"
+    },
+    "specific_data": {
+        "company_name": "한국타이어앤테크놀로지",
+        "ticker": "161390",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "관세 영향을 믹스 향상과 가격 인상으로 상쇄",
+            "전기차 타이어 비중 확대에 주력",
+            "원자재 가격 하락 및 물류비 안정화"
+        ],
+        "risk_factors": [
+            "관세 불확실성",
+            "지배구조 리스크"
+        ],
+        "shareholder_structure": "주식수 123,875,069주 (유동주식 비중 55.3%)"
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-09",
+        "brokerage": "대신증권",
+        "analyst_name": "김회재",
+        "report_title": "오랜만에 만나는 All Red"
+    },
+    "specific_data": {
+        "market_summary": "연휴를 앞둔 마지막 거래일에 조정을 받았지만, 주가 미디어 업종 모두 상승. 오랜만에 만나는 All Red. 실적이 모두 공개된 가운데, 제일기획, 이노션, 스튜디오드래곤, 콘텐트리중앙은 시장 기대 수준의 실적을, CGV와 ENM은 서프라이즈 달성.",
+        "macro_indicators": "KOSPI 4,214.2에서 5,507.0으로 상승, KOSDAQ 925.5에서 1,106.1로 상승.",
+        "fund_flows": "ENM과 콘중 및 이노션의 경우 자회사들의 실적이 개선되면서, 이번 4Q 및 25년의 실적 개선이 일회성이 아닌 구조적 개선의 모습임을 확인.",
+        "key_news": [
+            "NFLX-워너 반독점 조사 착수",
+            "tvN 드라마 강세",
+            "AI 컨텐츠 지원",
+            "AI 광고 규제 전환 제기",
+            "멀티플렉스 축소 지속"
+        ]
+    }
+}

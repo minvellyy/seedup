@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-11",
+        "brokerage": "한화리서치",
+        "analyst_name": "null",
+        "report_title": "2월 디지털자산 정책 인사이트"
+    },
+    "specific_data": {
+        "sector_name": "디지털자산",
+        "industry_rating": "null",
+        "top_picks": [],
+        "industry_trends": [
+            "디지털자산 정책 인사이트",
+            "디지털자산 시장구조법안 논의",
+            "STO 법안 통과",
+            "디지털자산기본법 지연",
+            "국제적 규제 원칙의 제도화"
+        ],
+        "risk_factors": [
+            "법안 통과 지연에 따른 불확실성",
+            "스테이블코인 발행 주체 요건의 불확실성",
+            "디지털자산의 법적 성격에 대한 논란"
+        ]
+    }
+}

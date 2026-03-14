@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-20",
+        "brokerage": "iM증권",
+        "analyst_name": "전유진, 장호",
+        "report_title": "FEOC 세부안 발표 비중국산 프리미엄 근거 .."
+    },
+    "specific_data": {
+        "company_name": "한화솔루션",
+        "ticker": "009830",
+        "investment_rating": "Hold",
+        "investment_points": [
+            "미국 셀 통관 정상화",
+            "Cartersville 상업가동 2~3분기부터 시작",
+            "목표주가 50,000원 상향"
+        ],
+        "risk_factors": [
+            "미국 내 모듈 과잉 재고",
+            "재고의 추세적 감소 필요"
+        ],
+        "shareholder_structure": "외국인지분율 14.4%"
+    }
+}

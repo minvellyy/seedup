@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "DS투자증권",
+        "analyst_name": null,
+        "report_title": "소외 대신 주목이 필요한 주가"
+    },
+    "specific_data": {
+        "company_name": "금호타이어",
+        "ticker": "073240",
+        "investment_rating": "매수",
+        "investment_points": [
+            "영업이익 1,453억원으로 컨센서스 상회",
+            "광주 공장의 빠른 복구에 따른 유럽 정상화",
+            "고인치 믹스 개선과 ASP 상승"
+        ],
+        "risk_factors": [
+            "북미 관세 영향",
+            "광주 공장 화재"
+        ],
+        "shareholder_structure": "주요주주: 싱웨이코리아(외 8인) 61.8%, 금호타이어우리사주(외 1인) 1.5%"
+    }
+}

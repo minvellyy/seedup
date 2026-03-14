@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "하나증권",
+        "analyst_name": "채운샘",
+        "report_title": "4Q25 리뷰 길게 보면 작은 흔들림"
+    },
+    "specific_data": {
+        "company_name": "한화에어로스페이스",
+        "ticker": "012450",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "목표주가 1,460,000원 유지",
+            "4분기 실적은 아쉬웠지만 연간 증익 기조 지속 가능",
+            "폴란드 외 국가로의 수출 본격화 예상"
+        ],
+        "risk_factors": [
+            "연결자회사 실적 부진",
+            "일회성 비용 반영",
+            "지상방산 내수 매출비중 증가에 따른 믹스 악화"
+        ],
+        "shareholder_structure": "한화 외 6 인 35.78%, 국민연금공단 7.92%"
+    }
+}

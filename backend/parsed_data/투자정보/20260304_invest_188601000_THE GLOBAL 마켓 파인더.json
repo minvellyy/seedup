@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-03",
+        "brokerage": "대신증권",
+        "analyst_name": "문건우, 문남중",
+        "report_title": "THE GLOBAL 마켓 파인더"
+    },
+    "specific_data": {
+        "strategy_theme": "실물 자산 선호",
+        "recommended_portfolio": [
+            "엔비디아"
+        ],
+        "strategy_logic": [
+            "AI 수익성 우려 지속",
+            "전기/금속/유틸리티 상승"
+        ],
+        "quant_factors": [
+            "금속 및 광업",
+            "전기장비",
+            "전자 장비, 기기 및 부품"
+        ]
+    }
+}

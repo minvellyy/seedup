@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-09",
+        "brokerage": "DS INVESTMENT & SECURITIES",
+        "analyst_name": "최승호",
+        "report_title": "구글 앱수수료 인하에 따른 영업이익 변화 점.."
+    },
+    "specific_data": {
+        "sector_name": "인터넷·게임",
+        "industry_rating": null,
+        "top_picks": [
+            "넷마블"
+        ],
+        "industry_trends": [
+            "구글 앱수수료 인하에 따른 영업이익 변화",
+            "게임사 영업이익률 개선 전망",
+            "애플 수수료 인하 가능성"
+        ],
+        "risk_factors": [
+            "글로벌 게임업황 악화",
+            "게임사들의 자체 결제로의 전환",
+            "법적 분쟁의 결과"
+        ]
+    }
+}

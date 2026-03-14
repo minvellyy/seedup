@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-04",
+        "brokerage": "유안타증권",
+        "analyst_name": "황규원",
+        "report_title": "대산공장 구조조정으로, 2,000억원 절감 기대.."
+    },
+    "specific_data": {
+        "company_name": "롯데케미칼",
+        "ticker": "011170",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "대산공장 구조조정으로 연간 2,000억원 절감 기대",
+            "구조조정 완료 시 5,800억원 비용 절감 효과",
+            "목표주가 165,000원으로 상승여력 96% 예상"
+        ],
+        "risk_factors": [
+            "구조조정 과정에서의 예상치 못한 비용 발생",
+            "글로벌 석화 업황의 변동성"
+        ],
+        "shareholder_structure": "주요주주 롯데지주 외 41인"
+    }
+}

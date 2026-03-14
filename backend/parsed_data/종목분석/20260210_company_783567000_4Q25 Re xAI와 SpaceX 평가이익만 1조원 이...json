@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "미래에셋증권",
+        "analyst_name": "고연수",
+        "report_title": "4Q25 Re xAI와 SpaceX 평가이익만 1조원 이.."
+    },
+    "specific_data": {
+        "company_name": "미래에셋증권",
+        "ticker": "006800",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "xAI와 SpaceX 관련 평가이익이 연간 기준 약 1조원 이상 반영될 것으로 예상됨",
+            "2026년 지배주주순이익 추정치를 2.3조원으로 상향 조정",
+            "SpaceX 상장 시 추가적인 평가이익 반영 가능성",
+            "디지털자산 시장에서의 선점효과 기대"
+        ],
+        "risk_factors": [
+            "해외 CRE 익스포저가 약 1조원인 점",
+            "해외부동산 손상차손 부담"
+        ],
+        "shareholder_structure": "미래에셋캐피탈 외 17 인 33.23%, 네이버 8.36%"
+    }
+}

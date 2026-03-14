@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "키움증권",
+        "analyst_name": "김진구",
+        "report_title": "긍정적 현실의 직시"
+    },
+    "specific_data": {
+        "company_name": "엔씨소프트",
+        "ticker": "036570",
+        "investment_rating": "BUY(Maintain)",
+        "investment_points": [
+            "목표주가 430,000원 유지",
+            "게임 업종 최선호주로 지속 제시",
+            "아이온2의 한국/대만 매출 지속성 확인",
+            "글로벌 성공 가능성 반영"
+        ],
+        "risk_factors": [
+            "신규 유저 유입의 불확실성",
+            "경쟁 심화",
+            "게임 서비스의 지속성"
+        ],
+        "shareholder_structure": "주요 주주 김택진 외 14인 12.4%"
+    }
+}

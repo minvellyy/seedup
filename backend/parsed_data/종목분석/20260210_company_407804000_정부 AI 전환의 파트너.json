@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": null,
+        "report_date": null,
+        "brokerage": null,
+        "analyst_name": null,
+        "report_title": "정부 AI 전환의 파트너"
+    },
+    "specific_data": {
+        "company_name": "코난테크놀로지",
+        "ticker": "000000",
+        "investment_rating": null,
+        "investment_points": [
+            "AI 요소 기술 적용 시작",
+            "KIS A 지능형 CCTV 국방 분야 인증 획득",
+            "AI 기술 협력 MOU 체결",
+            "모 언어 모델 'Konan LLM' 정식 출시",
+            "AI 플랫폼 구축 사업 계약 체결"
+        ],
+        "risk_factors": null,
+        "shareholder_structure": null
+    }
+}

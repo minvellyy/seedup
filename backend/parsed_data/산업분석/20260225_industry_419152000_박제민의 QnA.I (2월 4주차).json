@@ -1,0 +1,39 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-25",
+        "brokerage": "SK증권",
+        "analyst_name": "박제민",
+        "report_title": "박제민의 QnA.I (2월 4주차)"
+    },
+    "specific_data": {
+        "sector_name": "AI 및 기술 산업",
+        "industry_rating": null,
+        "top_picks": [
+            "엔비디아",
+            "알파벳",
+            "애플",
+            "마이크로소프트",
+            "아마존",
+            "메타 플랫폼스",
+            "오라클",
+            "코어위브"
+        ],
+        "industry_trends": [
+            "강한 수요 + Vera Rubin 생산 진행으로 펀더멘탈 견고",
+            "AI Full stack 기업, 텍스트 및 이미지 AI 모델 1위 사업자",
+            "교체 주기+신품 프로모션을 통한 판매 호조",
+            "AI PaaS 1위 사업자, OpenAI 엔진 활용 해자",
+            "CPU DC 1위 사업자, GPU DC 공격적 증설 진행 중",
+            "AI 도입으로 광고 P,Q 개선",
+            "Stargate IaaS 담당 사업자, 수주 절반 이상 OpenAI",
+            "1위 네오클라우드 사업자, 수주 절반 이상 OpenAI"
+        ],
+        "risk_factors": [
+            "AI 공포가 전염되는 움직임",
+            "내러티브 리스크가 주가를 먼저 흔드는 국면",
+            "기존 보안 SW 예산 잠식 가능성",
+            "AI 도입 자체를 기업들이 망설일 수 있는 계기"
+        ]
+    }
+}

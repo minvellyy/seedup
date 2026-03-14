@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "한화투자증권",
+        "analyst_name": "송유림, 김예인",
+        "report_title": "몸은 가볍게, 마음은 비장하게"
+    },
+    "specific_data": {
+        "company_name": "GS건설",
+        "ticker": "006360",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "주택 매출 감소가 집중되는 상반기까지는 실적 개선이 제한되겠으나 올해가 지나면서 성장에 대한 그림은 보다 명확해질 것으로 기대됨.",
+            "목표주가는 24,000원으로 유지됨.",
+            "현재 주가는 19,110원으로 상승여력 25.6%."
+        ],
+        "risk_factors": [
+            "주택 매출이 큰 폭으로 감소할 가능성.",
+            "이니마 EPC현장에서의 비용 반영."
+        ],
+        "shareholder_structure": "허창수 (외 17인) 23.6%, 국민연금공단 (외 1인) 6.9%, 자사주 (외 1인) 0.8%"
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2023-10-01",
+        "brokerage": "대신증권",
+        "analyst_name": "유정현",
+        "report_title": "유통 & 의류"
+    },
+    "specific_data": {
+        "sector_name": "유통 & 의류",
+        "industry_rating": "긍정적",
+        "top_picks": [
+            "신세계",
+            "롯데쇼핑",
+            "현대백화점",
+            "이마트",
+            "BGF리테일"
+        ],
+        "industry_trends": [
+            "소비자 심리 회복",
+            "반도체 산업 호황",
+            "외국인 관광객 증가",
+            "백화점 매출 증가"
+        ],
+        "risk_factors": [
+            "글로벌 경제 불확실성",
+            "소비자 물가 상승",
+            "경기 둔화"
+        ]
+    }
+}

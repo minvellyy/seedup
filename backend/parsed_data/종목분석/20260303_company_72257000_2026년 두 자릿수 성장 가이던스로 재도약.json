@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-03",
+        "brokerage": "유안타증권",
+        "analyst_name": "이승은",
+        "report_title": "2026년 두 자릿수 성장 가이던스로 재도약"
+    },
+    "specific_data": {
+        "company_name": "코스맥스",
+        "ticker": "192820",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "2026년 두 자릿수 성장 가이던스 제시",
+            "K-뷰티 수출 호조 지속",
+            "유럽 프리미엄 스킨케어 시장 진출"
+        ],
+        "risk_factors": [
+            "미국 법인 BEP 달성 시점 모니터링 필요",
+            "해외 법인 턴어라운드 불확실성"
+        ],
+        "shareholder_structure": "주요주주: 코스맥스비티아이 외 10, 외인지분율 37.96%"
+    }
+}

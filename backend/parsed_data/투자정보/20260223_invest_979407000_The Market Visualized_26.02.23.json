@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-23",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "The Market Visualized_26.02.23"
+    },
+    "specific_data": {
+        "strategy_theme": null,
+        "recommended_portfolio": [],
+        "strategy_logic": [
+            "국내 증시는 펀더멘털 지표와 투자 심리, 모멘텀 등 핵심 동력이 전부 견조한 흐름을 보이고 있음",
+            "미국 증시는 기술 성장주의 모멘텀이 둔화되는 가운데 가치 스타일의 상대적 강세가 이어지고 있음",
+            "매매 수급은 개인과 외국인 간 대칭적 흐름이 나타나고 있음",
+            "모멘텀과 멀티플은 대체로 상반된 흐름을 보이는 경향이 있음",
+            "중소형주 스타일은 지수의 방향성이 뚜렷한 국면보다, 박스권 흐름에서 상대적으로 강세를 보일 가능성이 높음"
+        ],
+        "quant_factors": [
+            "모멘텀(주가수익률)",
+            "밸류(멀티플)",
+            "사이즈(시가총액)"
+        ]
+    }
+}

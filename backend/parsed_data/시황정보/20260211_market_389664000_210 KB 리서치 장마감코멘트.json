@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-10",
+        "brokerage": "KB증권",
+        "analyst_name": "임정은, 태윤선, 김상엽",
+        "report_title": "210 KB 리서치 장마감코멘트"
+    },
+    "specific_data": {
+        "market_summary": "KOSPI 5,301pt (+0.07%), KOSDAQ 1,115pt (-1.10%)",
+        "macro_indicators": null,
+        "fund_flows": {
+            "individual": -8734,
+            "foreign": 1434,
+            "institution": 5635
+        },
+        "key_news": [
+            "KOSPI 5,300선 회복",
+            "미 증시는 소프트웨어 및 AI 관련주 중심으로 저가 매수세 유입",
+            "대형마트 새벽배송 허용 기대감에 유통 및 대형마트 관련주 상승",
+            "항공주 강세",
+            "AI 전력 수요 확대에 따른 해외 대형 원전 수출 기대감",
+            "금융지주는 실적 개선과 정책 환경 변화에 맞춘 주주환원 강화 기대로 강세 지속",
+            "외국인은 2 거래일 연속 KOSPI 순매수 기록"
+        ]
+    }
+}

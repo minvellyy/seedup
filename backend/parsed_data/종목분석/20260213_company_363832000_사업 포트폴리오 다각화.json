@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-13",
+        "brokerage": "유안타증권",
+        "analyst_name": "최지운",
+        "report_title": "사업 포트폴리오 다각화"
+    },
+    "specific_data": {
+        "company_name": "팬오션",
+        "ticker": "028670",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "사업 포트폴리오 다각화",
+            "4Q25 매출액 1조 4,763억원, 영업이익 1,304억원으로 컨센서스에 부합",
+            "목표주가 6,200원으로 상향 조정"
+        ],
+        "risk_factors": [
+            "구조적인 수요 회복이 제한적",
+            "선박 공급 증가",
+            "OPEC+ 감산 완화 및 지정학적 이슈"
+        ],
+        "shareholder_structure": "주요주주 하림지주 외 12 인"
+    }
+}

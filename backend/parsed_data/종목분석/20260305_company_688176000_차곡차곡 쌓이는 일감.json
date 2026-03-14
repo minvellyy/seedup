@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-05",
+        "brokerage": "키움증권",
+        "analyst_name": "조재원",
+        "report_title": "차곡차곡 쌓이는 일감"
+    },
+    "specific_data": {
+        "company_name": "엔알비",
+        "ticker": "475230",
+        "investment_rating": "Not Rated",
+        "investment_points": [
+            "차별적인 기술력과 풍부한 레퍼런스를 바탕으로, 향후 모듈러주택 보급 확대 정책의 최대 수혜 예상",
+            "모듈러 제작 및 판매, 보유 모듈러 임대 사업을 영위",
+            "100% 공장에서 제작한 3D 모듈러로 지상 30층까지 조립 가능한 역량 보유"
+        ],
+        "risk_factors": [
+            "건설 공기 단축, 인력 고령화 문제 해결 필요",
+            "모듈러주택 공급 계획의 불확실성"
+        ],
+        "shareholder_structure": "주요 주주 강건우 외 2 인 48.0%"
+    }
+}

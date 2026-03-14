@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-09",
+        "brokerage": "KB증권",
+        "analyst_name": "임정은, 태윤선, 김상엽",
+        "report_title": "39 KB 리서치 장마감코멘트"
+    },
+    "specific_data": {
+        "market_summary": "KOSPI 5,251pt (-5.96%), KOSDAQ 1,102pt (-4.54%)",
+        "macro_indicators": "미-이란 지정학 리스크가 지속되며 국내 증시 급락세, 오후 들어 낙폭 일부 만회. 미 증시는 중동 불확실성에 더해 고용 및 소비 지표가 시장 예상을 하회하며 스태그플레이션 우려가 확대되었고, 여러 복합 악재가 겹치며 3대 지수 하락 마감.",
+        "fund_flows": {
+            "individual": "+46,214",
+            "foreign": "-32,047",
+            "institution": "-15,344"
+        },
+        "key_news": [
+            "미-이란 관련 뉴스플로우 및 국제 유가 방향성",
+            "미국 2월 CPI, PCE, 4분기 GDP 등 물가 및 경기 지표",
+            "오라클, 어도비 등 AI 소프트웨어 기업 실적",
+            "국내 코스닥 액티브 ETF 출시 및 대미투자특별법 처리 일정"
+        ]
+    }
+}

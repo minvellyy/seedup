@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-10",
+        "brokerage": "DS INVESTMENT & SECURITIES",
+        "analyst_name": "최승호",
+        "report_title": "미워도 다시 한번 v2"
+    },
+    "specific_data": {
+        "sector_name": "게임",
+        "industry_rating": "Trading Buy",
+        "top_picks": [
+            "넷마블",
+            "조이시티"
+        ],
+        "industry_trends": [
+            "게임산업 구조적 정체 지속 예상",
+            "모바일 게임산업 결제액 감소",
+            "구글 앱수수료 인하에 따른 영업이익 개선 기대"
+        ],
+        "risk_factors": [
+            "게임산업 성장 정체",
+            "글로벌 경쟁 심화",
+            "신작 출시 지연"
+        ]
+    }
+}

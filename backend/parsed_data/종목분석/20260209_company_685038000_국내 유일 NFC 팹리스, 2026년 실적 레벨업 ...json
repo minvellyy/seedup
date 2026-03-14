@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-07",
+        "brokerage": "대신증권",
+        "analyst_name": "김아영",
+        "report_title": "국내 유일 NFC 팹리스, 2026년 실적 레벨업 .."
+    },
+    "specific_data": {
+        "company_name": "쓰리에이로직스",
+        "ticker": "177900",
+        "investment_rating": "N/R",
+        "investment_points": [
+            "2026년 실적 레벨업",
+            "기술 진입 장벽",
+            "신규 성장축 확장"
+        ],
+        "risk_factors": [
+            "고객 고지 리스크"
+        ],
+        "shareholder_structure": "주요 주주 박광범 외 6 인 29.18%"
+    }
+}

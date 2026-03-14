@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "미래에셋증권",
+        "analyst_name": "안영준",
+        "report_title": "4Q25 Re 새로운 시대의 개막을 알리는 서프.."
+    },
+    "specific_data": {
+        "company_name": "미래에셋증권",
+        "ticker": "006800",
+        "investment_rating": "Buy (Maintain)",
+        "investment_points": [
+            "4분기 지배순이익 146% 증가, 기대치 상회",
+            "해외부동산 손실 인식 vs BK 호조 + 투자자산 가치 상승",
+            "자산 토큰화 시장 선점"
+        ],
+        "risk_factors": [
+            "해외부동산 손실",
+            "금리 상승에 따른 이자비용 증가"
+        ],
+        "shareholder_structure": "주요 주주: 미래에셋캐피탈 외 20인 33.05%"
+    }
+}

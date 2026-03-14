@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "키움증권",
+        "analyst_name": "임수진",
+        "report_title": "질적 성장이 증명한 어닝 서프라이즈"
+    },
+    "specific_data": {
+        "company_name": "에스엠",
+        "ticker": "041510",
+        "investment_rating": "BUY(Maintain)",
+        "investment_points": [
+            "질적 성장이 증명한 어닝 서프라이즈",
+            "중국 변수 등 대외 불확실성에도 불구하고, 자체 IP 이익 체력이 강화됨",
+            "고마진 MD/라이선싱 성장이 견인한 어닝 서프라이즈"
+        ],
+        "risk_factors": [
+            "중국 송출 예정이던 콘서트 무산",
+            "중국 모멘텀 둔화"
+        ],
+        "shareholder_structure": "주요 주주 카카오 외 7 인 41.7%"
+    }
+}

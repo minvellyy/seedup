@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-09",
+        "brokerage": "한화투자증권",
+        "analyst_name": "박세연, 김예인",
+        "report_title": "KOSPI 6000 시대 ④  국민연금 의결권 위임.."
+    },
+    "specific_data": {
+        "sector_name": "ESG",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "국민연금 의결권 민간 위임",
+            "행동주의 캠페인의 양적 확대에서 질적 심화로 변화",
+            "위탁운용사의 의결권 행사 유인 강화",
+            "기업의 지배구조 개선 필요성 증가"
+        ],
+        "risk_factors": [
+            "정치적 부담",
+            "운용사 간 수탁자 책임 경쟁 심화"
+        ]
+    }
+}

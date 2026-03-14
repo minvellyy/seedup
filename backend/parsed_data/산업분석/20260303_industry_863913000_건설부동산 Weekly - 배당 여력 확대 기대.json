@@ -1,0 +1,30 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-03",
+        "brokerage": "유진투자증권",
+        "analyst_name": "류태환, 임범수",
+        "report_title": "건설부동산 Weekly - 배당 여력 확대 기대"
+    },
+    "specific_data": {
+        "sector_name": "건설/부동산",
+        "industry_rating": null,
+        "top_picks": [
+            "삼성E&A",
+            "HDC현대산업개발",
+            "GS건설",
+            "DL이앤씨",
+            "대우건설"
+        ],
+        "industry_trends": [
+            "주간 아파트가격 동향",
+            "전세가격지수 상승",
+            "정비사업 수주 신중모드",
+            "주주환원정책 강화"
+        ],
+        "risk_factors": [
+            "미분양에 따른 운전자본 부담",
+            "PF보증 관련 잠재적 유동성 리스크"
+        ]
+    }
+}

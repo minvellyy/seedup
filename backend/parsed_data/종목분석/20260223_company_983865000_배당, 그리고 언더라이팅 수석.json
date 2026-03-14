@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-23",
+        "brokerage": "대신증권",
+        "analyst_name": "박혜진, 권용수",
+        "report_title": "배당, 그리고 언더라이팅 수석"
+    },
+    "specific_data": {
+        "company_name": "DB손해보험",
+        "ticker": "005830",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "위험손해율 분기 대비 -8.1%p 하락",
+            "장기보험손익 선전, 컨센 상회",
+            "명확한 배당정책과 언더라이팅 우등생",
+            "목표주가 및 투자의견 상향"
+        ],
+        "risk_factors": [
+            "경쟁사와의 손해율 차이",
+            "IBNR적립 이슈",
+            "보험료 인상에 따른 고객 반발 가능성"
+        ],
+        "shareholder_structure": "주요주주 김남호 외 14 인 25.96%, 국민연금공단 7.35%"
+    }
+}

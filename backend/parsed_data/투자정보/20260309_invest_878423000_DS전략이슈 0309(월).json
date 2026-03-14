@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-09",
+        "brokerage": "DS투자증권",
+        "analyst_name": "양형모",
+        "report_title": "DS전략이슈 0309(월)"
+    },
+    "specific_data": {
+        "strategy_theme": "VIX 분석으로 공포 이겨내기",
+        "recommended_portfolio": [
+            "S&P500",
+            "KOSPI"
+        ],
+        "strategy_logic": [
+            "VIX 30 도달 시 매수 기준 추가 낙폭 중앙값은 S&P500 -4.26%, KOSPI -7.83%",
+            "VIX 30에서 고점을 형성하는 케이스는 VIX30 도달 이전에 낙폭 대부분이 이미 발생하고 추가 낙폭은 작다.",
+            "현재 VIX 26.0은 스파이크 탐지 임계값을 막 초과한 초기 단계로, 역사적 분포상 중앙값 고점(29.1)에 근접하고 있다."
+        ],
+        "quant_factors": [
+            "VIX 30 도달 확률 39.5%",
+            "VIX 40 도달 확률 29.4%",
+            "S&P500 MDD 중앙값 -6.1%",
+            "KOSPI MDD 중앙값 -10.69%"
+        ]
+    }
+}

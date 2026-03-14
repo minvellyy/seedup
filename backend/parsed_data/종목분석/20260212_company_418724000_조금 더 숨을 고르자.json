@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "iM증권",
+        "analyst_name": "김윤상",
+        "report_title": "조금 더 숨을 고르자"
+    },
+    "specific_data": {
+        "company_name": "풍산",
+        "ticker": "103140",
+        "investment_rating": "Hold",
+        "investment_points": [
+            "25.4Q 실적 기대치 부합",
+            "전기동 가격 상승으로 신동 부문의 Metal Gain 확대",
+            "방산 부문 내수 중심의 큰 폭의 매출 증가"
+        ],
+        "risk_factors": [
+            "신동/방산 부문 마진율 부진 지속",
+            "방산 매출 감소",
+            "전기동 가격 상승에 따른 민수 부문 실적 둔화"
+        ],
+        "shareholder_structure": "주요 주주 지분율: 외국인지분율 16.7%"
+    }
+}

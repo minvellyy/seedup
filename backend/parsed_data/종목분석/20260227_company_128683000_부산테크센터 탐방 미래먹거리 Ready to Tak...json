@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-27",
+        "brokerage": "하나증권",
+        "analyst_name": "안도현",
+        "report_title": "부산테크센터 탐방 미래먹거리 Ready to Tak.."
+    },
+    "specific_data": {
+        "company_name": "대한항공",
+        "ticker": "003490",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "부산테크센터 탐방: 미래먹거리 Ready to Take off",
+            "항공우주사업부의 성장 가능성",
+            "군용기 및 무인기 사업의 확대"
+        ],
+        "risk_factors": [
+            "글로벌 경제 불확실성",
+            "항공산업의 변동성"
+        ],
+        "shareholder_structure": "한진칼 외 29 인 27.06%, 국민연금공단 7.01%"
+    }
+}

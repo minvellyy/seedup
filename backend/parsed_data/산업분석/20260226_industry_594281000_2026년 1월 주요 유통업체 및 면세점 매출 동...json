@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2025-02-26",
+        "brokerage": "교보증권",
+        "analyst_name": "장민지",
+        "report_title": "2026년 1월 주요 유통업체 및 면세점 매출 동.."
+    },
+    "specific_data": {
+        "sector_name": "유통",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "2026년 1월 주요 유통업체 매출 YoY +4.4% 기록",
+            "오프라인 매출 -0.6%, 온라인 매출 +8.2%",
+            "백화점 매출 YoY +13.4% 기록",
+            "대형마트 매출 YoY -18.8% 기록",
+            "면세점 매출 YoY +12.2% 기록"
+        ],
+        "risk_factors": [
+            "대형마트 및 SSM 매출 감소",
+            "설 명절 수요 이연"
+        ]
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "미래에셋증권",
+        "analyst_name": "김주희",
+        "report_title": "자산가치에 더한 호텔 슈퍼사이클"
+    },
+    "specific_data": {
+        "company_name": "서부T&D",
+        "ticker": "006730",
+        "investment_rating": "Not Rated",
+        "investment_points": [
+            "호텔 비중 80%의 부동산 디벨로퍼로서 자산가치 증대",
+            "호텔 영업이익률 40%에 육박",
+            "중국의 한일령 수혜로 인한 수요 증가 기대"
+        ],
+        "risk_factors": [
+            "부동산 경기 및 정책 리스크",
+            "PF·금융 환경 리스크",
+            "인바운드 모멘텀 둔화 리스크"
+        ],
+        "shareholder_structure": "주요 주주: ㈜엠와이에이치 9.2%, 자사주 18.99%, 기타 72.8%"
+    }
+}

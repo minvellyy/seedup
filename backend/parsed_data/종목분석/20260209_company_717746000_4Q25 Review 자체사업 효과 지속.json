@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "교보증권",
+        "analyst_name": "이상호",
+        "report_title": "4Q25 Review 자체사업 효과 지속"
+    },
+    "specific_data": {
+        "company_name": "HDC현대산업개발",
+        "ticker": "294870",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "자체사업 효과 지속",
+            "2026년 가이던스 신규수주 6.5조원 제시",
+            "서울원 아이파크, 청주가경, 서산 센트럴 본격적인 매출인식 예정"
+        ],
+        "risk_factors": [
+            "영업이익 컨센서스 대폭 하회",
+            "판관비 증가 영향"
+        ],
+        "shareholder_structure": "HDC 외 6 인 43.02%"
+    }
+}

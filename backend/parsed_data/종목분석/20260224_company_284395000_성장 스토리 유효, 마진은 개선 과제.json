@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-24",
+        "brokerage": "교보증권",
+        "analyst_name": "권우정",
+        "report_title": "성장 스토리 유효, 마진은 개선 과제"
+    },
+    "specific_data": {
+        "company_name": "코스맥스",
+        "ticker": "192820",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "성장 스토리 유효",
+            "중국 및 미국 선방",
+            "한국은 수익성 개선이 관건",
+            "겔마스크팩 비중 확대 전망"
+        ],
+        "risk_factors": [
+            "한국 매출 수익성 아쉬움",
+            "동남아 비우호적 영업환경",
+            "제품 믹스 악화에 따른 수익성 하락"
+        ],
+        "shareholder_structure": "코스맥스비티아이 외 10 인 27.51%, 국민연금공단 11.73%"
+    }
+}

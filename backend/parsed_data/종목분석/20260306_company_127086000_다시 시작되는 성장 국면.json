@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-06",
+        "brokerage": "한국IR협의회",
+        "analyst_name": "채윤석, 정수현",
+        "report_title": "다시 시작되는 성장 국면"
+    },
+    "specific_data": {
+        "company_name": "젝시믹스",
+        "ticker": "337930",
+        "investment_rating": "저평가",
+        "investment_points": [
+            "일본·대만·중국 3개 해외법인 확장을 통한 글로벌 외형 성장 본격화",
+            "골프·러닝·이너웨어 등 신규 카테고리 다변화를 통한 성장동력 확보",
+            "현재 주가는 2026년 추정 실적 기준 PER 6.3x, PBR 1.0x로 과거 대비 저평가 구간"
+        ],
+        "risk_factors": [
+            "전환사채 오버행 이슈 존재"
+        ],
+        "shareholder_structure": "강민준 외 3 인 45.29%"
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-04",
+        "brokerage": "유안타증권",
+        "analyst_name": "손현정",
+        "report_title": "증설 효과 본격화, 이익 체질 상향 구간"
+    },
+    "specific_data": {
+        "company_name": "일진전기",
+        "ticker": "103590",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "26년 증설 효과의 온전한 반영",
+            "27~29년까지 확보된 수주 가시성",
+            "초고압 용량 확장의 낙수효과"
+        ],
+        "risk_factors": [
+            "고수익 프로젝트 비중 확대",
+            "생산 슬롯이 이미 채워진 구조"
+        ],
+        "shareholder_structure": "주요주주 일진홀딩스 외 3 인, 외인지분율 13.17%"
+    }
+}

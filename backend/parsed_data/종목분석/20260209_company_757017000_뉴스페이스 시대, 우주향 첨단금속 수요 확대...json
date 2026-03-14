@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2024-06-12",
+        "brokerage": "SK증권",
+        "analyst_name": "허선재",
+        "report_title": "뉴스페이스 시대, 우주향 첨단금속 수요 확대.."
+    },
+    "specific_data": {
+        "company_name": "에이치브이엠",
+        "ticker": "295310",
+        "investment_rating": "Not Rated",
+        "investment_points": [
+            "뉴스페이스 시대, 우주향 첨단금속 수요 확대의 수혜주",
+            "글로벌 최대 민간 우주 발사체 기업 향 특수 합금 공급 레퍼런스를 확보",
+            "제2공장 증설을 통해 고청정 진공 용해 기반의 양산 체제를 구축"
+        ],
+        "risk_factors": [
+            "고객 고지 리스크"
+        ],
+        "shareholder_structure": "문승호(외3) 35.86 %, 최재영 8.07 %"
+    }
+}

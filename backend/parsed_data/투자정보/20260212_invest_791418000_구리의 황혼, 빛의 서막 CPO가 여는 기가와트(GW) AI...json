@@ -1,0 +1,31 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "키움증권",
+        "analyst_name": "박기현",
+        "report_title": "구리의 황혼, 빛의 서막 CPO가 여는 기가와트(GW) AI.."
+    },
+    "specific_data": {
+        "strategy_theme": "AI 인프라의 광학화",
+        "recommended_portfolio": [
+            "루멘텀 홀딩스 (LITE.US)",
+            "패브리넷 (FN.US)",
+            "아리스타 네트웍스 (ANET.US)",
+            "시에나 (CIEN.US)",
+            "TE 커넥티비티 (TEL.US)",
+            "비아비 솔루션스 (VIAV.US)",
+            "PLUS 글로벌AI인프라 (489010)"
+        ],
+        "strategy_logic": [
+            "CPO 시장의 성장과 AI 인프라의 발전",
+            "광학 기술의 필요성과 CPO의 중요성",
+            "하이퍼스케일러의 수요 증가"
+        ],
+        "quant_factors": [
+            "AI 데이터센터의 전력 소비 문제",
+            "구리 장벽의 물리적 한계",
+            "CPO의 상용화와 시장 성장 전망"
+        ]
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-06",
+        "brokerage": "DS증권",
+        "analyst_name": "강태호",
+        "report_title": "[DS Defense Daily] 2026-03-06"
+    },
+    "specific_data": {
+        "market_summary": "이란은 중동 국가들을 공격할 때 샤헤드식 드론에 점점 더 의존하고 있으며, 이는 이란이 보유한 저렴한 드론 재고를 활용하고 드론 발사대가 공중에서 탐지되지 않도록 하기 위함이다.",
+        "macro_indicators": null,
+        "fund_flows": null,
+        "key_news": [
+            "이스라엘 정보당국은 이란이 1만 대 이상의 샤헤드 드론을 보유하고 있을 가능성이 높다고 밝혔다.",
+            "이란의 드론 공격으로 인해 유럽 남동부 지역의 군사적 대응이 포착되고 있다.",
+            "이탈리아는 이란의 공격으로부터 키프로스를 보호하기 위해 군함을 파견할 예정이다."
+        ]
+    }
+}

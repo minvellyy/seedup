@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-11",
+        "brokerage": "DS INVESTMENT & SECURITIES",
+        "analyst_name": "null",
+        "report_title": "아직 쓰이지 않은 챕터, 중국"
+    },
+    "specific_data": {
+        "company_name": "감성코퍼레이션",
+        "ticker": "036620",
+        "investment_rating": "매수",
+        "investment_points": [
+            "중국 사업 성공 여부가 핵심 모멘텀",
+            "고정비 레버리지 효과와 해외 수출 확대로 수익성 개선",
+            "국내 어페럴 20% 이상 성장",
+            "배당과 적극적인 자사주 매입 소각"
+        ],
+        "risk_factors": [
+            "지분 구조 문제로 사업 전개가 지연될 수 있음",
+            "시장 집중도가 이미 상위 소 브랜드 80% 이상으로 문이 좁아짐"
+        ],
+        "shareholder_structure": "김호선(외 5인) 29.7%, 자사주(외 1인) 0.5%"
+    }
+}

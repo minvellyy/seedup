@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-12",
+        "brokerage": "DS투자증권",
+        "analyst_name": "장지혜, 강태호",
+        "report_title": "해외 마케팅과 지역 확대로 글로벌 존재감 확.."
+    },
+    "specific_data": {
+        "company_name": "농심",
+        "ticker": "004370",
+        "investment_rating": "매수",
+        "investment_points": [
+            "해외 마케팅과 지역 확대로 글로벌 존재감 확대 중",
+            "일회성 비용과 마케팅 증가에도 매출 성장으로 이익 방어",
+            "26년 해외 중심 외형 성장과 국내 중심 수익 개선 전망"
+        ],
+        "risk_factors": [
+            "수요 둔화 영향",
+            "마케팅 비용 증가로 수익성 하락"
+        ],
+        "shareholder_structure": "농심홀딩스(외 6인) 44.2%, 국민연금공단(외 1인) 7.9%"
+    }
+}

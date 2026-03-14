@@ -1,0 +1,29 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-12",
+        "brokerage": "유진투자증권",
+        "analyst_name": "강송철",
+        "report_title": "5월 MSCI 리뷰 예상"
+    },
+    "specific_data": {
+        "strategy_theme": "MSCI 지수 신규 편입 종목 분석",
+        "recommended_portfolio": [
+            "레인보우로보틱스",
+            "키움증권",
+            "삼천당제약",
+            "에이비엘바이오"
+        ],
+        "strategy_logic": [
+            "신규 편입 종목은 발표 45일 전부터 주가 상승",
+            "2023년과 2025년에 주가 상승 폭이 컸음",
+            "KOSPI 대비 초과수익 기록"
+        ],
+        "quant_factors": [
+            "시가총액",
+            "유동비율",
+            "매입수요 추정",
+            "일평균 거래대금"
+        ]
+    }
+}

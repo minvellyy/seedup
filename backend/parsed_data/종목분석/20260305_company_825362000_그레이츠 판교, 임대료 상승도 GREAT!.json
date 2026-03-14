@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2025-08-28",
+        "brokerage": "대신증권",
+        "analyst_name": "이혜진",
+        "report_title": "그레이츠 판교, 임대료 상승도 GREAT!"
+    },
+    "specific_data": {
+        "company_name": "신한알파리츠",
+        "ticker": "293940",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "그레이츠판교 현대제철과 임대차 재계약 완료",
+            "NOC 약 +50% 상승",
+            "리파 금리 하락 및 NOI 개선으로 28년부터 가이던스 상회 배당 기대"
+        ],
+        "risk_factors": [
+            "서울 오피스 시장 공실률 상승",
+            "임대료 상승률 둔화",
+            "CBD 권역 오피스 공급 과잉 우려"
+        ],
+        "shareholder_structure": "주요주주 한화생명보험 외 5인 18.33%, 미래에셋자산운용 11.70%"
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-05",
+        "brokerage": "메리츠증권",
+        "analyst_name": "조아해, 공건희",
+        "report_title": "풍성하다"
+    },
+    "specific_data": {
+        "company_name": "KB금융",
+        "ticker": "105560",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "4Q25 지배주주순이익 7,212억원으로 컨센서스를 23% 상회",
+            "비이자이익 이익 기여도 확대 및 대손비용률 안정화",
+            "양호한 실적 기반 주주환원 기대"
+        ],
+        "risk_factors": [
+            "희망퇴직 1,820억원",
+            "ELS 등 과징금 3,330억원",
+            "배드뱅크 출연금 410억원"
+        ],
+        "shareholder_structure": "국민연금공단 8.74%, Capital Research and 8.03%, MBlaanckaRgeomcke Fnut nCdo mAdpvainsoy rs외 외2 6.56%"
+    }
+}

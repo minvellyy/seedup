@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "키움증권",
+        "analyst_name": "신민수",
+        "report_title": "마지막 남은 코인 사용, 진짜 배수의 진"
+    },
+    "specific_data": {
+        "company_name": "루닛",
+        "ticker": "328130",
+        "investment_rating": "Not Rated",
+        "investment_points": [
+            "미국 매출 증가로 외형 성장",
+            "2,500억 원 규모의 주주배정 유상증자 진행",
+            "비용 절감 및 미국 사업 활성화 필요"
+        ],
+        "risk_factors": [
+            "운영자금 부족",
+            "전환사채 조기 상환 리스크",
+            "법인세비용차감전계속사업손실"
+        ],
+        "shareholder_structure": "주요 주주 백승욱 외 1인 7.9%"
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-13",
+        "brokerage": "하나증권",
+        "analyst_name": "김홍식, 이상훈",
+        "report_title": "광모듈 수요가 끝이 없다"
+    },
+    "specific_data": {
+        "company_name": "RF머트리얼즈",
+        "ticker": "327260",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "AI로 인한 트래픽 증가",
+            "광증폭기 수요 급증",
+            "최근 설비 확충으로 높은 매출 성장세 전망",
+            "26년 FWD PBR 기준 글로벌 피어 대비 낮은 수준"
+        ],
+        "risk_factors": [
+            "CPO 시기상조론",
+            "구리선의 물리적 특성으로 인한 신호 감쇠"
+        ],
+        "shareholder_structure": "알에프에이치아이씨 외 9 인 50.63%"
+    }
+}

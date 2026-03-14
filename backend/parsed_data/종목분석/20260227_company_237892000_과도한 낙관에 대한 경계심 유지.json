@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-27",
+        "brokerage": "키움증권",
+        "analyst_name": "조재원",
+        "report_title": "과도한 낙관에 대한 경계심 유지"
+    },
+    "specific_data": {
+        "company_name": "한국전력",
+        "ticker": "015760",
+        "investment_rating": "Outperform(Maintain)",
+        "investment_points": [
+            "2026년 영업이익 성장세 지속 전망",
+            "발전 믹스 개선 기대",
+            "요금 인상 및 주주환원에 대한 보수적인 의견 유지"
+        ],
+        "risk_factors": [
+            "기타 영업비용 증가",
+            "연료비 및 구입전력비 감소",
+            "온실가스배출비용 및 원전 사후처리 비용 인상"
+        ],
+        "shareholder_structure": "주요 주주: 한국산업은행 외 1인 51.1%"
+    }
+}

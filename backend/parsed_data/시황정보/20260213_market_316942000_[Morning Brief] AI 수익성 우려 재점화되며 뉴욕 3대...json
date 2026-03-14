@@ -1,0 +1,20 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-13",
+        "brokerage": "신영증권",
+        "analyst_name": null,
+        "report_title": "[Morning Brief] AI 수익성 우려 재점화되며 뉴욕 3대.."
+    },
+    "specific_data": {
+        "market_summary": "AI 수익성 우려 재점화되며 뉴욕 3대지수 하락 마감. 국내 증시는 코스피 5,500pt 돌파하며 상승 마감.",
+        "macro_indicators": "미국 1월 소비자물가, 기존주택판매 등 발표 예정.",
+        "fund_flows": "외국인 수급강도 순매수 금액: 102.9억원, 기관 수급강도 순매수 금액: 562억원.",
+        "key_news": [
+            "AI 수익성 우려 재점화로 뉴욕 3대 지수 하락",
+            "코스피 5,500pt 돌파",
+            "LG전자 차익실현 매물 출회",
+            "시스코시스템즈 실적 발표 후 기술주 약세"
+        ]
+    }
+}

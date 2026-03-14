@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2023-03-09",
+        "brokerage": "키움증권",
+        "analyst_name": "이한결",
+        "report_title": "자주국방 시대로 전환"
+    },
+    "specific_data": {
+        "sector_name": "방산",
+        "industry_rating": "비중확대(Overweight)",
+        "top_picks": [
+            "LIG넥스원",
+            "현대로템"
+        ],
+        "industry_trends": [
+            "유럽, 중동, 아시아-태평양 지역의 방위비 지출 증가",
+            "국내 방산 업체들의 수주 확대 기대",
+            "미국/이스라엘-이란 전쟁으로 인한 방산 수요 증가"
+        ],
+        "risk_factors": [
+            "지정학적 불안정성",
+            "글로벌 경제 불확실성",
+            "환율 변동"
+        ]
+    }
+}

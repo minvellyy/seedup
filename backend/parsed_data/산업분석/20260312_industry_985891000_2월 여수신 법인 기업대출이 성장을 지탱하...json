@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-12",
+        "brokerage": "한화투자증권",
+        "analyst_name": "김도하",
+        "report_title": "2월 여수신 법인 기업대출이 성장을 지탱하.."
+    },
+    "specific_data": {
+        "sector_name": "은행",
+        "industry_rating": "Positive",
+        "top_picks": [],
+        "industry_trends": [
+            "법인 기업대출이 성장을 지탱하는 중",
+            "예금은행 대출잔액은 2,551조원(+3% YoY)으로 월 중 9조원 증가",
+            "가계 대출이 3개월 연속 순감소",
+            "수신 증가율이 여신 증가율을 초과"
+        ],
+        "risk_factors": [
+            "가계대출의 감소",
+            "수신에서의 자금 이탈 우려"
+        ]
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "한화투자증권",
+        "analyst_name": "한유정, 고예진",
+        "report_title": "실적도, 배당도, 투자도 서프라이즈"
+    },
+    "specific_data": {
+        "company_name": "오리온",
+        "ticker": "090430",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "2025년 결산 배당금이 시장 기대치를 상회",
+            "2026년 CAPEX 100% 이상 증가 예상",
+            "2026년 연결 매출액 및 영업이익 증가 예상"
+        ],
+        "risk_factors": [
+            "중국 및 베트남 내수 회복 지연",
+            "러시아의 환율 변동"
+        ],
+        "shareholder_structure": "오리온홀딩스 43.8%, 국민연금공단 8.1%, Westwood Global Investments 5.0%"
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "iM증권",
+        "analyst_name": "변용진",
+        "report_title": "4Q25 좋은데 더 좋아질 한 해"
+    },
+    "specific_data": {
+        "company_name": "HD현대중공업",
+        "ticker": "329180",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "2025년 4분기 영업이익률 11.6%로 동종사 대비 높은 수준",
+            "해양사업부의 이익률 17.5%로 역대 최고 기록",
+            "주가의 상방을 견인하는 해외 함정사업 관련 기대감"
+        ],
+        "risk_factors": [
+            "일회성 비용 요인으로 1,000억원 이상의 비용 발생 가능성",
+            "정치/외교적 진전에 따른 성과 변동 가능성"
+        ],
+        "shareholder_structure": "외국인지분율 15.0%, 자본금 444십억원, 발행주식수 10,496만주"
+    }
+}

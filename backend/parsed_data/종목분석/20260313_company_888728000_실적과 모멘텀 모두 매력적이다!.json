@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-13",
+        "brokerage": "유안타증권",
+        "analyst_name": "권명준",
+        "report_title": "실적과 모멘텀 모두 매력적이다!"
+    },
+    "specific_data": {
+        "company_name": "헥토이노베이션",
+        "ticker": "214180",
+        "investment_rating": "NOT RATED",
+        "investment_points": [
+            "실적과 모멘텀 모두 매력적이다!",
+            "신규 서비스 출시 지속 및 확대전략과 고객 다변화 효과로 본업인 IT정보서비스의 성장세가 지속되었다.",
+            "자회사 헥토파이낸셜과 헥토헬스케어도 성장세를 보이고 있다.",
+            "현재 시가총액(2,729억원)은 저평가 구간이라고 판단된다."
+        ],
+        "risk_factors": [
+            "신규투자 비용 증가의 영향으로 영업이익 감소",
+            "스테이블코인 관련 법안과 입법 논의의 불확실성"
+        ],
+        "shareholder_structure": "주요주주 이경민 외 3 인, 자회사 헥토파이낸셜의 지분을 38.5% 보유하고 있다."
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "교보증권",
+        "analyst_name": "권우정",
+        "report_title": "주주환원 서프라이즈"
+    },
+    "specific_data": {
+        "company_name": "오리온",
+        "ticker": "271560",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "4분기 연결 매출액 및 영업이익은 각각 9,426억원(YoY 7%), 1,676억원(YoY 5%)으로 시장기대치 부합",
+            "최근 급락한 코코아 가격이 본격적으로 반영되면서 향후 원가 개선이 기대됨",
+            "주당 배당금 3,500원(YoY 40%) 지급 결정, 고배당 기업 요건 충족을 위한 노력 지속"
+        ],
+        "risk_factors": [
+            "일부 원재료 가격 상승 부담",
+            "운송비 단가 상승",
+            "창고료 상승으로 매출액 증가 대비 이익 증가 폭 제한적"
+        ],
+        "shareholder_structure": "오리온홀딩스 외 9인 43.81%, 국민연금공단 8.12%"
+    }
+}

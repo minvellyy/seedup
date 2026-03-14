@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-12",
+        "brokerage": "유안타증권",
+        "analyst_name": "손현정",
+        "report_title": "글로벌 확장 비용 부담 지속"
+    },
+    "specific_data": {
+        "company_name": "농심",
+        "ticker": "004370",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "4Q25 매출액 8,824억원(YoY +3.2%)",
+            "영업이익 334억원(YoY +63.4%)",
+            "해외 매출액 2,883억원(YoY +18.3%)",
+            "목표주가 530,000원 유지"
+        ],
+        "risk_factors": [
+            "글로벌 마케팅 비용 부담",
+            "경쟁 심화",
+            "소비 둔화"
+        ],
+        "shareholder_structure": "주요주주 농심홀딩스 외 5 인"
+    }
+}

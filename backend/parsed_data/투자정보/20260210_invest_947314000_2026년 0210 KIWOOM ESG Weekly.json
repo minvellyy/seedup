@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-10",
+        "brokerage": "K IWOOM",
+        "analyst_name": "이성훈",
+        "report_title": "2026년 0210 KIWOOM ESG Weekly"
+    },
+    "specific_data": {
+        "strategy_theme": "ESG 공시 기준 제도화",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "ESG 공시기준 최종안과 로드맵 초안 발표",
+            "스코프3(온실가스 배출량 공시) 포함",
+            "대기업부터 단계적 의무공시 추진",
+            "법정 공시로 전환"
+        ],
+        "quant_factors": [
+            "ESG 리스크 관리 역량",
+            "공시 의무화 일정"
+        ]
+    }
+}

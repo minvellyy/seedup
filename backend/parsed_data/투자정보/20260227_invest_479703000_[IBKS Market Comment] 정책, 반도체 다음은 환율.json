@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-27",
+        "brokerage": "IBK투자증권",
+        "analyst_name": "변준호",
+        "report_title": "[IBKS Market Comment] 정책, 반도체 다음은 환율"
+    },
+    "specific_data": {
+        "strategy_theme": "원화 강세 및 환율 전망",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "원화 강세가 새로운 시장 변수로 대두될 전망",
+            "금융투자 매수, 외국인 매도 형태로 수급 주체 변화",
+            "한미 금리차 축소 기대감 지속",
+            "WGBI 편입으로 인한 환율 안정화 기대감",
+            "미국 상호 관세 위법 판결로 달러 약세 압력",
+            "RIA 출시로 미국 투자 자금의 국내 회귀 예상"
+        ],
+        "quant_factors": [
+            "KOSPI 12M F. P/E 9배~12.5배",
+            "KOSPI 12M F. P/B 2배"
+        ]
+    }
+}

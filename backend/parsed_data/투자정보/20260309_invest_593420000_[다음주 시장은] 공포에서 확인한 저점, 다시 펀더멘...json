@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-06",
+        "brokerage": "대신증권",
+        "analyst_name": "정해창, 이경민",
+        "report_title": "[다음주 시장은] 공포에서 확인한 저점, 다시 펀더멘.."
+    },
+    "specific_data": {
+        "strategy_theme": "펀더멘털 주시",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "지정학적 리스크는 예측보다 대응",
+            "펀더멘털과 실적에 근거한 비중확대 전략 유효",
+            "예측 불가능한 지정학적 노이즈에서 거시경제로 시선 이동"
+        ],
+        "quant_factors": [
+            "P/E 8배의 지지력 확인",
+            "과거 서킷브레이커는 증시 변동성의 정점을 형성",
+            "현재 구간은 손익비 측면에서 비중확대 전략 유효"
+        ]
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "유진투자증권",
+        "analyst_name": "정의훈",
+        "report_title": "노 젓는데 물이 계속 들어온다"
+    },
+    "specific_data": {
+        "company_name": "인텔리안테크",
+        "ticker": "189300",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "4분기 매출액 1,243억원(+61%yoy), 영업이익 198억원(흑자전환yoy) 기록",
+            "미국향 게이트웨이 안테나 및 원웹 평판형 매출 확대",
+            "SpaceX의 상장 기대감으로 우주산업에 대한 시장 기대치 상승",
+            "목표주가를 150,000원으로 상향"
+        ],
+        "risk_factors": [
+            "해상용 VSAT 안테나 매출 부진",
+            "저궤도 위성통신 시장의 경쟁 심화"
+        ],
+        "shareholder_structure": "성상엽 (외 7인) 23.2%, 자사주 (외 1인) 5.0%"
+    }
+}

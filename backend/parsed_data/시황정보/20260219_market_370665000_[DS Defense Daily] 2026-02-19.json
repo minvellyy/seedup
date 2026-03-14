@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-19",
+        "brokerage": "DS증권",
+        "analyst_name": "강태호",
+        "report_title": "[DS Defense Daily] 2026-02-19"
+    },
+    "specific_data": {
+        "market_summary": "미국 국방부 관계자가 유럽의 국방비 자국 내 지출 확대 추진에 찬성 표명. EU 회원국들은 2025년에 국방비로 3,810억 유로를 지출할 것으로 예상되며, 이는 5년 전보다 63% 증가한 수치.",
+        "macro_indicators": "EU 회원국들은 2035년까지 국방비를 GDP의 5%로 늘리기로 합의.",
+        "fund_flows": "방산 5사 시가총액 총합 추이 및 1D 수익률 비교.",
+        "key_news": [
+            "미국은 유럽 동맹국들이 국방자금을 자국 무기 산업에 지원하는 것에 대한 입장을 바꿈.",
+            "독일 공군이 자국 사양으로 제작된 첫 번째 IRIS-T SLM 방공 미사일 시스템을 인도.",
+            "에스토니아가 CAESAR 자주포 12대를 추가 도입하는 계약 체결."
+        ]
+    }
+}

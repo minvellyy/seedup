@@ -1,0 +1,35 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-19",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "SK증권 아침에 슥_2026.02.19"
+    },
+    "specific_data": {
+        "market_summary": "미국 저가 매수 지속 및 엔비디아-메타 협력에 상승 마감 코스피, 유럽 ECB 총재 조기 사퇴 및 BOE 인하 기대 속 상승 마감",
+        "macro_indicators": null,
+        "fund_flows": {
+            "foreign_investors": {
+                "net_buy": -12000,
+                "net_sell": null
+            },
+            "institutional_investors": {
+                "net_buy": null,
+                "net_sell": null
+            },
+            "pension_funds": {
+                "net_buy": null,
+                "net_sell": null
+            },
+            "mutual_funds": {
+                "net_buy": null,
+                "net_sell": null
+            }
+        },
+        "key_news": [
+            "1월 FOMC 의사록 내 인상 가능성 언급에도 저가 매수 지속 및 메타의 엔비디아 GPU 계약에 상승",
+            "라가르드 ECB 총재 조기 사퇴설 및 영국 물가 둔화에 따른 인하 기대감 확대 속 상승"
+        ]
+    }
+}

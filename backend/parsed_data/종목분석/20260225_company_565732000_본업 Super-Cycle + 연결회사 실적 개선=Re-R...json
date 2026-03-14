@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "현대차증권",
+        "analyst_name": "김종배",
+        "report_title": "본업 Super-Cycle + 연결회사 실적 개선=Re-R.."
+    },
+    "specific_data": {
+        "company_name": "덕산하이메탈",
+        "ticker": "077360",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "IT Super-Cycle에 따른 SB, MSB, CSB 모두 수요가 급증하고 있음.",
+            "Advanced Packaging의 확대로 인해 Micro Solder Ball(MSB)의 수요가 확대 중.",
+            "FC-BGA, HDD의 수요 증가로 인해 고객사향 MSB 물량 공급 확대 및 신규 고객사 확보."
+        ],
+        "risk_factors": [
+            "고객 고지 리스크",
+            "공급망 리스크",
+            "기술적 리스크"
+        ],
+        "shareholder_structure": "이수훈 외 12 인 57.75%"
+    }
+}

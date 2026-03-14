@@ -1,0 +1,35 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-09",
+        "brokerage": "미래에셋증권",
+        "analyst_name": "박수진",
+        "report_title": "China Weekly Issue  15.5 규획 핵심 정책 방향 점검"
+    },
+    "specific_data": {
+        "strategy_theme": "중국 경제 정책 방향 및 투자 전략",
+        "recommended_portfolio": [
+            "텐센트",
+            "알리바바그룹홀딩스",
+            "CSOP HSTec h 3In0d3e3x",
+            "샤오미그룹",
+            "메이투안",
+            "시노펙의정화학섬유",
+            "시누크",
+            "산동묵용",
+            "상해유틸리티",
+            "동방전기"
+        ],
+        "strategy_logic": [
+            "내수 확대 기반의 재정·통화 정책 공조 강화",
+            "첨단 산업 중심의 새로운 성장 동력 육성",
+            "자본시장을 통한 혁신 기업 자금 흐름 확대"
+        ],
+        "quant_factors": [
+            "경제 성장 목표: 4.5% ~ 5%",
+            "물가 목표(CPI): 2%",
+            "재정적자율: 4%",
+            "재정적자 규모: 5.8조 위안"
+        ]
+    }
+}

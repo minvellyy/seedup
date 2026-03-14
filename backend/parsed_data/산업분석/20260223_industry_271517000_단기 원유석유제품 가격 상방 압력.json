@@ -1,0 +1,33 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-23",
+        "brokerage": "하나증권",
+        "analyst_name": "윤재성, 김형준",
+        "report_title": "단기 원유석유제품 가격 상방 압력"
+    },
+    "specific_data": {
+        "sector_name": "에너지/화학",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "SK이노베이션",
+            "S-Oil",
+            "금호석유화학",
+            "KCC",
+            "롯데정밀화학"
+        ],
+        "industry_trends": [
+            "단기 원유/석유제품 가격 상방 압력",
+            "정제마진 하락",
+            "미국 원유 재고 감소",
+            "러시아 원유 수출량 감소",
+            "OPEC+ 증산 개시"
+        ],
+        "risk_factors": [
+            "미국의 이란 공격 가능성",
+            "베네수엘라 원유 생산량 확대",
+            "OPEC+의 증산 개시",
+            "물가 부담 증가"
+        ]
+    }
+}

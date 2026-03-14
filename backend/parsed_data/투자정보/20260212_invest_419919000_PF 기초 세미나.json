@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2023-10-22",
+        "brokerage": "대신증권",
+        "analyst_name": "배상영",
+        "report_title": "PF 기초 세미나"
+    },
+    "specific_data": {
+        "strategy_theme": "부동산 PF 신용평가 및 리스크 관리",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "PF 신용등급은 프로젝트 사업성에 기초한 부도발생가능성과 신용보강 및 회수율에 기초하여 결정",
+            "사업초기위험, 재무적 역량, 자산의 특성, 완공위험, 사업주의 역량, 운영위험을 고려"
+        ],
+        "quant_factors": [
+            "부채상환비율(DSCR)",
+            "시장상황",
+            "재무구조",
+            "현금흐름 통제"
+        ]
+    }
+}

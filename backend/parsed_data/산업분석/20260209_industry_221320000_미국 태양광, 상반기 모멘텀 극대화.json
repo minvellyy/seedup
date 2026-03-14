@@ -1,0 +1,33 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-09",
+        "brokerage": "하나증권",
+        "analyst_name": "윤재성, 김형준",
+        "report_title": "미국 태양광, 상반기 모멘텀 극대화"
+    },
+    "specific_data": {
+        "sector_name": "에너지/화학",
+        "industry_rating": "Neutral",
+        "top_picks": [
+            "S-Oil",
+            "한화솔루션",
+            "효성티앤씨",
+            "롯데정밀화학",
+            "금호석유화학"
+        ],
+        "industry_trends": [
+            "미국 태양광 발전 수요 증가",
+            "중국의 AD/CVD 조사 개시",
+            "태양광 모듈 수입량 급감 예상",
+            "정유사 OSP 인하 사이클 도래",
+            "LNG 수혜주가 화학 섹터에 존재"
+        ],
+        "risk_factors": [
+            "중국의 태양광 셀/모듈 수출 제한",
+            "미국 내 공급망 문제",
+            "정유사 마진 압박",
+            "천연가스 가격 상승"
+        ]
+    }
+}

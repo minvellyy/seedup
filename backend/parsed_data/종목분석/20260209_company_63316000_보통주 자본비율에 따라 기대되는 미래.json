@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "대신증권",
+        "analyst_name": "박혜진, 권용수RA",
+        "report_title": "보통주 자본비율에 따라 기대되는 미래"
+    },
+    "specific_data": {
+        "company_name": "우리금융지주",
+        "ticker": "316140",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "보통주 자본비율에 따라 앞으로 높아질 DPS와 자사주 매입 규모",
+            "‘25년 비과세배당을 감안한 총 주주환원율 39.8% 달성",
+            "‘26년 보수적으로 총 환원율 43.2% 전망",
+            "업종 내 최선호주 유지"
+        ],
+        "risk_factors": [
+            "은행업종의 PBR과 자본정책이 업종 평균을 하회",
+            "환원정책 발표 가능성"
+        ],
+        "shareholder_structure": "주요주주: 우리금융지주우리사주 외 1인 7.70%, 국민연금공단 6.78%"
+    }
+}

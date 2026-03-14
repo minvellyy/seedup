@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "유안타증권",
+        "analyst_name": "우도형",
+        "report_title": "2026년은 개선을 꿈꾼다"
+    },
+    "specific_data": {
+        "company_name": "기업은행",
+        "ticker": "024110",
+        "investment_rating": "HOLD",
+        "investment_points": [
+            "4Q25 순이익 컨센서스 부합",
+            "이자이익 증가",
+            "비이자이익 양호한 수준",
+            "배당소득 분리과세 적용 어려움"
+        ],
+        "risk_factors": [
+            "배당성향 상승 요건 미충족",
+            "임금인상 관련 충당금 반영",
+            "배드뱅크 관련 비용 반영"
+        ],
+        "shareholder_structure": "대한민국정부(기획재정부) 외 2 인"
+    }
+}

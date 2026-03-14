@@ -1,0 +1,32 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2025-02-13",
+        "brokerage": "투자분석부",
+        "analyst_name": null,
+        "report_title": "[IBKS Daily] Start with IBKS(2026.02.13) 반도체 강.."
+    },
+    "specific_data": {
+        "strategy_theme": "반도체주 중심 상승",
+        "recommended_portfolio": [
+            "삼성전자",
+            "SK하이닉스",
+            "현대차",
+            "두산에너빌리티",
+            "LG전자",
+            "POSCO홀딩스",
+            "한미반도체"
+        ],
+        "strategy_logic": [
+            "미국 기술주 강세에 따른 국내 반도체주 상승",
+            "AI 기술주 조정에 따른 포지션 재편",
+            "로봇용 배터리 수요 기대감"
+        ],
+        "quant_factors": [
+            "KOSPI 상승률",
+            "KOSDAQ 상승률",
+            "외국인 순매수",
+            "기관 순매수"
+        ]
+    }
+}

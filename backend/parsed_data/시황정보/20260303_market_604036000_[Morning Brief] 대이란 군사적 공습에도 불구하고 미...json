@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-03",
+        "brokerage": "null",
+        "analyst_name": "null",
+        "report_title": "[Morning Brief] 대이란 군사적 공습에도 불구하고 미.."
+    },
+    "specific_data": {
+        "market_summary": "대이란 군사적 공습에도 불구하고 미 증시 상승 마감. 국내 증시는 외국인 대규모 순매도세에 하락 마감하였으나 개인의 순매수로 하락폭이 제한됨.",
+        "macro_indicators": "미국 국채 10년물 금리 상승, 달러-원 환율은 휴장.",
+        "fund_flows": "외국인 대규모 순매도, 개인 순매수.",
+        "key_news": [
+            "대이란 군사적 공습에도 불구하고 미 증시 상승 마감",
+            "한국과 UAE의 방산, 원전 등 650억 달러 규모 사업협력 발표",
+            "카타르 LNG 가동 중단으로 천연가스 선물가 급등"
+        ]
+    }
+}

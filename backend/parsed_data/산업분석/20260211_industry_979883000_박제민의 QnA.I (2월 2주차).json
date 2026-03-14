@@ -1,0 +1,33 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-11",
+        "brokerage": "SK증권",
+        "analyst_name": "박제민",
+        "report_title": "박제민의 QnA.I (2월 2주차)"
+    },
+    "specific_data": {
+        "sector_name": "AI 및 클라우드 컴퓨팅",
+        "industry_rating": null,
+        "top_picks": [
+            "엔비디아",
+            "알파벳",
+            "애플",
+            "마이크로소프트",
+            "아마존",
+            "메타 플랫폼스",
+            "오라클",
+            "코어위브"
+        ],
+        "industry_trends": [
+            "AI 기술의 확산과 클라우드 서비스의 수요 증가",
+            "AI 관련 Capex 증가",
+            "개발자 도구의 시장 성장"
+        ],
+        "risk_factors": [
+            "AI 기술의 발전 지연",
+            "메모리 공급 부족",
+            "경쟁 심화"
+        ]
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-06",
+        "brokerage": "한국IR협의회",
+        "analyst_name": null,
+        "report_title": "「AI」 카메라 모듈 검사장비 및 신사업 다각.."
+    },
+    "specific_data": {
+        "company_name": "하이비젼시스템",
+        "ticker": "126700",
+        "investment_rating": null,
+        "investment_points": [
+            "카메라 모듈 검사장비 분야에서의 기술력",
+            "2차전지 및 로봇 사업으로의 다각화",
+            "LG이노텍 등 주요 고객사와의 안정적인 관계"
+        ],
+        "risk_factors": [
+            "스마트폰 시장의 변화에 따른 수요 변동",
+            "신규 사업 부문에서의 고객사 확보 기간에 따른 매출 불확실성"
+        ],
+        "shareholder_structure": "최두원 12.0%, 박상엽 2.0%, 오상근 1.98%, 이진태 0.20%"
+    }
+}

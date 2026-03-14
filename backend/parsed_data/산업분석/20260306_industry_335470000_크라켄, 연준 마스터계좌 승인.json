@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-05",
+        "brokerage": "한화리서치",
+        "analyst_name": "최윤영",
+        "report_title": "크라켄, 연준 마스터계좌 승인"
+    },
+    "specific_data": {
+        "sector_name": "디지털자산",
+        "industry_rating": "Positive",
+        "top_picks": [],
+        "industry_trends": [
+            "크라켄이 연준의 마스터 계좌 승인을 받아 중앙은행 결제망에 직접 접근",
+            "비은행∙핀테크 기업의 중앙은행 결제망 접근 가능성 시험",
+            "결제 전용 중앙은행 계좌 모델의 실제 작동 시작"
+        ],
+        "risk_factors": [
+            "은행권의 반발",
+            "비은행 기업의 중앙은행 결제망 접근에 대한 규제 형평성 문제"
+        ]
+    }
+}

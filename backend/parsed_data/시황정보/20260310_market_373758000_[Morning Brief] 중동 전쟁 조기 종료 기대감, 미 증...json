@@ -1,0 +1,66 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-10",
+        "brokerage": "null",
+        "analyst_name": "null",
+        "report_title": "[Morning Brief] 중동 전쟁 조기 종료 기대감, 미 증.."
+    },
+    "specific_data": {
+        "market_summary": "중동 전쟁 조기 종료 기대감, 미 증시 상승 마감. 국내 증시는 유가 급등으로 하락.",
+        "macro_indicators": {
+            "KOSPI": {
+                "current": 5251.9,
+                "1D_change": -6.0,
+                "1W_change": -15.9
+            },
+            "KOSDAQ": {
+                "current": 1102.3,
+                "1D_change": -4.5,
+                "1W_change": -7.6
+            },
+            "S&P_500": {
+                "current": 6796.0,
+                "1D_change": 0.8,
+                "1W_change": -1.2
+            },
+            "DOW": {
+                "current": 47741,
+                "1D_change": 0.5,
+                "1W_change": -2.4
+            },
+            "NASDAQ": {
+                "current": 22696,
+                "1D_change": 1.4,
+                "1W_change": -0.2
+            }
+        },
+        "fund_flows": {
+            "foreign_investors": {
+                "KOSPI": {
+                    "cash": -31000,
+                    "futures": -6000
+                },
+                "KOSDAQ": {
+                    "cash": "null",
+                    "futures": "null"
+                }
+            },
+            "institutional_investors": {
+                "KOSPI": {
+                    "cash": "null",
+                    "futures": "null"
+                },
+                "KOSDAQ": {
+                    "cash": "null",
+                    "futures": "null"
+                }
+            }
+        },
+        "key_news": [
+            "중동 전쟁 조기 종료 기대감 확대",
+            "미 증시 상승 마감",
+            "유가 급등으로 국내 증시 하락"
+        ]
+    }
+}

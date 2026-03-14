@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-12",
+        "brokerage": "유진투자증권",
+        "analyst_name": "류태환, 임범수",
+        "report_title": "4Q25 Review 고진감래(苦盡甘來)"
+    },
+    "specific_data": {
+        "sector_name": "건설/부동산",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "삼성E&A",
+            "GS건설"
+        ],
+        "industry_trends": [
+            "정비사업 수주 호황",
+            "원전/SMR 모멘텀 확대",
+            "해외 포트폴리오 다변화"
+        ],
+        "risk_factors": [
+            "이주비 대출 규제에 따른 사업 지연 가능성",
+            "원가 및 미분양 관련 대손 반영"
+        ]
+    }
+}

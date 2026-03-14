@@ -1,0 +1,30 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-20",
+        "brokerage": "하나증권",
+        "analyst_name": "유재선, 성무규",
+        "report_title": "지연되고 있는 LNG 용량시장 입찰"
+    },
+    "specific_data": {
+        "sector_name": "유틸리티",
+        "industry_rating": null,
+        "top_picks": [
+            "SGC에너지",
+            "지역난방공사",
+            "SK이터닉스",
+            "E1"
+        ],
+        "industry_trends": [
+            "LNG 용량시장 입찰 지연",
+            "전력 수요 감소",
+            "지역별 전기요금제 도입 추진",
+            "연료전지 수요 증가"
+        ],
+        "risk_factors": [
+            "중동 지정학적 리스크",
+            "SMP 하락",
+            "전력 수요 예측의 불확실성"
+        ]
+    }
+}

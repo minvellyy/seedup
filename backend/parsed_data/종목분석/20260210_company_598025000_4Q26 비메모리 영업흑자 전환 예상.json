@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "키움증권",
+        "analyst_name": "박유악",
+        "report_title": "4Q26 비메모리 영업흑자 전환 예상"
+    },
+    "specific_data": {
+        "company_name": "삼성전자",
+        "ticker": "005930",
+        "investment_rating": "BUY(Maintain)",
+        "investment_points": [
+            "비메모리 영업흑자 전환 예상",
+            "Exynos 2700의 갤럭시S27 내 점유율이 50% 수준까지 확대될 전망",
+            "NAND의 추가 가격 인상",
+            "HBM4 양산 본격화",
+            "비메모리 영업흑자 전환 모멘텀 반영"
+        ],
+        "risk_factors": [
+            "반도체 시장의 변동성",
+            "글로벌 경제 불확실성",
+            "기술 경쟁력 저하 가능성"
+        ],
+        "shareholder_structure": "주요 주주: 삼성생명보험 외 16인 19.8%"
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-09",
+        "brokerage": "DS INVESTMENT & SECURITIES",
+        "analyst_name": "김민정",
+        "report_title": "HIMS&HERS, 저가 경구용 위고비 출시 철회"
+    },
+    "specific_data": {
+        "sector_name": "제약·바이오",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "Hims&Hers의 저가 경구용 위고비 출시 철회",
+            "Compounded drug에 대한 이해와 규제적 보호"
+        ],
+        "risk_factors": [
+            "환자 안전에 심각한 위험 초래 가능성",
+            "법적 조치의 위험"
+        ]
+    }
+}

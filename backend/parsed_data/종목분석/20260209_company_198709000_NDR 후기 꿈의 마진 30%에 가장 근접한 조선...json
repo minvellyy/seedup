@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "DS투자증권",
+        "analyst_name": "김대성",
+        "report_title": "NDR 후기 꿈의 마진 30%에 가장 근접한 조선.."
+    },
+    "specific_data": {
+        "company_name": "대한조선",
+        "ticker": "439260",
+        "investment_rating": "매수",
+        "investment_points": [
+            "25년 4분기 영업이익률 27.2%로 사상 최대 실적 달성",
+            "26년에는 24년에 수주한 고선가 물량의 매출 인식이 시작됨",
+            "고환율 기조가 유지될 시 30%까지 마진 개선 가능"
+        ],
+        "risk_factors": [
+            "지정학적 리스크로 인한 탱커선 운임 변동성",
+            "오버행 리스크"
+        ],
+        "shareholder_structure": "케이에이치아이(외 16인) 47.7%, 안다에이치자산운용(외 1인) 24.9%"
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "IBK투자증권",
+        "analyst_name": "남성현",
+        "report_title": "돋보이는 실적"
+    },
+    "specific_data": {
+        "company_name": "BGF리테일",
+        "ticker": "282330",
+        "investment_rating": "매수",
+        "investment_points": [
+            "2025년 4분기 실적이 시장 및 기존 추정치를 상회",
+            "상품매입율 개선에 따른 효과",
+            "상여급 지급 변경에 따른 효과",
+            "연결 자회사 실적 개선"
+        ],
+        "risk_factors": [
+            "편의점 업황 둔화",
+            "외부 경쟁력 확대에 따른 리스크"
+        ],
+        "shareholder_structure": "비지에프 외 18 인 51.35%, 국민연금공단 9.31%"
+    }
+}

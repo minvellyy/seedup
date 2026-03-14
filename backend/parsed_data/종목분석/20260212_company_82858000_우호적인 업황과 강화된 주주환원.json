@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "SK증권",
+        "analyst_name": "최관순",
+        "report_title": "우호적인 업황과 강화된 주주환원"
+    },
+    "specific_data": {
+        "company_name": "LS",
+        "ticker": "006260",
+        "investment_rating": "매수(유지)",
+        "investment_points": [
+            "우호적인 업황과 강화된 주주환원",
+            "4분기 돋보이는 외형성장",
+            "목표주가 상향"
+        ],
+        "risk_factors": [
+            "저수익 제품군에 대한 매출비중 확대로 영업이익 감소",
+            "비수기 영향으로 영업적자 발생 가능성"
+        ],
+        "shareholder_structure": "구자열(외44) 32.60%, 자사주 13.73%, 외국인 지분율 18.92%"
+    }
+}

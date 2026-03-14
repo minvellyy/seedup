@@ -1,0 +1,31 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-05",
+        "brokerage": "한화투자증권",
+        "analyst_name": "안현국",
+        "report_title": "엔비디아 PER 21.1배, 나스닥은 25.3배"
+    },
+    "specific_data": {
+        "strategy_theme": "2026년 영업이익 예상치 변화",
+        "recommended_portfolio": [
+            "에이디테크놀로지",
+            "LG디스플레이",
+            "현대오토에버",
+            "LG전자",
+            "HJ중공업",
+            "포스코퓨처엠"
+        ],
+        "strategy_logic": [
+            "1개월 영업이익 예상치가 3개월 예상치보다 높은 종목 상위",
+            "최대 실적에 최고 주가가 기대되는 종목",
+            "진짜모멘텀 보유 종목"
+        ],
+        "quant_factors": [
+            "EPS 변화율",
+            "PER",
+            "ROE",
+            "시가총액"
+        ]
+    }
+}

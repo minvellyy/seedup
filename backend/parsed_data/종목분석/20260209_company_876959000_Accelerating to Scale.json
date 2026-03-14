@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "유진투자증권",
+        "analyst_name": "권해순, 이다빈",
+        "report_title": "Accelerating to Scale"
+    },
+    "specific_data": {
+        "company_name": "씨어스테크놀로지",
+        "ticker": "458870",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "디지털 헬스케어 분야에서 의료기관 중심의 플랫폼 비즈니스를 영위하는 First Mover로서 국내 및 해외 사업 확장 중",
+            "연평균 65%yoy 매출 고성장이 가능할 것으로 예상",
+            "2026년, 2027년 및 2028년 영업이익이 각각 24%, 21%, 33% 상향 조정",
+            "2027E 실적에 Target P/E 40배 적용",
+            "스마트 병동 구축을 위한 플랫폼 검증 단계 완료"
+        ],
+        "risk_factors": [
+            "경쟁사들의 유사한 시스템 출시",
+            "해외 진출 전략의 성공 여부"
+        ],
+        "shareholder_structure": "이영신 (28.3%), 변동준 (5.6%), 채정훈 (0.1%)"
+    }
+}

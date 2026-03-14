@@ -1,0 +1,140 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-12",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "SK증권 아침에 슥_2026.03.12"
+    },
+    "specific_data": {
+        "market_summary": "미국 유가 불안 속 혼조 마감 코스피, 유럽 중동 상황 주목하며 하락, 중국 유가 안정세에 소폭 상승",
+        "macro_indicators": null,
+        "fund_flows": {
+            "foreign_investors": {
+                "net_buy": [
+                    {
+                        "stock": "엠케이전자",
+                        "strength": 2.96
+                    },
+                    {
+                        "stock": "우리기술",
+                        "strength": 2.31
+                    },
+                    {
+                        "stock": "신성이엔지",
+                        "strength": 2.15
+                    }
+                ],
+                "net_sell": [
+                    {
+                        "stock": "오이솔루션",
+                        "strength": -3.16
+                    },
+                    {
+                        "stock": "한국석유",
+                        "strength": -1.69
+                    },
+                    {
+                        "stock": "RFHIC",
+                        "strength": -1.53
+                    }
+                ]
+            },
+            "institutions": {
+                "net_buy": [
+                    {
+                        "stock": "오이솔루션",
+                        "strength": 3.09
+                    },
+                    {
+                        "stock": "조이시티",
+                        "strength": 2.62
+                    },
+                    {
+                        "stock": "아모센스",
+                        "strength": 2.5
+                    }
+                ],
+                "net_sell": [
+                    {
+                        "stock": "와이지-원",
+                        "strength": -2.15
+                    },
+                    {
+                        "stock": "셀바스AI",
+                        "strength": -1.98
+                    },
+                    {
+                        "stock": "RF머트리얼즈",
+                        "strength": -1.44
+                    }
+                ]
+            },
+            "pension_funds": {
+                "net_buy": [
+                    {
+                        "stock": "오이솔루션",
+                        "strength": 0.52
+                    },
+                    {
+                        "stock": "한국카본",
+                        "strength": 0.51
+                    },
+                    {
+                        "stock": "쏠리드",
+                        "strength": 0.38
+                    }
+                ],
+                "net_sell": [
+                    {
+                        "stock": "아모텍",
+                        "strength": -0.49
+                    },
+                    {
+                        "stock": "유비쿼스",
+                        "strength": -0.4
+                    },
+                    {
+                        "stock": "진성티이씨",
+                        "strength": -0.32
+                    }
+                ]
+            },
+            "investment_trusts": {
+                "net_buy": [
+                    {
+                        "stock": "아모센스",
+                        "strength": 2.36
+                    },
+                    {
+                        "stock": "덕산하이메탈",
+                        "strength": 1.12
+                    },
+                    {
+                        "stock": "티에프이",
+                        "strength": 1.03
+                    }
+                ],
+                "net_sell": [
+                    {
+                        "stock": "셀바스AI",
+                        "strength": -1.77
+                    },
+                    {
+                        "stock": "지아이에스",
+                        "strength": -1.37
+                    },
+                    {
+                        "stock": "한미약품",
+                        "strength": -0.22
+                    }
+                ]
+            }
+        },
+        "key_news": [
+            "IEA의 중동 전쟁으로 인한 원유 공급 차질 대응에도 전쟁 장기화 우려 커지며 하방 압력을 가함",
+            "중동 지역에 계속되는 군사적 충돌이 투자 심리에 부담으로 작용",
+            "IEA 역사상 최대 규모의 전략 비축유 방출 제안 소식에 유가 하락하며 위험 선호 심리 회복"
+        ]
+    }
+}

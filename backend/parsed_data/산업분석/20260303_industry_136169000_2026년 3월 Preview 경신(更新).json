@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-03",
+        "brokerage": "유안타증권",
+        "analyst_name": "백길현",
+        "report_title": "2026년 3월 Preview 경신(更新)"
+    },
+    "specific_data": {
+        "sector_name": "반도체",
+        "industry_rating": "BUY",
+        "top_picks": [
+            "삼성전자",
+            "SK하이닉스",
+            "하나머티리얼즈"
+        ],
+        "industry_trends": [
+            "AI 추론 시장 확대",
+            "고부가 DRAM 중심의 이익 추정치 상향 조정",
+            "메모리 반도체 수요의 하방 지지선 확장"
+        ],
+        "risk_factors": [
+            "지정학적 리스크",
+            "중국의 반도체 자급화 전략",
+            "전통 IT 세트 수요 위축"
+        ]
+    }
+}

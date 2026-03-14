@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "키움증권",
+        "analyst_name": "김은갑, 손예빈",
+        "report_title": "실적 턴어라운드, 주주환원율 상승"
+    },
+    "specific_data": {
+        "company_name": "iM 금융지주",
+        "ticker": "139130",
+        "investment_rating": "BUY (Maintain)",
+        "investment_points": [
+            "실적 턴어라운드",
+            "주주환원율 상승",
+            "안정적 이익 증가 전망"
+        ],
+        "risk_factors": [
+            "부동산 PF 리스크",
+            "이자이익 감소"
+        ],
+        "shareholder_structure": "주요 주주 (주)오케이저축은행 9.92%, 외국인 지분율 46.75%"
+    }
+}

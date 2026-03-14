@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-23",
+        "brokerage": "DS증권",
+        "analyst_name": "강태호",
+        "report_title": "[DS Defense Daily] 2026-02-23"
+    },
+    "specific_data": {
+        "market_summary": "중동 지역에 미군 전투기가 급증하고 있으며, 방산 관련 기업의 시가총액과 수익률이 증가하고 있다.",
+        "macro_indicators": null,
+        "fund_flows": null,
+        "key_news": [
+            "미국은 이란을 상대로 대규모 군사작전을 펼칠 가능성에 대비해 중동에 공군력을 집결하고 있다.",
+            "에스토니아가 러시아와의 국경 강화를 위해 이동식 벙커 구매에 착수했다.",
+            "이란은 러시아와 비밀리에 휴대용 미사일 거래를 합의했다."
+        ]
+    }
+}

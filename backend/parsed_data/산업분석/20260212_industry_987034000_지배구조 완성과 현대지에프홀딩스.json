@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2025-02-12",
+        "brokerage": "IBK투자증권",
+        "analyst_name": "남성현",
+        "report_title": "지배구조 완성과 현대지에프홀딩스"
+    },
+    "specific_data": {
+        "sector_name": "유통·식자재/지주",
+        "industry_rating": null,
+        "top_picks": [
+            "현대지에프홀딩스",
+            "현대홈쇼핑"
+        ],
+        "industry_trends": [
+            "현대백화점그룹의 지배구조 완성",
+            "현대지에프홀딩스 배당액 확대",
+            "선택과 집중을 통한 성장 전략"
+        ],
+        "risk_factors": [
+            "지배구조 변화에 따른 불확실성",
+            "M&A 관련 리스크"
+        ]
+    }
+}

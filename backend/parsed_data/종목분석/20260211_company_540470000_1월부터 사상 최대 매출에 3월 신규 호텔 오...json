@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "하나증권",
+        "analyst_name": "이기훈, 김현수",
+        "report_title": "1월부터 사상 최대 매출에 3월 신규 호텔 오.."
+    },
+    "specific_data": {
+        "company_name": "파라다이스",
+        "ticker": "034230",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "사상 최대 매출에 3월 신규 호텔 오픈",
+            "강력한 비중확대 추천"
+        ],
+        "risk_factors": [
+            "4분기 부진한 실적",
+            "인건비성 비용 증가"
+        ],
+        "shareholder_structure": "파라다이스글로벌 외 7 인 45.26%, 국민연금공단 7.13%"
+    }
+}

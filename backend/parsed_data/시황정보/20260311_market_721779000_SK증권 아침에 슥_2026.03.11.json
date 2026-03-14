@@ -1,0 +1,20 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-11",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "SK증권 아침에 슥_2026.03.11"
+    },
+    "specific_data": {
+        "market_summary": "주요국 증시 수익률 및 국내 주요 지수 추이",
+        "macro_indicators": null,
+        "fund_flows": "투자자별 순매수 대금 (단위 : 억원)",
+        "key_news": [
+            "미국 호르무즈 해협 안전 보장 관련 논란에 혼조 마감",
+            "국제유가 급락에 상승 마감",
+            "중국 국제유가 급락 및 수출입 지표 호조에 상승 마감",
+            "국내 미국-이란 전쟁 종결 기대감에 상승 마감"
+        ]
+    }
+}

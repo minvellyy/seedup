@@ -1,0 +1,30 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-20",
+        "brokerage": "대신증권",
+        "analyst_name": "박강호, 류형근, 서지원",
+        "report_title": "IT Weekly"
+    },
+    "specific_data": {
+        "sector_name": "IT/전기전자",
+        "industry_rating": "긍정적",
+        "top_picks": [
+            "삼성전자",
+            "SK하이닉스",
+            "LG전자",
+            "LG디스플레이",
+            "삼성전기"
+        ],
+        "industry_trends": [
+            "반도체 및 전기전자 대형주 강세",
+            "MLCC 가격 인상 가능성",
+            "AI 및 데이터센터 관련 수요 증가"
+        ],
+        "risk_factors": [
+            "글로벌 공급망 불확실성",
+            "가격 저항 심화",
+            "미국의 관세 정책 변화"
+        ]
+    }
+}

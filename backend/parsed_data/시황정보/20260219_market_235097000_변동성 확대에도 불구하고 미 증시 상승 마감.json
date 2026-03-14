@@ -1,0 +1,20 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-19",
+        "brokerage": null,
+        "analyst_name": null,
+        "report_title": "변동성 확대에도 불구하고 미 증시 상승 마감"
+    },
+    "specific_data": {
+        "market_summary": "변동성 확대에도 불구하고 미 증시 상승 마감. 국내 증시는 하락 마감.",
+        "macro_indicators": "미국 1월 수출입, 경기선행지수, EU 경제전망 보고서, 월마트 실적발표",
+        "fund_flows": "증시 활황과 거래대금 증가로 위탁매매 수수료 수익 확대 등 성장성 가시화되는 증권업종은 강세 지속.",
+        "key_news": [
+            "미국 1월 수출입",
+            "EU 경제전망 보고서",
+            "월마트 실적발표",
+            "일본 대미투자 프로젝트 공개"
+        ]
+    }
+}

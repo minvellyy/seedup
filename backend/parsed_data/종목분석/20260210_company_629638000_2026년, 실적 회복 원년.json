@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "대신증권",
+        "analyst_name": "유정현",
+        "report_title": "2026년, 실적 회복 원년"
+    },
+    "specific_data": {
+        "company_name": "한섬",
+        "ticker": "020000",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "2026년 실적 회복 원년",
+            "25년 4분기, 3년만에 영업이익 증가",
+            "목표주가 25,000원 상향(+25%)",
+            "국내 패션 경기 회복을 고려한 실적 상향"
+        ],
+        "risk_factors": [
+            "국내 소비경기",
+            "신규 브랜드 출시 및 출점 계획",
+            "온라인 채널 성장률",
+            "오프라인 채널 수익성 개선 여부"
+        ],
+        "shareholder_structure": "주요 주주: 현대홈쇼핑 40.50%, 베어링자산운용 7.45%"
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-12",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "SK증권 Global Carbon Market Daily_260212"
+    },
+    "specific_data": {
+        "market_summary": "국내외 배출권 가격 추이 및 원자재 가격 동향",
+        "macro_indicators": null,
+        "fund_flows": null,
+        "key_news": [
+            "[뉴욕유가] 美, 2차 항모 중동으로 출항 준비 중…WTI 1%↑",
+            "기후소송단 “탄소중립법 개정 공론화 기간 짧아, 졸속 우려”",
+            "美 ‘온실가스는 유해’ 판단 폐지 방침... 이르면 이번주 발표"
+        ]
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-02-25",
+        "brokerage": "키움증권",
+        "analyst_name": "김유미, 안예하, 심수빈",
+        "report_title": "0225 달러, 주요 통화 약세에 상승"
+    },
+    "specific_data": {
+        "strategy_theme": "달러, 주요 통화 약세에 상승",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "미국 소비심리가 예상보다 양호하게 나타남",
+            "엔화가 통화정책 불확실성으로 약세",
+            "파운드화는 금리 인하 전망에 하락"
+        ],
+        "quant_factors": [
+            "미국 2월 컨퍼런스보드 소비자기대지수",
+            "일본 BOJ의 추가 금리 인상에 대한 회의적인 시각",
+            "물가 둔화에 따른 금리 인하 가능성"
+        ]
+    }
+}

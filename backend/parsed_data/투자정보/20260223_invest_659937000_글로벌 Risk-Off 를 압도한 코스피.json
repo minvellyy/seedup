@@ -1,0 +1,34 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-20",
+        "brokerage": "DAISHIN",
+        "analyst_name": "정해창, 이경민",
+        "report_title": "글로벌 Risk-Off 를 압도한 코스피"
+    },
+    "specific_data": {
+        "strategy_theme": "글로벌 Risk-Off를 압도한 코스피",
+        "recommended_portfolio": [
+            "SK하이닉스",
+            "삼성전기",
+            "이수페타시스",
+            "우리금융지주",
+            "KT&G",
+            "DB손해보험",
+            "한화생명",
+            "현대해상",
+            "삼성화재"
+        ],
+        "strategy_logic": [
+            "글로벌 증시의 위험 회피 심리를 이겨낸 펀더멘털과 수급 모멘텀",
+            "패시브 자금 추가 유입",
+            "금융주 정책 기대감 유효"
+        ],
+        "quant_factors": [
+            "반도체",
+            "조선/방산",
+            "기계(원자력)",
+            "금융주"
+        ]
+    }
+}

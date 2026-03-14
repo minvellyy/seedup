@@ -1,0 +1,30 @@
+{
+    "common_metadata": {
+        "report_type": "주식전략",
+        "report_date": "2026-03-03",
+        "brokerage": "SK증권",
+        "analyst_name": "강대승",
+        "report_title": "[전략 COMMENT] 단기 변동성 확대, 분할 매수로 접근 .."
+    },
+    "specific_data": {
+        "strategy_theme": "단기 변동성 확대, 분할 매수로 접근 추천",
+        "recommended_portfolio": [
+            "월마트",
+            "맥도날드",
+            "반도체",
+            "전력"
+        ],
+        "strategy_logic": [
+            "미국의 이란 공격으로 주식시장 변동성 확대",
+            "실적에 대한 중요도 커지는 시장으로 변모 가속화",
+            "AI 패권 경쟁 속 실적 성장 보이는 한국 증시 분할 매수 추천",
+            "전쟁 자체보다 통화정책과 유동성 경로에 미치는 영향이 중요"
+        ],
+        "quant_factors": [
+            "유동성 공급량 감소",
+            "높은 유가 지속 가능성",
+            "PPI 상승",
+            "실적 가시성이 높은 기업 선호"
+        ]
+    }
+}

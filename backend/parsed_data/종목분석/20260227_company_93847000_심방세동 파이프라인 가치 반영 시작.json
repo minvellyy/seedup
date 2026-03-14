@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-26",
+        "brokerage": "미래에셋증권",
+        "analyst_name": "김승민, 조세은",
+        "report_title": "심방세동 파이프라인 가치 반영 시작"
+    },
+    "specific_data": {
+        "company_name": "종근당",
+        "ticker": "185750",
+        "investment_rating": "매수",
+        "investment_points": [
+            "목표주가 15.5만원으로 상향",
+            "CKD-510의 임상개발 진전에 따른 파이프라인 가치 부각 전망",
+            "상승여력 63.7%"
+        ],
+        "risk_factors": [
+            "임상2상 최종 결과는 2027~28년 확인 가능",
+            "중간 업데이트 가능성"
+        ],
+        "shareholder_structure": "주요 주주 지분율에 대한 정보는 제공되지 않음"
+    }
+}

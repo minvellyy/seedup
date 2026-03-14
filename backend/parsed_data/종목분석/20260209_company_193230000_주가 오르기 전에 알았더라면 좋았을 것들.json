@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "키움증권",
+        "analyst_name": "신민수",
+        "report_title": "주가 오르기 전에 알았더라면 좋았을 것들"
+    },
+    "specific_data": {
+        "company_name": "토모큐브",
+        "ticker": "475960",
+        "investment_rating": "Buy(Maintain)",
+        "investment_points": [
+            "4Q25 실적이 매출액 50억, 영업이익 4억을 기록하여 당사 추정치를 각각 +25%, 10억 상회함.",
+            "'HT-X1 mini' 제품의 국내 수요 증가와 비바 의료기기 모듈 매출 인식이 호실적을 견인함.",
+            "PER 35배 이상의 고평가 가능성으로 최선호주 의견 유지."
+        ],
+        "risk_factors": [
+            "단기 주가 변동성 요인으로 VC의 물량이 남아있음.",
+            "해당 물량들은 상장 후 1개월, 3개월 의무 보유 확약 기간이 지나 차익 실현 가능."
+        ],
+        "shareholder_structure": "주요 주주 박용근 외 5인 19.0%"
+    }
+}

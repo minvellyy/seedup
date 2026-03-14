@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-13",
+        "brokerage": "대신증권",
+        "analyst_name": "김회재",
+        "report_title": "6년 만의 흑자 전환"
+    },
+    "specific_data": {
+        "company_name": "콘텐트리중앙",
+        "ticker": "036420",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "6년 만의 흑자 전환",
+            "Wiip의 제작 정상화로 25년 OP 56억원(+529억원)",
+            "26년은 메가박스 포함 전사업부 흑자 전망"
+        ],
+        "risk_factors": [
+            "317% 수준의 부채비율은 부담",
+            "드라마 편당 시가총액의 감소에 따라 목표주가 하향"
+        ],
+        "shareholder_structure": "주요주주 중앙피앤아이 외 2인 42.24%"
+    }
+}

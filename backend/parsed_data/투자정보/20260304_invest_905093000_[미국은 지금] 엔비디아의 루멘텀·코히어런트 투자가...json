@@ -1,0 +1,29 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-03",
+        "brokerage": "키움증권",
+        "analyst_name": "박기현",
+        "report_title": "[미국은 지금] 엔비디아의 루멘텀·코히어런트 투자가.."
+    },
+    "specific_data": {
+        "strategy_theme": "엔비디아의 루멘텀·코히어런트 투자가 가진 전략적 함의",
+        "recommended_portfolio": [
+            "루멘텀 홀딩스",
+            "코히어런트"
+        ],
+        "strategy_logic": [
+            "GPU 연산력과 네트워킹 대역폭의 불일치",
+            "빅테크의 커스텀 칩 공세 및 기술 주도권 방어",
+            "공급망 통제권 확보를 통한 경쟁 우위 선점",
+            "차세대 기술 표준화 및 수직적 통합 완성",
+            "지정학적 리스크 관리 및 정책적 수혜 극대화"
+        ],
+        "quant_factors": [
+            "GPU 가동률",
+            "네트워킹 대역폭",
+            "AI 인프라 경제성",
+            "CAPEX 효율성"
+        ]
+    }
+}

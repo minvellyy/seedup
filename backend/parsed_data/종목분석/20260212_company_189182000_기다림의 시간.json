@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "교보증권",
+        "analyst_name": "김동우",
+        "report_title": "기다림의 시간"
+    },
+    "specific_data": {
+        "company_name": "시프트업",
+        "ticker": "462870",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "4Q25 매출은 641억원으로 시장 예상치 하회",
+            "니케 매출 안정적 유지",
+            "일본 및 미국에서의 매출 순위 상승",
+            "신작 게임 출시 기대"
+        ],
+        "risk_factors": [
+            "영업이익 역성장 가능성",
+            "글로벌 게임사와의 경쟁 심화"
+        ],
+        "shareholder_structure": "김형태 외 7인 42.18%, ACEVILLE PTE. LTD 34.48%"
+    }
+}

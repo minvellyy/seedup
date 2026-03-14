@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-11",
+        "brokerage": "유안타증권",
+        "analyst_name": "이안나, 배종성",
+        "report_title": "직접 보는 AI 데이터센터 내부 BESS로 꽉 차.."
+    },
+    "specific_data": {
+        "sector_name": "2차전지/신에너지",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "삼성SDI",
+            "한중엔시에스"
+        ],
+        "industry_trends": [
+            "2026~2028년 BESS·냉각 골든 타임",
+            "AI 데이터센터 전력 아키텍처 내 BESS의 중요성 증가",
+            "미국 BESS 히든 수요(BTM) 증가"
+        ],
+        "risk_factors": [
+            "전력 인프라 병목 문제",
+            "정전 및 전력 품질 문제",
+            "AI 데이터센터의 높은 전력 수요"
+        ]
+    }
+}

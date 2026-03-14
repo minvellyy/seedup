@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-09",
+        "brokerage": "유진투자증권",
+        "analyst_name": "이승우, 박재환",
+        "report_title": "Memory Watch - Semiconductor in the Fire H.."
+    },
+    "specific_data": {
+        "sector_name": "반도체",
+        "industry_rating": "긍정적",
+        "top_picks": [
+            "브로드컴",
+            "마벨"
+        ],
+        "industry_trends": [
+            "AI 반도체 매출 증가",
+            "메모리 가격 강세 지속",
+            "데이터센터 투자 증가"
+        ],
+        "risk_factors": [
+            "호르무즈 봉쇄로 인한 유가 상승",
+            "금리 상승으로 인한 자금조달 어려움",
+            "반도체 섹터의 변동성 증가"
+        ]
+    }
+}

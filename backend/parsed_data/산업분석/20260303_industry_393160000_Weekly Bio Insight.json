@@ -1,0 +1,36 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-03",
+        "brokerage": "SK증권",
+        "analyst_name": "이선경",
+        "report_title": "Weekly Bio Insight"
+    },
+    "specific_data": {
+        "sector_name": "제약/바이오",
+        "industry_rating": null,
+        "top_picks": [
+            "삼천당제약",
+            "한올바이오파마",
+            "일동제약",
+            "제일약품",
+            "SK바이오팜",
+            "삼성에피스홀딩스",
+            "메타케어",
+            "제일파마홀딩스",
+            "명인제약",
+            "영진약품"
+        ],
+        "industry_trends": [
+            "코스피 제약 지수는 0.4% 상승",
+            "코스닥 제약 지수는 4.4% 상승",
+            "신약개발 모멘텀 있는 개별주 중심으로 관심 집중",
+            "리벨서스/위고비제네릭 유럽 11개국 독점 라이선스 계약 체결",
+            "FDA 희귀의약품 지정 소식"
+        ],
+        "risk_factors": [
+            "매크로 변수에 따른 변동성 확대",
+            "임상 결과 발표에 따른 주가 변동성"
+        ]
+    }
+}

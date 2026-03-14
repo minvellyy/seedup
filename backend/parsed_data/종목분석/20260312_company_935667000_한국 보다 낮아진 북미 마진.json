@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-12",
+        "brokerage": "한화리서치",
+        "analyst_name": "한유정, 고예진",
+        "report_title": "한국 보다 낮아진 북미 마진"
+    },
+    "specific_data": {
+        "company_name": "농심",
+        "ticker": "004370",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "공격적인 마케팅 활동",
+            "복리후생비 증가 부담",
+            "기대치에 부합한 4분기 실적"
+        ],
+        "risk_factors": [
+            "북미 매출 저조",
+            "비용 지출 증가",
+            "금값 상승"
+        ],
+        "shareholder_structure": "농심홀딩스 (44.2%), 국민연금공단 (7.9%), 자사주 (4.9%)"
+    }
+}

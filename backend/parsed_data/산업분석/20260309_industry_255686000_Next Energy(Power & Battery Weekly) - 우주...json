@@ -1,0 +1,32 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-09",
+        "brokerage": "유진투자증권",
+        "analyst_name": "황성현",
+        "report_title": "Next Energy(Power & Battery Weekly) - 우주.."
+    },
+    "specific_data": {
+        "sector_name": "전기차 배터리 및 에너지",
+        "industry_rating": null,
+        "top_picks": [
+            "LG에너지솔루션",
+            "삼성SDI",
+            "SK이노베이션",
+            "LG화학",
+            "포스코퓨처엠",
+            "두산에너빌리티"
+        ],
+        "industry_trends": [
+            "전고체 배터리의 우주 적용 확대 기대",
+            "전기차 수요 둔화",
+            "미국 내 SMR 건설 승인",
+            "배터리 가격 및 원가 추이 변화"
+        ],
+        "risk_factors": [
+            "전고체 배터리의 높은 가격",
+            "충방전 사이클의 짧음",
+            "경제성 문제"
+        ]
+    }
+}

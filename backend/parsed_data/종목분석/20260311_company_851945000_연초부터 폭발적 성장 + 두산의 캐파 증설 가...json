@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-11",
+        "brokerage": "DS투자증권",
+        "analyst_name": "김수현",
+        "report_title": "연초부터 폭발적 성장 + 두산의 캐파 증설 가.."
+    },
+    "specific_data": {
+        "company_name": "파미셀",
+        "ticker": "005690",
+        "investment_rating": "매수",
+        "investment_points": [
+            "연초부터 폭발적 성장",
+            "25년 영업이익 600% 이상 성장",
+            "두산향 매출 1,100억원 이상 전망",
+            "경화제 매출이 25년 324억원에서 600억원으로 증가 예상"
+        ],
+        "risk_factors": [
+            "전쟁, 유가 하락으로 인한 주가 조정",
+            "바이오 부문 실적 개선 여부"
+        ],
+        "shareholder_structure": "김현수(외 7인) 9.4%, 김용만(외 1인) 0.1%"
+    }
+}

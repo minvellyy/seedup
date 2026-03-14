@@ -1,0 +1,35 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-10",
+        "brokerage": "키움증권",
+        "analyst_name": "한지영, 이성훈",
+        "report_title": "0210, 미 증시, AI주 불안 완화, 기대 인플레이션 둔.."
+    },
+    "specific_data": {
+        "strategy_theme": "AI 관련주 매수 전략",
+        "recommended_portfolio": [
+            "애플",
+            "마이크로소프트",
+            "알파벳",
+            "메타",
+            "아마존",
+            "테슬라",
+            "엔비디아",
+            "브로드컴",
+            "AMD",
+            "마이크론"
+        ],
+        "strategy_logic": [
+            "AI 업체들의 수익성 우려 완화",
+            "기대 인플레이션 둔화",
+            "하이퍼스케일러 업체들의 대규모 투자",
+            "S&P500 순이익률 증가"
+        ],
+        "quant_factors": [
+            "V-KOSPI 지수",
+            "코스피 영업이익 컨센서스",
+            "미국 고용 및 CPI"
+        ]
+    }
+}

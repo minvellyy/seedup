@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-11",
+        "brokerage": "IBK투자증권",
+        "analyst_name": "김운호",
+        "report_title": "자사주 취득, 처분, 소각 계획 공시"
+    },
+    "specific_data": {
+        "company_name": "삼성전자",
+        "ticker": "005930",
+        "investment_rating": "매수",
+        "investment_points": [
+            "자사주 소각 결정으로 주주 환원 의지 반영",
+            "자사주 처리 계획 공시 기준 강화에 따른 결정",
+            "2025년 이후 처음으로 주식 소각"
+        ],
+        "risk_factors": [
+            "주가 변동성",
+            "시장 환경 변화"
+        ],
+        "shareholder_structure": "주요 주주 지분율은 보통주 1.6%, 우선주 1.7%로 요약됨"
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-09",
+        "brokerage": "키움증권",
+        "analyst_name": "김유미, 안예하, 심수빈",
+        "report_title": "0309 달러, 고용 부진에 하락"
+    },
+    "specific_data": {
+        "strategy_theme": "달러 약세 및 국제유가 상승에 따른 투자 전략",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "달러화는 고용 부진에 따라 하락",
+            "유로화는 달러 약세로 강보합권에서 마감",
+            "국제유가는 호르무즈 해협 봉쇄 우려로 상승"
+        ],
+        "quant_factors": [
+            "고용지표",
+            "국제유가",
+            "환율"
+        ]
+    }
+}

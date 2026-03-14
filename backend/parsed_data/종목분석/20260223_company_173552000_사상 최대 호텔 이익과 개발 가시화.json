@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-23",
+        "brokerage": "하나증권",
+        "analyst_name": "이기훈, 김현수",
+        "report_title": "사상 최대 호텔 이익과 개발 가시화"
+    },
+    "specific_data": {
+        "company_name": "서부T&D",
+        "ticker": "006730",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "사상 최대 호텔 이익과 개발 가시화",
+            "목표주가 상향",
+            "레져 산업 내 지속 최선호주"
+        ],
+        "risk_factors": [
+            "방일 중국인 수 감소",
+            "MICE 부진"
+        ],
+        "shareholder_structure": "엠와이에이치 외 14 인 50.35%"
+    }
+}

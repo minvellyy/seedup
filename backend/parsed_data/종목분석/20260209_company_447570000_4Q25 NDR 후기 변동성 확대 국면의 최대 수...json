@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "키움증권",
+        "analyst_name": "고연수",
+        "report_title": "4Q25 NDR 후기 변동성 확대 국면의 최대 수.."
+    },
+    "specific_data": {
+        "company_name": "키움증권",
+        "ticker": "039490",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "변동성 확대 국면의 최대 수혜주",
+            "2026년 투자포인트는 거래대금의 ‘레벨업’",
+            "실적·배당·수급 측면에서 투자 매력도 높음"
+        ],
+        "risk_factors": [
+            "국내주식 시장점유율 하락 우려",
+            "2027년 감익 우려"
+        ],
+        "shareholder_structure": "다우기술 외 4인 41.20%, 국민연금공단 11.69%"
+    }
+}

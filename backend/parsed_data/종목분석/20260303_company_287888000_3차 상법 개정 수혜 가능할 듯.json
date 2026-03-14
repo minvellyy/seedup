@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-03",
+        "brokerage": "iM증권",
+        "analyst_name": "이상헌, 장호",
+        "report_title": "3차 상법 개정 수혜 가능할 듯"
+    },
+    "specific_data": {
+        "company_name": "한샘",
+        "ticker": "009240",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "3차 상법 개정으로 원칙적 소각 시대를 맞이하여 동사 자사주 29.5% 소각 불가피",
+            "주주환원 기반 마련하면서 동사 밸류에이션 상승의 원동력으로 작용할 듯",
+            "목표주가(12M) 67,000원 유지"
+        ],
+        "risk_factors": [
+            "대주주의 지배력 강화 수단으로 오용되는 문제점",
+            "영업구조상 고정비 비중이 큰 상황에서 실적 턴어라운드 기대난망"
+        ],
+        "shareholder_structure": "IMM PE 외 특수관계인 36.0%, TETON CAPITAL PARTNERS, L.P 9.2%, 국민연금 5.4%, 자사주 29.5%, 기타 20.0%"
+    }
+}

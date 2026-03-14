@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-09",
+        "brokerage": "유진투자증권",
+        "analyst_name": "이현지, 고수영",
+        "report_title": "미디어엔터레저 Monthly 오시오 자시오 가.."
+    },
+    "specific_data": {
+        "sector_name": "미디어/엔터테인먼트",
+        "industry_rating": "BUY",
+        "top_picks": [
+            "하이브",
+            "와이지엔터",
+            "파라다이스",
+            "SAMG엔터"
+        ],
+        "industry_trends": [
+            "3월부터 주요 아티스트 컴백 다수 예정",
+            "중국 Mass 중심 성장",
+            "극장가 훈풍 지속"
+        ],
+        "risk_factors": [
+            "중국 정부의 규제",
+            "글로벌 경제 불확실성"
+        ]
+    }
+}

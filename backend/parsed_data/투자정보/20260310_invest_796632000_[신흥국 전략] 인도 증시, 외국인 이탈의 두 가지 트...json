@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-10",
+        "brokerage": "하나증권",
+        "analyst_name": "김근아",
+        "report_title": "[신흥국 전략] 인도 증시, 외국인 이탈의 두 가지 트.."
+    },
+    "specific_data": {
+        "strategy_theme": "신흥국 전략",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "IT 섹터의 외국인 자금 유출",
+            "중동 리스크에 따른 시장 불안",
+            "NIFTY50 지수 조정",
+            "러시아산 원유 조달의 중요성"
+        ],
+        "quant_factors": [
+            "NIFTY IT 지수 하락",
+            "외국인 순매도 규모",
+            "원유 가격 변동성",
+            "환율 변동"
+        ]
+    }
+}

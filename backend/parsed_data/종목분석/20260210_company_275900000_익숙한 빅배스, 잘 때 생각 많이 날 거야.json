@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "키움증권",
+        "analyst_name": "신대현",
+        "report_title": "익숙한 빅배스, 잘 때 생각 많이 날 거야"
+    },
+    "specific_data": {
+        "company_name": "대우건설",
+        "ticker": "047040",
+        "investment_rating": "BUY(Maintain)",
+        "investment_points": [
+            "대규모 비용 반영에 따라 실적 개선에 대한 가시성이 높아짐",
+            "원전 수주 파이프라인 추가",
+            "한수원이 수주를 성공 시 주요 시공 후보자가 될 가능성"
+        ],
+        "risk_factors": [
+            "일회성 비용 반영으로 인한 실적 하회",
+            "원가율 상승"
+        ],
+        "shareholder_structure": "증흥토건 외 2인 50.8%"
+    }
+}

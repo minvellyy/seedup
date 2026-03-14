@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-06",
+        "brokerage": "유안타증권",
+        "analyst_name": "권명준",
+        "report_title": "[다시봐] 신규성장동력을 주목!"
+    },
+    "specific_data": {
+        "company_name": "아바코",
+        "ticker": "083930",
+        "investment_rating": "NOT RATED",
+        "investment_points": [
+            "디스플레이 스퍼터 장비 주력사업",
+            "2차전지, MLCC, 태양전지, 반도체로 사업영역 확대",
+            "지속적인 장비 개발"
+        ],
+        "risk_factors": [
+            "2차전지 관련 수주 및 매출 저조 예상",
+            "고온공정 증가로 인한 결함 가능성"
+        ],
+        "shareholder_structure": "주요주주: 위재곤 외 5인"
+    }
+}

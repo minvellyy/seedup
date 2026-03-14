@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "한화투자증권",
+        "analyst_name": "김도하",
+        "report_title": "재차 확보된 TSR 매력"
+    },
+    "specific_data": {
+        "company_name": "BNK금융지주",
+        "ticker": "138930",
+        "investment_rating": "Buy (상향)",
+        "investment_points": [
+            "재차 확보된 TSR 매력",
+            "예상 경로에서 26년~28년 평균 DY는 5.2%로 기대됨",
+            "목표주가 23,000원으로 상향 조정"
+        ],
+        "risk_factors": [
+            "비경상 요인으로 인한 손실",
+            "인건비 증가"
+        ],
+        "shareholder_structure": "롯데쇼핑 (외 7인) 10.8%, 국민연금공단 (외 1인) 8.8%, 협성종합건업 (외 7인) 6.7%"
+    }
+}

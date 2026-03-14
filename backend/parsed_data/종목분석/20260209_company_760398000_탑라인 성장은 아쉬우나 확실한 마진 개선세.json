@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "키움증권",
+        "analyst_name": "신대현",
+        "report_title": "탑라인 성장은 아쉬우나 확실한 마진 개선세"
+    },
+    "specific_data": {
+        "company_name": "HDC현대산업개발",
+        "ticker": "294870",
+        "investment_rating": "BUY(Maintain)",
+        "investment_points": [
+            "현재 주가는 저평가 되어있다고 판단된다.",
+            "자체주택 부문의 높은 수익성은 지속될 것으로 전망된다.",
+            "외주주택 부문도 매출화가 본격화될 경우 추가적인 마진 상승이 가능할 것으로 판단된다."
+        ],
+        "risk_factors": [
+            "토목/SOC 부문의 적자 지속",
+            "잔금 납입되지 않은 현장에서의 충당금 반영"
+        ],
+        "shareholder_structure": "주요 주주 HDC 외 6 인 43.0%"
+    }
+}

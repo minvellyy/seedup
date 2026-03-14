@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-04",
+        "brokerage": "하나증권",
+        "analyst_name": "김홍식, 이상훈",
+        "report_title": "5G SA로의 진화 시 새로운 주가 역사 쓸 것"
+    },
+    "specific_data": {
+        "company_name": "RFHIC",
+        "ticker": "218410",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "5G SA로의 진화 시 새로운 주가 역사 쓸 것",
+            "피지컬 AI 활성화 목적으로 글로벌 주요 국가에서 수요 증가 기대",
+            "NXP의 통신 사업 부문 철수로 공급 사이드에 우호적인 환경 조성 예상",
+            "2026년도 에릭슨 신규 매출 가세로 매출 성장 기회",
+            "연결 자회사 RF머트리얼즈의 가파른 영업이익 성장 지속 전망",
+            "여전히 저평가되어있음"
+        ],
+        "risk_factors": [
+            "주파수 경매, 에릭슨 공급 등 대형 호재가 노출된 상황이 아님"
+        ],
+        "shareholder_structure": "조덕수 외 20 인 33.53%, 국민연금공단 6.11%"
+    }
+}

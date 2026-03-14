@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-19",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "SK증권 Global Carbon Market Daily_260219"
+    },
+    "specific_data": {
+        "market_summary": "국내외 배출권 가격 추이 및 원자재 가격 동향",
+        "macro_indicators": null,
+        "fund_flows": null,
+        "key_news": [
+            "[뉴욕유가] 밴스 \"이란, 핵심 요구 받아들이지 않아\"…WTI 4.6%↑",
+            "CBAM 시행에 탄소비용 부담 가중…저탄소 기술 투자 시급",
+            "NAMU EnR \"한국산 알루미늄, 2034년까지 EU 배출권 누적 117.6만톤 필요\""
+        ]
+    }
+}

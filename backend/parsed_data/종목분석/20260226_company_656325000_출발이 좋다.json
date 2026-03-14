@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-26",
+        "brokerage": "IBK투자증권",
+        "analyst_name": "김태현",
+        "report_title": "출발이 좋다"
+    },
+    "specific_data": {
+        "company_name": "오리온",
+        "ticker": "271560",
+        "investment_rating": "매수 (유지)",
+        "investment_points": [
+            "1월 잠정 실적, 중국 중심의 국내외 법인 고른 성장세",
+            "목표주가 170,000원으로 6.3% 상향",
+            "중국·러시아 원가 개선으로 전사 이익 개선세가 두드러짐",
+            "신제품 공급 확대와 미국, UAE 등 수출 증가로 소폭 성장"
+        ],
+        "risk_factors": [
+            "내수 둔화",
+            "원가 부담",
+            "기상악화로 인한 발주 축소"
+        ],
+        "shareholder_structure": "오리온홀딩스 외 9 인 43.81%, 국민연금공단 8.12%, 외국인 지분율 35.1%"
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-04",
+        "brokerage": "하나증권",
+        "analyst_name": "김홍식, 이상훈",
+        "report_title": "과거 쏠리드 주가는 단기 실적 아닌 스토리로.."
+    },
+    "specific_data": {
+        "company_name": "쏠리드",
+        "ticker": "050890",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "2025년 4분기 어닝 서프라이즈 기록",
+            "2026년 하반기 영업이익 증가 예상",
+            "미국/유럽 시장 회복 전망",
+            "5G SA 전환 및 인빌딩 투자 수혜 예상",
+            "밸류에이션 매력도 높음"
+        ],
+        "risk_factors": [
+            "이익 감소에 대한 공포감",
+            "주가 상승 지연 가능성"
+        ],
+        "shareholder_structure": "정준 외 2 인 10.52%"
+    }
+}

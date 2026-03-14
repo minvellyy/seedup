@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-13",
+        "brokerage": "키움증권",
+        "analyst_name": "심수빈",
+        "report_title": "공급 변수에 주목하는 원유시장"
+    },
+    "specific_data": {
+        "strategy_theme": "공급 변수에 주목하는 원유시장",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "과잉공급 구조 지속 예상",
+            "원유 수요의 구조적 변화 언급",
+            "2026년 수요 증가가 석유화학 원료 중심으로 나타날 것"
+        ],
+        "quant_factors": [
+            "미국 생산 차질",
+            "러시아 제재",
+            "이란발 지정학적 긴장"
+        ]
+    }
+}

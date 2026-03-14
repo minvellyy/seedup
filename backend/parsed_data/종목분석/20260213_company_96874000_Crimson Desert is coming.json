@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-13",
+        "brokerage": "유진투자증권",
+        "analyst_name": "정의훈",
+        "report_title": "Crimson Desert is coming"
+    },
+    "specific_data": {
+        "company_name": "펄어비스",
+        "ticker": "263750",
+        "investment_rating": "HOLD",
+        "investment_points": [
+            "붉은사막 출시를 앞두고 유저 기대감 증가",
+            "3/20 출시 이후 초기 판매 성과가 예상보다 좋을 경우 실적과 주가 반등 예상"
+        ],
+        "risk_factors": [
+            "판매량 추정치 상향이 이루어지지 않을 경우 주가 상승 여력 제한",
+            "비용 증가로 인한 영업적자 지속 가능성"
+        ],
+        "shareholder_structure": "김대일 외 11인 37.2%, 자사주 4.4%"
+    }
+}

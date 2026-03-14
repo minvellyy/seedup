@@ -1,0 +1,29 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-09",
+        "brokerage": "하나증권",
+        "analyst_name": "박승진, 신민건",
+        "report_title": "[New K-ETF] 차이나 AI반도체 TOP4+"
+    },
+    "specific_data": {
+        "strategy_theme": "중국 AI 반도체 기업에 투자하는 패시브 ETF",
+        "recommended_portfolio": [
+            "캠브리콘",
+            "중지이노라이트",
+            "나우라",
+            "SMIC"
+        ],
+        "strategy_logic": [
+            "중국 AI 반도체 기업들을 편입하는 패시브 ETF",
+            "TOP4 포지션에 각각 15% 비중 할당",
+            "ARTIS 키워드 유사도 및 유동시가총액 기준으로 비중 결정"
+        ],
+        "quant_factors": [
+            "시가총액 10억달러 이상",
+            "거래대금 100만달러 이상",
+            "ARTIS 키워드 유사도",
+            "유동시가총액"
+        ]
+    }
+}

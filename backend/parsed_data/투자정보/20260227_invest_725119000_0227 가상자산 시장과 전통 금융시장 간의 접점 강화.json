@@ -1,0 +1,15 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-02-27",
+        "brokerage": "키움증권",
+        "analyst_name": "김현정",
+        "report_title": "0227 가상자산 시장과 전통 금융시장 간의 접점 강화"
+    },
+    "specific_data": {
+        "strategy_theme": null,
+        "recommended_portfolio": [],
+        "strategy_logic": [],
+        "quant_factors": []
+    }
+}

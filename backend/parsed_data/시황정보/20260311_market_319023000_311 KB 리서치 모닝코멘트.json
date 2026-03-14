@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-11",
+        "brokerage": "KB증권",
+        "analyst_name": "임정은, 태윤선",
+        "report_title": "311 KB 리서치 모닝코멘트"
+    },
+    "specific_data": {
+        "market_summary": "국내 및 글로벌 증시 동향",
+        "macro_indicators": "미국 10년물 국채 수익률 4.16%, 달러 인덱스 98.83, 국제 유가 83.45달러/배럴",
+        "fund_flows": "미국 증시에서 기술주 견조한 흐름 보이며 지수 방어",
+        "key_news": [
+            "이란과의 전쟁 상황 주시하며 혼조세 마감",
+            "백악관이 즉각 부인에 나섰으나 시장에 혼란을 야기",
+            "오늘밤 발표될 CPI가 금리와 증시 향방 결정할 변수로 떠오르며 관망세 고조"
+        ]
+    }
+}

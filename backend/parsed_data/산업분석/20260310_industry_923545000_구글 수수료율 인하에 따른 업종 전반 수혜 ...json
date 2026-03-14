@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-10",
+        "brokerage": "SK증권",
+        "analyst_name": "남효지",
+        "report_title": "구글 수수료율 인하에 따른 업종 전반 수혜 .."
+    },
+    "specific_data": {
+        "sector_name": "게임",
+        "industry_rating": null,
+        "top_picks": [
+            "넷마블"
+        ],
+        "industry_trends": [
+            "구글 수수료율 인하에 따른 업종 전반 수혜 기대",
+            "모바일 매출/해외 매출 비중 높고, 자체 결제 적용 확대 중인 넷마블 수혜 가장 클 것",
+            "애플도 수수료 인하 시 업종 전반 수혜 강도 더욱 높아질 것"
+        ],
+        "risk_factors": [
+            "모바일 매출 비중이 낮은 업체는 수혜가 제한적일 수 있음",
+            "신규 게임 출시 계획이 없는 업체는 불리할 수 있음"
+        ]
+    }
+}

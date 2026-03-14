@@ -1,0 +1,46 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-10",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "SK증권 아침에 슥_2026.03.10"
+    },
+    "specific_data": {
+        "market_summary": "미국 전쟁 조기 종식 언급에 3대 지수 모두 상승 마감. 코스피는 장 초반 유가 상승으로 하락 출발했으나, 전쟁 조기 종식 기대감에 주요 빅테크 중심 매수세 유입. 유럽 주요국은 전략 비축유 방출 전망으로 낙폭 줄이며 약보합 마감. 중국은 중동발 지정학 리스크에도 양회 기간 정책 기대감으로 낙폭 다소 축소.",
+        "macro_indicators": null,
+        "fund_flows": {
+            "foreign_investors": {
+                "net_buy": [
+                    60000,
+                    48000,
+                    36000,
+                    24000,
+                    12000,
+                    0,
+                    -12000,
+                    -24000,
+                    -36000
+                ],
+                "net_sell": null
+            },
+            "institutional_investors": {
+                "net_buy": null,
+                "net_sell": null
+            },
+            "pension_funds": {
+                "net_buy": null,
+                "net_sell": null
+            },
+            "mutual_funds": {
+                "net_buy": null,
+                "net_sell": null
+            }
+        },
+        "key_news": [
+            "미 - 2월 주택판매",
+            "중 - 2월 무역수지",
+            "한 - 1분기 GDP"
+        ]
+    }
+}

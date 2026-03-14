@@ -1,0 +1,36 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-05",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "SK증권 아침에 슥_2026.03.05"
+    },
+    "specific_data": {
+        "market_summary": "미국 국제유가 안정 조짐 및 경제 지표 호조에 상승 마감 코스피, 유럽 중동 전쟁 경계감 소폭 후퇴에 상승 마감, 중국 미국-이란 전쟁 장기화 우려에 하락 마감.",
+        "macro_indicators": null,
+        "fund_flows": {
+            "foreign_investors": {
+                "net_buy": 24000,
+                "net_sell": -24000
+            },
+            "institutional_investors": {
+                "net_buy": null,
+                "net_sell": null
+            },
+            "pension_funds": {
+                "net_buy": null,
+                "net_sell": null
+            },
+            "individual_investors": {
+                "net_buy": null,
+                "net_sell": null
+            }
+        },
+        "key_news": [
+            "미국의 호르무즈 해협 안전 보장 강조에 따른 유가 안정 조짐 및 서비스업 지표 호조에 강세",
+            "NYT 이란 협상 시도 보도에 경계감 소폭 후퇴하여 강세",
+            "미국-이란 전쟁 장기화 우려에 위험 회피 심리 강화되어 약세"
+        ]
+    }
+}

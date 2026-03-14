@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-06",
+        "brokerage": "한국IR협의회",
+        "analyst_name": "백종석, 김혜빈",
+        "report_title": "턴어라운드 및 밸류업의 시작"
+    },
+    "specific_data": {
+        "company_name": "가온그룹",
+        "ticker": "078890",
+        "investment_rating": "긍정적",
+        "investment_points": [
+            "가온브로드밴드의 해외 공략 확대 기대",
+            "가온로보틱스, 외부 협업 확대 기대",
+            "밸류업 공시 긍정적"
+        ],
+        "risk_factors": [
+            "셋톱박스 사업의 낮은 수익성",
+            "로봇 사업(신사업)의 낮은 매출 기여도"
+        ],
+        "shareholder_structure": "최대주주는 임동연 대표이사로, 지분 14.32% 보유. 주요주주 임동연 외 3인 14.99% 보유."
+    }
+}

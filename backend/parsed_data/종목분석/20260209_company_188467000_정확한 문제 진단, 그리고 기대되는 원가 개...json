@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "교보증권",
+        "analyst_name": "권우정",
+        "report_title": "정확한 문제 진단, 그리고 기대되는 원가 개.."
+    },
+    "specific_data": {
+        "company_name": "롯데웰푸드",
+        "ticker": "280360",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "정확한 문제 진단 및 기대되는 원가 개선",
+            "신규 CEO 부임 이후 사측의 문제 진단",
+            "중장기적인 체질 개선의 출발점"
+        ],
+        "risk_factors": [
+            "원가 부담 지속",
+            "내수 둔화",
+            "영업/마케팅 변화에 대한 대응 부족"
+        ],
+        "shareholder_structure": "롯데지주 외 15인 68.57%, 국민연금공단 7.21%, 외국인지분 13.37%"
+    }
+}

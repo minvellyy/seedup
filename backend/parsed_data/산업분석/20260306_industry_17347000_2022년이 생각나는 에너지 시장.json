@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-06",
+        "brokerage": "하나증권",
+        "analyst_name": "유재선, 성무규",
+        "report_title": "2022년이 생각나는 에너지 시장"
+    },
+    "specific_data": {
+        "sector_name": "유틸리티",
+        "industry_rating": null,
+        "top_picks": [
+            "SK가스",
+            "SGC에너지"
+        ],
+        "industry_trends": [
+            "에너지 가격 상승",
+            "중동 지정학적 리스크",
+            "재생에너지 준중앙급전 운영제도 시행"
+        ],
+        "risk_factors": [
+            "중동산 원유 및 LNG 공급 중단",
+            "천연가스 가격 상승",
+            "환율 변동"
+        ]
+    }
+}

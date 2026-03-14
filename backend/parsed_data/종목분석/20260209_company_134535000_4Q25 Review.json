@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "키움증권",
+        "analyst_name": "조소정",
+        "report_title": "4Q25 Review"
+    },
+    "specific_data": {
+        "company_name": "아모레퍼시픽",
+        "ticker": "090430",
+        "investment_rating": null,
+        "investment_points": [
+            "영업 상황은 양호하나, 연말 희망 퇴직 시행 관련 일회성 비용 반영 영향",
+            "전반적인 실적 방향성은 개선 국면",
+            "구조적 성장 동력이 필요"
+        ],
+        "risk_factors": [
+            "일회성 비용으로 인한 영업이익 하회",
+            "주가의 추가 상승을 위해서는 구조적 성장 동력이 필요"
+        ],
+        "shareholder_structure": "주요 주주 지분율에 대한 정보는 제공되지 않음"
+    }
+}

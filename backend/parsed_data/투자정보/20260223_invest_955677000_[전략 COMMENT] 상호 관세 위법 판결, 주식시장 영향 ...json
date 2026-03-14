@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-23",
+        "brokerage": "SK증권",
+        "analyst_name": "강대승",
+        "report_title": "[전략 COMMENT] 상호 관세 위법 판결, 주식시장 영향 .."
+    },
+    "specific_data": {
+        "strategy_theme": "상호 관세 위법 판결에 따른 투자 전략",
+        "recommended_portfolio": [
+            "반도체",
+            "폴리실리콘",
+            "의료 장비·기기"
+        ],
+        "strategy_logic": [
+            "정책 기한 설정으로 미국 기업의 선제적 수입 확대 가능성 존재",
+            "관세 부과 의지 확인으로 기업의 수입을 앞당길 가능성",
+            "상호관세 위법 판결이 한국 주식시장에 큰 영향은 없음"
+        ],
+        "quant_factors": [
+            "미국 GDP 연율화 증가율",
+            "구리 가격 변동"
+        ]
+    }
+}

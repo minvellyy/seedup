@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2023-02-19",
+        "brokerage": "한국IR협의회",
+        "analyst_name": "이원재, 이희경",
+        "report_title": "PBR 0.3배로 반도체 하이테크 설비업종 최대 .."
+    },
+    "specific_data": {
+        "company_name": "성도이엔지",
+        "ticker": "037350",
+        "investment_rating": "매수",
+        "investment_points": [
+            "하이테크설비 부문이 외형 및 이익 성장 견인",
+            "에스티아이의 지분법이익 성장 기대",
+            "반도체 설비투자 확대 시기 도래"
+        ],
+        "risk_factors": [
+            "대규모 프로젝트 종료에 따른 매출 공백 및 수주 모멘텀 둔화 리스크",
+            "전방 산업 투자 지연 및 대외 경제적 불확실성"
+        ],
+        "shareholder_structure": "서인수 외 3인 35.85%"
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "교보증권",
+        "analyst_name": "김동우",
+        "report_title": "유년기를 지나 성장기"
+    },
+    "specific_data": {
+        "company_name": "카카오페이",
+        "ticker": "377300",
+        "investment_rating": "Trading Buy",
+        "investment_points": [
+            "4Q25 매출은 2,698억원(YoY +24.0%)",
+            "영업이익은 208억원(YoY 흑자전환)",
+            "전체 TPV는 49조원(YoY +14%)",
+            "결제서비스 매출은 1,411억원(+12%) 기록",
+            "금융서비스 매출은 1,128억원(+34.3%) 기록"
+        ],
+        "risk_factors": [
+            "스테이블코인 관련 법규 제도화 일정 불확실성",
+            "주가 변동성에 노출"
+        ],
+        "shareholder_structure": "주요주주: 카카오 외 2인 46.18%, Alipay Singapore Holding Pte. Ltd 27.07%"
+    }
+}

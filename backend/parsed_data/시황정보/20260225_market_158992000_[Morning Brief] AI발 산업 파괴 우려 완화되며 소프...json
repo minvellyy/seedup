@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-25",
+        "brokerage": "null",
+        "analyst_name": "null",
+        "report_title": "[Morning Brief] AI발 산업 파괴 우려 완화되며 소프.."
+    },
+    "specific_data": {
+        "market_summary": "AI발 산업 파괴 우려 완화되며 소프트웨어 업종 반등, 미 증시 상승 마감",
+        "macro_indicators": "미국 국채 10년물 금리 4.30%, 한국10Y 3.590%",
+        "fund_flows": "외국인 수급강도 순매수 금액: 497억원, 기관 수급강도 순매수 금액: 253억원",
+        "key_news": [
+            "미국 정부 배터리를 대상으로 한 무역확장법 232조 관세 부과 검토",
+            "앤트로픽 소프트웨어 업체들과 파트너십 발표",
+            "트럼프 대통령 국정연설 예정"
+        ]
+    }
+}

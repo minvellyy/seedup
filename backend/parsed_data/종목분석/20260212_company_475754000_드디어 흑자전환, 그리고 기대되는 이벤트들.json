@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "미래에셋증권",
+        "analyst_name": "이진호",
+        "report_title": "드디어 흑자전환, 그리고 기대되는 이벤트들"
+    },
+    "specific_data": {
+        "company_name": "OCI홀딩스",
+        "ticker": "010060",
+        "investment_rating": "매수",
+        "investment_points": [
+            "목표주가 18만원 상향 및 섹터 내 Top Pick 유지",
+            "흑자전환 성공",
+            "폴리실리콘 가격 상승 기대"
+        ],
+        "risk_factors": [
+            "중국 폴리실리콘 규제 발표",
+            "시장 변동성"
+        ],
+        "shareholder_structure": "주요 주주 지분율에 대한 정보는 제공되지 않음"
+    }
+}

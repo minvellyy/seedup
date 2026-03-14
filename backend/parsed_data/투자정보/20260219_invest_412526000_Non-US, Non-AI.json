@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2023-10-30",
+        "brokerage": "메리츠증권",
+        "analyst_name": "이수정",
+        "report_title": "Non-US, Non-AI"
+    },
+    "specific_data": {
+        "strategy_theme": "AI J-Curve 초기 단계: AI 수혜 < 피해 부각",
+        "recommended_portfolio": [
+            "반도체",
+            "은(귀금속+산업재)",
+            "전력·그리드·산업재",
+            "금(위험회피 국면 헷지 수단)"
+        ],
+        "strategy_logic": [
+            "AI가 범용 기술로 확산되는 과정에서 초기 조정비용 발생",
+            "성과의 이질성 확대",
+            "시장점유율/이익 재배분 형태의 J-Curve"
+        ],
+        "quant_factors": [
+            "AI의 생산성 효과에 대한 학술 문헌",
+            "산업 내 재배분 완료 후 선도 기업 중심 비대칭적 전개"
+        ]
+    }
+}

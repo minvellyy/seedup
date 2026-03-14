@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "미래에셋증권",
+        "analyst_name": "류제현, 김주희",
+        "report_title": "멀티플레이어로 변신 중"
+    },
+    "specific_data": {
+        "company_name": "팬오션",
+        "ticker": "028670",
+        "investment_rating": "매수",
+        "investment_points": [
+            "주력 사업부문 실적 개선세 시현",
+            "LNG 부문 매출 증가",
+            "목표주가 상향"
+        ],
+        "risk_factors": [
+            "물동량 부진",
+            "외부 경제 환경 변화"
+        ],
+        "shareholder_structure": "지배주주 지분율 100%"
+    }
+}

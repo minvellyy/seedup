@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-13",
+        "brokerage": "DS투자증권",
+        "analyst_name": "양형모",
+        "report_title": "DS전략이슈 0313(금)"
+    },
+    "specific_data": {
+        "strategy_theme": "역대급 만기 후 방향성 분석",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "현재 S&P 500은 하락 추세가 아닌 구조적 제약에 갇혀 있다.",
+            "3월 20일 만기 이후 포지션이 해소되면 강력한 상방 에너지가 발생할 것으로 기대된다.",
+            "현재는 최대 공포 구간이며, 이는 방향성 매수 기회를 제공한다."
+        ],
+        "quant_factors": [
+            "SPX 7,000 행사가격에 콜옵션과 풋옵션의 명목금액 기준 포지션이 집중되어 있다.",
+            "현재 GEX는 -$63.40B로, 하락 시 추가 매도 압력이 존재한다.",
+            "스큐는 96번째 백분위수로, 하방 리스크가 극도로 높게 평가되고 있다."
+        ]
+    }
+}

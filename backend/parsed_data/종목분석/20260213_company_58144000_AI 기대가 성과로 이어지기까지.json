@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-13",
+        "brokerage": "SK증권",
+        "analyst_name": "남효지",
+        "report_title": "AI 기대가 성과로 이어지기까지"
+    },
+    "specific_data": {
+        "company_name": "카카오",
+        "ticker": "035720",
+        "investment_rating": "매수(유지)",
+        "investment_points": [
+            "AI 기대가 성과로 이어지기까지",
+            "광고 매출 +10.6% 성장 전망",
+            "연결 이익 성장 이끌 것",
+            "글로벌 빅테크와 협업으로 AI 서비스 성과 보일 것"
+        ],
+        "risk_factors": [
+            "고객 고지 리스크"
+        ],
+        "shareholder_structure": "김범수(외75) 24.10%, 국민연금공단 7.40%, 외국인 지분율 30.50%"
+    }
+}

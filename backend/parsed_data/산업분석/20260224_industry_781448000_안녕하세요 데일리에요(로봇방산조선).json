@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": null,
+        "brokerage": "데일리",
+        "analyst_name": null,
+        "report_title": "안녕하세요 데일리에요(로봇방산조선)"
+    },
+    "specific_data": {
+        "sector_name": "로봇, 방산, 조선",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "현대차그룹, 새만금에 10조 투자해 로봇 미래 육성",
+            "KNR시스템, 아마존에 구동기 성능 검증 시스템 공급",
+            "테솔로, 경량형 로봇핸드 'DG-5F-S' 출시",
+            "한화오션, 美 AI·로봇에 1억弗 투자 추진",
+            "유니트리 CEO '휴머노이드 지능, 10세 아이 수준'",
+            "독일의 대규모 방산 투자"
+        ],
+        "risk_factors": [
+            "비용 상승 속 건조 예산 부족",
+            "심화되는 경쟁에 대한 우려"
+        ]
+    }
+}

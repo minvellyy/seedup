@@ -1,0 +1,36 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-26",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "SK증권 아침에 슥_2026.02.26"
+    },
+    "specific_data": {
+        "market_summary": "주요국 증시 수익률이 상승세를 보이며, 특히 KOSPI와 KOSDAQ이 대형주 중심으로 상승 마감하였다. 엔비디아 실적 기대와 AI 산업 우려 완화가 긍정적인 영향을 미쳤다.",
+        "macro_indicators": null,
+        "fund_flows": {
+            "foreign_investors": {
+                "net_buy": 24000,
+                "net_sell": -24000
+            },
+            "institutional_investors": {
+                "net_buy": null,
+                "net_sell": null
+            },
+            "pension_funds": {
+                "net_buy": null,
+                "net_sell": null
+            },
+            "individual_investors": {
+                "net_buy": null,
+                "net_sell": null
+            }
+        },
+        "key_news": [
+            "미국 엔비디아 실적 기대 속 SW 업종 우려 완화에 상승 마감",
+            "유럽 금융주 강세에 상승 마감",
+            "중국 양회 앞두고 부양책 기대감 확대에 상승 마감"
+        ]
+    }
+}

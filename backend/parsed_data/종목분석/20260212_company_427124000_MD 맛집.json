@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "유진투자증권",
+        "analyst_name": "이현지, 고수영",
+        "report_title": "MD 맛집"
+    },
+    "specific_data": {
+        "company_name": "에스엠",
+        "ticker": "041510",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "4분기 매출액은 3,190억원(+16.6%yoy), 영업이익은 546억원(+62.2%yoy)으로 시장 컨센서스 큰폭 상회",
+            "MD/라이선싱 매출이 큰폭 성장하며 외형과 수익성을 동반 견인",
+            "올해는 다양한 아티스트 활동이 이어지며 글로벌 시장 확장을 위해 노력 중"
+        ],
+        "risk_factors": [
+            "신보 발매 감소로 인한 음반 역성장",
+            "일회성 라이선싱 매출의 기여가 높아 지속 가능성 우려"
+        ],
+        "shareholder_structure": "카카오는 41.7%의 지분을 보유하고 있으며, Tencent Music Entertainment는 9.7%의 지분을 보유"
+    }
+}

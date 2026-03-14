@@ -1,0 +1,33 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-06",
+        "brokerage": "하나증권",
+        "analyst_name": "김재임, 김시현, 송종원",
+        "report_title": "Tech&Stock Weekly 아마존 클라우드 성장세 & 2026년.."
+    },
+    "specific_data": {
+        "strategy_theme": "아마존 클라우드 성장세 & 2026년 전략적 프로젝트에 주목",
+        "recommended_portfolio": [
+            "아마존(AMZN.US)",
+            "루멘텀 홀딩스(LITE.US)",
+            "알파벳(GOOGL.US)",
+            "AMD(AMD.US)",
+            "팔란티어(PLTR.US)"
+        ],
+        "strategy_logic": [
+            "아마존의 클라우드 성장세와 Capex 증가",
+            "루멘텀 홀딩스의 신규 성장 동력",
+            "알파벳의 클라우드 성장과 AI 수요 증가",
+            "AMD의 데이터센터 매출 증가",
+            "팔란티어의 정부 및 커머셜 매출 증가"
+        ],
+        "quant_factors": [
+            "2026년 Capex 지출 계획",
+            "1Q26 영업이익 가이던스",
+            "AWS 매출 성장률",
+            "루멘텀 홀딩스의 수주잔고",
+            "팔란티어의 Rule of 40 지표"
+        ]
+    }
+}

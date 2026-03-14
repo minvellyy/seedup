@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-23",
+        "brokerage": "한화투자증권",
+        "analyst_name": "김성래, 김예인",
+        "report_title": "4Q25 호실적으로 26년 방향성 입증"
+    },
+    "specific_data": {
+        "company_name": "에스엘",
+        "ticker": "005850",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "4Q25 호실적 기록으로 상저하고 패턴 탈피",
+            "2026년 매출액 5.65조원(+7.9%) 전망",
+            "고객사 신차 사이클 수혜 본격화",
+            "로봇 사업 확대의 원년"
+        ],
+        "risk_factors": [
+            "글로벌 수요 둔화 우려",
+            "GM 모델 단산 영향"
+        ],
+        "shareholder_structure": "이성엽 (외 10인) 62.9%, 국민연금공단 (외 1인) 8.2%, StanleyElectric (외 1인) 7.0%"
+    }
+}

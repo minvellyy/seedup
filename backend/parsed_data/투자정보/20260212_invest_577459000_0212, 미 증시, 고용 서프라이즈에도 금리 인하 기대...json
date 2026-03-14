@@ -1,0 +1,36 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-12",
+        "brokerage": "키움증권",
+        "analyst_name": "이성훈",
+        "report_title": "0212, 미 증시, 고용 서프라이즈에도 금리 인하 기대.."
+    },
+    "specific_data": {
+        "strategy_theme": null,
+        "recommended_portfolio": [
+            "애플",
+            "마이크로소프트",
+            "알파벳",
+            "메타",
+            "아마존",
+            "테슬라",
+            "엔비디아",
+            "브로드컴",
+            "AMD",
+            "마이크론"
+        ],
+        "strategy_logic": [
+            "미 증시 고용 서프라이즈에도 금리 인하 기대 후퇴",
+            "고용 지표 발표 후 시장 반응",
+            "국내 증시 상승세 지속",
+            "특정 업종 간 순환매 장세"
+        ],
+        "quant_factors": [
+            "고용 지표",
+            "금리 동결 확률",
+            "업종별 수익률",
+            "외국인 수급"
+        ]
+    }
+}

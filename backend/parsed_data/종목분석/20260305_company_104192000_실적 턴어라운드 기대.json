@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-05",
+        "brokerage": "한국IR협의회",
+        "analyst_name": "김태현, 박규연",
+        "report_title": "실적 턴어라운드 기대"
+    },
+    "specific_data": {
+        "company_name": "크레버스",
+        "ticker": "096240",
+        "investment_rating": "매수",
+        "investment_points": [
+            "적극적인 성장 전략에 따른 매출 반등 기대",
+            "영업이익 개선 기대"
+        ],
+        "risk_factors": [
+            "학령인구 감소에 따른 매출액 성장 둔화 및 감소 우려",
+            "보유하고 있는 자사주 처리에 대한 불확실성"
+        ],
+        "shareholder_structure": "최대주주 김영화 회장 16.0%, 특수관계인 10.1%, 자사주 21.4%"
+    }
+}

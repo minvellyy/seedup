@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "대신증권",
+        "analyst_name": "한송협",
+        "report_title": "미국 직판 돈 얼마나 들어요"
+    },
+    "specific_data": {
+        "company_name": "휴젤",
+        "ticker": "145020",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "미국 직판 체계 구축으로 외형 성장 기대",
+            "톡신 수출 급증으로 어닝 서프라이즈",
+            "2026년 미국 하이브리드 직판 매출 본격화 예상"
+        ],
+        "risk_factors": [
+            "고정비 증가 부담",
+            "의료 장비 및 서비스 업종에 따른 이익 둔화 우려"
+        ],
+        "shareholder_structure": "주요주주 Aphrodite Acquisition Holdings LLC 외, 외국인 지분율 53.64%"
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-13",
+        "brokerage": "미래에셋증권",
+        "analyst_name": "임희석",
+        "report_title": "붉은사막 이후도 생각할 시기"
+    },
+    "specific_data": {
+        "company_name": "펄어비스",
+        "ticker": "263750",
+        "investment_rating": "매도",
+        "investment_points": [
+            "매출액은 컨센서스를 5% 상회했으나 영업이익은 컨센서스를 하회",
+            "붉은사막 출시 일정이 다가오고 있으나 리스크 관리가 필요한 시점",
+            "목표주가를 36,000원으로 유지하나 상승여력 감소"
+        ],
+        "risk_factors": [
+            "PC 매출액 하향 안정화",
+            "신작 공백이 불가피"
+        ],
+        "shareholder_structure": "주요 주주 지분율에 대한 정보는 제공되지 않음"
+    }
+}

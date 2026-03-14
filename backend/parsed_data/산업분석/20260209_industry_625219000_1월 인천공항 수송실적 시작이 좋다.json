@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-09",
+        "brokerage": "하나증권",
+        "analyst_name": "안도현",
+        "report_title": "1월 인천공항 수송실적 시작이 좋다"
+    },
+    "specific_data": {
+        "sector_name": "운송",
+        "industry_rating": "Neutral",
+        "top_picks": [
+            "대한항공(003490)",
+            "진에어(272450)"
+        ],
+        "industry_trends": [
+            "1월 인천공항 여객수송실적 688만명(+5% (YoY))",
+            "1월 인천공항 화물수송실적 23.7만톤(+7% (YoY))",
+            "중국/일본 노선 여객 수송량이 23%/14% (YoY) 증가"
+        ],
+        "risk_factors": [
+            "대한항공 산하 항공사 실적 부진",
+            "공정위의 공급 유지 조항 영향"
+        ]
+    }
+}

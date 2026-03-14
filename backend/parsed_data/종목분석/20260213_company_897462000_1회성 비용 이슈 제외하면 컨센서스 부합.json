@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-13",
+        "brokerage": "하나증권",
+        "analyst_name": "이기훈, 김현수",
+        "report_title": "1회성 비용 이슈 제외하면 컨센서스 부합"
+    },
+    "specific_data": {
+        "company_name": "롯데관광개발",
+        "ticker": "032350",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "1회성 비용 이슈 제외하면 컨센서스 부합",
+            "목표주가(12M) 31,000원",
+            "현재주가(2.12) 25,400원",
+            "중장기 목표 시가총액 3조원까지는 변함 없는 레져 최선호주",
+            "현 주가는 2027년 예상 P/E 약 16배 수준으로 저평가"
+        ],
+        "risk_factors": [
+            "호텔 운영을 대행하는 하얏트 향 1회성 매니지먼트 비용 발생",
+            "연결납세 적용에 따른 이연법인세 조정"
+        ],
+        "shareholder_structure": "김기병 외 4 인 39.49%, 국민연금공단 9.86%"
+    }
+}

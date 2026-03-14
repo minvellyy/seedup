@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-27",
+        "brokerage": "KB증권",
+        "analyst_name": "임정은, 태윤선, 김상엽",
+        "report_title": "227 KB 리서치 장마감코멘트"
+    },
+    "specific_data": {
+        "market_summary": "KOSPI 6,244pt (-1.00%), KOSDAQ 1,192pt (+0.39%)",
+        "macro_indicators": null,
+        "fund_flows": {
+            "individual": "+60,793",
+            "foreign": "-68,563",
+            "institution": "+4,920"
+        },
+        "key_news": [
+            "외국인 매도 확대",
+            "미 증시는 엔비디아가 컨센서스를 상회하는 실적을 발표했음에도 차익실현 매물이 출회되며 반도체 전반의 투자심리를 위축시키면서 혼조세로 마감.",
+            "한국과 UAE가 방산 분야 300억 달러를 포함해 원전, AI 등 총 650억 달러 규모의 프로젝트 협력을 발표.",
+            "현대차는 10%대 상승하며 4거래일 연속 강세 유지."
+        ]
+    }
+}

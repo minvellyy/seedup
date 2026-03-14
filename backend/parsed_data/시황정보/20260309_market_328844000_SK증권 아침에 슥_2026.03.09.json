@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-09",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "SK증권 아침에 슥_2026.03.09"
+    },
+    "specific_data": {
+        "market_summary": "주요국 증시 수익률 및 국내 주요 지수 추이",
+        "macro_indicators": "국내 및 글로벌 경제 지표에 대한 분석",
+        "fund_flows": "투자자별 순매수 대금 및 외국인, 기관, 연기금, 개인의 매수 강도",
+        "key_news": [
+            "미국 유가 폭등·고용 둔화로 하락 마감",
+            "중국 저가 매수세·이란과 협상 기대에 상승 마감",
+            "국내 이란 사태로 인한 패닉 진정되며 보합 마감"
+        ]
+    }
+}

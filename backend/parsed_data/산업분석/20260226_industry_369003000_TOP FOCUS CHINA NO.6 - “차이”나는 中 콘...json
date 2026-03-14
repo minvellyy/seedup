@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2023-10-25",
+        "brokerage": "유안타증권",
+        "analyst_name": "이환욱, 한동우",
+        "report_title": "TOP FOCUS CHINA NO.6 - “차이”나는 中 콘.."
+    },
+    "specific_data": {
+        "sector_name": "미디어/엔터/디지털자산",
+        "industry_rating": null,
+        "top_picks": [
+            "Damai Entertainment (1060.HK)"
+        ],
+        "industry_trends": [
+            "중국 콘서트 산업의 빠른 성장",
+            "공연관광 문화의 부상",
+            "한한령 해제 가능성 증가"
+        ],
+        "risk_factors": [
+            "한한령 해제에 대한 불확실성",
+            "코로나19 이후 성장률 완화"
+        ]
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-27",
+        "brokerage": "SK증권",
+        "analyst_name": "형권훈",
+        "report_title": "Keep Going"
+    },
+    "specific_data": {
+        "company_name": "에이피알",
+        "ticker": "278470",
+        "investment_rating": "매수(유지)",
+        "investment_points": [
+            "Ulta 온라인 순위 트래픽 및 영국 아마존 순위 트래픽 긍정적",
+            "높은 실적 성장성에 더해, 유럽 내 러티브 구체화 시 리레이팅 가능",
+            "화장품 업종 Top-pick 관점 유지, 매수 추천"
+        ],
+        "risk_factors": [
+            "유럽 온라인 B2C 시장 침투 성공 여부",
+            "미국 오프라인 시장에서의 경쟁"
+        ],
+        "shareholder_structure": "김병훈(외5) 34.81%, 외국인 지분율 32.54%"
+    }
+}

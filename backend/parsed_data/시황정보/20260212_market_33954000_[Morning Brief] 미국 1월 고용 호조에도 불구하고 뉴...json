@@ -1,0 +1,20 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-12",
+        "brokerage": "null",
+        "analyst_name": "null",
+        "report_title": "[Morning Brief] 미국 1월 고용 호조에도 불구하고 뉴.."
+    },
+    "specific_data": {
+        "market_summary": "미국 1월 고용 호조에도 불구하고 뉴욕 3대지수 약보합 마감. 국내 증시는 순환매 장세로 코스피 상승.",
+        "macro_indicators": "미국 1월 ADP 고용보고서 13만명 증가로 시장 예상치(7만명) 큰 폭 상회. 실업률 4.3%.",
+        "fund_flows": "CJ대한통운(+6.58%) 등 물류업종 강세. 외국인 수급강도 순매수 금액 증가.",
+        "key_news": [
+            "마이크론 CFO의 HBM4 대량 생산 발언으로 마이크론 급등",
+            "영국 4분기 GDP 발표",
+            "사우디 글로벌 방위산업 전시회",
+            "두산, HD현대, 카카오 등 주요 기업 실적발표"
+        ]
+    }
+}

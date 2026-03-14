@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-04",
+        "brokerage": "한국IR협의회기업리서치센터",
+        "analyst_name": null,
+        "report_title": "[AI] 전기화학식 가스 센서 기반 안전 솔루션.."
+    },
+    "specific_data": {
+        "company_name": "센코",
+        "ticker": "347000",
+        "investment_rating": null,
+        "investment_points": [
+            "국내 유일의 전기화학식 가스 센서 기술 보유",
+            "산업안전 및 환경 모니터링 수요 증가",
+            "글로벌 시장 확대 기반 마련"
+        ],
+        "risk_factors": [
+            "정부 예산 변동에 따른 스마트도시 사업 규모 축소 가능성",
+            "글로벌 경기 변동이 산업안전 투자에 미치는 영향",
+            "대기업의 중소 센서 시장 진출에 따른 경쟁 심화"
+        ],
+        "shareholder_structure": "최대주주인 티에스 2024-16 M&A 성장조합이 19.74%의 지분을 보유하고 있으며, 특수관계인 전체의 지분율은 32.34%입니다."
+    }
+}

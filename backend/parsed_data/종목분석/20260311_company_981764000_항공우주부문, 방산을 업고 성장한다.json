@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-10",
+        "brokerage": "미래에셋증권",
+        "analyst_name": "류제현, 김주희",
+        "report_title": "항공우주부문, 방산을 업고 성장한다"
+    },
+    "specific_data": {
+        "company_name": "대한항공",
+        "ticker": "003490",
+        "investment_rating": "매수",
+        "investment_points": [
+            "항공우주부문 방산으로 장기 성장 기틀",
+            "2026년 신규수주 1.7조원 목표",
+            "매출 및 수주잔고 각각 1조원, 4.4조원으로 확대 전망",
+            "현재 주가 12개월 선행 PBR 0.8배로 저평가 상태"
+        ],
+        "risk_factors": [
+            "유가 및 환율 상승에 따른 주가 변동 리스크",
+            "자회사 실적 부진으로 연결 실적 감익 가능성"
+        ],
+        "shareholder_structure": "주요 주주 지분율에 대한 정보는 제공되지 않음"
+    }
+}

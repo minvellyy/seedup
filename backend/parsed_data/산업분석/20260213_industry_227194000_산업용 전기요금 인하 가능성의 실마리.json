@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-13",
+        "brokerage": "하나증권",
+        "analyst_name": "유재선, 성무규",
+        "report_title": "산업용 전기요금 인하 가능성의 실마리"
+    },
+    "specific_data": {
+        "sector_name": "유틸리티",
+        "industry_rating": null,
+        "top_picks": [
+            "지역난방공사",
+            "SGC에너지"
+        ],
+        "industry_trends": [
+            "전기요금 체계 개편 논의",
+            "LNG 공급 증가",
+            "재생에너지 전략 재편"
+        ],
+        "risk_factors": [
+            "요금 인상 저항",
+            "산업용 수요 이탈",
+            "가스터빈 조달 병목"
+        ]
+    }
+}

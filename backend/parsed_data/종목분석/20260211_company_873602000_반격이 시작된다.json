@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "미래에셋증권",
+        "analyst_name": "류제현, 김주희",
+        "report_title": "반격이 시작된다"
+    },
+    "specific_data": {
+        "company_name": "CJ대한통운",
+        "ticker": "000120",
+        "investment_rating": "매수",
+        "investment_points": [
+            "택배 물동량 개선",
+            "CL 매출 인식 본격화",
+            "이커머스 경쟁력 입증"
+        ],
+        "risk_factors": [
+            "원가율 상승",
+            "글로벌 포워딩 약세 지속"
+        ],
+        "shareholder_structure": "주요 주주 지분율은 외국인 보유비중 16.0%, 유동주식비율 47.2%."
+    }
+}

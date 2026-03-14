@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "대신증권",
+        "analyst_name": "유정현",
+        "report_title": "이제 모든 부진을 털고 앞으로 나아간다"
+    },
+    "specific_data": {
+        "company_name": "신세계인터내셔날",
+        "ticker": "031430",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "해외 패션과 수입 코스메틱 부문 고성장",
+            "부진한 사업부 정리 효과로 2026년 실적 크게 개선될 전망",
+            "목표주가 17,000원으로 상향 (+13%)"
+        ],
+        "risk_factors": [
+            "중국 법인과 브랜드 구조조정을 위한 대손충당금 반영",
+            "부진한 사업부로 인한 마진 저하"
+        ],
+        "shareholder_structure": "주요주주 신세계 외 1 인 54.60%"
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-27",
+        "brokerage": "대신증권",
+        "analyst_name": "유정현",
+        "report_title": "글로벌 Top vendor다운 놀라운 실적"
+    },
+    "specific_data": {
+        "company_name": "영원무역",
+        "ticker": "111770",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "25년 4분기 OEM 부문 전방 호조로 매출 달러 기준 18% 성장 추정",
+            "유정현 OEM 부문 영업이익률 대폭 개선(yoy +5%p)",
+            "26년에도 OEM 부문 고성장과 Scott 실적 개선 이어질 전망",
+            "목표주가를 140,000원으로 상향(+17%)"
+        ],
+        "risk_factors": [
+            "원달러 환율 변동",
+            "유럽 및 미국의 스포츠 브랜드 고객사들 실적"
+        ],
+        "shareholder_structure": "영원무역홀딩스 외 9 인 50.75%, 국민연금공단 10.01%"
+    }
+}

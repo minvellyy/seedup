@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-19",
+        "brokerage": "유진투자증권",
+        "analyst_name": "이주형",
+        "report_title": "유일무이하다 유일무이한"
+    },
+    "specific_data": {
+        "company_name": "파미셀",
+        "ticker": "005690",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "2분기부터 두산 전자BG의 차세대 아키텍처향 CCL 매출이 본격화될 전망.",
+            "저유전율 전자소재 매출액이 연간 1,151억원(YoY +78%) 기록할 것으로 예상.",
+            "바이오메디컬 부문에서 CDMO 사업 매출 확대 기대.",
+            "2026년 연간 실적은 매출액 1,651억원(YoY +45%), 영업이익 633억원(YoY +84%) 전망."
+        ],
+        "risk_factors": [
+            "PTFE 소재의 전면 대체 가능성은 매우 낮음.",
+            "이원화 노이즈로 인한 주가 변동성."
+        ],
+        "shareholder_structure": "김현수 (외 7인) 9.4%, 김용만 (외 1인) 0.1%"
+    }
+}

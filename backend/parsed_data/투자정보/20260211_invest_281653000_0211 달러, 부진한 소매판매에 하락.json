@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-02-11",
+        "brokerage": "키움증권",
+        "analyst_name": "김유미, 안예하, 심수빈",
+        "report_title": "0211 달러, 부진한 소매판매에 하락"
+    },
+    "specific_data": {
+        "strategy_theme": "달러 약세 및 엔화 강세",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "미국 소매판매 부진으로 달러 약세",
+            "고용보고서 발표를 앞둔 경계감",
+            "엔화 강세는 정책당국 개입 우려로 인한 것"
+        ],
+        "quant_factors": [
+            "소비 둔화 우려",
+            "금리 인하 기대",
+            "국제유가 하락"
+        ]
+    }
+}

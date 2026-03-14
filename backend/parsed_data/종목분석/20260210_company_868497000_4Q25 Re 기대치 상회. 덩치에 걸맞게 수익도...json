@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "NH 투자증권",
+        "analyst_name": "안영준",
+        "report_title": "4Q25 Re 기대치 상회. 덩치에 걸맞게 수익도.."
+    },
+    "specific_data": {
+        "company_name": "NH 투자증권",
+        "ticker": "005940",
+        "investment_rating": "Buy (Maintain)",
+        "investment_points": [
+            "4분기 실적은 브로커리지 및 운용 호조로 시장 기대치 상회",
+            "자산 증가에 따른 이자손익 증가와 운용손익 선방이 실적 서프라이즈 견인",
+            "증자로 자본 확충 + 적극적 레버리지 확대, 향후 확보한 자산으로 수익성을 향상할 수 있을 지가 관건"
+        ],
+        "risk_factors": [
+            "IB 수수료손익은 감소",
+            "채무보증수수료 감소"
+        ],
+        "shareholder_structure": "주요 주주 농협금융지주(주) 외 6인 58.15%"
+    }
+}

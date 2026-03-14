@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "키움증권",
+        "analyst_name": "이한결",
+        "report_title": "스쳐 지나가는 성장통"
+    },
+    "specific_data": {
+        "company_name": "한화에어로스페이스",
+        "ticker": "012450",
+        "investment_rating": "BUY(Maintain)",
+        "investment_points": [
+            "폴란드향 K9/천무 인도 물량은 견조",
+            "부속품 매출, 호주/이집트 K9 사업이 본격화",
+            "지상방산 부문의 수주잔고는 37.2조원으로 향후 4년치 일감을 보유"
+        ],
+        "risk_factors": [
+            "기타 해외 매출 감소",
+            "내수 매출 증가로 지역 믹스 악화",
+            "일회성 비용 반영"
+        ],
+        "shareholder_structure": "주요 주주 한화 외 6 인 35.8%"
+    }
+}

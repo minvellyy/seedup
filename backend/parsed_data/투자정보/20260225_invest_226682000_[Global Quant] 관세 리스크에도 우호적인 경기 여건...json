@@ -1,0 +1,35 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-25",
+        "brokerage": "하나증권",
+        "analyst_name": "이철현",
+        "report_title": "[Global Quant] 관세 리스크에도 우호적인 경기 여건.."
+    },
+    "specific_data": {
+        "strategy_theme": "경기민감 업종 선호",
+        "recommended_portfolio": [
+            "소재",
+            "에너지",
+            "금융",
+            "건설 & 엔지니어링",
+            "금속 & 광업",
+            "기계",
+            "전기장비",
+            "화학제품",
+            "건축제품"
+        ],
+        "strategy_logic": [
+            "우호적인 경기 여건에 따른 경기민감 업종의 성과 기대",
+            "IT 및 금융 업종의 부진",
+            "AI 관련 기술주 조정",
+            "관세 리스크와 변동성 증가"
+        ],
+        "quant_factors": [
+            "고용지표",
+            "CPI 안정",
+            "ISM 제조업 PMI",
+            "S&P 500 내 업종 성과 차별화"
+        ]
+    }
+}

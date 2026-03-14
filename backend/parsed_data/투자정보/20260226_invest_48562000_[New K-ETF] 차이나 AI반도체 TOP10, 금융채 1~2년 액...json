@@ -1,0 +1,33 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-26",
+        "brokerage": "하나증권",
+        "analyst_name": "박승진, 신민건",
+        "report_title": "[New K-ETF] 차이나 AI반도체 TOP10, 금융채 1~2년 액.."
+    },
+    "specific_data": {
+        "strategy_theme": "AI 반도체 및 금융채 투자",
+        "recommended_portfolio": [
+            "Hygon",
+            "Cambricon",
+            "Verisilicon",
+            "Innolight",
+            "Eoptolink",
+            "ShengyTech",
+            "GigaDevice",
+            "Montage",
+            "SMIC",
+            "Piotech"
+        ],
+        "strategy_logic": [
+            "AI 산업 육성 정책의 수혜가 기대되는 종목들로 구성",
+            "시가총액 70%, LLM 점수 30% 기준으로 종목 선정",
+            "정기 리밸런싱 연 4회 진행"
+        ],
+        "quant_factors": [
+            "시가총액 가중치",
+            "LLM 점수"
+        ]
+    }
+}

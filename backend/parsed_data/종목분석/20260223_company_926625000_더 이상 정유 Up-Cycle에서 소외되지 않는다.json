@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-23",
+        "brokerage": "하나증권",
+        "analyst_name": "윤재성, 김형준",
+        "report_title": "더 이상 정유 Up-Cycle에서 소외되지 않는다"
+    },
+    "specific_data": {
+        "company_name": "SK이노베이션",
+        "ticker": "096770",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "정유 Up-Cycle에서 소외되지 않음",
+            "목표주가 상향",
+            "사업 포트폴리오 재편 시작"
+        ],
+        "risk_factors": [
+            "SK온의 영업이익 적자",
+            "BOSK 청산에 따른 리스크"
+        ],
+        "shareholder_structure": "SK 외 12 인 52.09%, 국민연금공단 5.00%"
+    }
+}

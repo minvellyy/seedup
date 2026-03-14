@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "iM증권",
+        "analyst_name": "배세호",
+        "report_title": "개선될 2026년 실적, 신규 플랜트 수주가 중.."
+    },
+    "specific_data": {
+        "company_name": "DL이앤씨",
+        "ticker": "375500",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "2026년 실적 개선 예상",
+            "신규 플랜트 수주 중요",
+            "안정된 주택 원가율과 선제적인 리스크 관리"
+        ],
+        "risk_factors": [
+            "플랜트 수주 불확실성",
+            "2025년 플랜트 매출 부진"
+        ],
+        "shareholder_structure": "주요 주주 지분율: 외국인지분율 29.2%"
+    }
+}

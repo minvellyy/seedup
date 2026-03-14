@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-26",
+        "brokerage": "SK증권",
+        "analyst_name": "허선재",
+        "report_title": "SOFC 증설 사이클 초입, 실적 레벨업 시작"
+    },
+    "specific_data": {
+        "company_name": "코세스",
+        "ticker": "089890",
+        "investment_rating": "Not Rated",
+        "investment_points": [
+            "AI 데이터센터 확산에 따른 전력 수요 급증으로 SOFC 수요 확대",
+            "Bloom Energy향 신규 수주와 본격적인 매출 인식 시작"
+        ],
+        "risk_factors": [
+            "경쟁사 대비 우수한 기술력 유지 필요",
+            "SOFC 시장의 변동성"
+        ],
+        "shareholder_structure": "박명순(외1) 49.78%, 외국인 지분율 0.69%"
+    }
+}

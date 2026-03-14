@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "한국IR협의회",
+        "analyst_name": null,
+        "report_title": "「AI」 슈퍼커패시터 및 소형 이차전지 전문 .."
+    },
+    "specific_data": {
+        "company_name": "코칩",
+        "ticker": "126730",
+        "investment_rating": null,
+        "investment_points": [
+            "20년 이상의 슈퍼커패시터 제조 기술력",
+            "30년간 구축한 글로벌 유통 네트워크",
+            "전세계 최초로 -40도~85도 온도범위에서 작동하는 전해액 개발"
+        ],
+        "risk_factors": [
+            "수익성 악화",
+            "경쟁 심화",
+            "원자재 가격 변동"
+        ],
+        "shareholder_structure": "손진형 48.54%, 임유순 9.04%, 손성원 7.77%, 특수관계인 전체 지분율 65.69%"
+    }
+}

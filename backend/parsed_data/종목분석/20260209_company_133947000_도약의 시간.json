@@ -1,0 +1,17 @@
+{
+    "common_metadata": {
+        "report_type": null,
+        "report_date": null,
+        "brokerage": "iM금융지주",
+        "analyst_name": null,
+        "report_title": "도약의 시간"
+    },
+    "specific_data": {
+        "company_name": "iM금융지주",
+        "ticker": "000000",
+        "investment_rating": null,
+        "investment_points": [],
+        "risk_factors": [],
+        "shareholder_structure": null
+    }
+}

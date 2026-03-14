@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "교보증권",
+        "analyst_name": "김동우",
+        "report_title": "본격 성장 전 높아지는 이익 베이스"
+    },
+    "specific_data": {
+        "company_name": "네오위즈",
+        "ticker": "095660",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "2025년 괄목할만한 성과를 보인 'P의 거짓: 서곡' 및 'Shape of Dreams' 등 라인업의 기저 영향으로 PC/콘솔 매출이 YoY -17.2% 감소",
+            "27년부터 출시 예정인 PC/콘솔 라인업에 대한 투자 증가로 비용 부담이 다소 높아질 것으로 예상",
+            "'브라운더스트2'의 지속 성장과 웹보드 규제 완화 영향으로 26년 매출 4,124억원(YoY -4.7%) 예상"
+        ],
+        "risk_factors": [
+            "PC/콘솔 매출 감소",
+            "비용 증가",
+            "게임 출시 일정 지연 가능성"
+        ],
+        "shareholder_structure": "주요주주: 나성균 외 12인 37.65%, 외국인지분 19.86%"
+    }
+}

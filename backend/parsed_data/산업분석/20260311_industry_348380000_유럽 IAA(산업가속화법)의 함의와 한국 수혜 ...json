@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-11",
+        "brokerage": "하나증권",
+        "analyst_name": "김현수, 홍지원",
+        "report_title": "유럽 IAA(산업가속화법)의 함의와 한국 수혜 .."
+    },
+    "specific_data": {
+        "sector_name": "2차전지",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "LG에너지솔루션(373220)",
+            "삼성SDI(006400)",
+            "에코프로비엠(247540)"
+        ],
+        "industry_trends": [
+            "유럽 IAA(산업가속화법)의 발표로 유럽 내 공급망 강화 및 탈탄소 산업 육성",
+            "전기차 및 배터리 관련 로컬 콘텐츠 요건 강화",
+            "한국 배터리 기업들의 유럽 시장 진입 장벽 증가"
+        ],
+        "risk_factors": [
+            "중국 기업들의 저가 공세",
+            "유럽 내 생산능력 및 고용 요건 강화",
+            "로컬 콘텐츠 규정의 변화"
+        ]
+    }
+}

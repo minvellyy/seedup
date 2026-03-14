@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-10",
+        "brokerage": "하나증권",
+        "analyst_name": "안도현",
+        "report_title": "2월 인천공항 수송실적 기저 효과 지속, 고.."
+    },
+    "specific_data": {
+        "sector_name": "운송",
+        "industry_rating": "Neutral",
+        "top_picks": [
+            "대한항공(003490)",
+            "진에어(272450)"
+        ],
+        "industry_trends": [
+            "2월 인천공항 여객수송실적 637만명(+7% (YoY))",
+            "중국/일본 노선 여객 수송량이 25%/14% (YoY) 증가",
+            "미주/유럽도 각각 3%/8% 증가",
+            "동남아 노선은 -6% (YoY)로 부진한 수요"
+        ],
+        "risk_factors": [
+            "고유가로 인한 항공사 비용 부담",
+            "고환율로 인한 전반적인 비용 상승",
+            "고유가가 장기화될 경우 영업이익 감소 가능성"
+        ]
+    }
+}

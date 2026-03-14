@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-19",
+        "brokerage": "iM증권",
+        "analyst_name": "이상헌, 장호",
+        "report_title": "올해 수익성 대폭 개선 및 자사주 소각 기대"
+    },
+    "specific_data": {
+        "company_name": "디오",
+        "ticker": "039840",
+        "investment_rating": "NR",
+        "investment_points": [
+            "올해 수익성 대폭 개선 및 자사주 소각 기대",
+            "중국 등 해외 매출 증가로 수익성 개선",
+            "자사주 6.8% 소각 불가피"
+        ],
+        "risk_factors": [
+            "매출채권 부실 요인",
+            "가격경쟁 심화"
+        ],
+        "shareholder_structure": "김진철 6.7%, 자사주 6.8%, 외국인 지분율 14.6%"
+    }
+}

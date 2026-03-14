@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-11",
+        "brokerage": "한화투자증권",
+        "analyst_name": "이진협",
+        "report_title": "백화점 외국인 매출 비중은 어디까지 올라갈 .."
+    },
+    "specific_data": {
+        "sector_name": "유통",
+        "industry_rating": "Positive",
+        "top_picks": [
+            "롯데쇼핑"
+        ],
+        "industry_trends": [
+            "백화점 외국인 매출 비중 증가",
+            "내수 회복 및 인바운드 모멘텀 강화",
+            "명품 매출 비중의 중요성"
+        ],
+        "risk_factors": [
+            "일본 백화점 시장과의 비교",
+            "매장 면적의 차이로 인한 소비자 선호 변화"
+        ]
+    }
+}

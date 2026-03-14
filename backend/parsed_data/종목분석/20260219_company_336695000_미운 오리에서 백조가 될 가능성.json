@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-13",
+        "brokerage": "DS투자증권",
+        "analyst_name": "안주원",
+        "report_title": "미운 오리에서 백조가 될 가능성"
+    },
+    "specific_data": {
+        "company_name": "씨에스윈드",
+        "ticker": "112610",
+        "investment_rating": "매수",
+        "investment_points": [
+            "미국의 에너지 정책이 주가에 큰 영향을 미침",
+            "2025년 신규수주 15억불 확보",
+            "풍력 분야의 반전 가능성"
+        ],
+        "risk_factors": [
+            "미국의 정치적 변화에 따른 주가 변동성",
+            "풍력 발전원으로의 인정 부족"
+        ],
+        "shareholder_structure": "김성권(외 15인) 39.8%, 국민연금공단(외 1인) 7.9%"
+    }
+}
