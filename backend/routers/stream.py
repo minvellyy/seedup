@@ -98,7 +98,7 @@ async def ws_status():
             "price_store_sample": {k: v for k, v in list(store.items())[:5]},
         }
     else:
-        # KiwoomWebSocketManager (단일)
+        # KisWebSocketManager (단일)
         return {
             "initialized": True,
             "type": "single",
