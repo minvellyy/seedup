@@ -7,7 +7,6 @@ const DashboardPage = () => {
   const navigate = useNavigate()
   const { user } = useAuth()
   const [investorTrading, setInvestorTrading] = useState({})
-  const [tradingMarketTab, setTradingMarketTab] = useState('KOSPI')
   const [marketWeather, setMarketWeather] = useState(null)
   const [marketIndices, setMarketIndices] = useState([])
   const [instrumentsStocks, setInstrumentsStocks] = useState([])
@@ -24,8 +23,17 @@ const DashboardPage = () => {
   const [showChatbot, setShowChatbot] = useState(false)
   const [chatMessages, setChatMessages] = useState([])
   const [chatInput, setChatInput] = useState('')
+  const [holdingsSummary, setHoldingsSummary] = useState(null)
+  const chatMessagesEndRef = useRef(null)
 
   const API_BASE_URL = ''
+
+  // 채팅 메시지가 업데이트될 때마다 스크롤을 맨 아래로
+  useEffect(() => {
+    if (chatMessagesEndRef.current) {
+      chatMessagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [chatMessages])
 
   useEffect(() => {
     fetchDashboardData()
@@ -36,7 +44,21 @@ const DashboardPage = () => {
     // 페이지 진입 시 캐시된 추천 결과가 있으면 자동으로 불러옴 (refresh=false)
     fetchStockRecs(user.userId, false)
     fetchPortfolioRecs(user.userId, false)
+    fetchHoldingsSummary(user.userId)
   }, [user])
+
+  // 보유 자산 요약 정보 가져오기
+  const fetchHoldingsSummary = async (userId) => {
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/holdings/${userId}/summary`)
+      if (response.ok) {
+        const data = await response.json()
+        setHoldingsSummary(data)
+      }
+    } catch (err) {
+      console.warn('보유 자산 조회 실패:', err)
+    }
+  }
 
   // 실시간 주가 SSE 스트림 — instrumentsStocks + recStocks 통합 구독
   const esRef = useRef(null)
@@ -70,7 +92,7 @@ const DashboardPage = () => {
           })
         )
       } catch (err) {
-        console.warn('SSE 파싱 오류:', err)
+        console.warn('SSE 파싱 오류:', err) 
       }
     }
 
@@ -116,7 +138,7 @@ const DashboardPage = () => {
             const priceMap = Object.fromEntries(priceList.map(s => [s.stock_code, s]))
             newStocks = top3.map(item => ({
               stock_code:    item.ticker,
-              name:          item.name,
+              name:          item.name || priceMap[item.ticker]?.name || item.ticker,
               exchange:      item.market,
               current_price: priceMap[item.ticker]?.current_price ?? 0,
               change_rate:   priceMap[item.ticker]?.change_rate ?? null,
@@ -342,29 +364,81 @@ const DashboardPage = () => {
     return 'neutral'
   }
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!chatInput.trim()) return
 
-    const newMessage = {
+    const userMessage = {
       id: Date.now(),
       text: chatInput,
       sender: 'user',
       timestamp: new Date()
     }
 
-    setChatMessages([...chatMessages, newMessage])
+    setChatMessages(prev => [...prev, userMessage])
+    const currentMessage = chatInput
     setChatInput('')
 
-    // 봇 응답 시뮬레이션
-    setTimeout(() => {
-      const botResponse = {
-        id: Date.now(),
-        text: '안녕하세요! 투자 관련 질문이 있으시면 언제든지 물어보세요.',
-        sender: 'bot',
-        timestamp: new Date()
+    // 로딩 메시지 추가
+    const loadingMessage = {
+      id: Date.now() + 1,
+      text: '답변을 생성하는 중...',
+      sender: 'bot',
+      timestamp: new Date(),
+      loading: true
+    }
+    setChatMessages(prev => [...prev, loadingMessage])
+
+    try {
+      console.log('[챗봇] API 호출 시작:', currentMessage)
+      
+      // 실제 챗봇 API 호출
+      const response = await fetch(`${API_BASE_URL}/api/chat/send`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: user?.userId || 999999,
+          message: currentMessage,
+          session_id: null // 대시보드에서는 간단한 질의응답만 지원
+        })
+      })
+
+      console.log('[챗봇] API 응답 상태:', response.status)
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('[챗봇] API 오류 응답:', errorText)
+        throw new Error(`챗봇 응답 실패: ${response.status}`)
       }
-      setChatMessages(prev => [...prev, botResponse])
-    }, 500)
+
+      const data = await response.json()
+      console.log('[챗봇] API 응답 데이터:', data)
+
+      // 로딩 메시지 제거 후 실제 응답 추가
+      setChatMessages(prev => {
+        const filtered = prev.filter(msg => !msg.loading)
+        return [...filtered, {
+          id: Date.now(),
+          text: data.message || data.response || '응답을 받았지만 내용이 비어있습니다.',
+          sender: 'bot',
+          timestamp: new Date()
+        }]
+      })
+    } catch (error) {
+      console.error('[챗봇] 오류 발생:', error)
+      // 로딩 메시지 제거 후 오류 메시지 추가
+      setChatMessages(prev => {
+        const filtered = prev.filter(msg => !msg.loading)
+        return [...filtered, {
+          id: Date.now(),
+          text: `죄송합니다. 오류가 발생했습니다: ${error.message}`,
+          sender: 'bot',
+          timestamp: new Date(),
+          error: true
+        }]
+      })
+    }
   }
 
   if (loading) {
@@ -404,11 +478,103 @@ const DashboardPage = () => {
     )
   }
 
+  // 로딩 중일 때
+  if (loading) {
+    return (
+      <>
+        <style>{`
+          @keyframes spinLoader {
+            to { transform: rotate(360deg); }
+          }
+        `}</style>
+        <div style={{ 
+          minHeight: '100vh', 
+          background: 'linear-gradient(135deg, #FFF9E6 0%, #FFFBEA 50%, #FFF6DC 100%)',
+          display: 'flex', 
+          flexDirection: 'column', 
+          alignItems: 'center', 
+          justifyContent: 'center',
+          width: '100%',
+          position: 'fixed',
+          top: 0,
+          left: 0,
+          right: 0,
+          bottom: 0
+        }}>
+          <div style={{
+            width: '60px',
+            height: '60px',
+            border: '5px solid #e8f5e9',
+            borderTopColor: '#5a9068',
+            borderRadius: '50%',
+            animation: 'spinLoader 0.8s linear infinite',
+            marginBottom: '2rem'
+          }}></div>
+          <p style={{ margin: 0, fontSize: '0.95rem', color: '#5a9068', fontWeight: '500', letterSpacing: '0.3px' }}>포트폴리오를 불러오는 중...</p>
+        </div>
+      </>
+    )
+  }
+
   return (
     <div className="dashboard-page">
       <div className="dashboard-header">
-        <h1>투자 대시보드</h1>
-        <p className="dashboard-subtitle">실시간 시장 동향과 맞춤형 투자 정보를 확인하세요</p>
+        <div style={{ maxWidth: '1600px', margin: '0 auto', display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '2rem' }}>
+          <div>
+            <h1>안녕하세요, {user?.name || user?.username || '투자자'}님 </h1>
+            <p className="dashboard-subtitle">
+              {new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' })}
+            </p>
+          </div>
+          
+          {holdingsSummary && holdingsSummary.total_current_value > 0 && (
+            <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
+              {/* 총 보유 자산 */}
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.25)',
+                backdropFilter: 'blur(10px)',
+                padding: '1.2rem 1.8rem',
+                borderRadius: '16px',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                minWidth: '200px'
+              }}>
+                <div style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.9)', marginBottom: '0.4rem', fontWeight: '600' }}>
+                  총 보유 자산
+                </div>
+                <div style={{ fontSize: '2rem', fontWeight: '800', color: 'white', letterSpacing: '-0.5px' }}>
+                  ₩{holdingsSummary.total_current_value.toLocaleString()}
+                </div>
+              </div>
+              
+              {/* 전일 대비 */}
+              <div style={{
+                background: 'rgba(255, 255, 255, 0.25)',
+                backdropFilter: 'blur(10px)',
+                padding: '1.2rem 1.8rem',
+                borderRadius: '16px',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                minWidth: '180px'
+              }}>
+                <div style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.9)', marginBottom: '0.4rem', fontWeight: '600' }}>
+                  전일 대비
+                </div>
+                <div style={{ 
+                  fontSize: '1.6rem', 
+                  fontWeight: '800', 
+                  color: holdingsSummary.total_return_amount >= 0 ? '#fef3c7' : '#bfdbfe',
+                  letterSpacing: '-0.5px'
+                }}>
+                  {holdingsSummary.total_return_amount >= 0 ? '+' : ''}
+                  {holdingsSummary.total_return_amount.toLocaleString()}원
+                  <span style={{ fontSize: '1.1rem', marginLeft: '0.5rem', fontWeight: '700' }}>
+                    {holdingsSummary.total_return_rate >= 0 ? '▲' : '▼'}
+                    {Math.abs(holdingsSummary.total_return_rate).toFixed(2)}%
+                  </span>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
       </div>
 
       <div className="dashboard-content">
@@ -465,31 +631,73 @@ const DashboardPage = () => {
             </div>
           </div>
 
-          {/* 투자자별 매매동향 */}
+          {/* 투자자별 매매동향 - KOSPI */}
           <div className="trading-trends-card card">
             <div className="card-header">
               <h2>투자자별 매매동향</h2>
               <span className="trading-date">
-                {Object.values(investorTrading)[0]?.date ?? ''}
+                {investorTrading['KOSPI']?.date ?? ''}
               </span>
             </div>
-            {/* 시장 탭 */}
-            <div className="trading-market-tabs">
-              {['KOSPI', 'KOSDAQ'].map(m => (
-                <button
-                  key={m}
-                  className={`trading-tab${tradingMarketTab === m ? ' active' : ''}`}
-                  onClick={() => setTradingMarketTab(m)}
-                >{m}</button>
-              ))}
-            </div>
+            {/* KOSPI 마켓 표시 */}
+            <div className="trading-market-label">KOSPI</div>
             {/* 테이블 */}
             {(() => {
-              const d = investorTrading[tradingMarketTab]
-              // 매도/매수: 양수 값을 그대로 표시, 0이면 데이터 없음('-')
+              const d = investorTrading['KOSPI']
               const fmtSell = (v) => (v == null || Number(v) === 0) ? '-' : Number(v).toLocaleString('ko-KR')
               const fmtBuy  = fmtSell
-              // 순매수: +/- 부호 포함
+              const fmtNet = (v) => {
+                if (v == null) return '-'
+                const n = Number(v)
+                return (n > 0 ? '+' : '') + n.toLocaleString('ko-KR', { minimumFractionDigits: 0 })
+              }
+              const rows = d ? [
+                { label: '기관(십억원)',   sell: d.institution_sell, buy: d.institution_buy, net: d.institution_net },
+                { label: '외국인(십억원)', sell: d.foreign_sell,     buy: d.foreign_buy,     net: d.foreign_net },
+                { label: '개인(십억원)',   sell: d.individual_sell,  buy: d.individual_buy,  net: d.individual_net },
+              ] : []
+              return (
+                <table className="investor-table">
+                  <thead>
+                    <tr>
+                      <th>구분</th>
+                      <th>매도</th>
+                      <th>매수</th>
+                      <th>순매수</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {rows.length === 0 ? (
+                      <tr><td colSpan={4} style={{textAlign:'center',color:'#888',padding:'16px'}}>데이터 로딩 중...</td></tr>
+                    ) : rows.map((r, i) => (
+                      <tr key={i}>
+                        <td className="investor-label">{r.label}</td>
+                        <td>{fmtSell(r.sell)}</td>
+                        <td>{fmtBuy(r.buy)}</td>
+                        <td className={getChangeColor(r.net)}>{fmtNet(r.net)}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              )
+            })()}
+          </div>
+
+          {/* 투자자별 매매동향 - KOSDAQ */}
+          <div className="trading-trends-card card">
+            <div className="card-header">
+              <h2>투자자별 매매동향</h2>
+              <span className="trading-date">
+                {investorTrading['KOSDAQ']?.date ?? ''}
+              </span>
+            </div>
+            {/* KOSDAQ 마켓 표시 */}
+            <div className="trading-market-label">KOSDAQ</div>
+            {/* 테이블 */}
+            {(() => {
+              const d = investorTrading['KOSDAQ']
+              const fmtSell = (v) => (v == null || Number(v) === 0) ? '-' : Number(v).toLocaleString('ko-KR')
+              const fmtBuy  = fmtSell
               const fmtNet = (v) => {
                 if (v == null) return '-'
                 const n = Number(v)
@@ -601,6 +809,49 @@ const DashboardPage = () => {
             const BLUE_PALETTE = ['#1E3A8A','#2D5BB5','#2563EB','#3B82F6','#60A5FA','#93C5FD','#BAD4F5','#DBEAFE']
             const getColor = (idx) => BLUE_PALETTE[Math.min(idx, BLUE_PALETTE.length - 1)]
             const RISK_COLOR = { '안정형': '#27ae60', '중립형': '#f39c12', '공격형': '#e74c3c' }
+            const TIER_SUMMARY = {
+              '안정형':    '🛡️ 원금 보존을 최우선으로, 안전하게 자산을 지키는 포트폴리오입니다.',
+              '안정추구형': '🛡️ 낮은 변동성으로 꾸준히 자산을 불려가는 안정형 포트폴리오입니다.',
+              '위험중립형': '⚖️ 안정성과 수익 가능성을 균형 있게 담은 포트폴리오입니다.',
+              '적극투자형': '📈 성장 가능성 높은 종목에 집중해 높은 수익을 노리는 포트폴리오입니다.',
+              '공격투자형': '🚀 강한 상승 모멘텀 종목으로 구성해 최대 수익을 추구하는 포트폴리오입니다.',
+            }
+            const INVEST_GOAL_LABEL_D = {
+              '노후 준비': '노후 준비', '은퇴 준비': '노후 준비',
+              '주택 마련': '내 집 마련', '집 구입': '내 집 마련',
+              '자산 증식': '자산 증식', '목돈 마련': '목돈 마련',
+              '여유 자금 운용': '여유 자금 운용', '자녀 교육': '자녀 교육 자금',
+            }
+            const buildCardSummary = (pf) => {
+              const ctx = pf.survey_context || {}
+              const tierIcon = { '안정형':'🛡️','안정추구형':'🛡️','위험중립형':'⚖️','적극투자형':'📈','공격투자형':'🚀' }[pf.risk_tier] || '📊'
+              const GOAL_LBL = {
+                '노후 준비':'노후 준비','은퇴 준비':'노후 준비',
+                '주택 마련':'내 집 마련','집 구입':'내 집 마련',
+                '자산 증식':'자산 증식','목돈 마련':'목돈 마련',
+                '여유 자금 운용':'여유 자금 운용','자녀 교육':'자녀 교육 자금',
+              }
+              const goal = ctx.INVEST_GOAL ? (GOAL_LBL[ctx.INVEST_GOAL] || ctx.INVEST_GOAL) : null
+              const horizon = ctx.TARGET_HORIZON || null
+              const lumpAmt = ctx.LUMP_SUM_AMOUNT ? parseInt(ctx.LUMP_SUM_AMOUNT, 10) : null
+              const monthlyAmt = ctx.MONTHLY_AMOUNT ? parseInt(ctx.MONTHLY_AMOUNT, 10) : null
+              const contribType = ctx.CONTRIBUTION_TYPE
+              const fmtKrw = (n) => n >= 100_000_000 ? `${(n/100_000_000).toFixed(0)}억 원` : `${(n/10_000).toFixed(0)}만 원`
+              const mc = pf.monte_carlo_1y
+              const retStr = mc?.p50_pct != null ? ` · 기대수익 ${mc.p50_pct >= 0 ? '+' : ''}${mc.p50_pct.toFixed(0)}%` : ''
+              const nItems = (pf.portfolio_items || []).length
+              const condParts = []
+              if (goal && horizon) condParts.push(`${goal}(${horizon})`)
+              else if (goal) condParts.push(goal)
+              else if (horizon) condParts.push(`${horizon} 목표`)
+              if (contribType === 'LUMP_SUM' && lumpAmt) condParts.push(`일시금 ${fmtKrw(lumpAmt)}`)
+              else if (contribType === 'DCA' && monthlyAmt) condParts.push(`월 ${fmtKrw(monthlyAmt)} 적립식`)
+              else if (monthlyAmt) condParts.push(`월 ${fmtKrw(monthlyAmt)}`)
+              else if (lumpAmt) condParts.push(fmtKrw(lumpAmt))
+              const pfDesc = `${pf.risk_tier} ${nItems}개 종목${retStr}`
+              if (condParts.length > 0) return `${tierIcon} ${condParts.join(' · ')}에 최적화된 ${pfDesc}`
+              return TIER_SUMMARY[pf.risk_tier] || `${tierIcon} ${pf.risk_tier} 성향에 맞게 구성된 포트폴리오입니다.`
+            }
             const fmtPct = (v) => v == null ? '-' : `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`
             return (
               <div className="recommendations-card card">
@@ -645,17 +896,16 @@ const DashboardPage = () => {
                           onClick={() => navigate('/portfolio/recommendation', { state: { portfolioData: pf } })}
                         >
                           <div className="recommendation-header">
-                            <h3 style={{ color: accentColor }}>
-                              포트폴리오 {pfIdx + 1} :&nbsp;
-                              <span style={{ color: '#2c3e50', fontWeight: 600 }}>{riskLabel}</span>
+                            <h3 style={{ color: '#1a202c', fontSize: '1.05rem', fontWeight: 600 }}>
+                              <span style={{ color: accentColor, fontSize: '0.9rem' }}>포트폴리오 {pfIdx + 1}</span> : {riskLabel}
                             </h3>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                               {perf && (
                                 <span style={{
-                                  fontSize: 11, fontWeight: 700,
+                                  fontSize: '0.7rem', fontWeight: 700,
                                   color: perf.ann_return_pct >= 0 ? '#e74c3c' : '#3B82F6',
                                   background: perf.ann_return_pct >= 0 ? '#fff1eb' : '#eff6ff',
-                                  padding: '2px 8px', borderRadius: 10,
+                                  padding: '3px 8px', borderRadius: 10,
                                 }}>
                                   3Y {fmtPct(perf.ann_return_pct)}
                                 </span>
@@ -663,11 +913,11 @@ const DashboardPage = () => {
                               <span style={{ fontSize: 14, color: '#bbb' }}>›</span>
                             </div>
                           </div>
-                          <p className="recommendation-reason" style={{ color: '#888', fontSize: 12, marginBottom: 8 }}>
-                            ↳ {pf.portfolio_summary || (pf.overall_summary ? pf.overall_summary.split('. ')[0] : '추천 근거 없음')}
+                          <p className="recommendation-reason" style={{ color: '#64748b', fontSize: '0.85rem', marginBottom: 10, lineHeight: 1.5 }}>
+                            {buildCardSummary(pf)}
                           </p>
                           {/* 비중 막대 */}
-                          <div style={{ display: 'flex', height: 6, borderRadius: 4, overflow: 'hidden', marginBottom: 8 }}>
+                          <div style={{ display: 'flex', height: 8, borderRadius: 6, overflow: 'hidden', marginBottom: 10 }}>
                             {items.map((item, idx) => (
                               <div key={item.ticker}
                                 title={`${item.name} ${item.weight_pct.toFixed(1)}%`}
@@ -679,18 +929,22 @@ const DashboardPage = () => {
                             )}
                           </div>
                           {/* 상위 종목 태그 */}
-                          <div style={{ display: 'flex', gap: 5, flexWrap: 'wrap' }}>
-                            {items.slice(0, 3).map((item) => (
+                          <div style={{ display: 'flex', gap: 6, flexWrap: 'wrap' }}>
+                            {items.slice(0, 5).map((item, idx) => (
                               <span key={item.ticker} style={{
-                                fontSize: 11, padding: '2px 7px', borderRadius: 10,
-                                background: '#f0f4ff', color: '#2563EB', fontWeight: 600,
+                                fontSize: '0.75rem',
+                                padding: '4px 10px',
+                                borderRadius: '12px',
+                                background: '#2563EB',
+                                color: 'white',
+                                fontWeight: '600',
+                                boxShadow: '0 2px 4px rgba(37, 99, 235, 0.2)',
                               }}>
                                 {item.name} {item.weight_pct.toFixed(0)}%
-                                {item.ai_fin_grade && <span style={{ color: '#888', fontWeight: 400, marginLeft: 3 }}>({item.ai_fin_grade})</span>}
                               </span>
                             ))}
-                            {items.length > 3 && (
-                              <span style={{ fontSize: 11, color: '#999' }}>+{items.length - 3}개</span>
+                            {items.length > 5 && (
+                              <span style={{ fontSize: 11, color: '#999', alignSelf: 'center' }}>+{items.length - 5}개</span>
                             )}
                           </div>
                         </div>
@@ -712,7 +966,66 @@ const DashboardPage = () => {
         onClick={() => setShowChatbot(!showChatbot)}
         aria-label="챗봇 열기"
       >
-        💬
+        <svg width="46" height="46" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+          {/* 줄기 */}
+          <path 
+            d="M 50 75 Q 48 65, 47 55 Q 46 45, 48 38" 
+            fill="none"
+            stroke="#ffffff" 
+            strokeWidth="6"
+            strokeLinecap="round"
+          />
+          
+          {/* 왼쪽 잎 - 더 둥글고 통통한 형태 */}
+          <path 
+            d="M 48 38 Q 35 35, 25 28 Q 18 23, 16 18 Q 16 15, 19 14 Q 23 14, 28 18 Q 38 25, 48 38" 
+            fill="#ffffff"
+            fillOpacity="0.95"
+            stroke="#ffffff" 
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          {/* 왼쪽 잎 중심맥 */}
+          <path 
+            d="M 48 38 Q 38 32, 30 26" 
+            fill="none"
+            stroke="#5a9068" 
+            strokeWidth="2"
+            strokeLinecap="round"
+            opacity="0.6"
+          />
+          
+          {/* 오른쪽 잎 - 더 둥글고 통통한 형태 */}
+          <path 
+            d="M 48 38 Q 61 35, 71 28 Q 78 23, 80 18 Q 80 15, 77 14 Q 73 14, 68 18 Q 58 25, 48 38" 
+            fill="#ffffff"
+            fillOpacity="0.95"
+            stroke="#ffffff" 
+            strokeWidth="3"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          />
+          {/* 오른쪽 잎 중심맥 */}
+          <path 
+            d="M 48 38 Q 58 32, 66 26" 
+            fill="none"
+            stroke="#5a9068" 
+            strokeWidth="2"
+            strokeLinecap="round"
+            opacity="0.6"
+          />
+          
+          {/* 줄기 하단 (땅과의 연결) */}
+          <ellipse 
+            cx="50" 
+            cy="78" 
+            rx="8" 
+            ry="3.5" 
+            fill="#ffffff"
+            opacity="0.85"
+          />
+        </svg>
       </button>
 
       {/* 챗봇 모달 */}
@@ -730,11 +1043,14 @@ const DashboardPage = () => {
                 <p>안녕하세요! 투자 관련 질문이 있으시면 언제든지 물어보세요.</p>
               </div>
             ) : (
-              chatMessages.map((msg) => (
-                <div key={msg.id} className={`chat-message ${msg.sender}`}>
-                  <p>{msg.text}</p>
-                </div>
-              ))
+              <>
+                {chatMessages.map((msg) => (
+                  <div key={msg.id} className={`chat-message ${msg.sender} ${msg.loading ? 'loading' : ''} ${msg.error ? 'error' : ''}`}>
+                    <p>{msg.text}</p>
+                  </div>
+                ))}
+                <div ref={chatMessagesEndRef} />
+              </>
             )}
           </div>
           <div className="chatbot-input">

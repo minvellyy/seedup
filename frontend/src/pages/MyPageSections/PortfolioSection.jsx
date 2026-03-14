@@ -1,20 +1,5 @@
-import React, { useState } from 'react'
-
-// 통합 포트폴리오 Mock data
-const mockPortfolio = {
-  totalAmount: 27900000,
-  items: [
-    { name: '삼성전자', value: 20, amount: 5580000 },
-    { name: 'SK하이닉스', value: 18, amount: 5022000 },
-    { name: '현대차', value: 12, amount: 3348000 },
-    { name: 'LG에너지솔루션', value: 11, amount: 3069000 },
-    { name: 'POSCO홀딩스', value: 10, amount: 2790000 },
-    { name: '삼성바이오로직스', value: 9, amount: 2511000 },
-    { name: 'KB금융', value: 8, amount: 2232000 },
-    { name: '카카오', value: 7, amount: 1953000 },
-    { name: '네이버', value: 5, amount: 1395000 },
-  ],
-}
+import React, { useState, useEffect } from 'react'
+import { useAuth } from '../../contexts/AuthContext'
 
 // 인터랙티브 도넛 차트 컴포넌트
 const DonutChart = ({ items, size = 400, selectedIndex, hoveredIndex, onSelectItem }) => {
@@ -102,8 +87,64 @@ const DonutChart = ({ items, size = 400, selectedIndex, hoveredIndex, onSelectIt
 }
 
 const PortfolioSection = () => {
+  const { user } = useAuth()
+  
   const [selectedIndex, setSelectedIndex] = useState(null)
   const [hoveredIndex, setHoveredIndex] = useState(null)
+  const [portfolio, setPortfolio] = useState({ totalAmount: 0, items: [] })
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  // 보유 주식 데이터 가져오기
+  useEffect(() => {
+    if (!user?.userId) {
+      setLoading(false)
+      setPortfolio({ totalAmount: 0, items: [] })
+      return
+    }
+
+    const fetchPortfolio = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+
+        const response = await fetch(`http://localhost:8000/api/holdings/${user.userId}/summary`)
+        if (!response.ok) {
+          throw new Error('포트폴리오 조회에 실패했습니다')
+        }
+
+        const data = await response.json()
+
+        // 데이터 변환: holdings를 차트용 items로 변환
+        const items = data.holdings.map(holding => {
+          const value = data.total_current_value > 0 
+            ? (holding.current_value / data.total_current_value * 100) 
+            : 0
+          return {
+            name: holding.stock_name,
+            code: holding.stock_code,
+            value: parseFloat(value.toFixed(1)),
+            amount: holding.current_value || (holding.purchase_price * holding.shares),
+            shares: holding.shares,
+            returnRate: holding.return_rate || 0
+          }
+        })
+
+        setPortfolio({
+          totalAmount: data.total_current_value,
+          items: items
+        })
+      } catch (err) {
+        console.error('포트폴리오 조회 실패:', err)
+        setError(err.message)
+        setPortfolio({ totalAmount: 0, items: [] })
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPortfolio()
+  }, [user])
 
   const colors = [
     '#4f46e5', '#7c3aed', '#db2777', '#ea580c', '#65a30d', '#0891b2', '#8b5cf6', '#ec4899', '#14b8a6'
@@ -125,13 +166,38 @@ const PortfolioSection = () => {
     setSelectedIndex(selectedIndex === index ? null : index)
   }
 
-  const selectedItem = selectedIndex !== null ? mockPortfolio.items[selectedIndex] : null
+  const selectedItem = selectedIndex !== null ? portfolio.items[selectedIndex] : null
+
+  // 로딩 상태
+  if (loading) {
+    return (
+      <div className="section-content">
+        <h2 className="section-title">포트폴리오 관리</h2>
+        <div className="loading-state">
+          <div className="spinner"></div>
+          <p>포트폴리오를 불러오는 중...</p>
+        </div>
+      </div>
+    )
+  }
+
+  // 에러 상태
+  if (error) {
+    return (
+      <div className="section-content">
+        <h2 className="section-title">포트폴리오 관리</h2>
+        <div className="error-state">
+          <p>⚠️ {error}</p>
+        </div>
+      </div>
+    )
+  }
 
   return (
     <div className="section-content">
       <h2 className="section-title">포트폴리오 관리</h2>
       
-      {mockPortfolio.items.length === 0 ? (
+      {portfolio.items.length === 0 ? (
         <div className="empty-state-card">
           <p>등록된 포트폴리오가 없습니다</p>
           <p className="empty-hint">보유 주식 내역을 먼저 등록해주세요</p>
@@ -141,7 +207,7 @@ const PortfolioSection = () => {
           <div className="portfolio-header">
             <h3>통합 포트폴리오</h3>
             <p className="portfolio-total">
-              총 자산 <strong>{formatNumber(mockPortfolio.totalAmount)}원</strong>
+              총 자산 <strong>{formatNumber(portfolio.totalAmount)}원</strong>
             </p>
           </div>
 
@@ -169,7 +235,7 @@ const PortfolioSection = () => {
             {/* 차트 영역 */}
             <div className="portfolio-chart-section">
               <DonutChart 
-                items={mockPortfolio.items} 
+                items={portfolio.items} 
                 size={400}
                 selectedIndex={selectedIndex}
                 hoveredIndex={hoveredIndex}
@@ -181,7 +247,7 @@ const PortfolioSection = () => {
             <div className="portfolio-legend-section">
               <h4>보유 종목</h4>
               <div className="portfolio-legend">
-                {mockPortfolio.items.map((item, index) => {
+                {portfolio.items.map((item, index) => {
                   const isActive = index === selectedIndex || index === hoveredIndex
                   const hasSelection = selectedIndex !== null
                   const opacity = hasSelection && !isActive ? 0.5 : 1

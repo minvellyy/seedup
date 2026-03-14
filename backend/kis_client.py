@@ -21,13 +21,22 @@ from dotenv import load_dotenv
 # .env 로드 (backend/ 기준)
 load_dotenv(dotenv_path=Path(__file__).parent / ".env")
 
-BASE_URL = "https://openapi.koreainvestment.com:9443"
+# KIS API 서버 URL 설정 (모의투자 / 실거래 구분)
+IS_MOCK = os.getenv("KIS_MOCK", "false").lower() == "true"
+if IS_MOCK:
+    BASE_URL = "https://openapivts.koreainvestment.com:29443"  # 모의투자
+    print("[KIS] 모의투자 모드로 설정됨")
+else:
+    BASE_URL = "https://openapi.koreainvestment.com:9443"      # 실거래
+    print("[KIS] 실거래 모드로 설정됨")
 
 # 토큰 캐시 파일 경로 (project root 는 backend/ )
 _TOKEN_FILE = Path(__file__).parent / ".kis_token_cache"
 
 # ── 토큰 캐시 (메모리 + 파일 이중 저장) ──────────────────────────────────────
+import threading as _threading
 _token_cache: Dict = {"token": None, "expires_at": 0.0}
+_token_lock = _threading.Lock()  # 다중 스레드 동시 갱신 방지
 
 
 def _load_token_from_file() -> bool:
@@ -56,35 +65,74 @@ def _save_token_to_file(token: str, expires_at: float) -> None:
         pass
 
 
-def _get_token() -> str:
+def _get_token(force_refresh: bool = False) -> str:
     """access_token 발급 (1일 1회 제한 → 파일 캐시 우선 사용)."""
     now = time.time()
-    # 메모리 캐시 확인
-    if _token_cache["token"] and _token_cache["expires_at"] > now + 60:
-        return _token_cache["token"]
-    # 파일 캐시 확인
-    if _load_token_from_file():
-        return _token_cache["token"]
+    if not force_refresh:
+        # 메모리 캐시 확인 (lock 없이 빠른 읽기)
+        if _token_cache["token"] and _token_cache["expires_at"] > now + 60:
+            return _token_cache["token"]
+        # 파일 캐시 확인
+        if _load_token_from_file():
+            return _token_cache["token"]
 
-    # 신규 발급
-    resp = requests.post(
-        f"{BASE_URL}/oauth2/tokenP",
-        json={
-            "grant_type": "client_credentials",
-            "appkey":     os.getenv("APP_KEY", "").strip(),
-            "appsecret":  os.getenv("APP_SECRET", "").strip(),
-        },
-        timeout=10,
-    )
-    resp.raise_for_status()
-    data = resp.json()
+    with _token_lock:
+        # lock 획득 후 재확인 — 다른 스레드가 갱신했을 수 있음
+        now = time.time()
+        if not force_refresh and _token_cache["token"] and _token_cache["expires_at"] > now + 60:
+            return _token_cache["token"]
 
-    token      = data["access_token"]
-    expires_at = now + int(data.get("expires_in", 86400))
-    _token_cache["token"]      = token
-    _token_cache["expires_at"] = expires_at
-    _save_token_to_file(token, expires_at)
-    return token
+        # 강제갱신이거나 캐시 없음 — 신규 발급
+        if force_refresh:
+            _token_cache["token"] = None
+            _token_cache["expires_at"] = 0.0
+            if _TOKEN_FILE.exists():
+                try:
+                    _TOKEN_FILE.unlink()
+                except Exception:
+                    pass
+
+        resp = requests.post(
+            f"{BASE_URL}/oauth2/tokenP",
+            json={
+                "grant_type": "client_credentials",
+                "appkey":     os.getenv("APP_KEY", "").strip(),
+                "appsecret":  os.getenv("APP_SECRET", "").strip(),
+            },
+            timeout=10,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+
+        token      = data["access_token"]
+        expires_at = now + int(data.get("expires_in", 86400))
+        _token_cache["token"]      = token
+        _token_cache["expires_at"] = expires_at
+        _save_token_to_file(token, expires_at)
+        return token
+
+
+def _kis_get(url: str, tr_id: str, params: Dict, retry: bool = True):
+    """KIS GET 요청 헬퍼. 500(토큰 만료) 시 토큰 갱신 후 1회 재시도.
+    
+    재시도 후에도 500 오류가 발생하면 HTTPError를 발생시킵니다.
+    """
+    import logging as _logging
+    _logger = _logging.getLogger("kis_client")
+    
+    try:
+        r = requests.get(url, headers=_headers(tr_id), params=params, timeout=10)
+        if r.status_code == 500 and retry:
+            _logger.warning("KIS 500 수신 — 토큰 갱신 후 1회 재시도 (%s)", url)
+            _get_token(force_refresh=True)
+            r = requests.get(url, headers=_headers(tr_id), params=params, timeout=10)
+            if r.status_code == 500:
+                _logger.error("KIS 500 재시도 후에도 실패 — API 호출 중단 (%s)", url)
+        r.raise_for_status()
+        return r
+    except Exception as e:
+        _logger.debug("KIS API 요청 실패 [%s]: %s", url, e)
+        raise
 
 
 def _headers(tr_id: str) -> Dict[str, str]:
@@ -111,16 +159,14 @@ def get_current_price(stock_code: str) -> Dict:
             "price_date":    str,     # 기준일 'YYYY-MM-DD'
         }
     """
-    r = requests.get(
+    r = _kis_get(
         f"{BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-price",
-        headers=_headers("FHKST01010100"),
-        params={
+        "FHKST01010100",
+        {
             "FID_COND_MRKT_DIV_CODE": "J",
             "FID_INPUT_ISCD":         stock_code,
         },
-        timeout=10,
     )
-    r.raise_for_status()
     data = r.json()
 
     if data.get("rt_cd") != "0":
@@ -150,20 +196,18 @@ def _get_daily_chunk(
     end_yyyymmdd: str,
 ) -> List[Dict]:
     """특정 기간 일별 종가 조회 (최대 ~100 거래일)."""
-    r = requests.get(
+    r = _kis_get(
         f"{BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-daily-itemchartprice",
-        headers=_headers("FHKST03010100"),
-        params={
+        "FHKST03010100",
+        {
             "FID_COND_MRKT_DIV_CODE": "J",
             "FID_INPUT_ISCD":         stock_code,
             "FID_INPUT_DATE_1":       start_yyyymmdd,
             "FID_INPUT_DATE_2":       end_yyyymmdd,
             "FID_PERIOD_DIV_CODE":    "D",
-            "FID_ORG_ADJ_PRC":        "0",   # 수정주가 미반영
+            "FID_ORG_ADJ_PRC":        "0",
         },
-        timeout=15,
     )
-    r.raise_for_status()
     data = r.json()
 
     if data.get("rt_cd") != "0":
@@ -176,8 +220,14 @@ def _get_daily_chunk(
         if not d or not c:
             continue
         fmt_date = f"{d[:4]}-{d[4:6]}-{d[6:]}" if len(d) == 8 else d
+        o = row.get("stck_oprc", "")
+        h = row.get("stck_hgpr", "")
+        l = row.get("stck_lwpr", "")
         result.append({
             "date":   fmt_date,
+            "open":   float(o) if o else None,
+            "high":   float(h) if h else None,
+            "low":    float(l) if l else None,
             "close":  float(c),
             "volume": int(row.get("acml_vol", 0) or 0) or None,
         })
@@ -185,10 +235,10 @@ def _get_daily_chunk(
 
 
 def get_daily_prices_1y(stock_code: str) -> List[Dict]:
-    """최근 1년 일별 종가 리스트 (오름차순).
+    """최근 1년 일별 OHLCV 리스트 (오름차순).
 
     KIS API 1회 호출 최대 100건 한계 → 3회로 나눠 1년 커버.
-    반환: [{"date": "YYYY-MM-DD", "close": float, "volume": int|None}, ...]
+    반환: [{"date": "YYYY-MM-DD", "open": float|None, "high": float|None, "low": float|None, "close": float, "volume": int|None}, ...]
     """
     today   = datetime.today()
     cutoff  = today - timedelta(days=365)
@@ -246,16 +296,14 @@ def get_index_price(market: str) -> Dict:
     if not iscd:
         raise ValueError(f"지원하지 않는 시장: {market}")
 
-    r = requests.get(
+    r = _kis_get(
         f"{BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-index-price",
-        headers=_headers("FHPUP02100000"),
-        params={
+        "FHPUP02100000",
+        {
             "FID_COND_MRKT_DIV_CODE": "U",
             "FID_INPUT_ISCD":         iscd,
         },
-        timeout=10,
     )
-    r.raise_for_status()
     data = r.json()
 
     if data.get("rt_cd") != "0":
@@ -296,16 +344,14 @@ def get_investor_trading(market: str = "KOSPI") -> Dict:
     """
     iscd_2 = "S001" if market.upper() == "KOSPI" else "Q001"
 
-    r = requests.get(
+    r = _kis_get(
         f"{BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-investor-time-by-market",
-        headers=_headers("FHPTJ04030000"),
-        params={
+        "FHPTJ04030000",
+        {
             "FID_INPUT_ISCD":   "999",
             "FID_INPUT_ISCD_2": iscd_2,
         },
-        timeout=10,
     )
-    r.raise_for_status()
     data = r.json()
 
     if data.get("rt_cd") != "0":
@@ -357,10 +403,10 @@ def get_investor_trading_daily(market: str = "KOSPI") -> Dict:
     iscd  = "1001" if is_kosdaq else "0001"
     iscd1 = "KSQ"  if is_kosdaq else "KSP"
 
-    r = requests.get(
+    r = _kis_get(
         f"{BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-investor-daily-by-market",
-        headers=_headers("FHPTJ04040000"),
-        params={
+        "FHPTJ04040000",
+        {
             "FID_COND_MRKT_DIV_CODE": "U",
             "FID_INPUT_ISCD":         iscd,
             "FID_INPUT_DATE_1":       today_ymd,
@@ -368,9 +414,7 @@ def get_investor_trading_daily(market: str = "KOSPI") -> Dict:
             "FID_INPUT_DATE_2":       today_ymd,
             "FID_INPUT_ISCD_2":       iscd,
         },
-        timeout=10,
     )
-    r.raise_for_status()
     data = r.json()
 
     if data.get("rt_cd") != "0":
@@ -445,10 +489,10 @@ def get_investor_trading_history(market: str = "KOSPI", days: int = 20) -> list:
     iscd  = "1001" if is_kosdaq else "0001"
     iscd1 = "KSQ"  if is_kosdaq else "KSP"
 
-    r = requests.get(
+    r = _kis_get(
         f"{BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-investor-daily-by-market",
-        headers=_headers("FHPTJ04040000"),
-        params={
+        "FHPTJ04040000",
+        {
             "FID_COND_MRKT_DIV_CODE": "U",
             "FID_INPUT_ISCD":         iscd,
             "FID_INPUT_DATE_1":       from_dt,
@@ -456,9 +500,7 @@ def get_investor_trading_history(market: str = "KOSPI", days: int = 20) -> list:
             "FID_INPUT_DATE_2":       today_ymd,
             "FID_INPUT_ISCD_2":       iscd,
         },
-        timeout=15,
     )
-    r.raise_for_status()
     data = r.json()
 
     if data.get("rt_cd") != "0":
@@ -492,4 +534,44 @@ def get_investor_trading_history(market: str = "KOSPI", days: int = 20) -> list:
         })
 
     return results
+
+
+# ── KRX ETF 목록 조회 (pykrx) ───────────────────────────────────────────────
+
+def get_etf_list_from_krx(date_str: str = None) -> List[Dict]:
+    """네이버 금융 ETF API로 상장 ETF 전체 목록 조회.
+
+    Returns:
+        [{"stock_code": str, "name": str, "exchange": str}, ...]
+    """
+    import logging as _log
+    _logger = _log.getLogger("kis_client")
+
+    try:
+        resp = requests.get(
+            "https://finance.naver.com/api/sise/etfItemList.nhn",
+            headers={"User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36"},
+            timeout=15,
+        )
+        resp.raise_for_status()
+        data = resp.json()
+
+        if data.get("resultCode") != "success":
+            _logger.warning("네이버 ETF 목록 오류: %s", data.get("resultCode"))
+            return []
+
+        result: List[Dict] = []
+        for item in data.get("result", {}).get("etfItemList", []):
+            code = str(item.get("itemcode", "")).strip()
+            if not code or not code.isdigit():
+                continue
+            name = str(item.get("itemname", "")).strip()
+            result.append({"stock_code": code, "name": name, "exchange": "KOSPI"})
+
+        _logger.debug("네이버 ETF 목록 조회 완료: %d개", len(result))
+        return result
+
+    except Exception as e:
+        _logger.warning("네이버 ETF 목록 조회 실패: %s", e)
+        return []
 

@@ -1,0 +1,1100 @@
+/* CustomerCenterPage.css - 세련된 고객센터 디자인 */
+
+.customer-center {
+  min-height: calc(100vh - var(--header-h, 64px));
+  background: linear-gradient(135deg, #FFF9E6 0%, #FFFBEA 50%, #FFF6DC 100%);
+  padding: 1.5rem 0;
+}
+
+.cs-container {
+  max-width: 1400px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: 240px 1fr;
+  gap: 1.5rem;
+}
+
+/* ===================================
+   사이드바 스타일
+   =================================== */
+
+.cs-sidebar {
+  background: linear-gradient(180deg, #1a1a1a 0%, #0a0a0a 100%);
+  border-radius: 12px;
+  padding: 1.5rem 1rem;
+  height: fit-content;
+  max-height: calc(100vh - var(--header-h, 64px) - 3rem);
+  position: sticky;
+  top: calc(var(--header-h, 64px) + 1.5rem);
+  display: flex;
+  flex-direction: column;
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.12),
+    0 4px 12px rgba(0, 0, 0, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.cs-sidebar-title {
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: #ffe34d;
+  margin-bottom: 1rem;
+  padding: 0 0.5rem;
+  letter-spacing: -0.3px;
+  text-shadow: 0 2px 8px rgba(255, 227, 77, 0.25);
+}
+
+.cs-info-box {
+  background: rgba(255, 227, 77, 0.1);
+  border: 1px solid rgba(255, 227, 77, 0.2);
+  border-radius: 8px;
+  padding: 0.75rem;
+  margin-bottom: 1.25rem;
+  display: flex;
+  gap: 0.625rem;
+  align-items: flex-start;
+}
+
+.cs-info-box svg {
+  color: #ffe34d;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.cs-info-text {
+  font-size: 0.8125rem;
+  line-height: 1.4;
+  color: rgba(255, 255, 255, 0.8);
+  margin: 0;
+}
+
+.cs-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.375rem;
+}
+
+.cs-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.75rem 1rem;
+  background: transparent;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.9375rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+  text-align: left;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.cs-menu-item::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 3px;
+  background: #ffe34d;
+  transform: scaleY(0);
+  transition: transform 0.3s ease;
+}
+
+.cs-menu-item:hover {
+  background: rgba(255, 255, 255, 0.08);
+  color: rgba(255, 255, 255, 0.95);
+  transform: translateX(4px);
+}
+
+.cs-menu-item.active {
+  background: linear-gradient(90deg, rgba(255, 227, 77, 0.15) 0%, rgba(255, 227, 77, 0.05) 100%);
+  color: #ffffff;
+  font-weight: 600;
+}
+
+.cs-menu-item.active::before {
+  transform: scaleY(1);
+}
+
+.cs-menu-item .menu-icon {
+  font-size: 1.125rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  transition: transform 0.25s ease;
+}
+
+.cs-menu-item:hover .menu-icon {
+  transform: scale(1.08);
+}
+
+.cs-menu-item .menu-label {
+  flex: 1;
+}
+
+.active-indicator {
+  width: 5px;
+  height: 5px;
+  background: #ffe34d;
+  border-radius: 50%;
+  box-shadow: 0 0 8px rgba(255, 227, 77, 0.5);
+}
+
+/* ===================================
+   메인 콘텐츠 영역
+   =================================== */
+
+.cs-main-content {
+  min-height: 600px;
+}
+
+.cs-content-section {
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(20px);
+  border-radius: 16px;
+  padding: 1.75rem;
+  box-shadow: 
+    0 8px 24px rgba(0, 0, 0, 0.06),
+    0 4px 12px rgba(0, 0, 0, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+.cs-section-header {
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+}
+
+.cs-section-title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 0.375rem 0;
+  letter-spacing: -0.3px;
+}
+
+.cs-section-description {
+  font-size: 0.9375rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.btn-new-inquiry {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.625rem 1.25rem;
+  background: linear-gradient(135deg, #ffe34d 0%, #f4d400 100%);
+  color: #1a1a1a;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  box-shadow: 0 3px 10px rgba(255, 227, 77, 0.25);
+}
+
+.btn-new-inquiry:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(255, 227, 77, 0.4);
+}
+
+.btn-new-inquiry:active {
+  transform: translateY(0);
+}
+
+.btn-new-inquiry svg {
+  flex-shrink: 0;
+}
+
+/* ===================================
+   FAQ 섹션
+   =================================== */
+
+.faq-search-bar {
+  position: relative;
+  margin-bottom: 1.5rem;
+}
+
+.search-icon {
+  position: absolute;
+  left: 1rem;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #9ca3af;
+  pointer-events: none;
+}
+
+.faq-search-input {
+  width: 100%;
+  padding: 0.75rem 0.75rem 0.75rem 2.75rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  background: #ffffff;
+  transition: all 0.25s ease;
+  outline: none;
+}
+
+.faq-search-input:focus {
+  border-color: #ffe34d;
+  box-shadow: 0 0 0 4px rgba(255, 227, 77, 0.1);
+}
+
+.faq-search-input::placeholder {
+  color: #9ca3af;
+}
+
+.faq-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.faq-item {
+  background: #ffffff;
+  border: 1px solid #f3f4f6;
+  border-radius: 12px;
+  overflow: hidden;
+  transition: all 0.25s ease;
+}
+
+.faq-item:hover {
+  border-color: #e5e7eb;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.faq-item.open {
+  border-color: #ffe34d;
+  box-shadow: 0 4px 16px rgba(255, 227, 77, 0.12);
+}
+
+.faq-question {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 0.875rem;
+  padding: 1rem 1.25rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  text-align: left;
+  transition: background 0.2s ease;
+}
+
+.faq-question:hover {
+  background: #fafafa;
+}
+
+.faq-q-label {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #ffe34d 0%, #f4d400 100%);
+  color: #1a1a1a;
+  font-weight: 700;
+  font-size: 0.8125rem;
+  border-radius: 7px;
+  box-shadow: 0 2px 6px rgba(255, 227, 77, 0.25);
+}
+
+.faq-q-text {
+  flex: 1;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  line-height: 1.4;
+}
+
+.faq-toggle-icon {
+  flex-shrink: 0;
+  color: #6b7280;
+  transition: transform 0.3s ease;
+}
+
+.faq-item.open .faq-toggle-icon {
+  transform: rotate(180deg);
+  color: #1a1a1a;
+}
+
+.faq-answer {
+  display: flex;
+  gap: 0.875rem;
+  padding: 0 1.25rem 1rem 1.25rem;
+  background: #fafafa;
+  animation: slideDown 0.25s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.faq-a-label {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #1a1a1a;
+  color: #ffe34d;
+  font-weight: 700;
+  font-size: 0.8125rem;
+  border-radius: 7px;
+}
+
+.faq-a-text {
+  flex: 1;
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: #4b5563;
+  margin: 0;
+  padding-top: 0.125rem;
+}
+
+/* ===================================
+   1:1 문의 섹션
+   =================================== */
+
+.inquiry-container {
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 1.25rem;
+}
+
+.inquiry-detail-card,
+.inquiry-history-card {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 1.5rem;
+  border: 1px solid #f3f4f6;
+}
+
+.inquiry-detail-card {
+  min-height: 500px;
+}
+
+.inquiry-detail-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1.25rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.inquiry-detail-title {
+  font-size: 1.125rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.status-badge {
+  padding: 0.375rem 0.875rem;
+  border-radius: 6px;
+  font-size: 0.8125rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.status-pending {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.status-completed {
+  background: #d1fae5;
+  color: #065f46;
+}
+
+.inquiry-info-section {
+  margin-bottom: 1.5rem;
+}
+
+.inquiry-subject {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 0.75rem 0;
+  line-height: 1.4;
+}
+
+.inquiry-meta {
+  display: flex;
+  gap: 1.5rem;
+}
+
+.inquiry-meta-item {
+  display: flex;
+  gap: 0.5rem;
+  font-size: 0.875rem;
+}
+
+.meta-label {
+  color: #6b7280;
+  font-weight: 500;
+}
+
+.meta-value {
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+.inquiry-content-section,
+.inquiry-answer-section {
+  margin-bottom: 1.5rem;
+}
+
+.inquiry-answer-section {
+  background: #fafafa;
+  padding: 1.25rem;
+  border-radius: 12px;
+  margin-bottom: 0;
+}
+
+.content-section-label {
+  font-size: 0.8125rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 0.625rem 0;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.content-text {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: #4b5563;
+  margin: 0;
+}
+
+.answer-text {
+  font-size: 0.9375rem;
+  line-height: 1.6;
+  color: #1a1a1a;
+  margin: 0;
+  background: white;
+  padding: 1rem;
+  border-radius: 10px;
+  border: 1px solid #e5e7eb;
+}
+
+.answer-pending {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 3rem 2rem;
+  text-align: center;
+}
+
+.answer-pending svg {
+  margin-bottom: 1rem;
+}
+
+.pending-message {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 0.5rem 0;
+}
+
+.pending-description {
+  font-size: 0.9375rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* ===================================
+   문의 내역 리스트
+   =================================== */
+
+.inquiry-history-card {
+  max-height: 600px;
+  display: flex;
+  flex-direction: column;
+}
+
+.inquiry-history-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 0.875rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.inquiry-history-title {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.inquiry-count {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: #6b7280;
+  background: #f3f4f6;
+  padding: 0.25rem 0.625rem;
+  border-radius: 5px;
+}
+
+.inquiry-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+  overflow-y: auto;
+  max-height: 500px;
+  padding-right: 0.375rem;
+}
+
+.inquiry-list::-webkit-scrollbar {
+  width: 6px;
+}
+
+.inquiry-list::-webkit-scrollbar-track {
+  background: #f3f4f6;
+  border-radius: 3px;
+}
+
+.inquiry-list::-webkit-scrollbar-thumb {
+  background: #d1d5db;
+  border-radius: 3px;
+}
+
+.inquiry-list::-webkit-scrollbar-thumb:hover {
+  background: #9ca3af;
+}
+
+.inquiry-item {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 1rem;
+  background: #fafafa;
+  border: 1px solid transparent;
+  border-radius: 10px;
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.2s ease;
+}
+
+.inquiry-item:hover {
+  background: #f3f4f6;
+  border-color: #e5e7eb;
+}
+
+.inquiry-item.active {
+  background: #fffbea;
+  border-color: #ffe34d;
+  box-shadow: 0 2px 8px rgba(255, 227, 77, 0.15);
+}
+
+.inquiry-item-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.inquiry-item-date {
+  font-size: 0.8125rem;
+  color: #6b7280;
+}
+
+.inquiry-item-title {
+  font-size: 0.9375rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.4;
+}
+
+.inquiry-item-type {
+  font-size: 0.8125rem;
+  color: #6b7280;
+  background: #ffffff;
+  padding: 0.25rem 0.625rem;
+  border-radius: 6px;
+  width: fit-content;
+}
+
+/* ===================================
+   Empty State
+   =================================== */
+
+.empty-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.empty-state svg {
+  margin-bottom: 1.5rem;
+}
+
+.empty-message {
+  font-size: 1.125rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0 0 0.5rem 0;
+}
+
+.empty-description {
+  font-size: 0.9375rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+/* ===================================
+   로딩 & 에러 상태
+   =================================== */
+
+.loading-state,
+.error-state {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 4rem 2rem;
+  text-align: center;
+}
+
+.spinner {
+  width: 48px;
+  height: 48px;
+  border: 4px solid #f3f4f6;
+  border-top-color: #ffe34d;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin-bottom: 1.5rem;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.loading-state p {
+  font-size: 1rem;
+  color: #6b7280;
+  margin: 0;
+}
+
+.error-state {
+  background: #fef2f2;
+  border: 2px solid #fecaca;
+  border-radius: 16px;
+  padding: 3rem 2rem;
+}
+
+.error-message {
+  font-size: 1rem;
+  color: #dc2626;
+  margin: 0;
+}
+
+/* ===================================
+   문의 작성 모달
+   =================================== */
+
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 1.5rem;
+  animation: fadeIn 0.2s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.modal-content {
+  background: #ffffff;
+  border-radius: 16px;
+  max-width: 560px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.25);
+  animation: slideUp 0.25s ease;
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.modal-title {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.modal-close {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 32px;
+  height: 32px;
+  background: #f3f4f6;
+  border: none;
+  border-radius: 7px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  color: #6b7280;
+}
+
+.modal-close:hover {
+  background: #e5e7eb;
+  color: #1a1a1a;
+}
+
+.inquiry-form {
+  padding: 1.5rem;
+}
+
+.form-group {
+  margin-bottom: 1.25rem;
+}
+
+.form-label {
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 0.5rem;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 0.75rem 1rem;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  font-family: inherit;
+  color: #1a1a1a;
+  background: #ffffff;
+  transition: all 0.2s ease;
+  outline: none;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  border-color: #ffe34d;
+  box-shadow: 0 0 0 3px rgba(255, 227, 77, 0.1);
+}
+
+.form-input::placeholder,
+.form-textarea::placeholder {
+  color: #9ca3af;
+}
+
+.form-select {
+  cursor: pointer;
+  appearance: none;
+  background-image: url("data:image/svg+xml,%3Csvg width='12' height='8' viewBox='0 0 12 8' fill='none' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M1 1L6 6L11 1' stroke='%236b7280' stroke-width='2' stroke-linecap='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 1rem center;
+  padding-right: 2.75rem;
+}
+
+.form-textarea {
+  resize: vertical;
+  min-height: 120px;
+  line-height: 1.5;
+}
+
+.char-count {
+  text-align: right;
+  font-size: 0.75rem;
+  color: #9ca3af;
+  margin-top: 0.375rem;
+}
+
+.form-actions {
+  display: flex;
+  gap: 0.75rem;
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid #f3f4f6;
+}
+
+.btn-cancel,
+.btn-submit {
+  flex: 1;
+  padding: 0.75rem;
+  border: none;
+  border-radius: 10px;
+  font-size: 0.9375rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-cancel {
+  background: #f3f4f6;
+  color: #6b7280;
+}
+
+.btn-cancel:hover {
+  background: #e5e7eb;
+  color: #1a1a1a;
+}
+
+.btn-submit {
+  background: linear-gradient(135deg, #ffe34d 0%, #f4d400 100%);
+  color: #1a1a1a;
+  box-shadow: 0 3px 10px rgba(255, 227, 77, 0.25);
+}
+
+.btn-submit:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 5px 15px rgba(255, 227, 77, 0.35);
+}
+
+.btn-submit:active {
+  transform: translateY(0);
+}
+
+/* ===================================
+   반응형 디자인
+   =================================== */
+
+@media (max-width: 1200px) {
+  .inquiry-container {
+    grid-template-columns: 1fr 350px;
+  }
+}
+
+@media (max-width: 1024px) {
+  .cs-container {
+    grid-template-columns: 220px 1fr;
+    gap: 1.5rem;
+  }
+
+  .cs-sidebar {
+    padding: 1.25rem 1rem;
+  }
+
+  .cs-sidebar-title {
+    font-size: 1.25rem;
+  }
+
+  .cs-content-section {
+    padding: 1.5rem;
+  }
+
+  .inquiry-container {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+
+  .inquiry-detail-card {
+    min-height: auto;
+  }
+
+  .inquiry-history-card {
+    max-height: 450px;
+  }
+}
+
+@media (max-width: 768px) {
+  .customer-center {
+    padding: 1.25rem 0;
+  }
+
+  .cs-container {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+    padding: 0 1rem;
+  }
+
+  .cs-sidebar {
+    position: static;
+    max-height: none;
+  }
+
+  .cs-info-box {
+    font-size: 0.75rem;
+  }
+
+  .cs-content-section {
+    padding: 1.25rem;
+  }
+
+  .cs-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.875rem;
+  }
+
+  .btn-new-inquiry {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .cs-section-title {
+    font-size: 1.25rem;
+  }
+
+  .faq-q-text {
+    font-size: 0.9375rem;
+  }
+
+  .inquiry-subject {
+    font-size: 1rem;
+  }
+
+  .inquiry-meta {
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+
+  .modal-overlay {
+    padding: 1rem;
+  }
+
+  .modal-content {
+    max-height: 95vh;
+  }
+
+  .modal-header {
+    padding: 1.125rem 1.25rem;
+  }
+
+  .modal-title {
+    font-size: 1.125rem;
+  }
+
+  .inquiry-form {
+    padding: 1.25rem;
+  }
+
+  .form-actions {
+    flex-direction: column;
+  }
+}
+
+@media (max-width: 480px) {
+  .cs-sidebar-title {
+    font-size: 1.125rem;
+  }
+
+  .cs-menu-item {
+    font-size: 0.875rem;
+    padding: 0.75rem 1rem;
+  }
+
+  .cs-section-header {
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.875rem;
+  }
+
+  .cs-section-title {
+    font-size: 1.125rem;
+  }
+
+  .btn-new-inquiry {
+    padding: 0.625rem 1rem;
+    font-size: 0.875rem;
+  }
+
+  .faq-search-input {
+    padding: 0.75rem 0.75rem 0.75rem 2.5rem;
+  }
+
+  .faq-question {
+    padding: 0.875rem 1rem;
+  }
+
+  .faq-answer {
+    padding: 0 1rem 0.875rem 1rem;
+  }
+
+  .inquiry-detail-card,
+  .inquiry-history-card {
+    padding: 1.25rem;
+  }
+
+  .modal-header {
+    padding: 1rem;
+  }
+
+  .modal-title {
+    font-size: 1rem;
+  }
+
+  .inquiry-form {
+    padding: 1rem;
+  }
+
+  .form-label {
+    font-size: 0.8125rem;
+  }
+
+  .form-input,
+  .form-select,
+  .form-textarea {
+    padding: 0.625rem 0.875rem;
+    font-size: 0.875rem;
+  }
+}
