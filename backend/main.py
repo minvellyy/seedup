@@ -11,8 +11,23 @@ import asyncio
 import hashlib
 import json
 import logging
+import sys
 import uvicorn
 from datetime import datetime
+
+# ── Windows ProactorEventLoop ConnectionResetError 노이즈 억제 ────────────────
+if sys.platform == "win32":
+    import asyncio
+    _orig_call_exception_handler = asyncio.BaseEventLoop.call_exception_handler
+
+    def _silent_exception_handler(self, context):
+        exc = context.get("exception")
+        if isinstance(exc, ConnectionResetError):
+            return  # WinError 10054 노이즈 무시
+        _orig_call_exception_handler(self, context)
+
+    asyncio.BaseEventLoop.call_exception_handler = _silent_exception_handler
+# ─────────────────────────────────────────────────────────────────────────────
 
 logger = logging.getLogger("main")
 from routers import survey, dashboard, recommendations
@@ -1130,4 +1145,10 @@ async def shutdown_event():
 if __name__ == '__main__':
     # FastAPI 앱 실행
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    import logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(name)s] %(levelname)s  %(message)s",
+        datefmt="%H:%M:%S",
+    )
+    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")

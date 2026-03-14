@@ -9,9 +9,9 @@ def pct(x: float | None) -> str:
 
 def num(x: float | None) -> float | None:
     if x is None:
-        return None
+        return "데이터 없음"
     if isinstance(x, float) and np.isnan(x):
-        return None
+        return "데이터 없음"
     return float(x)
 
 def build_structured_report(df_scores: pd.DataFrame, ticker: str, as_of: str) -> dict:
