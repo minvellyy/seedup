@@ -61,6 +61,7 @@ _RISK_MAP_PF = {
     "적극투자형": ("적극투자형",  "2등급", 0.9,  0.1),
     "위험중립형": ("위험중립형",  "3등급", 0.70, 0.30),
     "안전추구형": ("안전추구형",  "4등급", 0.50, 0.50),
+    "안정추구형": ("안전추구형",  "4등급", 0.50, 0.50),  # 구버전 오타 호환
     "안정형":     ("안정형",      "5등급", 0.30, 0.70),
 }
 
@@ -126,10 +127,11 @@ def _recommend_portfolio_db(
                         and r["value_number"] and r["value_number"] > 1000), None)
         total_budget = int(lump or monthly or 10_000_000)
 
-    # ── 2. 종목 유니버스 (STOCK / ETF 별도 조회) ─────────────────────────
+    # ── 2. 종목 유니버스 (STOCK / ETF 별도 조회, bucket 포함) ───────────
     cur.execute("""
         SELECT u.instrument_id, i.stock_code, i.name, u.market, u.risk_type,
-               u.asset_type, i.last_price
+               u.asset_type, i.last_price,
+               COALESCE(u.bucket, 'CORE') AS bucket
         FROM universe_items u
         JOIN instruments i ON u.instrument_id = i.instrument_id
         WHERE u.active = 1 AND u.asset_type = 'STOCK'
@@ -141,7 +143,8 @@ def _recommend_portfolio_db(
 
     cur.execute("""
         SELECT u.instrument_id, i.stock_code, i.name, u.market, u.risk_type,
-               u.asset_type, i.last_price
+               u.asset_type, i.last_price,
+               'ETF' AS bucket
         FROM universe_items u
         JOIN instruments i ON u.instrument_id = i.instrument_id
         WHERE u.active = 1 AND u.asset_type = 'ETF'
@@ -150,7 +153,6 @@ def _recommend_portfolio_db(
         LIMIT 100
     """)
     etfs = cur.fetchall()
-
 
     # ── 3. 가격 데이터 로딩 ───────────────────────────────────────────────
     ref_date = _date.today()
@@ -174,7 +176,9 @@ def _recommend_portfolio_db(
     for r in cur.fetchall():
         price_hist[r["instrument_id"]].append((r["price_date"], float(r["close"])))
 
-    # ── 4. 종목 스코어링 (종목 추천과 동일 로직) ─────────────────────────
+    # ── 4. 다중팩터 스코어링 + 위험조정수익률(샤프) ──────────────────────
+    _RF_RATE_PF = 0.035  # 무위험 수익률 3.5%
+
     def _score_items(candidates, top_n=10):
         buf = []
         for s in candidates:
@@ -188,14 +192,17 @@ def _recommend_portfolio_db(
             p1y_p = next((p for d, p in hist if d >= ref_date - _timedelta(days=365)), None)
             ret_3m = (cp / p3m_p - 1) if p3m_p else None
             ret_1y = (cp / p1y_p - 1) if p1y_p else None
-            vol_ann = None
+            vol_ann, sharpe_1y = None, None
             if len(p252) >= 20:
                 dr = [p252[i] / p252[i - 1] - 1 for i in range(1, len(p252))]
                 mn = sum(dr) / len(dr)
                 vr = sum((r - mn) ** 2 for r in dr) / max(len(dr) - 1, 1)
                 vol_ann = _math.sqrt(vr) * _math.sqrt(252)
+                # ① 샤프지수: (1Y수익률 - 무위험률) / 연변동성
+                if ret_1y is not None and vol_ann > 0:
+                    sharpe_1y = (ret_1y - _RF_RATE_PF) / vol_ann
             buf.append({**s, "ret_3m": ret_3m, "ret_1y": ret_1y,
-                        "vol_ann": vol_ann, "current_price": cp})
+                        "vol_ann": vol_ann, "sharpe_1y": sharpe_1y, "current_price": cp})
 
         if len(buf) < 2:
             return buf[:top_n]
@@ -208,63 +215,114 @@ def _recommend_portfolio_db(
             rm = {i: r / (len(srt) - 1) for r, (i, _) in enumerate(srt)}
             return [rm.get(i, 0.5) for i in range(len(vals))]
 
-        r3 = _rn([b["ret_3m"] for b in buf])
-        r1 = _rn([b["ret_1y"] for b in buf])
-        vl = _rn([b["vol_ann"] for b in buf])
-        w3m, w1y, wvol = _SCORING_WEIGHTS.get(scoring_style, (0.35, 0.40, 0.25))
+        r3  = _rn([b["ret_3m"]    for b in buf])
+        r1  = _rn([b["ret_1y"]    for b in buf])
+        shn = _rn([b["sharpe_1y"] for b in buf])  # ② 샤프 순위 정규화 → 우량성 대리 지표
+        vl  = _rn([b["vol_ann"]   for b in buf])
+
         _FIN_GRADE_BOOST = {"우수": 0.08, "양호": 0.04, "보통": 0.0, "주의": -0.04}
         for i, b in enumerate(buf):
-            base = w3m * r3[i] + w1y * r1[i] + wvol * (1.0 - vl[i])
+            # ② 다중팩터: 모멘텀 40% + 우량성(샤프) 40% + 저변동성 20%
+            mom_score    = 0.40 * r3[i] + 0.60 * r1[i]
+            qual_score   = shn[i]
+            lowvol_score = 1.0 - vl[i]
+            base = 0.40 * mom_score + 0.40 * qual_score + 0.20 * lowvol_score
             t = b["stock_code"]
-            # LightGBM 방향성 신호 보정 (보조)
             sig_boost = 0.0
             if signal_map and t in signal_map:
                 sig_boost = 0.10 * float(signal_map[t].get("p_adj", 0.5))
-            # 재무등급 보정 (보조)
             fin_boost = 0.0
             if fin_map and t in fin_map:
                 fin_boost = _FIN_GRADE_BOOST.get(fin_map[t].get("overall_grade"), 0.0)
             b["score"] = base + sig_boost + fin_boost
-            b["p_adj"] = signal_map[t].get("p_adj") if signal_map and t in signal_map else None
+            b["p_adj"]     = signal_map[t].get("p_adj") if signal_map and t in signal_map else None
             b["fin_grade"] = fin_map[t].get("overall_grade") if fin_map and t in fin_map else None
         buf.sort(key=lambda x: x["score"], reverse=True)
         return buf[:top_n]
 
-    # 종목 및 ETF 스코어링
-    n_stocks = max(3, min(7, round(stock_wt * 8)))
-    n_etfs   = max(0, min(3, round(bond_wt * 5)))
-    top_stocks = _score_items(stocks, top_n=n_stocks)
-    top_etfs   = _score_items(etfs,   top_n=n_etfs)
-    portfolio_candidates = top_stocks + top_etfs
+    # ③ 유니버스 그룹핑 + ④ 코어-새틀라이트 전략 ────────────────────────
+    # 성향별 주식 슬롯 내 코어(대형 우량) : 새틀라이트(성장 모멘텀) 비율
+    _CS_SPLIT = {
+        "공격투자형": (0.40, 0.60),  # 코어 40% + 새틀라이트 60%
+        "적극투자형": (0.50, 0.50),
+        "위험중립형": (0.65, 0.35),
+        "안전추구형": (0.80, 0.20),
+        "안정추구형": (0.80, 0.20),
+        "안정형":     (1.00, 0.00),  # 코어만
+    }
+    _core_ratio, _sat_ratio = _CS_SPLIT.get(risk_tier, (0.65, 0.35))
+
+    n_total_stock = max(3, min(7, round(stock_wt * 8)))
+    n_core_slot   = max(1, round(n_total_stock * _core_ratio))
+    n_sat_slot    = n_total_stock - n_core_slot
+    n_etfs        = max(0, min(3, round(bond_wt * 5)))
+
+    core_pool   = [s for s in stocks if s.get("bucket") == "CORE"]
+    growth_pool = [s for s in stocks if s.get("bucket") != "CORE"]
+
+    top_core  = _score_items(core_pool,   top_n=n_core_slot)
+    top_sat   = _score_items(growth_pool, top_n=n_sat_slot)
+    top_etfs  = _score_items(etfs,        top_n=n_etfs)
+
+    # 슬롯 부족분 보충
+    if len(top_core) < n_core_slot:
+        used = {s["stock_code"] for s in top_core + top_sat}
+        extras = _score_items([s for s in growth_pool if s["stock_code"] not in used],
+                              top_n=n_core_slot - len(top_core))
+        top_core += extras
+
+    portfolio_candidates = top_core + top_sat + top_etfs
     if not portfolio_candidates:
         raise ValueError("포트폴리오를 구성할 종목이 없습니다.")
 
-    # ── 5. 포트폴리오 비중 ────────────────────────────────────────────────
-    total_n = len(portfolio_candidates)
-    stock_n = len(top_stocks)
+    stock_n = len(top_core) + len(top_sat)
     etf_n   = len(top_etfs)
-    per_stock_w = stock_wt / stock_n if stock_n else 0
-    per_etf_w   = bond_wt  / etf_n   if etf_n   else 0
+    total_n = len(portfolio_candidates)
+
+    # ── 5. 코어-새틀라이트 비중 배분 ─────────────────────────────────────
+    # 코어: stock_wt × core_ratio 내에서 score 비례 배분
+    # 새틀라이트: stock_wt × sat_ratio 내에서 score 비례 배분
+    # ETF: bond_wt 내에서 균등 배분
+    core_score_sum = sum(s.get("score", 1.0) for s in top_core) or 1.0
+    sat_score_sum  = sum(s.get("score", 1.0) for s in top_sat)  or 1.0
+    etf_score_sum  = sum(s.get("score", 1.0) for s in top_etfs) or 1.0
 
     p_items: List[PortfolioItem] = []
-    for s in top_stocks:
+    for s in top_core:
+        w = stock_wt * _core_ratio * (s.get("score", 1.0) / core_score_sum)
+        s["weight"] = w
+        sharpe_str = f" | 샤프 {s['sharpe_1y']:+.2f}" if s.get("sharpe_1y") is not None else ""
         p_items.append(PortfolioItem(
             ticker=s["stock_code"], name=s["name"],
             asset_type="STOCK", risk_type=s["risk_type"],
-            weight=round(per_stock_w, 4),
-            weight_pct=round(per_stock_w * 100, 1),
+            weight=round(w, 4), weight_pct=round(w * 100, 1),
             selection_reason=(
-                f"1년 수익률 {(s['ret_1y'] or 0)*100:+.1f}% / "
-                f"변동성 {(s['vol_ann'] or 0)*100:.1f}% 으로 모멘텀 상위 편입"
+                f"[코어] 1년 수익률 {(s['ret_1y'] or 0)*100:+.1f}%"
+                f"{sharpe_str} | 변동성 {(s['vol_ann'] or 0)*100:.1f}%"
             ),
-            explanation=f"{s['name']}은(는) 최근 수익 모멘텀 및 변동성 기준 우수 종목입니다.",
+            explanation=f"{s['name']}은(는) 대형 우량 코어 종목입니다. 포트폴리오 안정성 뼈대를 담당합니다.",
+        ))
+    for s in top_sat:
+        w = stock_wt * _sat_ratio * (s.get("score", 1.0) / sat_score_sum) if _sat_ratio > 0 else 0
+        s["weight"] = w
+        sharpe_str = f" | 샤프 {s['sharpe_1y']:+.2f}" if s.get("sharpe_1y") is not None else ""
+        p_items.append(PortfolioItem(
+            ticker=s["stock_code"], name=s["name"],
+            asset_type="STOCK", risk_type=s["risk_type"],
+            weight=round(w, 4), weight_pct=round(w * 100, 1),
+            selection_reason=(
+                f"[새틀라이트] 1년 수익률 {(s['ret_1y'] or 0)*100:+.1f}%"
+                f"{sharpe_str} | 변동성 {(s['vol_ann'] or 0)*100:.1f}%"
+            ),
+            explanation=f"{s['name']}은(는) 초과 수익(알파)을 노리는 성장 모멘텀 종목입니다.",
         ))
     for s in top_etfs:
+        w = bond_wt * (s.get("score", 1.0) / etf_score_sum)
+        s["weight"] = w
         p_items.append(PortfolioItem(
             ticker=s["stock_code"], name=s["name"],
             asset_type="ETF", risk_type=s["risk_type"],
-            weight=round(per_etf_w, 4),
-            weight_pct=round(per_etf_w * 100, 1),
+            weight=round(w, 4), weight_pct=round(w * 100, 1),
             selection_reason="분산투자 및 리스크 헤지 목적 ETF 편입",
             explanation=f"{s['name']}은(는) 포트폴리오 안정성 제고를 위한 ETF입니다.",
         ))
@@ -410,7 +468,7 @@ def _recommend_portfolio_db(
         allocation_rules=AllocationRulesSummary(
             grade=risk_grade,
             stock_max_pct=round(stock_wt * 100),
-            single_stock_max_pct=round(per_stock_w * 100 * 1.5),
+            single_stock_max_pct=round((stock_wt / max(stock_n, 1)) * 100 * 1.5),
             etf_min_pct=round(bond_wt * 100),
             target_weights={
                 "STOCK": stock_wt,
@@ -898,6 +956,31 @@ def recommend_stock_with_signals(
     inv_type = row.get("investment_type") or _koscom_to_inv_type(koscom_score)
     risk_tier, risk_grade, _, _ = _RISK_MAP_PF.get(inv_type, ("위험중립형", "3등급", 0.7, 0.3))
 
+    # 1-1. 설문 답변 일괄 조회 (DIVIDEND_PREF / TARGET_HORIZON / INVEST_GOAL / CONTRIBUTION_TYPE / ACCOUNT_TYPE)
+    cur.execute(
+        """
+        SELECT sq.code, sa.value_choice, sa.value_text
+        FROM survey_answers sa
+        JOIN survey_questions sq ON sa.question_id = sq.id
+        WHERE sa.user_id = %s AND sq.code IN (
+            'DIVIDEND_PREF', 'TARGET_HORIZON', 'INVEST_GOAL', 'CONTRIBUTION_TYPE', 'ACCOUNT_TYPE'
+        )
+        ORDER BY sa.updated_at DESC
+        """,
+        (user_id,),
+    )
+    _survey: dict = {}
+    for _r in (cur.fetchall() or []):
+        _c = _r["code"] if isinstance(_r, dict) else _r[0]
+        if _c not in _survey:
+            _survey[_c] = _r if isinstance(_r, dict) else {"code": _r[0], "value_choice": _r[1], "value_text": _r[2]}
+
+    dividend_pref = (_survey.get("DIVIDEND_PREF", {}).get("value_choice") or "MID").upper()
+    invest_goal_raw = (_survey.get("INVEST_GOAL", {}).get("value_text") or "").strip()
+    horizon_raw = (_survey.get("TARGET_HORIZON", {}).get("value_text") or "").strip()
+    contribution_type = (_survey.get("CONTRIBUTION_TYPE", {}).get("value_choice") or "").upper()
+    account_type_raw = (_survey.get("ACCOUNT_TYPE", {}).get("value_text") or "").strip()
+
     if not signal_tickers:
         raise ValueError("방향성 신호 종목 목록이 비어 있습니다.")
 
@@ -932,44 +1015,101 @@ def recommend_stock_with_signals(
         if code:
             price_hist[code].append(float(r["close"]))
 
-    # 3. 투자성향별 가중치 (MC비중, 신호비중, 재무비중)
-    _W = {
-        "공격투자형": (0.55, 0.35, 0.10),
-        "적극투자형": (0.50, 0.30, 0.20),
-        "위험중립형": (0.40, 0.25, 0.35),
-        "안전추구형": (0.30, 0.20, 0.50),
-        "안정형":     (0.25, 0.15, 0.60),
+    # ══════════════════════════════════════════════════════════════════════
+    # 3단계 스코어링 파이프라인
+    #
+    # [1단계] MC 수익률 점수  ← 핵심 기준
+    #   - 투자 기간(TARGET_HORIZON)에 맞는 퍼센타일로 MC 수익률 계산
+    #   - 단기(≤2Y) → p10(하락방어), 중기(3~6Y) → p50(중앙값), 장기(≥7Y) → p90(성장)
+    #   - 투자성향도 퍼센타일 선택에 반영 (공격형→ 성장 퍼센타일 우선)
+    #
+    # [2단계] 투자성향 적합도 보정
+    #   - 변동성이 성향에 맞으면 부스트(최대 +20%), 부적합하면 페널티(최대 -20%)
+    #   - LightGBM 신호 · 재무등급은 동일 가중치로 합산
+    #
+    # [3단계] 투자금/목표 미세조정
+    #   - DCA(적립식), ISA/연금 계좌 → 안정 종목 소폭 부스트
+    #   - INVEST_GOAL 키워드 → 노후/은퇴(안정↑) / 성장(성장↑) 미세조정
+    # ══════════════════════════════════════════════════════════════════════
+
+    import re as _re
+
+    # ── TARGET_HORIZON 파싱 → 투자 기간(년) ───────────────────────────────
+    _horizon_years: int = 3  # 기본값 중기
+    _hm = _re.search(r'(\d+)년', horizon_raw)
+    if _hm:
+        _hy = int(_hm.group(1))
+        _horizon_years = _hy if _hy <= 100 else max(1, _hy - _date.today().year)
+
+    # ── [1단계] 기간 + 투자성향 → 사용할 MC 퍼센타일 결정 ─────────────────
+    # 기간 기준 (기본)
+    if _horizon_years <= 2:
+        _mc_pct = "p10"   # 단기: 하락방어 시나리오(보수적 수익률)
+    elif _horizon_years >= 7:
+        _mc_pct = "p90"   # 장기: 성장 시나리오
+    else:
+        _mc_pct = "p50"   # 중기: 중앙값
+    # 투자성향으로 퍼센타일 조정 (기간이 같아도 성향에 따라 달라짐)
+    if risk_tier in ("공격투자형", "적극투자형") and _mc_pct != "p10":
+        _mc_pct = "p90"   # 공격형은 항상 상승 시나리오
+    elif risk_tier in ("안전추구형", "안정형") and _mc_pct != "p90":
+        _mc_pct = "p10"   # 안정형은 항상 하락방어 시나리오
+
+    # ── 투자성향별 허용 변동성 범위 (종목 적합도 판단 기준) ──────────────
+    _VOL_BAND = {
+        "공격투자형": (0.30, 1.00),   # 고변동성 OK
+        "적극투자형": (0.20, 0.70),
+        "위험중립형": (0.15, 0.50),
+        "안전추구형": (0.05, 0.35),
+        "안정형":     (0.05, 0.25),
     }
-    w_mc, w_sig, w_fin = _W.get(risk_tier, (0.40, 0.25, 0.35))
-    # 보수 성향 → 하락(p10) 중시, 공격 성향 → 상승(p90) 중시
-    mc_key = "p10" if risk_tier in ("안전추구형", "안정형") else (
-        "p90" if risk_tier in ("공격투자형", "적극투자형") else "p50"
-    )
+    _vol_low, _vol_high = _VOL_BAND.get(risk_tier, (0.10, 0.60))
+
     _FIN_GRADE_SCORE = {"우수": 1.0, "양호": 0.75, "보통": 0.50, "주의": 0.25}
 
-    # 4. 종목별 몬테카를로 시뮬레이션 (1,000,000경로 × GBM 닫힌형)
+    # ── MC 파라미터 상수 ──────────────────────────────────────────────────
     _N_MC = 1_000_000
     _rng = _np.random.default_rng(42)
+    _MARKET_MU_D = 0.08 / 252        # 시장 기대수익률 8%/yr로 shrinkage
+    _SHRINKAGE = 0.50
+    _MAX_SIGMA_ANN = 0.70            # σ Cap
+    _MAX_MU_ANN = 0.40               # μ Cap: 연 40% 초과 기대수익률은 현실에서 지속 불가
+    _MAX_MC_PCT = 500.0              # MC 결과값 상한: 500% (6배) — 극단 오른쪽 꼬리 차단
+    _MIN_MC_PCT = -99.0              # MC 결과값 하한: -99%
+
+    # ── [1단계] 종목별 MC 시뮬레이션 ─────────────────────────────────────
     candidates = []
     for ticker, closes in price_hist.items():
         if len(closes) < 60:
             continue
         rets = [closes[i] / closes[i - 1] - 1 for i in range(1, len(closes))]
-        mu_d = sum(rets) / len(rets)
-        var_d = sum((r - mu_d) ** 2 for r in rets) / max(len(rets) - 1, 1)
-        sigma_d = _math.sqrt(var_d)
+        mu_d_raw = sum(rets) / len(rets)
+        var_d = sum((r - mu_d_raw) ** 2 for r in rets) / max(len(rets) - 1, 1)
+        sigma_d_raw = _math.sqrt(var_d)
 
-        # GBM 닫힌형: exp((μ-½σ²)·252 + σ·√252·Z) - 1  (Z ~ N(0,1))
+        mu_d = mu_d_raw * (1 - _SHRINKAGE) + _MARKET_MU_D * _SHRINKAGE
+        # μ 캡: 연 40% 초과 기대수익률은 현실에서 지속 불가 → 클램핑
+        _max_mu_d = _MAX_MU_ANN / 252
+        mu_d = max(-_max_mu_d, min(_max_mu_d, mu_d))
+
+        sigma_ann = min(sigma_d_raw * _math.sqrt(252), _MAX_SIGMA_ANN)
+        sigma_d = sigma_ann / _math.sqrt(252)
+
+        # 투자 기간(N년)에 맞춰 MC 경로 계산
+        _trading_days = int(_horizon_years * 252)
         finals = (
-            _np.exp((mu_d - 0.5 * sigma_d**2) * 252
-                    + sigma_d * _np.sqrt(252) * _rng.standard_normal(_N_MC)) - 1
+            _np.exp((mu_d - 0.5 * sigma_d**2) * _trading_days
+                    + sigma_d * _math.sqrt(_trading_days) * _rng.standard_normal(_N_MC)) - 1
         ) * 100
+        # 결과값 클램핑: 극단적 오른쪽 꼬리 차단
+        finals = _np.clip(finals, _MIN_MC_PCT, _MAX_MC_PCT)
         mc_p10, mc_p50, mc_p90 = _np.percentile(finals, [10, 50, 90])
-        mc_val = mc_p10 if mc_key == "p10" else (mc_p90 if mc_key == "p90" else mc_p50)
+        mc_val = mc_p10 if _mc_pct == "p10" else (mc_p90 if _mc_pct == "p90" else mc_p50)
 
         sig = sig_map.get(ticker, {})
         fin = (fin_scores or {}).get(ticker, {})
         fin_grade = fin.get("overall_grade")
+        ann_vol_pct = sigma_ann  # 0~1 범위
         candidates.append({
             "ticker": ticker,
             "name": sig.get("name", ""),
@@ -977,16 +1117,37 @@ def recommend_stock_with_signals(
             "p_adj": float(sig.get("p_adj", 0.5)),
             "rank_overall": int(sig.get("rank_overall", 999)),
             "mc_p10": mc_p10, "mc_p50": mc_p50, "mc_p90": mc_p90, "mc_val": mc_val,
-            "ann_vol": sigma_d * _math.sqrt(252) * 100,
+            "ann_vol": ann_vol_pct * 100,      # % 단위
+            "ann_vol_ratio": ann_vol_pct,       # 0~1 (적합도 판단용)
             "ann_return": mu_d * 252 * 100,
             "fin_grade": fin_grade,
             "fin_score": _FIN_GRADE_SCORE.get(fin_grade, 0.50),
+            # 세부 팩터 점수 (0~1, 없으면 None)
+            "profitability_score": fin.get("profitability_score"),
+            "growth_score":        fin.get("growth_score"),
+            "stability_score":     fin.get("stability_score"),
+            "cashflow_score":      fin.get("cashflow_score"),
         })
 
     if not candidates:
         raise ValueError("몬테카를로 시뮬레이션을 위한 충분한 가격 데이터가 없습니다.")
 
-    # 5. 정규화 후 종합 점수
+    # ── 변동성 하드 필터: 성향에 크게 어긋나는 종목을 후보에서 완전 제외 ──
+    # 공격형/적극형: vol 하한을 _vol_low 그대로 사용 (저변동 안정주 완전 제외)
+    # 중립형 이하: -0.10 slack 허용
+    _hard_upper = _vol_high + 0.15   # 상단: 허용 최대치 + 15%p 여유
+    if risk_tier in ("공격투자형", "적극투자형"):
+        _hard_lower = _vol_low       # 하한 엄격 적용
+    else:
+        _hard_lower = max(0.0, _vol_low - 0.10)  # 하한: 10%p 여유
+    _vol_filtered = [
+        c for c in candidates
+        if _hard_lower <= c["ann_vol_ratio"] <= _hard_upper
+    ]
+    if len(_vol_filtered) >= top_n:
+        candidates = _vol_filtered
+
+    # ── [1단계] MC 수익률 정규화 점수 (0~1) ──────────────────────────────
     def _rn(vals):
         idxd = [(i, v) for i, v in enumerate(vals) if v is not None]
         if len(idxd) < 2:
@@ -995,15 +1156,99 @@ def recommend_stock_with_signals(
         rm = {i: r / (len(srt) - 1) for r, (i, _) in enumerate(srt)}
         return [rm.get(i, 0.5) for i in range(len(vals))]
 
-    mc_n  = _rn([c["mc_val"] for c in candidates])
-    sig_n = _rn([c["p_adj"]  for c in candidates])
+    mc_n  = _rn([c["mc_val"] for c in candidates])   # MC 수익률 순위 정규화
+    sig_n = _rn([c["p_adj"]  for c in candidates])   # LightGBM 신호 순위 정규화
+
+    # ── [2단계] 투자성향 적합도 보정 계수 계산 ───────────────────────────
+    # 종목 변동성이 허용 범위 내 → 부스트(최대 1.20), 범위 밖 → 페널티(최대 0.80)
+    for c in candidates:
+        v = c["ann_vol_ratio"]
+        if _vol_low <= v <= _vol_high:
+            # 범위 중앙에 가까울수록 최대 부스트
+            _mid = (_vol_low + _vol_high) / 2
+            _half = (_vol_high - _vol_low) / 2
+            _fit = 1.0 - abs(v - _mid) / _half if _half > 0 else 1.0
+            c["risk_fit"] = 1.0 + 0.20 * _fit      # 1.00 ~ 1.20
+        else:
+            # 범위 밖으로 벗어난 정도에 따라 페널티
+            _dist = min(abs(v - _vol_low), abs(v - _vol_high))
+            _penalty = min(0.20, _dist / 0.20)
+            c["risk_fit"] = 1.0 - _penalty          # 0.80 ~ 1.00
+
+    # ── [2단계] 재무등급 + LightGBM 신호 보조 점수 (0~1) ─────────────────
+    # 성향별 세부 팩터 가중치: (수익성, 성장성, 안정성, 현금흐름)
+    _FIN_DETAIL_W = {
+        "공격투자형": (0.15, 0.50, 0.15, 0.20),  # 성장성 최우선
+        "적극투자형": (0.20, 0.40, 0.20, 0.20),
+        "위험중립형": (0.30, 0.25, 0.25, 0.20),  # 균형
+        "안전추구형": (0.25, 0.15, 0.40, 0.20),  # 안정성 최우선
+        "안정추구형": (0.25, 0.15, 0.40, 0.20),
+        "안정형":     (0.20, 0.10, 0.50, 0.20),
+    }
+    _fw = _FIN_DETAIL_W.get(risk_tier, (0.25, 0.25, 0.25, 0.25))
+
     for i, c in enumerate(candidates):
-        c["total_score"] = w_mc * mc_n[i] + w_sig * sig_n[i] + w_fin * c["fin_score"]
+        # 세부 팩터 점수가 있으면 가중 합산, 없으면 overall_grade 기반 fin_score 사용
+        _fp, _fg, _fs, _fc = (
+            c.get("profitability_score"),
+            c.get("growth_score"),
+            c.get("stability_score"),
+            c.get("cashflow_score"),
+        )
+        _available = [v for v in [_fp, _fg, _fs, _fc] if v is not None]
+        if len(_available) >= 2:
+            # 데이터 있는 항목만 정규화하여 가중합
+            _detail_fin = (
+                (_fw[0] * (_fp or 0.5)) +
+                (_fw[1] * (_fg or 0.5)) +
+                (_fw[2] * (_fs or 0.5)) +
+                (_fw[3] * (_fc or 0.5))
+            )
+            # overall_grade 와 50:50 혼합 (단일 지표 과적합 방지)
+            _combined_fin = 0.50 * _detail_fin + 0.50 * c["fin_score"]
+        else:
+            _combined_fin = c["fin_score"]
+
+        c["support_score"] = 0.60 * sig_n[i] + 0.40 * _combined_fin
+
+    # ── [1+2단계] 핵심 점수: MC 수익률 순위(60%) + 지지점수(40%) × 투자성향 적합도 ──
+    # • 구 공식 mc_n * (1 + support*0.30): support 가 0이어도 mc_n이 0.5면 50점 유지
+    # • 신 공식 (mc_n*0.60 + support*0.40) * risk_fit:
+    #     - support=0(재무최하+신호 약): mc_n=0.5 → 0.3 → 30점 (이전 50점)
+    #     - support=1(재무최상+신호 강): mc_n=0.5 → 0.7 → 최대 84점
+    #   → 적합도 점수가 실제 재무·신호 품질을 반영
+    for i, c in enumerate(candidates):
+        c["total_score"] = (0.60 * mc_n[i] + 0.40 * c["support_score"]) * c["risk_fit"]
+
+    # ── [3단계] 투자금/목표 미세 조정 ────────────────────────────────────
+    # DCA(적립식): 변동성 낮은 종목 +5%
+    # ISA/연금 계좌: 안정 종목 +5%
+    # 노후/은퇴 목표: 변동성 낮은 종목 +5%
+    # 성장/증식 목표: 변동성 높은 종목 +5%
+    _at = account_type_raw.lower().replace(' ', '')
+    _gl = invest_goal_raw.replace(' ', '')
+    for c in candidates:
+        _adj = 1.0
+        v = c["ann_vol_ratio"]
+        if contribution_type == "DCA" and v < 0.35:
+            _adj *= 1.05
+        if ('isa' in _at or '연금' in _at) and v < 0.35:
+            _adj *= 1.05
+        if any(kw in _gl for kw in ('노후', '은퇴', '연금', '안전', '보존')) and v < 0.30:
+            _adj *= 1.05
+        elif any(kw in _gl for kw in ('자산증식', '증식', '성장', '수익', '공격')) and v > 0.40:
+            _adj *= 1.05
+        if dividend_pref == "HIGH" and v < 0.30:
+            _adj *= 1.03
+        elif dividend_pref == "LOW" and v > 0.40:
+            _adj *= 1.03
+        c["total_score"] *= _adj
+
     candidates.sort(key=lambda x: x["total_score"], reverse=True)
     top = candidates[:top_n]
 
     # 6. 응답 생성
-    mc_label = {"p10": "하락방어(10%)", "p50": "중앙값(50%)", "p90": "상승(90%)"}
+    _mc_pct_label = {"p10": f"하락방어(10%·{_horizon_years}년)", "p50": f"중앙값(50%·{_horizon_years}년)", "p90": f"성장(90%·{_horizon_years}년)"}
     items = []
     for rank, c in enumerate(top, 1):
         items.append(StockItem(
@@ -1013,21 +1258,25 @@ def recommend_stock_with_signals(
             market=c["market"],
             total_score=round(c["total_score"], 4),
             reasons=[
-                f"MC 1년 기대수익률({mc_label[mc_key]}) {c['mc_val']:+.1f}%",
+                f"MC {_horizon_years}년 기대수익률({_mc_pct_label[_mc_pct]}) {c['mc_val']:+.1f}%",
                 f"LightGBM 상승확률 {c['p_adj']*100:.0f}% (전체 {c['rank_overall']}위)",
-                f"재무등급 {c['fin_grade'] or '정보없음'}",
+                f"재무등급 {c['fin_grade'] or '정보없음'} | 연변동성 {c['ann_vol']:.0f}%",
             ],
             features=StockFeatures(
                 ret_3m=None, ret_6m=None,
                 ret_1y=round(c["mc_p50"] / 100, 4),
                 vol_ann=round(c["ann_vol"] / 100, 4),
                 beta=None, mdd=None,
+                mc_p10=round(c["mc_p10"], 2),
+                mc_p50=round(c["mc_p50"], 2),
+                mc_p90=round(c["mc_p90"], 2),
             ),
             explanation=(
-                f"몬테카를로 시뮬레이션(2,000경로) 1년 기대수익률: "
+                f"[{_horizon_years}년 투자기간 · {risk_tier}] "
+                f"MC 기대수익률({_mc_pct_label[_mc_pct]}) {c['mc_val']:+.1f}% | "
                 f"하락(10%) {c['mc_p10']:+.1f}% / 중앙값 {c['mc_p50']:+.1f}% / 상승(90%) {c['mc_p90']:+.1f}%. "
-                f"LightGBM 방향성 모델 전체 {c['rank_overall']}위 (상승확률 {c['p_adj']*100:.0f}%). "
-                f"재무등급 {c['fin_grade'] or '정보없음'}."
+                f"LightGBM 상승확률 {c['p_adj']*100:.0f}% (전체 {c['rank_overall']}위). "
+                f"재무등급 {c['fin_grade'] or '정보없음'} | 연변동성 {c['ann_vol']:.0f}%."
             ),
         ))
 

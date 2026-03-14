@@ -1,11 +1,14 @@
-"""KIS 실시간 WebSocket 관리자.
+"""키움증권 Open Trading API 실시간 WebSocket 관리자.
 
-KIS WebSocket으로 실시간 주식 체결가를 수신해 _price_store(메모리)에 저장한다.
-FastAPI startup_event에서 init_manager()를 호출해 백그라운드 태스크로 기동.
-SSE 엔드포인트(/api/stream/prices)에서 get_price_store()로 최신가 참조.
+한국투자증권(KIS) WebSocket에서 키움증권 WebSocket으로 교체.
+함수/클래스 인터페이스 동일 유지 — 기존 import 변경 불필요.
 
-TR_ID: H0STCNT0 (주식현재가 실시간 체결)
-수신 형식: "0|H0STCNT0|NNN|CODE^HH:MM:SS^현재가^부호^전일대비^등락률^..."
+WebSocket URL: wss://api.kiwoom.com/ws
+인증: Authorization: Bearer {token} 헤더 (연결 시)
+구독 TR: 0B (주식체결 실시간)
+구독 메시지: {"trnm": "REG", "grp_no": "1", "refresh": "1",
+              "data": [{"item": ["005930"], "type": ["0B"]}]}
+응답 필드: 10=현재가, 11=전일대비, 12=등락율, 13=누적거래량
 """
 from __future__ import annotations
 
@@ -13,199 +16,146 @@ import asyncio
 import json
 import logging
 import os
-import time
 from pathlib import Path
 from typing import Dict, Optional, Set
 
-import requests
 from dotenv import load_dotenv
 
 load_dotenv(dotenv_path=Path(__file__).parent / ".env")
 
-logger = logging.getLogger("kis_ws")
+logger = logging.getLogger("kiwoom_ws")
 
 # ── 환경 변수 ─────────────────────────────────────────────────────────────────
-_APPKEY    = os.getenv("APP_KEY", "").strip()
-_SECRETKEY = os.getenv("APP_SECRET", "").strip()
-_IS_MOCK   = os.getenv("KIS_MOCK", "false").lower() == "true"
+# 키움 WebSocket 1연결당 최대 구독 종목 수 (필요 시 .env에서 조정)
+_MAX_SUBSCRIPTIONS = int(os.getenv("KIS_MAX_SUBSCRIPTIONS", "100"))
 
-# KIS WebSocket 1연결당 최대 구독 종목 수 (기본 40, 계정 등급에 따라 조정)
-_MAX_SUBSCRIPTIONS = int(os.getenv("KIS_MAX_SUBSCRIPTIONS", "40"))
-
-# WebSocket URL
-_WS_URL_REAL = "ws://ops.koreainvestment.com:21000"
-_WS_URL_MOCK = "ws://ops.koreainvestment.com:31000"
-
-# approval_key 캐시 파일
-_APPROVAL_FILE = Path(__file__).parent / ".kis_approval_cache"
-_approval_lock = __import__("threading").Lock()  # 다중 Worker 동시 재발급 방지
+# 키움 WebSocket URL
+_WS_URL = "wss://api.kiwoom.com:10000/api/dostk/websocket"
 
 # ── 전역 상태 ──────────────────────────────────────────────────────────────────
 _price_store: Dict[str, Dict] = {}   # { "005930": {"current_price": 75000, ...} }
-_manager: Optional["KisWebSocketManager"] = None
+_manager: Optional["KiwoomWebSocketManager"] = None
+_ws_available: bool = True           # False = WS 포기, REST 폴링 사용 중
+_ws_connect_lock: Optional[asyncio.Lock] = None  # 워커 간 동시 로그인 방지
 
 
-# ── approval_key 발급 ─────────────────────────────────────────────────────────
-
-def _load_approval_from_file() -> Optional[str]:
-    """파일에서 approval_key 로드. 유효(1일)하면 반환, 만료면 None."""
-    try:
-        if not _APPROVAL_FILE.exists():
-            return None
-        data = json.loads(_APPROVAL_FILE.read_text(encoding="utf-8"))
-        if float(data.get("expires_at", 0)) > time.time() + 60:
-            return data["approval_key"]
-    except Exception:
-        pass
-    return None
+def _get_connect_lock() -> asyncio.Lock:
+    """모든 워커가 공유하는 연결 직렬화 Lock — 동시 로그인으로 인한 연결 충돌 방지."""
+    global _ws_connect_lock
+    if _ws_connect_lock is None:
+        _ws_connect_lock = asyncio.Lock()
+    return _ws_connect_lock
 
 
-def _save_approval_to_file(key: str) -> None:
-    try:
-        payload = {
-            "approval_key": key,
-            "expires_at": time.time() + 86400,  # 1일
-        }
-        _APPROVAL_FILE.write_text(json.dumps(payload), encoding="utf-8")
-    except Exception:
-        pass
+# ── 토큰 — kis_client 와 공유 (APP KEY 당 유효 토큰 1개 제한 대응) ─────────────
 
-
-def get_approval_key(force_refresh: bool = False) -> str:
-    """WebSocket 접속용 approval_key 발급(파일캐시 1일).
-
-    force_refresh=True 이면 캐시를 무시하고 새로 발급 (OPSP0011 감지 시 사용).
-    Lock으로 다중 Worker 동시 재발급을 방지한다.
-    """
-    # Lock 없이 빠른 읽기 (force_refresh 아닌 경우)
-    if not force_refresh:
-        cached = _load_approval_from_file()
-        if cached:
-            return cached
-
-    with _approval_lock:
-        # lock 획득 후 재확인 — 다른 Worker가 이미 갱신했을 수 있음
-        if not force_refresh:
-            cached = _load_approval_from_file()
-            if cached:
-                return cached
-        else:
-            # 강제 갱신: 캐시 파일 삭제
-            if _APPROVAL_FILE.exists():
-                try:
-                    _APPROVAL_FILE.unlink()
-                except Exception:
-                    pass
-
-        url = "https://openapi.koreainvestment.com:9443/oauth2/Approval"
-        body = {
-            "grant_type": "client_credentials",
-            "appkey": _APPKEY,
-            "secretkey": _SECRETKEY,   # appsecret 아님!
-        }
-        resp = requests.post(url, json=body, timeout=10)
-        resp.raise_for_status()
-        key = resp.json()["approval_key"]
-        _save_approval_to_file(key)
-        logger.info("KIS approval_key 발급 완료")
-        return key
+def _get_token() -> str:
+    """kis_client._get_token()을 위임 호출 — 동일 캐시/토큰 공유."""
+    from kis_client import _get_token as _client_get_token
+    return _client_get_token()
 
 
 # ── 구독 메시지 생성 ───────────────────────────────────────────────────────────
 
-# 구독할 실시간 TR_ID 목록
-# H0NXCNT0(넥스트레이드 NXT)는 별도 권한 필요 + 미운영 시간대에 연결 강제 종료됨 → 제외
-_REALTIME_TR_IDS = ["H0STCNT0"]
+_REALTIME_TR_IDS = ["0B"]   # 0B=주식체결, 0A=주식기세, 0H=주식예상체결
 
 
-def _build_subscribe_msg(approval_key: str, stock_code: str, tr_id: str = "H0STCNT0", tr_type: str = "1") -> str:
-    """tr_type '1'=구독, '2'=해제."""
+def _build_subscribe_msg(token: str, stock_code: str, tr_type: str = "3") -> str:
+    """키움 WS 구독 메시지 생성 (공식 문서 기준).
+
+    trnm: REG=구독등록, UNREG=해제
+    refresh: 1=기존등록유지
+    type: 0B=주식체결, 0A=주식기세
+    인증(token)은 연결 헤더에서 처리되므로 메시지 본문에는 포함하지 않음.
+    """
+    trnm = "REG" if tr_type != "4" else "UNREG"
     return json.dumps({
-        "header": {
-            "approval_key": approval_key,
-            "custtype": "P",
-            "tr_type": tr_type,
-            "content-type": "utf-8",
-        },
-        "body": {
-            "input": {
-                "tr_id": tr_id,
-                "tr_key": stock_code,
-            }
-        },
+        "trnm":    trnm,
+        "grp_no": "1",
+        "refresh": "1",
+        "data": [{"item": [stock_code], "type": ["0B"]}],
     })
 
 
 # ── 데이터 파싱 ────────────────────────────────────────────────────────────────
 
 def _parse_realtime(msg: str) -> Optional[Dict]:
-    """H0STCNT0(KRX) / H0NXCNT0(NXT) 실시간 체결 메시지를 파싱해 dict 반환.
+    """키움 0B 실시간 체결 메시지 파싱.
 
-    수신 형식: "0|<TR_ID>|NNN|<data>"
-    data 필드(^ 구분):
-        [0] MKSC_SHRN_ISCD 종목코드
-        [2] STCK_PRPR      현재가
-        [3] PRDY_VRSS_SIGN 부호 (1=상한,2=상승,3=보합,4=하한,5=하락)
-        [4] PRDY_VRSS      전일대비
-        [5] PRDY_CTRT      등락률
-        [13] ACML_VOL      누적거래량
+    공식 문서 응답 필드:
+        10 = 현재가
+        11 = 전일대비
+        12 = 등락율
+        13 = 누적거래량
+        302 = 종목명
+        9081 = 거래소구분 (1:KRX, 2:NXT)
+
+    예시 응답:
+    {
+      "trnm": "REAL",
+      "grp_no": "1",
+      "data": [{"item_cd": "005930", "values": {"10": "75000", "11": "500",
+                                                 "12": "0.67", "13": "1234567"}}]
+    }
     """
     try:
-        parts = msg.split("|")
-        if len(parts) < 4:
-            return None
-        # KRX 정규장(H0STCNT0) 또는 NXT(H0NXCNT0) 체결 메시지만 처리
-        if parts[0] in ("0", "1") and parts[1] in _REALTIME_TR_IDS:
-            data = parts[3].split("^")
-            if len(data) < 14:
-                return None
-            code      = data[0]
-            price     = int(data[2]) if data[2].isdigit() else 0
-            sign      = data[3]   # '1'상한 '2'상승 '3'보합 '4'하한 '5'하락
-            is_minus  = sign in ("4", "5")
-            try:
-                chg  = float(data[4]) * (-1 if is_minus else 1)
-                rate = float(data[5]) * (-1 if is_minus else 1)
-            except ValueError:
-                chg = rate = 0.0
-            try:
-                vol = int(data[13])
-            except ValueError:
-                vol = 0
+        data = json.loads(msg)
+        trnm = data.get("trnm", "")
 
-            return {
-                "stock_code":   code,
-                "current_price": price,
-                "change":        chg,
-                "change_rate":   rate,
-                "volume":        vol,
-            }
+        # 실시간 데이터 응답만 처리
+        if trnm not in ("REAL", "RSPN", ""):
+            return None
+
+        entries = data.get("data", [])
+        if not entries:
+            return None
+
+        row = entries[0] if isinstance(entries, list) else entries
+        code = str(row.get("item_cd", "") or row.get("stk_cd", "")).strip()
+        if not code:
+            return None
+
+        # values가 별도 dict인 경우와 flat인 경우 모두 처리
+        vals = row.get("values", row)
+
+        def _fv(k: str) -> float:
+            v = str(vals.get(k, 0) or 0).replace(",", "").replace("+", "")
+            try:
+                return float(v)
+            except ValueError:
+                return 0.0
+
+        price = abs(_fv("10"))   # 하락 시 음수로 오는 경우 대비
+        return {
+            "stock_code":    code,
+            "current_price": price,
+            "change":        _fv("11"),
+            "change_rate":   _fv("12"),
+            "volume":        int(abs(_fv("13"))),
+        }
     except Exception as e:
         logger.debug("파싱 오류: %s", e)
     return None
 
 
-# ── KisWebSocketManager ────────────────────────────────────────────────────────
+# ── KiwoomWebSocketManager ────────────────────────────────────────────────────
 
-class KisWebSocketManager:
-    """KIS WebSocket 연결을 유지하며 실시간 체결가를 _price_store에 저장한다."""
+class KiwoomWebSocketManager:
+    """키움 WebSocket 연결을 유지하며 실시간 체결가를 _price_store에 저장한다."""
 
     def __init__(self, is_mock: bool = False):
-        self._ws_url        = _WS_URL_MOCK if is_mock else _WS_URL_REAL
-        self._approval_key: Optional[str] = None
-        self._subscribed:   Set[str]      = set()
+        self._ws_url      = _WS_URL
+        self._token: Optional[str] = None
+        self._subscribed:   Set[str] = set()
         self._running       = False
         self._task: Optional[asyncio.Task] = None
-        self._invalid_key   = False
 
     # ── 공개 API ──────────────────────────────────────────────────────────────
 
     async def start(self, initial_codes: list[str]) -> None:
-        """백그라운드 루프 시작."""
         self._running = True
-        # approval_key 초기 발급은 _run_loop 내에서 처리 (재연결 시도마다 갱신)
         self._task = asyncio.create_task(self._run_loop(initial_codes))
-        logger.info("KIS WebSocket 백그라운드 태스크 시작")
+        logger.info("키움 WebSocket 백그라운드 태스크 시작")
 
     async def stop(self) -> None:
         self._running = False
@@ -213,12 +163,7 @@ class KisWebSocketManager:
             self._task.cancel()
 
     async def subscribe(self, codes: list[str]) -> None:
-        """아직 구독 안 된 종목코드 추가 구독 요청 (큐로 전달)."""
-        # _subscribed는 이제 "{code}:{tr_id}" 형식 → 하나라도 미완이면 pending에 추가
-        new_codes = [
-            c for c in codes
-            if any(f"{c}:{tr_id}" not in self._subscribed for tr_id in _REALTIME_TR_IDS)
-        ]
+        new_codes = [c for c in codes if f"{c}:vi0002" not in self._subscribed]
         if new_codes:
             self._pending_subscribe = getattr(self, "_pending_subscribe", set())
             self._pending_subscribe.update(new_codes)
@@ -226,54 +171,56 @@ class KisWebSocketManager:
     # ── 내부 루프 ─────────────────────────────────────────────────────────────
 
     async def _run_loop(self, initial_codes: list[str]) -> None:
-        """연결 끊기면 지수 백오프 후 자동 재연결.
-
-        구독할 종목이 없으면 연결을 시도하지 않고 대기한다.
-        실패 시 대기: 5 → 10 → 20 → 40 → 60초(최대) 반복.
-        """
         import websockets  # lazy import
+        from websockets.exceptions import InvalidStatus
 
         self._pending_subscribe: Set[str] = set(initial_codes)
-        self._invalid_key = False  # OPSP0011 수신 시 True
-        backoff = 5  # 초기 대기 시간(초)
+        backoff = 5
+        consecutive_500 = 0
+        _MAX_CONSECUTIVE_500 = 5   # 500 연속 5회 → 포기 (포털 설정 문제)
 
         while self._running:
-            # ── 구독 종목이 없으면 연결하지 않고 대기 ─────────────────────────
             if not self._pending_subscribe and not self._subscribed:
                 await asyncio.sleep(5)
                 continue
 
-            try:
-                # 재연결마다 approval_key 갱신 (캐시 유효하면 재사용, 만료시 재발급)
-                need_force = self._invalid_key
-                if need_force:
-                    self._invalid_key = False
-                    logger.info("approval_key 만료 감지 — 강제 재발급 요청")
-                try:
-                    self._approval_key = get_approval_key(force_refresh=need_force)
-                except Exception as key_err:
-                    logger.warning("approval_key 발급 실패: %s — 30초 후 재시도", key_err)
-                    await asyncio.sleep(30)
-                    continue
+            # 동시 로그인 방지: 워커들이 순서대로 연결하도록 직렬화
+            _lock = _get_connect_lock()
+            await _lock.acquire()
+            _lock_released = False
 
-                logger.info("KIS WS 연결 시도: %s", self._ws_url)
+            try:
+                self._token = _get_token()
+
+                logger.info("키움 WS 연결 시도: %s", self._ws_url)
                 async with websockets.connect(
                     self._ws_url,
-                    ping_interval=None,   # KIS는 텍스트 기반 PINGPONG 사용 → 내장 ping 비활성화
+                    ping_interval=None,
                     close_timeout=10,
                 ) as ws:
-                    logger.info("KIS WS 연결 성공")
-                    # 재연결 시: 기존 구독 목록을 pending에 복원한 뒤 subscribed 초기화
-                    # (flush_pending이 pending을 비워버리므로, subscribed에서 복원해야 재구독됨)
+                    # 연결 후 로그인 TR 전송 (키움 WS 인증 방식)
+                    await ws.send(json.dumps({"trnm": "LOGIN", "token": self._token}))
+                    try:
+                        login_raw = await asyncio.wait_for(ws.recv(), timeout=10)
+                        login_resp = json.loads(login_raw)
+                        rc = str(login_resp.get("return_code", "0"))
+                        if rc != "0":
+                            raise ConnectionError(f"WS 로그인 실패: {login_resp.get('return_msg', '')}")
+                        logger.info("키움 WS 로그인 성공")
+                    except asyncio.TimeoutError:
+                        logger.warning("WS 로그인 응답 타임아웃 — 계속 진행")
                     prev_codes = {s.split(":")[0] for s in self._subscribed}
                     self._subscribed.clear()
-                    self._limit_reached = False  # 재연결 시 한도 플래그 초기화
                     if prev_codes:
-                        self._pending_subscribe = getattr(self, "_pending_subscribe", set())
                         self._pending_subscribe.update(prev_codes)
                         logger.info("재연결 — %d개 종목 재구독 예약", len(prev_codes))
                     self._ws = ws
-                    backoff = 5  # 연결 성공 시 백오프 초기화
+                    backoff = 5
+
+                    # 로그인 완료 후 락 해제 — 다음 워커가 순차적으로 연결 가능
+                    await asyncio.sleep(1.0)
+                    _lock.release()
+                    _lock_released = True
 
                     recv_task   = asyncio.create_task(self._recv_loop(ws))
                     sender_task = asyncio.create_task(self._sender_loop(ws))
@@ -284,159 +231,252 @@ class KisWebSocketManager:
                         sender_task.cancel()
                         raise
 
-            except Exception as e:
-                err_msg = str(e)
-                # OPSP0011(approval_key 만료)은 키 재발급 후 즉시 재연결
-                if "invalid approval_key" in err_msg:
-                    backoff = 3
-                # "no close frame" 는 KIS가 TCP를 조용히 끊은 것 — DEBUG로 낮춤
-                elif "no close frame" in err_msg:
-                    logger.debug("KIS WS 연결 종료 (no close frame) — %d초 후 재연결", backoff)
-                elif "did not receive a valid HTTP response" in err_msg:
-                    logger.debug("KIS WS 연결 실패 (HTTP 응답 없음) — %d초 후 재연결", backoff)
+            except InvalidStatus as e:
+                # HTTP 수준 거부 — 응답 본문 로깅으로 정확한 원인 확인
+                try:
+                    body = e.response.body.decode("utf-8", errors="replace")
+                except Exception:
+                    body = str(e)
+
+                if e.response.status_code == 500:
+                    consecutive_500 += 1
+                    if consecutive_500 >= _MAX_CONSECUTIVE_500:
+                        logger.error(
+                            "키움 WS HTTP 500 연속 %d회 — REST 폴링으로 전환합니다. "
+                            "(포털 WebSocket 권한 또는 서버 상태 확인 필요)",
+                            consecutive_500,
+                        )
+                        global _ws_available
+                        _ws_available = False
+                        self._running = False
+                        asyncio.get_event_loop().create_task(
+                            _start_rest_polling(list(self._pending_subscribe))
+                        )
+                        break
+                    logger.warning(
+                        "키움 WS HTTP 500 (%d/%d) — 포털 WebSocket 권한 확인 필요: %s",
+                        consecutive_500, _MAX_CONSECUTIVE_500, body[:200],
+                    )
                 else:
-                    logger.warning("KIS WS 연결 오류: %s — %d초 후 재연결", e, backoff)
+                    consecutive_500 = 0
+                    logger.warning(
+                        "키움 WS HTTP %d 거부 → %s — %d초 후 재연결",
+                        e.response.status_code, body[:200], backoff,
+                    )
+                    # 인증 오류면 kis_client 토큰 캐시 강제 무효화
+                    if e.response.status_code in (401, 403):
+                        from kis_client import _get_token as _ct, _token_cache as _cc, _TOKEN_FILE as _cf
+                        _cc["token"] = None
+                        _cc["expires_at"] = 0.0
+                        try:
+                            if _cf.exists():
+                                _cf.unlink()
+                        except Exception:
+                            pass
+
                 if not self._running:
                     break
                 await asyncio.sleep(backoff)
-                backoff = min(backoff * 2, 60)  # 최대 60초
+                backoff = min(backoff * 2, 60)
+            except Exception as e:
+                err_msg = str(e)
+                if "no close frame" in err_msg:
+                    logger.debug("키움 WS 연결 종료 — %d초 후 재연결", backoff)
+                else:
+                    logger.warning("키움 WS 연결 오류: %s — %d초 후 재연결", e, backoff)
+                if not self._running:
+                    break
+                await asyncio.sleep(backoff)
+                backoff = min(backoff * 2, 60)
+            else:
+                # 정상 종료(예외 없음) — 즉시 재연결하면 동시 로그인 재발
+                if self._running:
+                    logger.debug("키움 WS 연결 종료 — %d초 후 재연결", backoff)
+                    await asyncio.sleep(backoff)
+                    backoff = min(backoff * 2, 60)
+            finally:
+                # 락이 아직 해제되지 않았다면 (연결/로그인 실패 등) 여기서 해제
+                if not _lock_released:
+                    try:
+                        _lock.release()
+                    except RuntimeError:
+                        pass
 
     async def _recv_loop(self, ws) -> None:
-        """수신 전용 루프."""
         async for raw in ws:
             if not self._running:
                 break
 
-            if raw == "PINGPONG":
-                await ws.send("PINGPONG")
+            # PINGPONG 처리 (문자열 형식)
+            if raw in ("PINGPONG", "ping", "pong"):
+                try:
+                    await ws.send("PINGPONG")
+                except Exception:
+                    pass
                 continue
 
             if raw.startswith("{"):
                 try:
                     sys_msg = json.loads(raw)
-                    body    = sys_msg.get("body", {})
-                    msg_cd  = body.get("msg_cd", "")
-                    rt_cd   = body.get("rt_cd", "")
-                    msg1    = body.get("msg1", "")
+                    trnm    = sys_msg.get("trnm", "")
 
-                    # OPSP0011 만 approval_key 만료로 처리
-                    if msg_cd == "OPSP0011":
-                        logger.debug("approval_key 만료 감지 (OPSP0011) — 재연결 시 키 재발급 예약")
-                        self._invalid_key = True
-                        raise ConnectionError("invalid approval_key")
+                    if trnm == "PING":
+                        # 키움 공식 PING: 수신한 메시지를 그대로 echo
+                        try:
+                            await ws.send(raw)
+                        except Exception:
+                            pass
+                        continue
 
-                    # OPSP0008: 구독 한도 초과 — 플래그 세우고 더 이상 구독 시도 안 함
-                    if msg_cd == "OPSP0008":
-                        logger.info(
-                            "KIS WS 구독 한도 초과 (OPSP0008) — 현재 %d개 구독 중 (최대 %d). "
-                            "추가 구독 중단. KIS_MAX_SUBSCRIPTIONS 환경변수로 한도를 줄이세요.",
-                            len(self._subscribed) // len(_REALTIME_TR_IDS),
-                            _MAX_SUBSCRIPTIONS,
-                        )
-                        self._limit_reached = True
-                    elif rt_cd == "1":
-                        logger.warning("KIS WS 구독 오류 응답 [%s]: %s", msg_cd, msg1)
-                    else:
-                        logger.debug("시스템 메시지: %s", sys_msg)
+                    if trnm == "REAL":
+                        # 실시간 체결 데이터
+                        parsed = _parse_realtime(raw)
+                        if parsed:
+                            _price_store[parsed["stock_code"]] = parsed
+                            logger.debug("수신 %s: %s", parsed["stock_code"], parsed["current_price"])
+                        continue
+
+                    if trnm in ("RSPN", "LOGIN"):
+                        # 구독/로그인 응답
+                        return_code = str(sys_msg.get("return_code", "0"))
+                        msg = sys_msg.get("return_msg", "")
+                        if return_code != "0":
+                            # 토큰 만료
+                            if "token" in msg.lower() or "인증" in msg:
+                                logger.info("토큰 만료 감지 — 재연결 예약")
+                                raise ConnectionError("token_expired")
+                            logger.warning("키움 WS 응답 오류 [%s]: %s", trnm, msg)
+                        continue
+
                 except (ConnectionError, asyncio.CancelledError):
                     raise
                 except Exception:
                     pass
                 continue
 
+            # JSON이 아닌 텍스트 메시지 (fallback)
             parsed = _parse_realtime(raw)
             if parsed:
-                code = parsed["stock_code"]
-                _price_store[code] = parsed
-                logger.debug("수신 %s: %s", code, parsed["current_price"])
+                _price_store[parsed["stock_code"]] = parsed
 
     async def _sender_loop(self, ws) -> None:
-        """0.5초마다 pending 구독 요청을 WS로 전송, 30초마다 PINGPONG 하트비트 전송."""
         last_ping = asyncio.get_event_loop().time()
         while self._running:
-            await self._flush_pending(ws)
+            try:
+                await self._flush_pending(ws)
+            except Exception:
+                break  # ConnectionClosed 포함 모든 연결 오류 → 루프 종료
             now = asyncio.get_event_loop().time()
             if now - last_ping >= 30:
                 try:
                     await ws.send("PINGPONG")
                     last_ping = now
-                    logger.debug("KIS WS PINGPONG 전송")
                 except Exception:
-                    break  # WS 연결 끊김 → _run_loop에서 재연결
+                    break
             await asyncio.sleep(0.5)
 
     async def _flush_pending(self, ws) -> None:
+        try:
+            from websockets.exceptions import ConnectionClosed as _WsCC
+        except ImportError:
+            _WsCC = Exception  # type: ignore[misc,assignment]
+
         pending: Set[str] = getattr(self, "_pending_subscribe", set())
         for code in list(pending):
-            # 구독 한도 초과 시 남은 pending을 모두 버림
-            if getattr(self, "_limit_reached", False):
-                pending.clear()
-                return
-            # 한도 체크: 구독 전 현재 구독 수 확인
-            current_count = len(self._subscribed) // max(len(_REALTIME_TR_IDS), 1)
+            current_count = len(self._subscribed)
             if current_count >= _MAX_SUBSCRIPTIONS:
-                logger.info(
-                    "KIS WS 구독 한도 도달 (%d/%d) — 나머지 %d개 종목 구독 생략",
-                    current_count, _MAX_SUBSCRIPTIONS, len(pending),
-                )
+                logger.info("키움 WS 구독 한도 (%d) 도달 — 나머지 %d개 생략", _MAX_SUBSCRIPTIONS, len(pending))
                 pending.clear()
                 return
-            all_done = True
-            for tr_id in _REALTIME_TR_IDS:
-                sub_key = f"{code}:{tr_id}"
-                if sub_key not in self._subscribed:
-                    try:
-                        msg = _build_subscribe_msg(self._approval_key, code, tr_id=tr_id)
-                        await ws.send(msg)
-                        self._subscribed.add(sub_key)
-                        logger.info("KIS WS 구독: %s [%s]", code, tr_id)
-                        await asyncio.sleep(0.05)  # 종목 간 전송 간격 (과부하 방지)
-                    except Exception as e:
-                        logger.warning("구독 전송 실패 %s [%s]: %s — 해당 종목 구독 건너뜀", code, tr_id, e)
-                        # 실패한 sub_key를 subscribed에 추가해 무한 재시도 방지
-                        self._subscribed.add(sub_key)
-                        all_done = False
-                        # WS 연결 자체가 끊긴 경우 즉시 중단
-                        if "close frame" in str(e) or "connection" in str(e).lower():
-                            return
-                    else:
-                        all_done = False  # 방금 구독 완료 → pending에서 제거 대기
-            if all_done:
-                pending.discard(code)
-        if not pending:
-            pending.clear()
+            sub_key = f"{code}:vi0002"
+            if sub_key not in self._subscribed:
+                try:
+                    msg = _build_subscribe_msg(self._token, code)
+                    await ws.send(msg)
+                    self._subscribed.add(sub_key)
+                    logger.debug("키움 WS 구독: %s", code)
+                    await asyncio.sleep(0.05)
+                except _WsCC:
+                    # 연결이 끊어짐 — 상위(_sender_loop)가 잡아서 루프 종료 처리
+                    raise
+                except Exception as e:
+                    # transport 오류 등 연결 문제 — DEBUG 로그 후 상위에 전달
+                    logger.debug("구독 전송 실패 %s: %s", code, e)
+                    raise
+            pending.discard(code)
 
 
-# ── KisWebSocketPool (다중 연결 풀) ──────────────────────────────────────────
+# KIS 코드와의 하위 호환을 위해 KisWebSocketManager도 동일 클래스로 노출
+KisWebSocketManager = KiwoomWebSocketManager
+
+
+# ── REST 폴링 폴백 ─────────────────────────────────────────────────────────────
+
+_rest_polling_task: Optional[asyncio.Task] = None
+_rest_poll_codes:   Set[str] = set()
+_REST_POLL_INTERVAL = int(os.getenv("REST_POLL_INTERVAL", "10"))  # 초
+
+
+async def _rest_poll_once(codes: list[str]) -> None:
+    """kis_client.get_current_price 를 사용해 가격을 _price_store에 갱신."""
+    try:
+        from kis_client import get_current_price
+    except ImportError:
+        logger.error("REST 폴링: kis_client import 실패")
+        return
+
+    for code in codes:
+        try:
+            data = await asyncio.to_thread(get_current_price, code)
+            _price_store[code] = {
+                "stock_code":    code,
+                "current_price": data.get("current_price", 0),
+                "change":        data.get("change", 0),
+                "change_rate":   data.get("change_rate", 0),
+                "volume":        data.get("volume", 0),
+            }
+        except Exception as e:
+            logger.debug("REST 폴링 오류 [%s]: %s", code, e)
+        await asyncio.sleep(0.08)   # 키움 rate limit 대응
+
+
+async def _start_rest_polling(initial_codes: list[str]) -> None:
+    global _rest_polling_task, _rest_poll_codes
+    _rest_poll_codes.update(initial_codes)
+
+    if _rest_polling_task and not _rest_polling_task.done():
+        logger.info("REST 폴링 이미 실행 중 (%d개 종목)", len(_rest_poll_codes))
+        return
+
+    async def _loop():
+        logger.info("REST 폴링 시작: %d개 종목, %d초 간격", len(_rest_poll_codes), _REST_POLL_INTERVAL)
+        while True:
+            codes = list(_rest_poll_codes)
+            if codes:
+                await _rest_poll_once(codes)
+            await asyncio.sleep(_REST_POLL_INTERVAL)
+
+    _rest_polling_task = asyncio.create_task(_loop())
+
+
+# ── WebSocket Pool ─────────────────────────────────────────────────────────────
 
 class KisWebSocketPool:
-    """KisWebSocketManager를 여러 개 생성해 40개 한도를 초과하는 종목을 커버한다.
-
-    초기 종목 목록을 _MAX_SUBSCRIPTIONS 단위로 분할해 각 연결에 분배하고,
-    이후 subscribe() 호출 시 여유 있는 연결에 추가하거나 새 연결을 생성한다.
-    모든 연결은 공유 _price_store에 체결가를 저장한다.
-    """
+    """KiwoomWebSocketManager 여러 개를 생성해 대량 종목을 커버한다."""
 
     def __init__(self, is_mock: bool = False):
         self._is_mock = is_mock
-        self._workers: list[KisWebSocketManager] = []
+        self._workers: list[KiwoomWebSocketManager] = []
 
     async def start(self, initial_codes: list[str]) -> None:
         if not initial_codes:
-            logger.info("KIS WebSocket Pool: 초기 종목 없음 — subscribe() 호출 시 연결 생성")
             return
-        chunks = [
-            initial_codes[i: i + _MAX_SUBSCRIPTIONS]
-            for i in range(0, len(initial_codes), _MAX_SUBSCRIPTIONS)
-        ]
-        for chunk in chunks:
-            w = KisWebSocketManager(is_mock=self._is_mock)
+        for i in range(0, len(initial_codes), _MAX_SUBSCRIPTIONS):
+            chunk = initial_codes[i: i + _MAX_SUBSCRIPTIONS]
+            w = KiwoomWebSocketManager(is_mock=self._is_mock)
             self._workers.append(w)
             await w.start(chunk)
-        logger.info(
-            "KIS WebSocket Pool 시작: %d개 연결, 총 %d개 종목 구독",
-            len(self._workers), len(initial_codes),
-        )
+        logger.info("키움 WebSocket Pool 시작: %d개 연결, 총 %d개 종목", len(self._workers), len(initial_codes))
 
     async def stop(self) -> None:
         for w in self._workers:
@@ -444,31 +484,21 @@ class KisWebSocketPool:
         self._workers.clear()
 
     async def subscribe(self, codes: list[str]) -> None:
-        """요청된 코드들을 여유 연결에 분배, 모자라면 새 연결 생성."""
         remaining = list(codes)
-
-        # 기존 workers에 여유 용량 채우기
         for w in self._workers:
             if not remaining:
                 break
-            current = len(w._subscribed) // max(len(_REALTIME_TR_IDS), 1)
+            current = len(w._subscribed)
             capacity = _MAX_SUBSCRIPTIONS - current
             if capacity > 0:
-                to_sub = remaining[:capacity]
+                await w.subscribe(remaining[:capacity])
                 remaining = remaining[capacity:]
-                await w.subscribe(to_sub)
-
-        # 남은 종목은 새 연결 생성
         while remaining:
             chunk = remaining[:_MAX_SUBSCRIPTIONS]
             remaining = remaining[_MAX_SUBSCRIPTIONS:]
-            w = KisWebSocketManager(is_mock=self._is_mock)
+            w = KiwoomWebSocketManager(is_mock=self._is_mock)
             self._workers.append(w)
             await w.start(chunk)
-            logger.info(
-                "KIS WebSocket Pool: 새 연결 추가 (총 %d개 연결)",
-                len(self._workers),
-            )
 
     @property
     def worker_count(self) -> int:
@@ -476,22 +506,33 @@ class KisWebSocketPool:
 
     @property
     def total_subscribed(self) -> int:
-        return sum(
-            len(w._subscribed) // max(len(_REALTIME_TR_IDS), 1)
-            for w in self._workers
-        )
+        return sum(len(w._subscribed) for w in self._workers)
 
 
 # ── 전역 접근자 ───────────────────────────────────────────────────────────────
 
 async def init_manager(initial_codes: list[str], is_mock: bool = False) -> None:
-    """FastAPI startup_event에서 1회 호출."""
+    """FastAPI startup_event에서 1회 호출.
+    키움 연결당 최대 100종목 제한 대응 — 100개 초과 시 Pool로 다수 연결 생성.
+    """
     global _manager
-    _manager = KisWebSocketManager(is_mock=is_mock)
-    await _manager.start(initial_codes)
+    if len(initial_codes) <= _MAX_SUBSCRIPTIONS:
+        _manager = KiwoomWebSocketManager(is_mock=is_mock)
+        await _manager.start(initial_codes)
+    else:
+        pool = KisWebSocketPool(is_mock=is_mock)
+        await pool.start(initial_codes)
+        _manager = pool  # type: ignore[assignment]
 
 
-def get_manager() -> Optional[KisWebSocketManager]:
+async def add_poll_codes(codes: list[str]) -> None:
+    """REST 폴링 대상 종목 추가 (WS 비활성 상태일 때 사용)."""
+    _rest_poll_codes.update(codes)
+    if not _ws_available:
+        await _start_rest_polling([])
+
+
+def get_manager() -> Optional[KiwoomWebSocketManager]:
     return _manager
 
 

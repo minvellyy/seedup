@@ -2,6 +2,7 @@ from fastapi import APIRouter, Depends, HTTPException
 from pydantic import BaseModel
 from typing import Dict, Any, List, Optional
 from datetime import datetime, timedelta
+from concurrent.futures import ThreadPoolExecutor, as_completed
 import asyncio
 import json
 import os
@@ -60,12 +61,23 @@ def _pf_cache_path(user_id: int) -> Path:
     return _PF_CACHE_DIR / f"user_{user_id}_portfolio.json"
 
 
+_REC_CACHE_TTL_SECONDS = 6 * 3600   # 추천 캐시 유효기간 6시간
+
+
 def _load_pf_cache(user_id: int):
-    """파일 캐시에서 포트폴리오를 읽어 반환합니다. 없으면 None."""
+    """파일 캐시에서 포트폴리오를 읽어 반환합니다. 없거나 TTL 만료 시 None."""
     p = _pf_cache_path(user_id)
     if p.exists():
         try:
-            return json.loads(p.read_text(encoding="utf-8"))
+            data = json.loads(p.read_text(encoding="utf-8"))
+            saved_at = data.get("saved_at")
+            if saved_at:
+                from datetime import timezone
+                age = (datetime.utcnow() - datetime.fromisoformat(saved_at)).total_seconds()
+                if age > _REC_CACHE_TTL_SECONDS:
+                    _cache_logger.info("포트폴리오 캐시 TTL 만료 (user_id=%s, age=%.0fh)", user_id, age / 3600)
+                    return None
+            return data
         except Exception:
             pass
     return None
@@ -90,11 +102,19 @@ def _stock_rec_cache_path(user_id: int) -> Path:
 
 
 def _load_stock_rec_cache(user_id: int):
-    """파일 캐시에서 종목 추천을 읽어 반환합니다. 없으면 None."""
+    """파일 캐시에서 종목 추천을 읽어 반환합니다. 없거나 TTL 만료 시 None."""
     p = _stock_rec_cache_path(user_id)
     if p.exists():
         try:
-            return json.loads(p.read_text(encoding="utf-8"))
+            data = json.loads(p.read_text(encoding="utf-8"))
+            saved_at = data.get("saved_at")
+            if saved_at:
+                from datetime import timezone
+                age = (datetime.utcnow() - datetime.fromisoformat(saved_at)).total_seconds()
+                if age > _REC_CACHE_TTL_SECONDS:
+                    _cache_logger.info("종목 추천 캐시 TTL 만료 (user_id=%s, age=%.0fh)", user_id, age / 3600)
+                    return None
+            return data
         except Exception:
             pass
     return None
@@ -169,10 +189,11 @@ except ImportError as _model_import_err:
 
 # ── CrewAI 매니저 에이전트 연동 (crewai 없어도 서버 기동 가능) ─────────────────
 try:
-    from manager_agent.crew import run_manager_analysis as _run_manager_analysis  # noqa: E402
-    from manager_agent.crew import run_portfolio_recommendation as _run_portfolio_recommendation  # noqa: E402
-    from manager_agent.crew import run_stock_recommendation as _run_stock_recommendation          # noqa: E402
-    from manager_agent.crew import run_mc_explanation_agent as _run_mc_explanation_agent          # noqa: E402
+    from manager_agent.crew import run_manager_analysis as _run_manager_analysis                          # noqa: E402
+    from manager_agent.crew import run_portfolio_recommendation as _run_portfolio_recommendation          # noqa: E402
+    from manager_agent.crew import run_stock_recommendation as _run_stock_recommendation                  # noqa: E402
+    from manager_agent.crew import run_mc_explanation_agent as _run_mc_explanation_agent                  # noqa: E402
+    from manager_agent.crew import run_mc_final_selection_agent as _run_mc_final_selection_agent          # noqa: E402
     _CREW_AVAILABLE = True
 except Exception as _crew_err:
     _CREW_AVAILABLE = False
@@ -190,12 +211,14 @@ def _make_analysis_llm():
         return ChatOpenAI(model=model.replace("openai/", ""))
 
 
-def _load_signal_fin_data(top_n: int = 25, conn=None) -> tuple:
+def _load_signal_fin_data(top_n: int = 500, conn=None) -> tuple:
     """
     signal_pack_latest.csv와 fin_scores parquet을 직접 로드합니다.
-    conn 제공 시 DB instruments 에 존재하는 종목만 포함 (상위 top_n).
+    conn 제공 시 DB instruments에 존재하는 종목만 포함.
+    DB 필터 적용 시 top_n 제한을 무시하고 교집합 전체를 반환합니다
+    (signal rank로 자르면 고변동성 종목만 남아 개인화 불가).
     Returns: (signal_tickers, fin_scores)
-      signal_tickers: [{ticker, name, market, p_adj, rank_overall}, ...] 상위 top_n
+      signal_tickers: [{ticker, name, market, p_adj, rank_overall}, ...]
       fin_scores: {ticker: {overall_grade, overall_score}}
     """
     signal_tickers = []
@@ -225,13 +248,18 @@ def _load_signal_fin_data(top_n: int = 25, conn=None) -> tuple:
         if SIGNAL_PACK_PATH.exists():
             df = pd.read_csv(SIGNAL_PACK_PATH, dtype={"ticker": str})
             df_stock = df[df["asset_type"] == "stock"].copy()
-            # DB 유니버스로 제한 (매칭 없으면 필터 생략)
+            # DB 유니버스로 제한 (매칭 없으면 top_n으로 폴백)
             if db_codes:
                 df_filtered = df_stock[df_stock["ticker"].str.zfill(6).isin(db_codes)]
                 if not df_filtered.empty:
-                    df_stock = df_filtered
-            df_top = df_stock.sort_values("rank_overall").head(top_n)
-            for _, row in df_top.iterrows():
+                    # DB 필터 적용 시 전체 교집합 사용 (top_n 제한 없음)
+                    # signal rank로 자르면 고변동성 소형주만 남아 성향별 개인화 불가
+                    df_stock = df_filtered.sort_values("rank_overall")
+                else:
+                    df_stock = df_stock.sort_values("rank_overall").head(top_n)
+            else:
+                df_stock = df_stock.sort_values("rank_overall").head(top_n)
+            for _, row in df_stock.iterrows():
                 ticker = str(row["ticker"]).zfill(6)
                 csv_name = str(row["name"]) if pd.notna(row.get("name")) else ""
                 signal_tickers.append({
@@ -249,11 +277,22 @@ def _load_signal_fin_data(top_n: int = 25, conn=None) -> tuple:
             df_fin = pd.read_parquet(parquet_path)
             df_sub = df_fin[df_fin["ticker"].astype(str).str.zfill(6).isin(codes)]
             date_col = "as_of" if "as_of" in df_sub.columns else df_sub.columns[0]
+            def _safe_float(row, key):
+                try:
+                    v = row.get(key)
+                    return float(v) if v is not None and pd.notna(v) else None
+                except Exception:
+                    return None
             for t, grp in df_sub.groupby("ticker"):
                 row = grp.sort_values(date_col).iloc[-1]
                 fin_scores[str(t).zfill(6)] = {
                     "overall_grade": str(row.get("overall_grade") or "") or None,
-                    "overall_score": float(row["overall_score"]) if pd.notna(row.get("overall_score")) else None,
+                    "overall_score": _safe_float(row, "overall_score"),
+                    # 세부 팩터 점수 (0~1 percentile) — 추천 스코어링에 직접 활용
+                    "profitability_score": _safe_float(row, "profitability_score"),
+                    "growth_score":        _safe_float(row, "growth_score"),
+                    "stability_score":     _safe_float(row, "stability_score"),
+                    "cashflow_score":      _safe_float(row, "cashflow_score"),
                 }
     except Exception:
         pass
@@ -332,7 +371,7 @@ def _get_db_conn_dep():
 # Response Models
 class MarketWeatherResponse(BaseModel):
     weather: str
-    score: int
+    score: float
     recommendation: str
     hint: str
 
@@ -564,7 +603,7 @@ JSON 형식으로만 답변:
 # API 엔드포인트들
 # API 엔드포인트들
 @router.get("/trading-trends", response_model=List[TradingTrendResponse])
-async def get_trading_trends(days: int = 5):
+def get_trading_trends(days: int = 5):
     """투자자별 매매동향.
     1순위: KRX 직접 HTTP 수급 데이터 (억원)
     2순위: DB 시장 수익률 기반 추정치 (KRX API 오류 시 fallback)
@@ -674,25 +713,28 @@ async def get_trading_trends(days: int = 5):
 
 
 @router.get("/investor-trading", response_model=List[InvestorTradingRow])
-async def get_investor_trading_today():
+def get_investor_trading_today():
     """당일 투자자별 매매동향 (KOSPI + KOSDAQ, 십억원).
 
     KIS 일별 API(FHPTJ04040000) 기준 당일 누적 순매수를 반환합니다.
     매도/매수는 미제공(0 반환) — 프론트엔드에서 '-'로 표시합니다.
     """
     from kis_client import get_investor_trading_best
-    results: list = []
-    for market in ["KOSPI", "KOSDAQ"]:
-        try:
-            row = get_investor_trading_best(market)
-            results.append(row)
-        except Exception as e:
-            print(f"investor-trading [{market}] 오류: {e}")
-    return results
+    results: list = [None, None]  # KOSPI=0, KOSDAQ=1 순서 유지
+    markets = ["KOSPI", "KOSDAQ"]
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        future_map = {pool.submit(get_investor_trading_best, m): i for i, m in enumerate(markets)}
+        for fut in as_completed(future_map):
+            idx = future_map[fut]
+            try:
+                results[idx] = fut.result()
+            except Exception:
+                results[idx] = None  # 조용히 무시 — 장 외 시간/KRX 미응답 정상
+    return [r for r in results if r is not None]
 
 
 @router.get("/market-weather", response_model=MarketWeatherResponse)
-async def get_market_weather(market: str = "KOSPI"):
+def get_market_weather(market: str = "KOSPI"):
     """KIS API 지수 등락률로 시장 날씨 산출 (market-indices 캐시 재사용)"""
     from kis_client import get_index_price
     import time
@@ -728,7 +770,7 @@ async def get_market_weather(market: str = "KOSPI"):
 
     # KIS 투자자별 수급 데이터 시도, 실패 시 등락률 프록시로 fallback
     try:
-        trading_data = _get_krx_trading(market)
+        trading_data = _get_kis_trading(market)
         data_source = f"수급기준 {trading_data['date']}"
     except Exception:
         scale = pct * 1_000_000_000_000
@@ -746,21 +788,19 @@ async def get_market_weather(market: str = "KOSPI"):
 
 
 @router.get("/market-indices", response_model=List[MarketIndexResponse])
-async def get_market_indices():
+def get_market_indices():
     """KIS API로 KOSPI/KOSDAQ 실시간 지수 조회 (5분 TTL 캐시)"""
     from kis_client import get_index_price
     import time
 
-    results = []
-    for market_code in ["KOSPI", "KOSDAQ"]:
-        # 5분 TTL 캐시
+    now = time.time()
+    markets = ["KOSPI", "KOSDAQ"]
+
+    def _fetch_index(market_code: str):
         cache_key = f"index_{market_code}"
-        now = time.time()
         cached = _index_cache.get(cache_key)
         if cached and now - cached["ts"] < 300:
-            results.append(cached["data"])
-            continue
-
+            return cached["data"]
         try:
             d = get_index_price(market_code)
             item = {
@@ -771,16 +811,22 @@ async def get_market_indices():
                 "date":        d["price_date"],
             }
             _index_cache[cache_key] = {"data": item, "ts": now}
-            results.append(item)
+            return item
         except Exception as e:
             print(f"KIS 지수 조회 실패 [{market_code}]: {e}")
-            # 캐시 만료된 값이라도 사용
-            if cached:
-                results.append(cached["data"])
+            return cached["data"] if cached else None
 
-    if not results:
+    results = [None, None]
+    with ThreadPoolExecutor(max_workers=2) as pool:
+        future_map = {pool.submit(_fetch_index, m): i for i, m in enumerate(markets)}
+        for fut in as_completed(future_map):
+            idx = future_map[fut]
+            results[idx] = fut.result()
+
+    filtered = [r for r in results if r is not None]
+    if not filtered:
         raise HTTPException(status_code=502, detail="KIS 지수 조회 실패")
-    return results
+    return filtered
 
 
 @router.get("/crew-status")
@@ -835,22 +881,139 @@ async def get_stock_recommendations_dashboard(
         pass
 
     # ── 1단계: 신호+재무 데이터 직접 로드 (빠름) ─────────────────────────
-    signal_tickers, fin_scores = _load_signal_fin_data(top_n=25, conn=conn)
+    signal_tickers, fin_scores = _load_signal_fin_data(conn=conn)
     signal_map = {s["ticker"]: s for s in signal_tickers}
 
-    # ── 2단계: Monte Carlo 주 모델로 종목 선정 ────────────────────────────
-    result_dict: dict | None = None
-    if signal_tickers and _MODELS_AVAILABLE:
+    # ── 1.5단계: MC 입력 전 사전 필터 ────────────────────────────────────
+    # 기획 의도: KOSPI200/KOSDAQ150 우량주 한정 → 재무 데이터 없는 저신호 종목 차단
+    #   · 재무 데이터(fin_scores) 있는 종목 → 무조건 통과
+    #   · 재무 데이터 없는 종목 → rank_overall 상위 60 이내일 때만 통과
+    #     (신호가 매우 강한 종목은 데이터 부족이어도 일단 후보에 포함)
+    _SIGNAL_ONLY_RANK_LIMIT = 60
+    signal_tickers_mc = [
+        s for s in signal_tickers
+        if s["ticker"] in fin_scores
+        or s.get("rank_overall", 9999) <= _SIGNAL_ONLY_RANK_LIMIT
+    ]
+    # 필터 후 후보가 너무 적으면 원본 사용 (안전망)
+    if len(signal_tickers_mc) < 20:
+        signal_tickers_mc = signal_tickers
+    _cache_logger.info(
+        "[MC 사전필터] 전체 %d → 필터 후 %d개 (재무데이터 보유 또는 rank<=%d)",
+        len(signal_tickers), len(signal_tickers_mc), _SIGNAL_ONLY_RANK_LIMIT,
+    )
+
+    # ── 2단계: Monte Carlo 전체 채점 + 순위표 생성 (top_n=30) ──────────────
+    # MC는 모든 후보 종목에 대해 시뮬레이션을 돌린 뒤 total_score로 정렬한다.
+    # top_n은 단순히 순위표 앞부분 슬라이스이므로, 넉넉히 30개를 받아
+    # CrewAI가 충분한 선택지를 갖고 최종 확정할 수 있도록 한다.
+    mc_ranked: dict | None = None
+    if signal_tickers_mc and _MODELS_AVAILABLE:
         try:
             mc_rec = await asyncio.to_thread(
                 _recommend_stock_mc,
-                user_id, conn, signal_tickers, fin_scores, koscom_score,
+                user_id, conn, signal_tickers_mc, fin_scores, koscom_score,
+                30,  # top_n=30: 계산비용 동일, CrewAI에 넓은 순위표 제공
             )
-            result_dict = _safe_model_dump(mc_rec)
+            mc_ranked = _safe_model_dump(mc_rec)
         except Exception:
-            result_dict = None
+            mc_ranked = None
 
-    # MC 모델 실패 → DB 계량 폴백
+    # ── 3단계: CrewAI 최종 확정 (30위 순위표 → 5개 선정 + 설명) ────────────
+    # 퀀트(MC)는 순위표를 제시하고, CrewAI가 재무 검증 + 잡주 필터로 최종 확정
+    result_dict: dict | None = None
+    if _CREW_AVAILABLE and mc_ranked:
+        try:
+            def _safe_pct(v, cap: float = 300.0):
+                """MC 수익률 → % 변환 + 클램핑 (LLM 주입 전 전처리)"""
+                if v is None:
+                    return None
+                try:
+                    f = float(v) * 100
+                    return round(max(-99.0, min(cap, f)), 1)
+                except (TypeError, ValueError):
+                    return None
+
+            candidates_json = json.dumps([
+                {
+                    "rank": it["rank"],
+                    "ticker": it["ticker"],
+                    "name": it["name"],
+                    "market": it.get("market", ""),
+                    "p_adj": it.get("p_adj"),
+                    "rank_overall": it.get("rank_overall"),
+                    "ai_fin_grade": it.get("ai_fin_grade", "정보없음"),
+                    "mc_p10_pct": _safe_pct(it["features"].get("mc_p10")),
+                    "mc_p50_pct": _safe_pct(it["features"].get("mc_p50")),
+                    "mc_p90_pct": _safe_pct(it["features"].get("mc_p90")),
+                    "vol_ann_pct": round((it["features"].get("vol_ann") or 0) * 100, 1),
+                }
+                for it in mc_ranked.get("items", [])
+            ], ensure_ascii=False)
+
+            llm = _make_analysis_llm()
+            sel_raw = await asyncio.wait_for(
+                asyncio.to_thread(
+                    _run_mc_final_selection_agent,
+                    llm=llm,
+                    candidates_json=candidates_json,
+                    user_risk_tier=inv_type,
+                ),
+                timeout=300.0,
+            )
+
+            # JSON 파싱 (마크다운 코드블록 제거 후)
+            try:
+                import re as _re
+                _stripped = sel_raw.strip() if isinstance(sel_raw, str) else str(sel_raw)
+                _m = _re.search(r"```(?:json)?\s*([\s\S]*?)```", _stripped)
+                _json_str = _m.group(1).strip() if _m else _stripped
+                sel_data = json.loads(_json_str)
+                crew_items = sel_data.get("items", []) if isinstance(sel_data, dict) else []
+            except Exception:
+                crew_items = []
+
+            # CrewAI 선정 결과와 MC 수치 데이터 병합
+            if crew_items:
+                mc_feature_map = {it["ticker"]: it for it in mc_ranked.get("items", [])}
+                merged_items = []
+                for crew_item in crew_items:
+                    ticker = crew_item.get("ticker", "")
+                    mc_data = mc_feature_map.get(ticker, {})
+                    merged_items.append({
+                        "rank": crew_item.get("rank", len(merged_items) + 1),
+                        "ticker": ticker,
+                        "name": crew_item.get("name") or mc_data.get("name", ""),
+                        "market": mc_data.get("market", ""),
+                        "p_adj": mc_data.get("p_adj"),
+                        "rank_overall": mc_data.get("rank_overall"),
+                        "ai_fin_grade": mc_data.get("ai_fin_grade"),
+                        "total_score": mc_data.get("total_score"),
+                        "features": mc_data.get("features", {}),
+                        "reasons": crew_item.get("reasons") or mc_data.get("reasons", []),
+                        "explanation": crew_item.get("explanation", ""),
+                    })
+                result_dict = {"items": merged_items}
+                # rank 오름차순 정렬 후 1-5 재번호 부여
+                # (CrewAI가 원본 30위 순위표의 rank를 그대로 가져오기 때문)
+                merged_items.sort(key=lambda x: x.get("rank", 999))
+                for new_rank, item in enumerate(merged_items, 1):
+                    item["rank"] = new_rank
+                result_dict = {"items": merged_items}
+                _cache_logger.info(
+                    "[CrewAI 최종확정] MC %d위 순위표 → CrewAI 확정 %d개",
+                    len(mc_ranked.get("items", [])), len(merged_items),
+                )
+        except (asyncio.TimeoutError, Exception) as _crew_sel_err:
+            _cache_logger.warning("[CrewAI 최종확정] 실패, MC top5 폴백: %s", _crew_sel_err)
+
+    # CrewAI 확정 실패 → MC top5 직접 사용 (폴백)
+    if result_dict is None and mc_ranked:
+        top5 = mc_ranked.get("items", [])[:5]
+        result_dict = {"items": top5}
+        _cache_logger.info("[폴백] CrewAI 미실행/실패 → MC top5 직접 반환")
+
+    # MC 모델 자체 실패 → DB 계량 폴백
     if result_dict is None:
         if not _MODELS_AVAILABLE:
             raise HTTPException(status_code=503, detail=f"모델 로드 실패: {_MODELS_IMPORT_ERR}")
@@ -858,40 +1021,12 @@ async def get_stock_recommendations_dashboard(
             fb = await asyncio.to_thread(_get_stock_rec, user_id=user_id, conn=conn, koscom_score=koscom_score)
             result_dict = _safe_model_dump(fb)
         except Exception as e:
+            # DB 계량 폴백도 실패 시 마지막 캐시 반환
+            cached_fb = _load_stock_rec_cache(user_id)
+            if cached_fb and cached_fb.get("data"):
+                _cache_logger.warning("종목 추천 DB 폴백 실패 — 캐시 반환: %s", e)
+                return cached_fb["data"]
             raise HTTPException(status_code=500, detail=f"종목 추천 오류: {e}")
-
-    # ── 3단계: CrewAI 설명 에이전트 (선정 결과에 설명 추가) ──────────────
-    if _CREW_AVAILABLE and result_dict:
-        try:
-            mc_summary = json.dumps([
-                {
-                    "rank": it["rank"], "ticker": it["ticker"], "name": it["name"],
-                    "mc_p10": it["features"].get("vol_ann"),
-                    "mc_p50": round(float(it["features"].get("ret_1y") or 0) * 100, 1),
-                    "reasons": it.get("reasons", []),
-                }
-                for it in result_dict.get("items", [])
-            ], ensure_ascii=False)
-            llm = _make_analysis_llm()
-            exp_raw = await asyncio.wait_for(
-                asyncio.to_thread(_run_mc_explanation_agent,
-                                  llm=llm,
-                                  mc_items_json=mc_summary,
-                                  user_risk_tier=inv_type,
-                                  mode="stock"),
-                timeout=120.0,
-            )
-            try:
-                exp_list = json.loads(exp_raw) if isinstance(exp_raw, str) else exp_raw
-                if isinstance(exp_list, list):
-                    exp_map = {e["ticker"]: e.get("explanation", "") for e in exp_list if "ticker" in e}
-                    for it in result_dict["items"]:
-                        if it["ticker"] in exp_map and exp_map[it["ticker"]]:
-                            it["explanation"] = exp_map[it["ticker"]]
-            except Exception:
-                pass
-        except (asyncio.TimeoutError, Exception):
-            pass  # 설명 실패해도 MC 결과는 그대로 반환
 
     _save_stock_rec_cache(user_id, result_dict)
     return result_dict
@@ -936,6 +1071,99 @@ async def get_portfolio_recommendations_multi_dashboard(
 # ─────────────────────────────────────────────────────────────────────────────
 
 _KOSCOM_TO_INV = [(30, "공격투자형"), (25, "적극투자형"), (20, "위험중립형"), (15, "안전추구형"), (0, "안정형")]
+
+
+def _compute_user_fit_score(pf: dict, inv_type: str, survey_ctx: dict) -> float:
+    """포트폴리오가 이 사용자에게 얼마나 적합한지 점수를 계산합니다. (0~1, 높을수록 좋음)
+
+    구성:
+    - 기대수익률(MC 중앙값)    — 성향별 가중치
+    - 하방위험(MC P10 기준)   — 성향별 가중치
+    - 샤프 프록시(수익률/변동성) — 공통
+    - 설문 기반 보너스(배당, 기여방식, 기간)
+    """
+    mc = pf.get("monte_carlo_1y") or {}
+    mean_ret = float(mc.get("mean_pct") or 0)
+    vol = float(mc.get("vol_ann_pct") or 1)
+    p50 = float(mc.get("p50_pct") or 0)
+    p10 = float(mc.get("p10_pct") or 0)
+
+    # 수익률/변동성/하방 점수 정규화 (클램프 0~1)
+    ret_score  = min(max((mean_ret + 10) / 50.0, 0.0), 1.0)   # -10~+40 → 0~1
+    risk_score = min(max((p10 + 30)     / 50.0, 0.0), 1.0)    # -30~+20 → 0~1 (downside safety)
+    sharpe_proxy = mean_ret / max(vol, 1.0)
+    sharpe_score = min(max((sharpe_proxy + 0.5) / 3.5, 0.0), 1.0)
+
+    # 성향별 가중치: (기대수익, 하방안전, 샤프)
+    _W = {
+        "공격투자형": (0.55, 0.15, 0.30),
+        "적극투자형": (0.45, 0.20, 0.35),
+        "위험중립형": (0.35, 0.30, 0.35),
+        "안전추구형": (0.20, 0.50, 0.30),
+        "안정추구형": (0.20, 0.50, 0.30),
+        "안정형":     (0.10, 0.65, 0.25),
+    }
+    w_ret, w_risk, w_sharpe = _W.get(inv_type, (0.35, 0.30, 0.35))
+    score = w_ret * ret_score + w_risk * risk_score + w_sharpe * sharpe_score
+
+    # 설문 보너스
+    div_pref = survey_ctx.get("DIVIDEND_PREF", "")
+    horizon  = survey_ctx.get("TARGET_HORIZON", "")
+    contrib  = survey_ctx.get("CONTRIBUTION_TYPE", "")
+    sty      = pf.get("portfolio_style", "")
+
+    if div_pref == "HIGH" and sty == "lowvol":
+        score += 0.04
+    if div_pref == "LOW" and sty == "momentum":
+        score += 0.04
+    if contrib == "DCA" and sty == "balanced":
+        score += 0.03
+    if any(y in (horizon or "") for y in ["1년", "2년"]) and sty == "momentum":
+        score += 0.03
+    if any(y in (horizon or "") for y in ["7년", "10년", "15년"]) and sty == "lowvol":
+        score += 0.03
+
+    return score
+
+
+def _build_fit_label(pf: dict, inv_type: str, survey_ctx: dict) -> str:
+    """포트폴리오의 실제 특성과 사용자 목표를 기반으로 라벨을 자동 생성합니다."""
+    mc = pf.get("monte_carlo_1y") or {}
+    mean_ret = float(mc.get("mean_pct") or 0)
+    vol      = float(mc.get("vol_ann_pct") or 15)
+
+    goal    = survey_ctx.get("INVEST_GOAL", "")
+    horizon = survey_ctx.get("TARGET_HORIZON", "")
+    div     = survey_ctx.get("DIVIDEND_PREF", "")
+
+    # 목표 prefix
+    _GOAL_PFX = [
+        (["노후", "은퇴"],    "노후"),
+        (["주택", "집 구입"], "내집마련"),
+        (["증식", "목돈"],    "자산증식"),
+        (["교육"],            "교육자금"),
+        (["여유"],            "여유자금"),
+    ]
+    goal_prefix = next((pfx for keys, pfx in _GOAL_PFX if any(k in goal for k in keys)), "")
+
+    # 포트폴리오 특성 분류
+    if div == "HIGH" and vol < 15:
+        char = "배당 안정"
+    elif vol < 12:
+        char = "저위험 안정"
+    elif vol > 22 or mean_ret > 18:
+        char = "고수익 성장"
+    elif mean_ret > 12:
+        char = "성장 중심"
+    elif mean_ret < 5 and vol < 14:
+        char = "원금 보전"
+    else:
+        char = "균형 성장"
+
+    suffix = "포트폴리오"
+    if goal_prefix:
+        return f"{goal_prefix} {char} {suffix}"
+    return f"{char} {suffix}"
 
 
 def _enrich_portfolio_quant_signals(portfolios: list) -> list:
@@ -1110,7 +1338,7 @@ async def get_portfolio_recommendations_ai(
         raise HTTPException(status_code=503, detail=f"모델 로드 실패: {_MODELS_IMPORT_ERR}")
 
     # ── 1단계: 신호+재무 데이터 직접 로드 ────────────────────────────────
-    signal_tickers, fin_scores = _load_signal_fin_data(top_n=25, conn=conn)
+    signal_tickers, fin_scores = _load_signal_fin_data(conn=conn)
     signal_map = {s["ticker"]: s for s in signal_tickers}
     fin_map = {
         ticker: {
@@ -1129,18 +1357,26 @@ async def get_portfolio_recommendations_ai(
             fin_map=fin_map,
         )
     except Exception as e:
+        # MC 모델 오류 시 마지막 캐시 반환 (refresh=true여도 캐시 우선)
+        _cache_logger.error("포트폴리오 MC 모델 오류 — 캐시 폴백 시도: %s", e)
+        cached_fb = _load_pf_cache(user_id)
+        if cached_fb:
+            portfolios_fb = cached_fb.get("portfolios", [])
+            if portfolios_fb:
+                for pf in portfolios_fb:
+                    pf["_cached_at"] = cached_fb.get("saved_at")
+                return portfolios_fb
         raise HTTPException(status_code=500, detail=f"포트폴리오 MC 모델 오류: {e}")
 
     # ── PortfolioRecommendationResponse → 프런트엔드 dict 변환 ────────────
-    _STYLE_MAP = {
-        "balanced": "균형 추천형",
-        "aggressive": "공격 성장형",
-        "conservative": "안전 추구형",
-    }
-    portfolios: list[dict] = []
-    for pf in pf_results:
+    # get_multi_portfolio_with_signals 은 항상 [balanced, momentum, lowvol] 순으로 반환
+    _MULTI_STYLES_LIST = ["balanced", "momentum", "lowvol"]
+
+    # 1차: 스타일 키 매핑
+    _raw_portfolios: list[dict] = []
+    for i, pf in enumerate(pf_results):
         pf_d = _safe_model_dump(pf)
-        sty = pf_d.get("portfolio_style", "balanced")
+        sty = _MULTI_STYLES_LIST[i] if i < len(_MULTI_STYLES_LIST) else "balanced"
         mc = pf_d.get("monte_carlo_1y") or {}
         mc_summary = ""
         if mc:
@@ -1150,8 +1386,7 @@ async def get_portfolio_recommendations_ai(
                 f"상승 시나리오(P90) {mc.get('p90_pct', 0):+.1f}%. "
                 f"기대수익률 {mc.get('mean_pct', 0):+.1f}%, 연간변동성 {mc.get('vol_ann_pct', 0):.1f}%."
             )
-        portfolios.append({
-            "portfolio_label": pf_d.get("portfolio_label", _STYLE_MAP.get(sty, sty)),
+        _raw_portfolios.append({
             "portfolio_style": sty,
             "portfolio_summary": mc_summary or pf_d.get("portfolio_summary", ""),
             "risk_tier": inv_type,
@@ -1172,6 +1407,17 @@ async def get_portfolio_recommendations_ai(
             "monte_carlo_1y": mc,
             "survey_context": survey_ctx,
         })
+
+    # 2차: 사용자 적합도 점수로 정렬 → 라벨 부여 (Top1/2/3)
+    for pf in _raw_portfolios:
+        pf["_fit_score"] = _compute_user_fit_score(pf, inv_type, survey_ctx)
+    _raw_portfolios.sort(key=lambda x: x["_fit_score"], reverse=True)
+
+    portfolios: list[dict] = []
+    for pf in _raw_portfolios:
+        pf["portfolio_label"] = _build_fit_label(pf, inv_type, survey_ctx)
+        del pf["_fit_score"]
+        portfolios.append(pf)
 
     # ── 3단계: CrewAI 설명 에이전트 (선정 종목 설명 보강) ────────────────
     if _CREW_AVAILABLE and portfolios:

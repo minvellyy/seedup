@@ -403,9 +403,11 @@ def run_manager_analysis(
             backstory=(
                 "글로벌 운용사 산업조사팀 출신 15년 경력 섹터 애널리스트. "
                 "반도체, 이차전지, 바이오, 금융, 소비재 등 주요 업종 전반에 정통하며, "
-                "거시경제 흐름과 업종 사이클을 투자자가 이해하기 쉽게 요약하는 것을 강점으로 한다."
+                "거시경제 흐름과 업종 사이클을 투자자가 이해하기 쉽게 요약하는 것을 강점으로 한다. "
+                "재무 데이터만으로 산업 트렌드가 충분히 파악되지 않을 때는 뉴스 검색을 통해 "
+                "최신 산업 동향을 직접 수집하여 분석에 반영한다."
             ),
-            tools=[read_fin_structured_report],
+            tools=[read_fin_structured_report, news_rag_search],
             llm=llm,
             verbose=True,
             allow_delegation=False,
@@ -491,15 +493,20 @@ def run_manager_analysis(
                 f"종목 {ticker}가 속한 산업/섹터에 대한 분석을 수행하라.\n\n"
                 "절차:\n"
                 "1) read_fin_structured_report 툴로 종목의 sector, industry 정보를 확인하라.\n"
-                "2) 해당 산업에 대해 다음을 분석하라:\n"
+                "2) news_rag_search 툴로 해당 산업·섹터 관련 최신 뉴스를 검색하라.\n"
+                "   - 검색 질의 예시: '[산업명] 트렌드', '[산업명] 성장', '[종목명] 경쟁사', '[산업명] 규제'\n"
+                "   - 뉴스가 없거나 검색 실패 시에도 멈추지 말고 다음 단계로 진행하라.\n"
+                "3) 수집한 데이터를 바탕으로 다음을 분석하라:\n"
                 "   - 산업 정의: 이 산업이 어떤 산업인지 쉬운 말로 설명\n"
-                "   - 현재 트렌드: 현재 이 산업의 주요 동향과 이슈\n"
+                "   - 현재 트렌드: 뉴스 및 재무 데이터 기반 현재 주요 동향 2~3개\n"
                 "   - 성장 전망: 향후 이 산업의 성장 가능성\n"
                 "   - 주요 리스크: 산업 전반에 영향을 줄 수 있는 위험 요인 1~2개\n"
                 "   - 경쟁 구도: 주요 경쟁사와 이 종목의 위치\n"
                 "   - 규제·정책: 산업에 영향을 주는 주요 규제나 정부 정책\n"
-                "3) 산업 관점에서 이 종목의 기회와 위협을 정리하라.\n\n"
-                "[작성 원칙] 산업에 익숙하지 않은 투자 입문자도 이해할 수 있도록 쉽게 작성하라."
+                "4) 산업 관점에서 이 종목의 기회와 위협을 정리하라.\n\n"
+                "[작성 원칙] 산업에 익숙하지 않은 투자 입문자도 이해할 수 있도록 쉽게 작성하라.\n"
+                "뉴스 검색 결과가 없더라도 재무 섹터 정보와 일반 지식으로 작성하고, "
+                "데이터 부재를 오류처럼 표시하지 말 것."
             ),
             expected_output=(
                 "산업분석 JSON:\n"
@@ -815,12 +822,25 @@ def run_stock_recommendation(
             f"{_profile_context}\n"
             f"[선정 기준] {guidance}\n\n"
             "다음 절차로 종목 Top5를 선정하라:\n\n"
-            "1. get_top_direction_signals 툴로 stock 유형 상위 25개 종목을 조회하라.\n"
-            "   (asset_type='stock', top_n=25)\n"
-            "2. 상위 10개 종목에 대해 read_fin_structured_report 툴로 재무 데이터를 조회하라.\n"
-            "   ⚠️ NOT_FOUND 오류가 나도 멈추지 말고, 해당 종목은 ai_fin_grade='정보없음'으로 처리하라.\n"
-            f"3. 위 [선정 기준]에 따라 투자성향 '{user_risk_tier}'에 최적인 종목 5개를 선정하라.\n"
+            "1. get_top_direction_signals 툴로 stock 유형 상위 30개 종목을 조회하라.\n"
+            "   (asset_type='stock', top_n=30)\n"
+            "2. 상위 종목들에 대해 read_fin_structured_report 툴로 재무 데이터를 조회하라.\n"
+            "   ⚠️ NOT_FOUND 오류가 나도 멈추지 말고, 해당 종목은 ai_fin_grade='정보없음'으로 처리하라.\n\n"
+            "[잡주 필터링 원칙 — 반드시 적용]\n"
+            "아래 조건 중 1개라도 해당하면 해당 종목은 최종 추천에서 제외하라:\n"
+            "  - 재무 데이터가 '정보없음'이면서 rank_overall이 500위권 밖인 종목 (신호도 약하고 재무도 없음)\n"
+            "  - ai_fin_grade가 '주의' 등급인 종목 (재무 위험)\n"
+            "  - 스팩(SPAC), 관리종목, 상장폐지 위험 종목으로 의심되는 이름(예: '제X호스팩', '홀딩스' 단독) → 제외\n"
+            "  - 상장 후 6개월 미만으로 보이는 종목 (가격 데이터가 극히 짧음) → 제외\n\n"
+            "[다양성 원칙]\n"
+            "  - 동일 섹터(바이오/의약품, 반도체, 금융 등)에서 최대 2종목만 허용하라.\n"
+            "  - p_adj 순위가 높더라도 이미 같은 섹터 2종목이 선정됐으면 다음 섹터 종목을 선택하라.\n\n"
+            f"3. 위 기준을 모두 적용한 뒤, 투자성향 '{user_risk_tier}'에 최적인 우량 종목 5개를 선정하라.\n"
             "4. 각 종목의 선정 이유(reasons 리스트, 2~3개)와 종합 설명(explanation)을 한국어로 작성하라.\n"
+            "   [설명 작성 지침]\n"
+            "   - 단순 수익률 숫자만 강조하지 말 것\n"
+            "   - '왜 이 종목이 이 투자성향의 투자자에게 적합한 구조를 가졌는지'를 반드시 포함할 것\n"
+            "   - 초보 투자자도 이해할 수 있도록 전문 용어에는 괄호 설명을 붙일 것\n"
         ),
         expected_output=(
             "반드시 아래 JSON 객체 형식으로만 출력하라. 마크다운 코드블록 없이 JSON만.\n\n"
@@ -880,12 +900,12 @@ def run_mc_explanation_agent(
         role="AI 퀀트 리포터",
         goal=(
             "몬테카를로 모델이 이미 선정한 종목에 대해 LightGBM 방향성 신호와 재무 데이터를 확인하여 "
-            "투자자가 이해할 수 있는 한국어 설명을 작성한다."
+            "투자 초보자가 불안해하지 않고 이해할 수 있는 한국어 설명을 작성한다."
         ),
         backstory=(
             "퀀트 모델의 수치 결과를 투자자 친화적인 언어로 해석하는 전문 애널리스트. "
-            "MC 모델이 선정한 종목은 그대로 유지하고, 방향성 신호와 재무 지표를 근거로 "
-            "왜 이 종목이 해당 투자성향에 적합한지 설명한다."
+            "MC 모델이 선정한 종목은 그대로 유지하되, 비현실적으로 높은 수익률(예: 수천, 수만 퍼센트)은 "
+            "수학적 모델의 '극심한 변동성 경고'로 해석하여 숫자 대신 정성적인 언어로 순화하여 설명한다."
         ),
         tools=[read_stock_direction_signal, read_fin_structured_report],
         llm=llm,
@@ -902,7 +922,14 @@ def run_mc_explanation_agent(
             "2. read_fin_structured_report 툴로 재무 데이터(overall_grade, 수익성, 안정성)를 조회하라.\n"
             "   NOT_FOUND여도 멈추지 말고 다음 종목으로 진행하라.\n"
             "3. MC 결과(p10/p50/p90)와 방향성 신호, 재무 데이터를 종합하여\n"
-            f"   {user_risk_tier} 투자자에게 이 종목이 왜 적합한지 2~3문장으로 설명하라.\n"
+            f"   {user_risk_tier} 투자자에게 이 종목이 왜 적합한지 2~3문장으로 설명하라.\n\n"
+            "⚠️ [수치 순화 원칙 — 반드시 준수] ⚠️\n"
+            "   - MC 결과에 p50 기준 수익률이 1,000% 이상(예: 5,000%, 80,000%)인 종목이 있다면,\n"
+            "     절대 그 숫자를 설명 문장에 직접 쓰지 마라.\n"
+            "   - 대신 '가격 변동성이 매우 큰 고위험 모멘텀 종목', '단기 급등락 가능성이 있는 종목',\n"
+            "     '공격적 성향에 맞는 높은 변동성 종목' 같은 정성적 표현으로 대체하라.\n"
+            "   - p10/p50/p90 수치 자체를 설명에 인용할 때는 현실적인 범위(예: ±30~200%)만 사용하고,\n"
+            "     비현실적 수치는 인용하지 마라.\n\n"
             "⚠️ 종목 목록, 순위, ticker는 절대 변경하지 마라. 설명 텍스트만 작성하라.\n"
         ),
         expected_output=(
@@ -918,6 +945,138 @@ def run_mc_explanation_agent(
         process=Process.sequential,
         verbose=True,
         max_execution_time=180,
+    )
+
+    result = crew.kickoff()
+    return str(result)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# MC 후보 → CrewAI 최종 확정 에이전트
+#
+# 흐름: LightGBM+MC 1차 후보(15개) → CrewAI 재무검증+잡주필터 → 최종 5개 확정
+# ─────────────────────────────────────────────────────────────────────────────
+
+def run_mc_final_selection_agent(
+    llm: Any,
+    candidates_json: str,
+    user_risk_tier: str = "위험중립형",
+    user_profile_json: str | None = None,
+) -> str:
+    """
+    몬테카를로 모델이 1차 선정한 후보 종목들을 입력받아
+    재무 검증 + 잡주 필터 + 투자성향 적합성을 종합하여 최종 5개를 확정합니다.
+
+    Parameters
+    ----------
+    candidates_json : str
+        MC 1차 후보 JSON 배열.
+        각 항목 필드: rank, ticker, name, market, p_adj, rank_overall,
+                     ai_fin_grade, mc_p10_pct, mc_p50_pct, mc_p90_pct, vol_ann_pct
+
+    Returns
+    -------
+    str
+        JSON 객체 문자열 {"items": [...]} — 최종 확정 5개 종목
+    """
+    # 투자성향별 최종 선정 기준
+    _tier_guidance = {
+        "공격투자형":  "mc_p90_pct(낙관 시나리오)와 p_adj(상승 확률)가 최상위인 종목을 우선하라. 단, 잡주·신규상장 제외.",
+        "적극투자형":  "mc_p50_pct(중간 시나리오)와 p_adj를 균형 있게 보고, 재무등급 '양호' 이상 종목을 우선하라.",
+        "위험중립형":  "mc_p50_pct와 재무건전성(overall_grade)을 균등 반영하라. vol이 지나치게 높은 종목은 제외.",
+        "안전추구형":  "재무 '우수'/'양호' 종목을 최우선. mc_p10_pct(비관 시나리오)가 -30% 이하인 종목은 제외.",
+        "안정형":      "재무 '우수' 이상만 허용. vol_ann_pct 30% 이하 저변동성 종목 중심으로 선정하라.",
+    }
+    guidance = _tier_guidance.get(user_risk_tier, _tier_guidance["위험중립형"])
+
+    # 유저 프로필 컨텍스트 구성
+    _profile_context = ""
+    if user_profile_json:
+        try:
+            import json as _json
+            _p = _json.loads(user_profile_json)
+            _survey = _p.get("survey", {})
+            _label_map = {
+                "INVEST_GOAL": "투자 목적",
+                "TARGET_HORIZON": "목표 시점",
+                "DIVIDEND_PREF": "배당 선호도",
+            }
+            _lines = [
+                f"  - {lbl}: {_survey[code]}"
+                for code, lbl in _label_map.items()
+                if _survey.get(code)
+            ]
+            if _lines:
+                _profile_context = "\n사용자 상세 정보:\n" + "\n".join(_lines) + "\n"
+        except Exception:
+            pass
+
+    selector = Agent(
+        role="AI 종목 심사위원",
+        goal=(
+            f"퀀트 모델이 제시한 후보 종목 중에서 {user_risk_tier} 투자자에게 진정으로 "
+            "적합한 우량 종목 5개를 최종 확정한다. 잡주·부실주를 반드시 걸러내고 "
+            "다양한 섹터에서 안정적인 포트폴리오를 구성한다."
+        ),
+        backstory=(
+            "LightGBM+몬테카를로 퀀트 모델이 1차적으로 걸러낸 후보를 받아 "
+            "DART 재무 데이터로 2차 검증하는 심사 애널리스트. "
+            "퀀트 점수가 높아도 재무가 부실하거나 잡주 성격이면 과감히 탈락시키며, "
+            "초보 투자자가 안심할 수 있는 구조의 종목을 최종 선발한다."
+        ),
+        tools=[read_fin_structured_report, read_stock_direction_signal],
+        llm=llm,
+        verbose=True,
+        allow_delegation=False,
+    )
+
+    task = Task(
+        description=(
+            f"사용자 투자성향: {user_risk_tier}\n"
+            f"{_profile_context}\n"
+            f"[최종 선정 기준] {guidance}\n\n"
+            "퀀트 모델(LightGBM + 몬테카를로) 1차 후보:\n"
+            f"{candidates_json}\n\n"
+            "다음 절차로 최종 5종목을 확정하라:\n\n"
+            "1. 후보 전체에 대해 read_fin_structured_report 툴로 재무 데이터를 조회하라.\n"
+            "   ⚠️ NOT_FOUND여도 멈추지 말고 '정보없음'으로 처리 후 계속하라.\n"
+            "2. 조회한 재무 데이터를 바탕으로 아래 [잡주 필터]를 적용하라:\n"
+            "   · 재무 데이터 '정보없음' + rank_overall 200위권 밖 → 제외\n"
+            "   · ai_fin_grade '주의' 등급 → 제외\n"
+            "   · 종목명에 '스팩', '제X호' 패턴 → 제외\n"
+            "   · vol_ann_pct가 150% 초과하는 극단적 고변동성 종목 → 제외\n"
+            "3. 남은 후보에서 투자성향 기준 + 섹터 다양성(동일 섹터 최대 2종목)을 적용하여\n"
+            "   최종 5종목을 확정하라.\n"
+            "4. 확정된 각 종목에 대해 한국어 설명(explanation)을 2~3문장으로 작성하라:\n"
+            "   · 퀀트 점수만 나열하지 말고, '왜 이 투자성향에 적합한 구조인지' 포함\n"
+            "   · 전문 용어에는 괄호 설명 추가\n"
+            "   · mc_p50_pct가 500% 초과하는 종목은 수치를 직접 언급하지 말고\n"
+            "     '고변동성 모멘텀 종목' 같은 정성적 표현으로 대체\n"
+        ),
+        expected_output=(
+            "반드시 아래 JSON 객체 형식으로만 출력하라. 마크다운 코드블록 없이 JSON만.\n\n"
+            "{\n"
+            '  "items": [\n'
+            '    {\n'
+            '      "rank": 1,\n'
+            '      "ticker": "005930",\n'
+            '      "name": "삼성전자",\n'
+            '      "reasons": ["선정 근거 1", "선정 근거 2"],\n'
+            '      "explanation": "이 종목은 ... 투자성향에 적합합니다."\n'
+            '    }\n'
+            '  ]\n'
+            "}\n\n"
+            "⚠️ items 배열은 정확히 5개. ticker와 name은 후보 목록에 있던 것만 사용.\n"
+        ),
+        agent=selector,
+    )
+
+    crew = Crew(
+        agents=[selector],
+        tasks=[task],
+        process=Process.sequential,
+        verbose=True,
+        max_execution_time=300,
     )
 
     result = crew.kickoff()

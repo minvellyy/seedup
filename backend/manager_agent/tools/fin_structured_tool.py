@@ -4,13 +4,71 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+from functools import lru_cache
 from pathlib import Path
 
 from crewai.tools import tool
 
 from config import FIN_MODEL_DIR as _FIN_MODEL_DIR
 
-_PARQUET_PATH = _FIN_MODEL_DIR / "data" / "processed" / "fin_scores_v2_2024_CONSOL_with_mc_with_price.parquet"
+_PARQUET_PATH   = _FIN_MODEL_DIR / "data" / "processed" / "fin_scores_v2_2024_CONSOL_with_mc_with_price.parquet"
+_UNIVERSE_PATH  = _FIN_MODEL_DIR / "data" / "processed" / "universe_k200_k150_fixed.parquet"
+_NO_FIN_PATH    = _FIN_MODEL_DIR / "data" / "processed" / "no_fin_data_tickers.json"
+
+
+@lru_cache(maxsize=1)
+def _load_no_fin_set() -> dict:
+    """재무 데이터 없는 종목 목록 {ticker: {name, exchange}} — 최초 1회만 로드."""
+    if _NO_FIN_PATH.exists():
+        try:
+            return json.loads(_NO_FIN_PATH.read_text(encoding="utf-8"))
+        except Exception:
+            pass
+    return {}
+
+
+def _get_alternatives(ticker: str, top_n: int = 3) -> list[dict]:
+    """같은 거래소에서 overall_score 상위 N개 종목을 대안으로 반환."""
+    try:
+        import pandas as pd
+        no_fin = _load_no_fin_set()
+        exchange = no_fin.get(ticker, {}).get("exchange", "")
+
+        univ = pd.read_parquet(_UNIVERSE_PATH)
+        univ["ticker"] = univ["ticker"].astype(str).str.zfill(6)
+
+        scores = pd.read_parquet(_PARQUET_PATH)
+        scores["ticker"] = scores["ticker"].astype(str).str.zfill(6)
+
+        # exchange 필터
+        if exchange:
+            cands = univ[univ["exchange"] == exchange]["ticker"].tolist()
+        else:
+            cands = univ["ticker"].tolist()
+
+        # 데이터 없는 종목 제외
+        no_fin_set = set(no_fin.keys())
+        cands = [t for t in cands if t not in no_fin_set]
+
+        # overall_score 기준 정렬
+        score_col = next((c for c in scores.columns if "overall_score" in c), None)
+        if score_col:
+            sub = scores[scores["ticker"].isin(cands)].copy()
+            sub = sub.sort_values(score_col, ascending=False).drop_duplicates("ticker")
+            top = sub.head(top_n)
+            name_map = univ.set_index("ticker")["name"].to_dict()
+            return [
+                {
+                    "ticker": row["ticker"],
+                    "name": name_map.get(row["ticker"], ""),
+                    "exchange": exchange,
+                    "overall_score": round(float(row[score_col]), 2) if row[score_col] is not None else None,
+                }
+                for _, row in top.iterrows()
+            ]
+    except Exception:
+        pass
+    return []
 
 
 def _load_report(ticker: str) -> dict | None:
@@ -87,21 +145,73 @@ def read_fin_structured_report(ticker: str) -> str:
     """fin_structured_model이 생성한 structured_report.json에서 종목의 재무 지표와 종합 스코어를 읽어 반환합니다.
     수익성(OPM/ROA), 성장성(매출/영업이익 YoY), 안정성(부채비율/유동비율),
     현금흐름(CFO/FCF margin), 밸류에이션(PER/PBR), overall_score/grade를 포함합니다.
+    재무 데이터가 없는 신규 상장 종목의 경우 대안 종목을 함께 반환합니다.
     Args:
         ticker: 종목코드 (예: '005930')
     """
     report = _load_report(ticker)
     if report:
         return json.dumps(report, ensure_ascii=False, indent=2)
+
+    # crewai .run(dict) 호출 시 ticker가 "{'ticker': '468530'}" 형태로 올 수 있음 — 추출
+    _raw_ticker = str(ticker)
+    if _raw_ticker.startswith("{") and "ticker" in _raw_ticker:
+        try:
+            import ast
+            _parsed = ast.literal_eval(_raw_ticker)
+            _raw_ticker = str(_parsed.get("ticker", _raw_ticker))
+        except Exception:
+            pass
+    t = _raw_ticker.strip().zfill(6)
+
+    # 종목명 조회 — no_fin 캐시 우선, 없을 때만 pykrx 호출
+    ticker_name = _load_no_fin_set().get(t, {}).get("name") or None
+    if not ticker_name:
+        try:
+            from pykrx import stock as _pykrx
+            import pandas as pd
+            _raw_name = _pykrx.get_market_ticker_name(t)
+            # pykrx가 종목 없으면 빈 DataFrame 반환 → 안전하게 처리
+            if isinstance(_raw_name, str) and _raw_name:
+                ticker_name = _raw_name
+        except Exception:
+            pass
+
+    # 같은 거래소에서 재무 데이터가 있는 대안 종목 추천
+    alternatives = _get_alternatives(t, top_n=3)
+
     return json.dumps({
-        "error": "NOT_FOUND",
-        "ticker": str(ticker).zfill(6),
-        "message": (
-            f"structured_report.json에 해당 종목 데이터가 없습니다. "
-            f"generate_fin_structured_report 툴을 사용해 생성하거나, "
-            f"fin_structured_model 파이프라인을 먼저 실행하세요. "
-            f"경로: {_FIN_MODEL_DIR / 'data' / 'processed' / 'structured_report.json'}"
+        "error": "NO_FINANCIAL_DATA",
+        "ticker": t,
+        "ticker_name": ticker_name,
+        "reason": (
+            "DART 재무제표 데이터가 없습니다. 신규 상장 종목이거나 비상장/관리종목일 수 있습니다. "
+            "재무 분석 없이 가격/뉴스/ESG 데이터만으로 분석을 진행하거나, "
+            "아래 대안 종목 중 하나를 분석하세요."
         ),
+        "fin_score": None,
+        "summary": None,
+        "alternatives": alternatives,
+    }, ensure_ascii=False)
+
+
+@tool("get_no_fin_data_tickers")
+def get_no_fin_data_tickers(dummy: str = "") -> str:
+    """재무 데이터(DART 재무제표)가 없는 종목 전체 목록을 반환합니다.
+    신규 상장 종목이나 비상장 종목 분석 전에 호출하여 확인하세요.
+    Args:
+        dummy: 사용 안 함 (툴 인터페이스 호환용)
+    """
+    no_fin = _load_no_fin_set()
+    if not no_fin:
+        return json.dumps({"count": 0, "tickers": []}, ensure_ascii=False)
+    return json.dumps({
+        "count": len(no_fin),
+        "tickers": [
+            {"ticker": t, **info}
+            for t, info in no_fin.items()
+        ],
+        "note": "이 종목들은 재무 분석 불가. 가격/뉴스/ESG만 활용하거나 대안 종목으로 교체하세요.",
     }, ensure_ascii=False)
 
 

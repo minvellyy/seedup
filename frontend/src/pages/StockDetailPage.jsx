@@ -267,15 +267,27 @@ function StockDetailPage() {
   ]
 
   // ── 기업 요약 그리드 ─────────────────────────────────────────────────────
-  const businessOverview = analysis?.company_analysis?.business_overview ?? null
   const mcap = scores?.market_cap ? fmtMcap(scores.market_cap) : '-'
+  // 산업분류: AI 분석의 섹터 → DB 섹터(비의미 값 제외) 순으로 폴백
+  const sectorLabel =
+    analysis?.company_analysis?.sector ||
+    analysis?.industry_analysis?.sector ||
+    (detail.sector && detail.sector !== '시장' ? detail.sector : null) ||
+    '-'
+  // 사업영역: AI 분석의 세부 업종 → 섹터 순으로 폴백 (줄글 제외)
+  const industryLabel =
+    analysis?.industry_analysis?.industry ||
+    analysis?.company_analysis?.sector ||
+    analysis?.industry_analysis?.sector ||
+    (detail.sector && detail.sector !== '시장' ? detail.sector : null) ||
+    '-'
   const companyFields = [
     { label: '기업명',   value: detail.name },
-    { label: '산업분류', value: detail.sector || '-' },
+    { label: '산업분류', value: sectorLabel },
     { label: '거래소',   value: detail.exchange || '-' },
     { label: '자산유형', value: detail.asset_type || '-' },
     { label: '시가총액', value: mcap },
-    { label: '사업영역', value: businessOverview || detail.sector || '-' },
+    { label: '사업영역', value: industryLabel },
   ]
 
   // ── 레이더 점수 ───────────────────────────────────────────────────────────
@@ -300,8 +312,8 @@ function StockDetailPage() {
             <div style={{ display: 'flex', gap: 8, marginTop: 4, flexWrap: 'wrap', alignItems: 'center' }}>
               <span className="sd-ticker">{detail.stock_code}</span>
               <span className="sd-market-badge">{detail.exchange}</span>
-              {detail.sector && detail.sector !== '시장' && (
-                <span className="sd-sector-badge">{detail.sector}</span>
+              {sectorLabel && sectorLabel !== '-' && (
+                <span className="sd-sector-badge">{sectorLabel}</span>
               )}
               {riskTier && <span className="sd-risk-tier">{riskTier}</span>}
             </div>
