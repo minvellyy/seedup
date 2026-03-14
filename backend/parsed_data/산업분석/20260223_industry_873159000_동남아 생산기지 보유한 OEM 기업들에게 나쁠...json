@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-23",
+        "brokerage": "대신증권",
+        "analyst_name": "유정현",
+        "report_title": "동남아 생산기지 보유한 OEM 기업들에게 나쁠.."
+    },
+    "specific_data": {
+        "sector_name": "섬유의복업",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "영원무역",
+            "한세실업",
+            "화승엔터프라이즈"
+        ],
+        "industry_trends": [
+            "미대법원의 관세 위법 판결 이후 관세율 인하 효과",
+            "동남아 생산기지를 보유한 OEM 기업들에게 긍정적인 영향"
+        ],
+        "risk_factors": [
+            "관세 정책의 불확실성",
+            "시장 혼란 가능성"
+        ]
+    }
+}

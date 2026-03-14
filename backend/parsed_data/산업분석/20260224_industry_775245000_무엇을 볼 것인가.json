@@ -1,0 +1,30 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-24",
+        "brokerage": "하나증권",
+        "analyst_name": "김록호, 김영규",
+        "report_title": "무엇을 볼 것인가"
+    },
+    "specific_data": {
+        "sector_name": "반도체",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "삼성전자(005930)",
+            "SK하이닉스(000660)",
+            "피에스케이(319660)",
+            "씨엠티엑스(388210)",
+            "원익머트리얼즈(104830)"
+        ],
+        "industry_trends": [
+            "AI로 인한 메모리의 구조적 성장",
+            "NAND 업황 중장기 가시성 확대",
+            "기존 장비 업체와 소재 업체들 신규 커버리지 개시"
+        ],
+        "risk_factors": [
+            "메모리 가격 상승으로 인한 원가 부담",
+            "B2C 의존도 축소로 인한 출하량 감소",
+            "국가 및 정부의 AI 투자 증가에 따른 불확실성"
+        ]
+    }
+}

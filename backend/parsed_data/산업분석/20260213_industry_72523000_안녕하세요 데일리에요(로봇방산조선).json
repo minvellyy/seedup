@@ -1,0 +1,33 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2023-02-12",
+        "brokerage": "데일리",
+        "analyst_name": null,
+        "report_title": "안녕하세요 데일리에요(로봇방산조선)"
+    },
+    "specific_data": {
+        "sector_name": "로봇, 방산, 조선",
+        "industry_rating": null,
+        "top_picks": [
+            "현대차 아틀라스",
+            "현대로템",
+            "한화엔진",
+            "에이로봇",
+            "풍산",
+            "알에스오토",
+            "RFHIC",
+            "HD현대重",
+            "한화오션"
+        ],
+        "industry_trends": [
+            "드론 전용 탄약 개발",
+            "고정밀 통합구동모듈 개발",
+            "LNGC 건조 능력 부활 논의"
+        ],
+        "risk_factors": [
+            "숙련공 인력난 심화",
+            "외국인 고용 감축"
+        ]
+    }
+}

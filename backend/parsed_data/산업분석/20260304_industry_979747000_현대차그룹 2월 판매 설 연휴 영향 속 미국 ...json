@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-04",
+        "brokerage": "SK증권",
+        "analyst_name": "윤혁진",
+        "report_title": "현대차그룹 2월 판매 설 연휴 영향 속 미국 .."
+    },
+    "specific_data": {
+        "sector_name": "자동차",
+        "industry_rating": null,
+        "top_picks": [
+            "현대차",
+            "기아"
+        ],
+        "industry_trends": [
+            "설 연휴에 따른 영업 일수 축소로 글로벌 판매 일시적 역성장",
+            "친환경차 판매 비중 확대 및 신차 출시 기대",
+            "미국 시장에서 하이브리드 모델 판매 호조"
+        ],
+        "risk_factors": [
+            "설 연휴로 인한 판매 감소",
+            "중동 전쟁으로 인한 주가 급등 반납",
+            "IRA 보조금 종료로 인한 미국 전기차 시장 약세"
+        ]
+    }
+}

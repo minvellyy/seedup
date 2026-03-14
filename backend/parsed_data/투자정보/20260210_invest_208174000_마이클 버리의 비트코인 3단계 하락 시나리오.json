@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2025-02-10",
+        "brokerage": "iM증권",
+        "analyst_name": "양현경",
+        "report_title": "마이클 버리의 비트코인 3단계 하락 시나리오"
+    },
+    "specific_data": {
+        "strategy_theme": "비트코인 하락 시나리오",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "비트코인이 7만 달러 이하로 하락: DAT 기업들의 평가손실 발생",
+            "비트코인이 6만 달러 이하로 하락: DAT 기업들의 존립 리스크 확대",
+            "비트코인이 5만 달러 이하로 하락: 채굴업체 파산 가능성 확대 및 비트코인 매도 압력 확대"
+        ],
+        "quant_factors": [
+            "비트코인 가격",
+            "DAT 기업 총부채",
+            "이더리움 기반 DAT 기업 총부채"
+        ]
+    }
+}

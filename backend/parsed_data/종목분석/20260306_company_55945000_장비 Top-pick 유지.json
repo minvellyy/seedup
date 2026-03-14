@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-06",
+        "brokerage": "DS투자증권",
+        "analyst_name": "이수림",
+        "report_title": "장비 Top-pick 유지"
+    },
+    "specific_data": {
+        "company_name": "피에스케이",
+        "ticker": "319660",
+        "investment_rating": "매수",
+        "investment_points": [
+            "전공정 범용 장비 업체가 가장 유리한 이유",
+            "2026년 삼성전자와 SK하이닉스 합산 DRAM 신규 장비 발주 규모는 180~190K 수준으로 추정",
+            "전환 투자 물량이 더 많이 나오는 구간에서는 범용 장비 업체의 수주가 가장 많이 나올 것으로 예상"
+        ],
+        "risk_factors": [
+            "고객사의 미국 비메모리 투자와 대만 신규 고객사 기대감"
+        ],
+        "shareholder_structure": "피에스케이홀딩스 32.9%, 국민연금공단 8.1%"
+    }
+}

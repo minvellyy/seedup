@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-13",
+        "brokerage": "한국IR협의회",
+        "analyst_name": "김경민, 권지승",
+        "report_title": "한국 반도체 장비 대표주"
+    },
+    "specific_data": {
+        "company_name": "원익IPS",
+        "ticker": "240810",
+        "investment_rating": "매수",
+        "investment_points": [
+            "삼성전자와의 전략적 파트너십",
+            "메모리 및 비메모리 반도체 장비 공급",
+            "CVD, ALD 등 다양한 증착장비 포트폴리오 보유"
+        ],
+        "risk_factors": [
+            "반도체 업황 사이클에 따른 주가 변동성",
+            "설비투자 지연 시 실적 타격",
+            "고객사 의존도"
+        ],
+        "shareholder_structure": "원익홀딩스 32.90%, 삼성전자 7.54%, 기타 임원 및 특수관계인 32.98%"
+    }
+}

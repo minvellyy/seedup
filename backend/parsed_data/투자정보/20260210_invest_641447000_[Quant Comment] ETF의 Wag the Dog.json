@@ -1,0 +1,39 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-10",
+        "brokerage": "유안타증권",
+        "analyst_name": "신현용",
+        "report_title": "[Quant Comment] ETF의 Wag the Dog"
+    },
+    "specific_data": {
+        "strategy_theme": "ETF 수급의 영향력",
+        "recommended_portfolio": [
+            "뉴로메카",
+            "ISC",
+            "와이씨",
+            "RFHIC",
+            "에스티팜",
+            "삼성중공업",
+            "코스메카코리아",
+            "에프에스티",
+            "성광벤드",
+            "시노펙스",
+            "iM금융지주",
+            "엘앤에프",
+            "레인보우로보틱스",
+            "보로노이",
+            "한화엔진"
+        ],
+        "strategy_logic": [
+            "ETF 시장 규모 확대",
+            "개별 종목의 시가총액과 ETF 내 편입 비중에 따른 수급 차별화",
+            "개인 투자자의 FOMO 성격 자금 유입"
+        ],
+        "quant_factors": [
+            "시가총액",
+            "ETF 추종자금",
+            "외국인 누적 순매수 강도"
+        ]
+    }
+}

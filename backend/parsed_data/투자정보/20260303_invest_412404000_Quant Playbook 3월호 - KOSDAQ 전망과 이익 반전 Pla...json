@@ -1,0 +1,54 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-03",
+        "brokerage": "YuantaResearch",
+        "analyst_name": "신현용",
+        "report_title": "Quant Playbook 3월호 - KOSDAQ 전망과 이익 반전 Pla.."
+    },
+    "specific_data": {
+        "strategy_theme": "KOSDAQ 전망과 이익 반전 Play",
+        "recommended_portfolio": [
+            "S-Oil",
+            "대한유화",
+            "코오롱인더",
+            "POSCO홀딩스",
+            "HD한국조선해양",
+            "삼성중공업",
+            "포스코인터내셔널",
+            "한국항공우주",
+            "대한항공",
+            "팬오션",
+            "현대차",
+            "한국타이어앤테크",
+            "신세계",
+            "롯데관광개발",
+            "한세실업",
+            "에이피알",
+            "롯데웰푸드",
+            "우리금융지주",
+            "삼성화재",
+            "삼성전자",
+            "SK하이닉스",
+            "주성엔지니어링",
+            "해성디에스",
+            "삼성전기",
+            "대덕전자",
+            "엔씨소프트",
+            "와이지엔터테인먼트",
+            "한국전력",
+            "SK"
+        ],
+        "strategy_logic": [
+            "KOSDAQ 지수의 상단 Target은 Base 시나리오 기준 1,800Pt, Best 시나리오 기준 2,000Pt",
+            "KOSDAQ 시장은 ETF 수급을 통해 개인 및 기관의 바스켓 투자가 선호됨",
+            "3월은 서프라이즈보다 쇼크 종목에 집중해야 함"
+        ],
+        "quant_factors": [
+            "Earnings",
+            "Valuation",
+            "Fundamental",
+            "Macro+"
+        ]
+    }
+}

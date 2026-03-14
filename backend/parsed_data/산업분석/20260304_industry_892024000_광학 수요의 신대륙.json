@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-04",
+        "brokerage": "교보증권",
+        "analyst_name": "박희철",
+        "report_title": "광학 수요의 신대륙"
+    },
+    "specific_data": {
+        "sector_name": "미드스몰캡",
+        "industry_rating": null,
+        "top_picks": [
+            "나무가",
+            "액트로"
+        ],
+        "industry_trends": [
+            "Physical AI 구현을 위한 고정밀 광학 센서 및 3D 센서 모듈 수요 증가",
+            "스마트폰 시장의 성숙화로 인한 새로운 수요처의 등장",
+            "K-광학 밸류체인의 경쟁력 강화"
+        ],
+        "risk_factors": [
+            "지정학적 이슈로 인한 공급망 불안정성",
+            "기술 발전 속도에 따른 경쟁 심화",
+            "시장 수요의 변동성"
+        ]
+    }
+}

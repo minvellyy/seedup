@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "유진투자증권",
+        "analyst_name": "류태환",
+        "report_title": "준비된 이익 정상화, 플랜트 수주가 응답할 .."
+    },
+    "specific_data": {
+        "company_name": "DL 이앤씨",
+        "ticker": "375500",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "준비된 이익 정상화",
+            "플랜트 수주가 응답할 시간",
+            "주택 원가율 개선 추세",
+            "신사업 모멘텀 유효"
+        ],
+        "risk_factors": [
+            "플랜트 수주잔고 대비 매출 목표 부담",
+            "자회사 DL건설의 사업구조 개편에 따른 외형 축소"
+        ],
+        "shareholder_structure": "DL (외 8인) 24.8%, Kopernik Global Investors, LLC (외 1인) 8.5%"
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "유안타증권",
+        "analyst_name": "고경범",
+        "report_title": "패시브에서 보는 케이뱅크 IPO - 공모 특공은 줄이고,.."
+    },
+    "specific_data": {
+        "strategy_theme": "케이뱅크 IPO",
+        "recommended_portfolio": [
+            "케이뱅크"
+        ],
+        "strategy_logic": [
+            "기관 수요예측 진행 중",
+            "공모가 고평가 논란",
+            "NIM 하락",
+            "강화된 공모 규제"
+        ],
+        "quant_factors": [
+            "시가총액 밴드: 3.37조원~3.85조원",
+            "희망 공모가: 8,300원 ~ 9,500원",
+            "기관 확약 수준: 7.41%",
+            "상장일 매도 출회 물량: 32.6%"
+        ]
+    }
+}

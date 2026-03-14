@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-13",
+        "brokerage": "null",
+        "analyst_name": "null",
+        "report_title": "SK증권 Global Carbon Market Daily_260213"
+    },
+    "specific_data": {
+        "market_summary": "글로벌 배출권 가격 및 에너지 가격 동향",
+        "macro_indicators": "null",
+        "fund_flows": "null",
+        "key_news": [
+            "[뉴욕유가] 트럼프 \"한 달 동안 이란과 대화하겠다\"…WTI 2.8%↓",
+            "트럼프 행정부, 온실가스 규제 근거 규정 폐지",
+            "‘CCU 기술’로 탄소 자원 생산국 발돋움···“제품 본격적 생산”"
+        ]
+    }
+}

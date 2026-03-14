@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-26",
+        "brokerage": "한화투자증권",
+        "analyst_name": "최윤영",
+        "report_title": "스테이블코인 테더, 공급 둔화 속 리테일 접.."
+    },
+    "specific_data": {
+        "sector_name": "디지털자산",
+        "industry_rating": "Positive",
+        "top_picks": [],
+        "industry_trends": [
+            "USDT 공급량 감소",
+            "USDC 공급량 정체",
+            "테더의 Whop 투자"
+        ],
+        "risk_factors": [
+            "스테이블코인 전체 유동성 정체",
+            "거시적 온체인 달러 유동성 피크아웃"
+        ]
+    }
+}

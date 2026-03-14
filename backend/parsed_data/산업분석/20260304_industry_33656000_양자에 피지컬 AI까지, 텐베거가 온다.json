@@ -1,0 +1,37 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-04",
+        "brokerage": "하나증권",
+        "analyst_name": "김홍식, 이상훈",
+        "report_title": "양자에 피지컬 AI까지, 텐베거가 온다"
+    },
+    "specific_data": {
+        "sector_name": "통신장비",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "RFHIC(218410)",
+            "KMW(032500)",
+            "쏠리드(050890)",
+            "이노와이어리스(073490)",
+            "오이솔루션(138080)",
+            "RF머트리얼즈(327260)",
+            "유비쿼스(264450)",
+            "우리넷(115440)",
+            "ICTK(456010)",
+            "Ericsson(ERICB SS)",
+            "Lumentum(LITE US)",
+            "IonQ(IONQ US)"
+        ],
+        "industry_trends": [
+            "양자암호통신 탑재 다시 뜨거운 이슈, 통신 핵심 서비스로 부상할 것",
+            "피지컬 AI의 완성은 네트워크, 5G SA 시대 맞이해 장비 수요 급증 예상",
+            "2026~2028년 장기 상승 사이클 도래, 소섹터별 1등 업체 집중 투자 추천"
+        ],
+        "risk_factors": [
+            "해킹 이슈로 인한 보안 리스크",
+            "양자암호통신의 상용화 지연 가능성",
+            "5G SA 전환에 따른 초기 투자 비용 증가"
+        ]
+    }
+}

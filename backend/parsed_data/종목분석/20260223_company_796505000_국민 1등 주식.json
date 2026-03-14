@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-23",
+        "brokerage": "대신증권",
+        "analyst_name": "류형근, 서지원RA",
+        "report_title": "국민 1등 주식"
+    },
+    "specific_data": {
+        "company_name": "삼성전자",
+        "ticker": "005930",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "2026년 영업이익 전망치를 기존 171조원에서 201조원으로 상향.",
+            "강력한 이익 성장 속 재무 체력 추가 개선.",
+            "2026년 메모리반도체 가격 전망 상향 반영."
+        ],
+        "risk_factors": [
+            "부품 가격 상승으로 세트 사업에서의 수익성 둔화 우려."
+        ],
+        "shareholder_structure": "주요주주 삼성생명보험 외 15 인 19.82% 와 국민연금공단 7.75%"
+    }
+}

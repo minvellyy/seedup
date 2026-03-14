@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-13",
+        "brokerage": "iM증권",
+        "analyst_name": "황지원",
+        "report_title": "모든 준비는 끝났다"
+    },
+    "specific_data": {
+        "company_name": "하이브",
+        "ticker": "352820",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "올해 예상 영업이익은 5,404억원(+983% YoY)으로 작년 대규모 비용 반영 이후 사상 최대 실적 달성을 전망한다.",
+            "BTS 대규모 월드투어 실적이 목표주가(12M) 450,000원(상향) 반영된다.",
+            "높은 북미/유럽 비중(50%)을 감안해 티켓 총 매출은 약 1.5조원으로 추정된다."
+        ],
+        "risk_factors": [
+            "라틴 보이그룹(Santos Bravos) 데뷔 비용",
+            "게임(아키텍트) 초기 마케팅 및 운영 비용",
+            "북미 사업구조 개편 관련 잔여 비용"
+        ],
+        "shareholder_structure": "외국인지분율 21.1%"
+    }
+}

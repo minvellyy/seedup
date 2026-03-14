@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "유안타증권",
+        "analyst_name": "이승은",
+        "report_title": "4Q25 Review 내수 둔화, 수출 성장 유효"
+    },
+    "specific_data": {
+        "company_name": "파마리서치",
+        "ticker": "214450",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "내수 의료기기 성장 둔화에도 불구하고 수출 중심 성장 지속",
+            "2026년 매출액 25% 이상 성장 목표",
+            "글로벌 의료기기 수요 확대와 신규 국가 진입에 따른 수출 지역 다변화"
+        ],
+        "risk_factors": [
+            "내수 성장 둔화 우려",
+            "경쟁 제품의 시장 침투",
+            "단기 실적 가시성 저하"
+        ],
+        "shareholder_structure": "주요주주 정상수 외 7 인"
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-12",
+        "brokerage": "대신증권",
+        "analyst_name": "박강호, 서지원RA",
+        "report_title": "2026년 3차 성장 진입  아이폰 폴드, HDI = .."
+    },
+    "specific_data": {
+        "company_name": "비에이치",
+        "ticker": "090460",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "2026년 애플 폴더블폰 출시로 인한 매출 증가",
+            "HDI 공급 증가로 인한 실적 개선",
+            "현재 P/E 5.5배로 저평가"
+        ],
+        "risk_factors": [
+            "애플의 스마트폰 판매량 감소",
+            "경쟁사의 가격 인하 및 시장 점유율 변화"
+        ],
+        "shareholder_structure": "주요 주주 이경환 외 6 인 21.85%, 국민연금공단 7.46%"
+    }
+}

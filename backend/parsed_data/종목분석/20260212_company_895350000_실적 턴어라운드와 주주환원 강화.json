@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "유진투자증권",
+        "analyst_name": "황성현",
+        "report_title": "실적 턴어라운드와 주주환원 강화"
+    },
+    "specific_data": {
+        "company_name": "OCI 홀딩스",
+        "ticker": "010060",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "실적 턴어라운드와 주주환원 강화",
+            "목표주가 200,000원으로 수정(+56%)",
+            "4Q25 매출액 8,106억원, 영업이익 273억원 기록",
+            "주주환원 정책 발표(환원률 50% 이상 지향)"
+        ],
+        "risk_factors": [
+            "TDI 등 기타 베이직케미칼 시황 부진",
+            "미국향 폴리실리콘 가격 상승 가능성"
+        ],
+        "shareholder_structure": "이화영 (외 28인) 30.6%, 국민연금공단 (외 1인) 12.3%"
+    }
+}

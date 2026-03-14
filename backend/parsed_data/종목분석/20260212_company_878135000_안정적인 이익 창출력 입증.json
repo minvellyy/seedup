@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "iM증권",
+        "analyst_name": "황지원",
+        "report_title": "안정적인 이익 창출력 입증"
+    },
+    "specific_data": {
+        "company_name": "에스엠",
+        "ticker": "041510",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "MD/라이선싱 매출 고성장과 연결 자회사 실적 개선",
+            "올해 영업이익 2,000억원대 진입 가능",
+            "RIIZE, NCT WISH 등 주요 저연차 그룹의 투어 규모 확대",
+            "EXO의 월드투어 재개로 성장 기대"
+        ],
+        "risk_factors": [
+            "음반 매출 감소",
+            "신보 발매 및 판매량 감소",
+            "군입대에 따른 아티스트 활동 제한"
+        ],
+        "shareholder_structure": "카카오는 21%, 카카오엔터 20%, SM 그룹 49%, 기타 10%"
+    }
+}

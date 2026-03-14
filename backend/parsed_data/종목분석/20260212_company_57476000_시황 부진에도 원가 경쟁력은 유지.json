@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "미래에셋증권",
+        "analyst_name": "류제현, 김주희",
+        "report_title": "시황 부진에도 원가 경쟁력은 유지"
+    },
+    "specific_data": {
+        "company_name": "HMM",
+        "ticker": "011200",
+        "investment_rating": "매수",
+        "investment_points": [
+            "컨테이너 시황 부진에도 원가 경쟁력 유지",
+            "벌크선 부문 선전으로 외형 감소 최소화",
+            "높은 현금 수준과 주주환원 정책 긍정적",
+            "상대적 원가 경쟁력 부각으로 주가 하방 지지"
+        ],
+        "risk_factors": [
+            "2026년 공급 압력 확대 우려",
+            "컨테이너 시장의 누적 공급 증가"
+        ],
+        "shareholder_structure": "주요 주주 지분율에 대한 정보는 제공되지 않음"
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-11",
+        "brokerage": "하나증권",
+        "analyst_name": "이준호",
+        "report_title": "JustPlay 인수, 하반기 캐주얼 추가 딜 기대"
+    },
+    "specific_data": {
+        "company_name": "엔씨소프트",
+        "ticker": "036570",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "JustPlay 인수로 글로벌 캐주얼 라인업과 AdTech 역량 내재화",
+            "JustPlay의 매출 성장세가 긍정적",
+            "2026년 매출액 가이던스 2조원~2.5조원 상단 달성 가능성"
+        ],
+        "risk_factors": [
+            "인수로 인한 PPA 상각 발생 예상",
+            "캐주얼 게임 시장의 경쟁 심화"
+        ],
+        "shareholder_structure": "김택진 외 14인 12.37%, Saudi Electronic Gaming Holding Company 외 1인 9.43%"
+    }
+}

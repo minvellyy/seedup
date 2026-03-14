@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "IBK투자증권",
+        "analyst_name": "이승훈, 장성호",
+        "report_title": "나 혼자만 레벨업하는 실적, 이제는 비상의 .."
+    },
+    "specific_data": {
+        "company_name": "넷마블",
+        "ticker": "251270",
+        "investment_rating": "매수 (유지)",
+        "investment_points": [
+            "4분기 실적 컨센서스 상회",
+            "기존 흥행작들의 지역 확장 효과",
+            "2026년 8종의 대규모 신작 출시 계획",
+            "강력한 주주환원 정책"
+        ],
+        "risk_factors": [
+            "신작 출시 지연",
+            "해외 시장의 변동성",
+            "무형자산의 일회성 손상차손"
+        ],
+        "shareholder_structure": "방준혁 외 12 인 24.33%, HAN RIVER 17.52%, I NVESTMENT PTE. LTD."
+    }
+}

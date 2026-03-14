@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "대신증권",
+        "analyst_name": "박장욱",
+        "report_title": "확대되는 점유율 안정적 성장과 배당 매력"
+    },
+    "specific_data": {
+        "company_name": "케이카",
+        "ticker": "381970",
+        "investment_rating": "N.R",
+        "investment_points": [
+            "안정적인 수익을 바탕으로 고배당주로서 매력 유효",
+            "25년에 이어, 26년에도 시장점유율 상승으로 성장을 전망함",
+            "소비자 신뢰를 기반으로 중고차 시장 내 점유율의 꾸준한 확대 중"
+        ],
+        "risk_factors": [
+            "고금리 영향으로 전체 중고차 시장 규모가 축소되는 환경",
+            "대외환경 불확실성"
+        ],
+        "shareholder_structure": "주요주주 한앤코오토서비스홀딩스유한회사 외 1인 72.21%"
+    }
+}

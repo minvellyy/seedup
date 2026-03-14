@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-19",
+        "brokerage": "대신증권",
+        "analyst_name": "정해창, 이경민",
+        "report_title": "2026년 설 연휴 글로벌 이슈가 KOSPI에 미치는 영향력"
+    },
+    "specific_data": {
+        "strategy_theme": "글로벌 AI 테마의 명암: 소프트웨어 vs 하드웨어",
+        "recommended_portfolio": [
+            "어플라이드머티리얼즈(AMAT)"
+        ],
+        "strategy_logic": [
+            "AI 에이전트 기술의 급격한 발전으로 기존 기업용 소프트웨어 서비스(SaaS) 기업들이 대체될 수 있음",
+            "소프트웨어 기업들의 실적 선방에도 불구하고 밸류에이션, 주가 하락",
+            "하드웨어 기업들은 견고한 실적을 기록",
+            "AI 인프라 투자가 여전히 초기 단계이며 메모리 반도체(HBM) 증설 사이클이 내년까지 이어질 것"
+        ],
+        "quant_factors": [
+            "CPI 하향 안정",
+            "트럼프 관세 정책 변화 기류",
+            "위험자산 선호심리 지지",
+            "반도체, IT하드웨어 업종의 견고한 흐름"
+        ]
+    }
+}

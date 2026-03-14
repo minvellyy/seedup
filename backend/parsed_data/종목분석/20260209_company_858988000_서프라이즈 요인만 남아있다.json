@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "하나증권",
+        "analyst_name": "이준호",
+        "report_title": "서프라이즈 요인만 남아있다"
+    },
+    "specific_data": {
+        "company_name": "NAVER",
+        "ticker": "035420",
+        "investment_rating": "BUY(유지)",
+        "investment_points": [
+            "AI 에이전트 및 커머스 침투 본격화",
+            "목표주가 350,000원 유지",
+            "2026년 실적 성장 예상"
+        ],
+        "risk_factors": [
+            "디지털자산기본법 지연",
+            "거래소 대주주 지분 제한"
+        ],
+        "shareholder_structure": "국민연금공단 9.33%, BlackRock Fund Advisors 외 13인 6.12%"
+    }
+}

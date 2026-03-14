@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-03",
+        "brokerage": "대신증권",
+        "analyst_name": "이경민, 조재운, 정해창",
+        "report_title": "트럼프, 중동 Risk vs.정책, 실적 모멘텀 3월 전반부 .."
+    },
+    "specific_data": {
+        "strategy_theme": "3월 증시 전망 및 투자전략",
+        "recommended_portfolio": [
+            "반도체, 자동차, 방산, 조선, 기계, 금융, 소비재"
+        ],
+        "strategy_logic": [
+            "단기 변동성 활용",
+            "소외 및 실적 대비 저평가 업종에 집중",
+            "내수주 및 성장주 중심의 순환매"
+        ],
+        "quant_factors": [
+            "선행 EPS",
+            "PER",
+            "PBR",
+            "금리 인하 기대"
+        ]
+    }
+}

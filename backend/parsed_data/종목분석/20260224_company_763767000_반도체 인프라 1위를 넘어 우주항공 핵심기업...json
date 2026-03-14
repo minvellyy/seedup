@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2023-10-19",
+        "brokerage": "한국IR협의회",
+        "analyst_name": "이원재, 이희경",
+        "report_title": "반도체 인프라 1위를 넘어 우주항공 핵심기업.."
+    },
+    "specific_data": {
+        "company_name": "한양이엔지",
+        "ticker": "045100",
+        "investment_rating": "매수",
+        "investment_points": [
+            "반도체 인프라 업계 부동의 1위 지위와 설비투자 확대 수혜",
+            "2026년부터 반도체 설비투자 100조 원시대로 진입",
+            "반도체 설비투자와 동사 매출액의 상관계수가 0.93으로 완벽하게 동조화"
+        ],
+        "risk_factors": [
+            "고객사 의존도 80% 이상으로 편중",
+            "반도체 산업의 설비투자 변동성"
+        ],
+        "shareholder_structure": "최대주주 김윤상 외 6 인 46.53%"
+    }
+}

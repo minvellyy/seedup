@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-24",
+        "brokerage": "키움증권",
+        "analyst_name": "안영준",
+        "report_title": "4Q25 Re 이번 주가 상승, 난 좀 다르게 본다"
+    },
+    "specific_data": {
+        "company_name": "한화생명",
+        "ticker": "088350",
+        "investment_rating": "BUY (Upgrade)",
+        "investment_points": [
+            "보험이익 호조에도 불구하고 투자손익 부진",
+            "그룹 지배구조 개편 기대감이 주가 상승 트리거",
+            "투자의견 및 목표주가 상향"
+        ],
+        "risk_factors": [
+            "채권 교체매매에 따른 투자손익 악화",
+            "해약환급금준비금 제도 개선 없이는 배당 재개 어려움"
+        ],
+        "shareholder_structure": "주요 주주 (주)한화 외 4인 45.05%"
+    }
+}

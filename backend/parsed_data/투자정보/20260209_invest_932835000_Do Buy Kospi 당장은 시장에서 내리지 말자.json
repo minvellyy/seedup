@@ -1,0 +1,32 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "iM증권",
+        "analyst_name": "김준영",
+        "report_title": "Do Buy Kospi 당장은 시장에서 내리지 말자"
+    },
+    "specific_data": {
+        "strategy_theme": "Do Buy Kospi",
+        "recommended_portfolio": [
+            "삼성전자",
+            "하이닉스",
+            "현대차",
+            "2차전지",
+            "방산",
+            "로봇"
+        ],
+        "strategy_logic": [
+            "반도체 사이클의 지속성",
+            "고환율, 고실적, 고재정의 호황",
+            "AI 투자 사이클의 영향",
+            "글로벌 공급망의 안정성"
+        ],
+        "quant_factors": [
+            "12m fwd P/E",
+            "EPS 성장률",
+            "환율 변동성",
+            "금리 인상"
+        ]
+    }
+}

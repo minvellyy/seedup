@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-04",
+        "brokerage": "교보증권",
+        "analyst_name": "정희령",
+        "report_title": "치솟는 몸값"
+    },
+    "specific_data": {
+        "company_name": "올릭스",
+        "ticker": "226950",
+        "investment_rating": "Not Rated",
+        "investment_points": [
+            "차세대 비만 치료제 후보물질 OLX501A 마우스 모델 실험 데이터 발표",
+            "단회 투여로 80%의 Knock-down 확인 및 효능 2개월 이상 유지",
+            "ALK7 타깃으로 0.3mg/kg 용량에서 약 80% Knock-down 달성",
+            "ALK7 타깃 데이터에 주목 권고"
+        ],
+        "risk_factors": [
+            "딜리버리 기술의 어려움",
+            "독성 리스크 동반 가능성"
+        ],
+        "shareholder_structure": "이동기 외 11 인 17.13%"
+    }
+}

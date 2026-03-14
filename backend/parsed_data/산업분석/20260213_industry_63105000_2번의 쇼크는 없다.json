@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-13",
+        "brokerage": "다이아신증권",
+        "analyst_name": "류형근, 서지원RA",
+        "report_title": "2번의 쇼크는 없다"
+    },
+    "specific_data": {
+        "sector_name": "반도체업",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "삼성전자",
+            "SK하이닉스"
+        ],
+        "industry_trends": [
+            "서버향 수요 성장",
+            "공급의 Discipline 강화",
+            "모바일 NAND ASP 정상화",
+            "AI 추론에 따른 SSD 수요 증가"
+        ],
+        "risk_factors": [
+            "메모리 인플레이션에 따른 세트 출하량 둔화",
+            "고객들의 공급망 우려",
+            "보수적 Capex 유지"
+        ]
+    }
+}

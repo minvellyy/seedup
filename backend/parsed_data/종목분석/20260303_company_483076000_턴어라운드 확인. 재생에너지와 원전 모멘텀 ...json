@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2023-10-16",
+        "brokerage": "유진투자증권",
+        "analyst_name": "한병화",
+        "report_title": "턴어라운드 확인. 재생에너지와 원전 모멘텀 .."
+    },
+    "specific_data": {
+        "company_name": "금양그린파워",
+        "ticker": "282720",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "연내 착공으로 외형 성장 예상",
+            "신재생 에너지 파이프라인 확장"
+        ],
+        "risk_factors": [
+            "시장 변동성",
+            "정책 변화"
+        ],
+        "shareholder_structure": "주요 주주 지분율: 지배주주 100%"
+    }
+}

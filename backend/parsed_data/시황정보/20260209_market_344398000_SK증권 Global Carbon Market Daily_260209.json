@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-09",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "SK증권 Global Carbon Market Daily_260209"
+    },
+    "specific_data": {
+        "market_summary": "국내외 배출권 가격 추이 및 원자재 가격 동향",
+        "macro_indicators": null,
+        "fund_flows": null,
+        "key_news": [
+            "[뉴욕유가] 美·이란 핵 폐기 협상 공회전…WTI 0.4%↑",
+            "NAMU EnR \"KAU 가격 왜곡에···한국 철강 'CBAM 비용 상승률' 일본보다 높아\"",
+            "EU, 2040 기후목표 유지한 채 ETS 전면 재설계…무상할당 연장 여부가 쟁점"
+        ]
+    }
+}

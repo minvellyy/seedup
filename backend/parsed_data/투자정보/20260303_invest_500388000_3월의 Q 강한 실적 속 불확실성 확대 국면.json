@@ -1,0 +1,31 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-03",
+        "brokerage": "교보증권",
+        "analyst_name": null,
+        "report_title": "3월의 Q 강한 실적 속 불확실성 확대 국면"
+    },
+    "specific_data": {
+        "strategy_theme": "강한 실적 속 불확실성 확대 국면",
+        "recommended_portfolio": [
+            "반도체",
+            "조선",
+            "유틸리티",
+            "증권",
+            "상사/자본재"
+        ],
+        "strategy_logic": [
+            "미국 경제정책 불확실성 확대",
+            "지정학적 갈등 리스크 확대",
+            "밸류, 실적모멘텀, 주주환원 관련 팩터의 중요성"
+        ],
+        "quant_factors": [
+            "P/B(12MF)",
+            "EPS2 수정비율(3M)",
+            "P/E(TTM)",
+            "EPS2 변화율(3M)",
+            "EV/EBITDA(12MF)"
+        ]
+    }
+}

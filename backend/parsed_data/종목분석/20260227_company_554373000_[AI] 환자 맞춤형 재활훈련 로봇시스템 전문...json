@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-26",
+        "brokerage": "한국IR협의회기업리서치센터",
+        "analyst_name": null,
+        "report_title": "[AI] 환자 맞춤형 재활훈련 로봇시스템 전문.."
+    },
+    "specific_data": {
+        "company_name": "피앤에스로보틱스",
+        "ticker": "460940",
+        "investment_rating": null,
+        "investment_points": [
+            "세계 최초 족관절 구동 시스템 기술",
+            "환자 맞춤형 재활 로봇기술",
+            "90.1% 수출 비중"
+        ],
+        "risk_factors": [
+            "정부 정책 변동에 따른 건강보험 급여 적용 범위 축소",
+            "경쟁사가 선점한 시장에서의 교체 수요 중심의 침투 전략"
+        ],
+        "shareholder_structure": "최대주주 박광훈 18.6%, 2대 주주 곽영남 6.6%, 특수관계인 전체 지분율 25.8%"
+    }
+}

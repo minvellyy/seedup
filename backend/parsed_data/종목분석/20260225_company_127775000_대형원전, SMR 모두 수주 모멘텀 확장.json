@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2023-02-26",
+        "brokerage": "대신증권",
+        "analyst_name": "허민호",
+        "report_title": "대형원전, SMR 모두 수주 모멘텀 확장"
+    },
+    "specific_data": {
+        "company_name": "두산에너빌리티",
+        "ticker": "034020",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "매수 유지",
+            "목표주가 130,000원으로 상향",
+            "2026년 폴란드향 수주 기대",
+            "해외 원전 기술 수주 확대"
+        ],
+        "risk_factors": [
+            "정치적 리스크",
+            "환율 변동 리스크",
+            "원자재 가격 상승 리스크"
+        ],
+        "shareholder_structure": "주요 주주: 두산 외 28인 30.68%, 국민연금공단 7.86%"
+    }
+}

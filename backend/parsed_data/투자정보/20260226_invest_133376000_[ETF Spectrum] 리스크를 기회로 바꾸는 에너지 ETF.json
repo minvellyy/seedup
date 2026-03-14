@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-02-26",
+        "brokerage": "유안타증권",
+        "analyst_name": "고경범, 김혜원",
+        "report_title": "[ETF Spectrum] 리스크를 기회로 바꾸는 에너지 ETF"
+    },
+    "specific_data": {
+        "strategy_theme": "리스크를 기회로 바꾸는 에너지 ETF",
+        "recommended_portfolio": [
+            "State Street Energy Select Sector SPDR ETF(XLE)",
+            "KIWOOM 미국원유에너지기업 ETF(474800)"
+        ],
+        "strategy_logic": [
+            "비용 절감",
+            "Q의 성장",
+            "주주환원"
+        ],
+        "quant_factors": [
+            "유가 변동성",
+            "안정적인 현금 흐름",
+            "주주환원 정책"
+        ]
+    }
+}

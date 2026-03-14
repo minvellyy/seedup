@@ -1,0 +1,17 @@
+{
+    "common_metadata": {
+        "report_type": null,
+        "report_date": null,
+        "brokerage": null,
+        "analyst_name": null,
+        "report_title": "광고 회복세 관찰"
+    },
+    "specific_data": {
+        "company_name": "카카오",
+        "ticker": "035720",
+        "investment_rating": null,
+        "investment_points": [],
+        "risk_factors": [],
+        "shareholder_structure": null
+    }
+}

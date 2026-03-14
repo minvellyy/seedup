@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "기업분석",
+        "report_date": "2026-02-10",
+        "brokerage": "하나증권",
+        "analyst_name": "김홍식, 이상훈",
+        "report_title": "2025년 4분기 컨퍼런스콜 요약"
+    },
+    "specific_data": {
+        "company_name": "KT",
+        "ticker": "030200",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "연간 매출액 28조2,442억원(+6.9% YoY) 기록",
+            "연간 당기순이익 1조8,368억원(+340.4% YoY) 기록",
+            "2025년 CAPEX 2조9,040억원 예정",
+            "4분기 DPS 600원, 자사주 매입 소각 예정"
+        ],
+        "risk_factors": [
+            "해킹 사고로 인한 가입자 이탈",
+            "B2B 사업 침체"
+        ],
+        "shareholder_structure": "주주환원 규모 증가, 신임 CEO의 배당 정책 정립 필요"
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-27",
+        "brokerage": "교보증권",
+        "analyst_name": "이상호",
+        "report_title": "4Q25 Review 레벨업 할 준비 완료"
+    },
+    "specific_data": {
+        "company_name": "HL D&I",
+        "ticker": "014790",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "2025년 4분기 연결 매출액 5,321억원 (YoY +22.7%)",
+            "영업이익 210억원 (YoY +38.4%)",
+            "주택건축의 적극적인 수주로 4Q25 수주잔고 6.3조 기록",
+            "주택 부문 분양률 85% 달성",
+            "2026년 매출과 영업이익 개선 예상"
+        ],
+        "risk_factors": [
+            "고원가율로 마진 훼손 기간",
+            "판촉비용 증가",
+            "법인세 관련 이연법인세"
+        ],
+        "shareholder_structure": "에이치엘홀딩스 외 9 인 46.36%"
+    }
+}

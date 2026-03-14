@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-26",
+        "brokerage": "SK증권",
+        "analyst_name": "형권훈",
+        "report_title": "별도법인 매출 성장세 견조"
+    },
+    "specific_data": {
+        "company_name": "한국콜마",
+        "ticker": "161890",
+        "investment_rating": "매수(유지)",
+        "investment_points": [
+            "4분기 영업이익 시장 컨센서스 소폭 하회",
+            "1분기 탑라인 가이던스 시장 컨센서스 대폭 상회",
+            "밸류에이션 매력과 긍정적인 1분기 실적 톤 고려",
+            "저점매수 유효"
+        ],
+        "risk_factors": [
+            "일시적인 재고조정으로 L사 산하 브랜드향 매출 감소",
+            "북미의 경우 기존 최대 고객사향 매출 감소 영향 지속"
+        ],
+        "shareholder_structure": "한국콜마홀딩스 26.58%, NIHON KOLMAR 11.77%, 외국인 지분율 35.69%"
+    }
+}

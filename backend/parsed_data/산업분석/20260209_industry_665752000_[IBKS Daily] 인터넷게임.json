@@ -1,0 +1,42 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-09",
+        "brokerage": "IBK투자증권",
+        "analyst_name": null,
+        "report_title": "[IBKS Daily] 인터넷게임"
+    },
+    "specific_data": {
+        "sector_name": "인터넷/SW/게임",
+        "industry_rating": null,
+        "top_picks": [
+            "NAVER",
+            "카카오",
+            "삼성에스디에스",
+            "현대오토에버",
+            "더존비즈온",
+            "한글과컴퓨터",
+            "롯데이노베이트",
+            "크래프톤",
+            "엔씨소프트",
+            "넷마블",
+            "시프트업",
+            "펄어비스",
+            "카카오게임즈",
+            "더블유게임즈",
+            "웹젠",
+            "NHN",
+            "컴투스",
+            "네오위즈",
+            "데브시스터즈"
+        ],
+        "industry_trends": [
+            "엔씨소프트 '리니지 클래식', 7일 한국·대만 출시",
+            "네이버·카카오, AI 에이전트 '오픈클로' 사용 금지령"
+        ],
+        "risk_factors": [
+            "보안 관리 강화로 인한 AI 사용 제한",
+            "게임 산업의 변동성"
+        ]
+    }
+}

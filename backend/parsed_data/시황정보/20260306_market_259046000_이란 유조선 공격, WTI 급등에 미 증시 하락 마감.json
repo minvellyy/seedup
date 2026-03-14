@@ -1,0 +1,21 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-06",
+        "brokerage": "null",
+        "analyst_name": "null",
+        "report_title": "이란 유조선 공격, WTI 급등에 미 증시 하락 마감"
+    },
+    "specific_data": {
+        "market_summary": "이란 유조선 공격으로 WTI 급등, 미국 증시 하락. 국내 증시는 코스피(+9.63%), 코스닥(+14.10%) 상승.",
+        "macro_indicators": "한국 2월 소비자물가, 미국 2월 소매판매, 미국 2월 고용보고서, 미 연준 굴스비 발언",
+        "fund_flows": "국내 증시에서 외국인 순매수, 기관 순매도",
+        "key_news": [
+            "이란 유조선 공격",
+            "WTI 80달러 돌파",
+            "케이뱅크 상장 성공",
+            "AI칩 수출 규제 검토",
+            "브로드컴 호실적"
+        ]
+    }
+}

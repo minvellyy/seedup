@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "한화투자증권",
+        "analyst_name": "김도하",
+        "report_title": "환원 확대와 자본비율 개선의 동반이 필요"
+    },
+    "specific_data": {
+        "company_name": "iM금융지주",
+        "ticker": "139130",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "환원 확대와 자본비율 개선의 동반 필요",
+            "경상 NIM 상승",
+            "목표주가 상향 조정"
+        ],
+        "risk_factors": [
+            "유가증권손익 부진",
+            "비경상 요인에 따른 판관비 증가"
+        ],
+        "shareholder_structure": "오케이저축은행 (외 3인) 10.0%, 국민연금공단 (외 1인) 9.1%, Aberdeen Asset Management 5.2%"
+    }
+}

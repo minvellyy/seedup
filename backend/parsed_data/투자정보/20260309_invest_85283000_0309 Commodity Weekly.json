@@ -1,0 +1,37 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-09",
+        "brokerage": "키움증권",
+        "analyst_name": "심수빈",
+        "report_title": "0309 Commodity Weekly"
+    },
+    "specific_data": {
+        "strategy_theme": "원자재 시장 동향",
+        "recommended_portfolio": [
+            "WTI",
+            "Brent",
+            "가솔린",
+            "천연가스",
+            "금",
+            "은",
+            "구리",
+            "알루미늄",
+            "납",
+            "옥수수",
+            "소맥",
+            "대두"
+        ],
+        "strategy_logic": [
+            "유가 급등에 따른 안전자산 수요 증가",
+            "지정학적 리스크에 따른 수급 전망",
+            "미국과 이란의 갈등으로 인한 원자재 가격 변동"
+        ],
+        "quant_factors": [
+            "S&P GSCI",
+            "CRB Index",
+            "주간 상승률",
+            "YTD 상승률"
+        ]
+    }
+}

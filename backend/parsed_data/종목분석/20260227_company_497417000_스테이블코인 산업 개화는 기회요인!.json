@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-27",
+        "brokerage": "유안타증권",
+        "analyst_name": "권명준",
+        "report_title": "스테이블코인 산업 개화는 기회요인!"
+    },
+    "specific_data": {
+        "company_name": "핑거",
+        "ticker": "163730",
+        "investment_rating": "NOT RATED",
+        "investment_points": [
+            "스테이블코인 산업 개화는 기회요인!",
+            "금융 비대면 채널 전용 플랫폼 구축",
+            "블록체인 관련 다수의 레퍼런스 보유",
+            "모바일신분증 AI패드 개발"
+        ],
+        "risk_factors": [
+            "시장 변동성",
+            "규제 리스크",
+            "경쟁 심화"
+        ],
+        "shareholder_structure": "주요주주 박민수 외 6 인"
+    }
+}

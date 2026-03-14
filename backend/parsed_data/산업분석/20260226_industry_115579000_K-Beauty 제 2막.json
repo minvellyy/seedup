@@ -1,0 +1,30 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2023-02-24",
+        "brokerage": "한화투자증권",
+        "analyst_name": "김병훈, 외 6인",
+        "report_title": "K-Beauty 제 2막"
+    },
+    "specific_data": {
+        "sector_name": "화장품",
+        "industry_rating": "Buy",
+        "top_picks": [
+            "에이피알",
+            "아모레퍼시픽",
+            "코스맥스",
+            "한국콜마"
+        ],
+        "industry_trends": [
+            "K-Beauty의 글로벌 Mass 시장 점유율 확대",
+            "정부의 K-뷰티 수출 성과 제고 및 확산방안 추진",
+            "중소형 ODM/OEM의 성장",
+            "신생 브랜드의 탄생 활발"
+        ],
+        "risk_factors": [
+            "품질 이슈 및 리드타임 관리 난이도",
+            "운전자본 부담 증가",
+            "수주 급증 구간의 선제 CAPEX 필요"
+        ]
+    }
+}

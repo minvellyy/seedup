@@ -1,0 +1,33 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-12",
+        "brokerage": "IBK투자증권",
+        "analyst_name": null,
+        "report_title": "[IBKS Daily] 인터넷게임"
+    },
+    "specific_data": {
+        "sector_name": "인터넷/SW/게임",
+        "industry_rating": null,
+        "top_picks": [
+            "NAVER",
+            "카카오",
+            "삼성에스디에스",
+            "현대오토에버",
+            "더존비즈온",
+            "크래프톤",
+            "엔씨소프트",
+            "넷마블",
+            "펄어비스",
+            "더블유게임즈"
+        ],
+        "industry_trends": [
+            "해외 게임사 넘어 OTT와 경쟁하는 게임산업",
+            "세제지원론 재점화"
+        ],
+        "risk_factors": [
+            "글로벌 경제 불확실성",
+            "경쟁 심화"
+        ]
+    }
+}

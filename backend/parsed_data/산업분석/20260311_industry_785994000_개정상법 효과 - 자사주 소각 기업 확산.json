@@ -1,0 +1,29 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-11",
+        "brokerage": "SK증권",
+        "analyst_name": "최관순",
+        "report_title": "개정상법 효과 - 자사주 소각 기업 확산"
+    },
+    "specific_data": {
+        "sector_name": "지주회사/ESG",
+        "industry_rating": null,
+        "top_picks": [
+            "SK",
+            "휴맥스홀딩스",
+            "네오위즈홀딩스",
+            "아모레퍼시픽홀딩스",
+            "롯데지주"
+        ],
+        "industry_trends": [
+            "자사주 소각을 통한 지주회사 재평가",
+            "상법 개정으로 인한 자사주 소각 의무화",
+            "지주회사에 대한 상대적 투자 매력도 증가"
+        ],
+        "risk_factors": [
+            "주식시장의 높은 변동성",
+            "자사주 소각에 대한 시장 반응"
+        ]
+    }
+}

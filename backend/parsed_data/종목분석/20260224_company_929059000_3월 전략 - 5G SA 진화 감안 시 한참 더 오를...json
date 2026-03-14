@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-24",
+        "brokerage": "하나증권",
+        "analyst_name": "김홍식, 이상훈",
+        "report_title": "3월 전략 - 5G SA 진화 감안 시 한참 더 오를.."
+    },
+    "specific_data": {
+        "company_name": "SK텔레콤",
+        "ticker": "017670",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "2026년 1분기 DPS가 800원 이상으로 발행될 전망",
+            "낮은 기저에 힘입어 2026년 도에는 높은 이익 성장이 예상",
+            "외국인 지분율이 38% 수준으로 수급 개선 가능성",
+            "기대배당수익률이 4.5% 수준으로 매력적"
+        ],
+        "risk_factors": [
+            "5G SA 시대 진입에 따른 주가 고평가 논란",
+            "기대배당수익률 오판 가능성"
+        ],
+        "shareholder_structure": "SK 외 9 인 30.59%, 국민연금공단 7.45%"
+    }
+}

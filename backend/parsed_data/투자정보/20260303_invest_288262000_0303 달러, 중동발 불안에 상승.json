@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-03",
+        "brokerage": "키움증권",
+        "analyst_name": "김유미, 심수빈",
+        "report_title": "0303 달러, 중동발 불안에 상승"
+    },
+    "specific_data": {
+        "strategy_theme": "달러 강세 및 원자재 가격 상승",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "미국·이스라엘과 이란 간 전쟁 격화로 안전자산 선호 심리 확대",
+            "중동발 지정학적 리스크로 국제유가 상승",
+            "인플레이션 우려로 달러 강세 지속"
+        ],
+        "quant_factors": [
+            "달러 대비 주요 통화 약세",
+            "NDF 달러/원 환율 상승",
+            "국제유가 급등"
+        ]
+    }
+}

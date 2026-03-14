@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-23",
+        "brokerage": "교보증권",
+        "analyst_name": "최보영",
+        "report_title": "2026년 2월 넷째 주 IT Weekly"
+    },
+    "specific_data": {
+        "sector_name": "반도체",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "삼성전자",
+            "SK하이닉스",
+            "LG전자"
+        ],
+        "industry_trends": [
+            "DRAM 잠정 수출액 증가",
+            "NAND 공급사 재고 수준 안정",
+            "중국 반도체 장비 확대"
+        ],
+        "risk_factors": [
+            "메모리 가격 변동성",
+            "글로벌 경기 둔화",
+            "정치적 불확실성"
+        ]
+    }
+}

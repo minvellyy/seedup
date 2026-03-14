@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2023-10-19",
+        "brokerage": "한국IR협의회",
+        "analyst_name": "이원재, 이희경",
+        "report_title": "하이테크 매출비중 85%, 반도체 설비투자 확.."
+    },
+    "specific_data": {
+        "company_name": "세보엠이씨",
+        "ticker": "011560",
+        "investment_rating": "매수",
+        "investment_points": [
+            "반도체 하이테크 매출비중 85%로 국내 기계설비 시장 내 독보적인 시장 지배력 보유",
+            "삼성전자와 SK하이닉스의 CAPEX 증가로 인한 수혜 기대",
+            "고배당 및 자사주 소각을 통한 주주가치 제고"
+        ],
+        "risk_factors": [
+            "전방 고객사의 국내투자 지연 리스크",
+            "트럼프 2기 통상 압박에 따른 불확실성"
+        ],
+        "shareholder_structure": "최대주주 김우영 대표이사 34.62%, 특수관계인 총 지분율 47.47%"
+    }
+}

@@ -1,0 +1,29 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-09",
+        "brokerage": "SK증권",
+        "analyst_name": "이선경",
+        "report_title": "Weekly Bio Insight"
+    },
+    "specific_data": {
+        "sector_name": "제약/바이오",
+        "industry_rating": null,
+        "top_picks": [
+            "한미약품",
+            "JW중외제약",
+            "셀트리온",
+            "비엘팜텍",
+            "메디아나"
+        ],
+        "industry_trends": [
+            "코스피 제약 지수는 0.7% 하락",
+            "코스닥 제약 지수는 7.6% 하락",
+            "실적 기대감이 높은 종목 중심으로 선별적 관심 증대"
+        ],
+        "risk_factors": [
+            "매크로 변수에 따른 변동성 확대",
+            "시장 기대치를 하회한 종목의 하락"
+        ]
+    }
+}

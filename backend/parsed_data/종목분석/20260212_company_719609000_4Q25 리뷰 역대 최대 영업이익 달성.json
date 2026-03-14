@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "유안타증권",
+        "analyst_name": "이환욱",
+        "report_title": "4Q25 리뷰 역대 최대 영업이익 달성"
+    },
+    "specific_data": {
+        "company_name": "에스엠",
+        "ticker": "041510",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "역대 최대 영업이익 달성",
+            "주력 아티스트 IP 향 MD/라이선싱 매출 호조",
+            "주요 종속 법인 실적 개선"
+        ],
+        "risk_factors": [
+            "투자자산 손상차손에 따른 순이익 개선세 제한"
+        ],
+        "shareholder_structure": "주요주주 카카오 외 7 인"
+    }
+}

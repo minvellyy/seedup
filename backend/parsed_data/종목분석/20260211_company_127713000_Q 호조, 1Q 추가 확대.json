@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "대신증권",
+        "analyst_name": "박강호, 서지원RA",
+        "report_title": "Q 호조, 1Q 추가 확대"
+    },
+    "specific_data": {
+        "company_name": "파트론",
+        "ticker": "091700",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "2026년 1Q 실적 호조",
+            "스마트폰용 카메라모듈 매출 증가",
+            "저평가 영역에서의 P/B 0.7배"
+        ],
+        "risk_factors": [
+            "부품업체의 수익성 둔화 우려",
+            "수요 둔화"
+        ],
+        "shareholder_structure": "주요주주 김종구 외 12인 27.64%"
+    }
+}

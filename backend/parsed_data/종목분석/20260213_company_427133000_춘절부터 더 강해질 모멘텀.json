@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-13",
+        "brokerage": "IBK투자증권",
+        "analyst_name": "김유혁",
+        "report_title": "춘절부터 더 강해질 모멘텀"
+    },
+    "specific_data": {
+        "company_name": "롯데관광개발",
+        "ticker": "032350",
+        "investment_rating": "매수",
+        "investment_points": [
+            "한일령 반사수혜",
+            "호텔객실 콤프 확대",
+            "테이블 가동률 상승"
+        ],
+        "risk_factors": [
+            "하얏트 로열티 비용 일회성 반영",
+            "중국 정부의 일본 여행 자제 권고"
+        ],
+        "shareholder_structure": "김기병 외 4인 39.49%, 국민연금공단 9.86%, 외국인 지분율 19.7%"
+    }
+}

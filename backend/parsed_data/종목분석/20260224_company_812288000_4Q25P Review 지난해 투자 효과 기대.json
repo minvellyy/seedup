@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-24",
+        "brokerage": "유진투자증권",
+        "analyst_name": "박종선",
+        "report_title": "4Q25P Review 지난해 투자 효과 기대"
+    },
+    "specific_data": {
+        "company_name": "지니언스",
+        "ticker": "263860",
+        "investment_rating": "NR",
+        "investment_points": [
+            "민간 매출 비중이 사상 처음으로 공공 비중을 상회",
+            "클라우드 NAC, EDR 서비스의 매출 및 고객 증가",
+            "우호적인 정부정책 및 신제품 출시 효과 기대"
+        ],
+        "risk_factors": [
+            "공공 정보보호 예산 삭감",
+            "연구개발 및 인건비 증가"
+        ],
+        "shareholder_structure": "이동범 (외 3인) 39.3%, Miri Capital Management(외 1인) 15.1%, Morgan Stanley & Co. (외 1인) 5.1%"
+    }
+}

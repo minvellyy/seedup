@@ -1,0 +1,21 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-11",
+        "brokerage": "하나금융투자",
+        "analyst_name": "이기훈, 김현수",
+        "report_title": "알아두면 쓸모있는 콘텐츠 캘린더"
+    },
+    "specific_data": {
+        "sector_name": "콘텐츠",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "BTS 컴백",
+            "NiziU 컴백",
+            "블랙핑크 초동 판매 증가",
+            "영화 <왕과 사는 남자> 관객 수 증가"
+        ],
+        "risk_factors": []
+    }
+}

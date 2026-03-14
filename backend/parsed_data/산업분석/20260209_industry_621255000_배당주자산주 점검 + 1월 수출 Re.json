@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-09",
+        "brokerage": "하나증권",
+        "analyst_name": "심은주, 고찬결",
+        "report_title": "배당주자산주 점검 + 1월 수출 Re"
+    },
+    "specific_data": {
+        "sector_name": "음식료/담배",
+        "industry_rating": "긍정적",
+        "top_picks": [
+            "오리온",
+            "KT&G",
+            "하이트진로"
+        ],
+        "industry_trends": [
+            "배당주 및 자산주의 상대적 아웃퍼폼",
+            "주요 음식료 업체의 배당기일이 이달 말로 예정",
+            "하림지주 및 롯데칠성의 주가 상승"
+        ],
+        "risk_factors": [
+            "국내 음료 및 주류 수요 부진",
+            "실적 개선 강도 약화"
+        ]
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-26",
+        "brokerage": "유진투자증권",
+        "analyst_name": "한병화",
+        "report_title": "미국 공장 가동으로 실적 개선 기대"
+    },
+    "specific_data": {
+        "company_name": "신흥에스이씨",
+        "ticker": "243840",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "미국 공장 가동으로 실적 개선 기대",
+            "2026년 매출액과 영업이익 각각 전년비 24%, 293% 증가 예상",
+            "업황에 맞추어서 원가 절감과 생산성 향상을 하는 능력 뛰어난 것 확인"
+        ],
+        "risk_factors": [
+            "헝가리 공장 임금 관련 규정 확정으로 인한 환입",
+            "전세계 전기차 판매량 감소 가능성"
+        ],
+        "shareholder_structure": "최화봉 (외 14인) 57.1%, 배영환 (외 1인) 0.3%, 신흥에스이씨우리사주 (외 1인) 0.2%"
+    }
+}

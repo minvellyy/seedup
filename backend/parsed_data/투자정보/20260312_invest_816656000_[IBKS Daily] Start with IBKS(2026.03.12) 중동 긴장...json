@@ -1,0 +1,36 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-12",
+        "brokerage": "투자분석부",
+        "analyst_name": null,
+        "report_title": "[IBKS Daily] Start with IBKS(2026.03.12) 중동 긴장.."
+    },
+    "specific_data": {
+        "strategy_theme": null,
+        "recommended_portfolio": [
+            "한화오션",
+            "삼성전자",
+            "삼성중공업",
+            "현대차",
+            "미래에셋증권",
+            "SK",
+            "SK하이닉스",
+            "한미반도체",
+            "LIG넥스원",
+            "기아"
+        ],
+        "strategy_logic": [
+            "중동 사태 이후 낙폭을 점차 만회하며 상승",
+            "기관 순매수 전환이 지수 상승을 견인",
+            "고유가 우려 속 혼조세",
+            "전략비축유 방출에도 석유 공급 불안 지속"
+        ],
+        "quant_factors": [
+            "KOSPI 상승률 1.40%",
+            "KOSDAQ 하락률 0.07%",
+            "중국증시 상승률 0.25%",
+            "미국 CPI YoY 2.4% 예상치 부합"
+        ]
+    }
+}

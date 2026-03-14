@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-20",
+        "brokerage": "iM증권",
+        "analyst_name": "전유진, 장호",
+        "report_title": "기름뿜뿜 Weekly 지방 발전사에 불리한 전력.."
+    },
+    "specific_data": {
+        "sector_name": "정유/화학/에너지",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "정제마진 약세에도 1분기 정유사들 실적은 상당히 좋을 듯",
+            "전력시장 개편으로 인한 기회",
+            "미국-이란 갈등 고조"
+        ],
+        "risk_factors": [
+            "정제마진 하락",
+            "지정학적 갈등",
+            "전력시장 개편에 따른 불확실성"
+        ]
+    }
+}

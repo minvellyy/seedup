@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-03",
+        "brokerage": "키움증권",
+        "analyst_name": "심수빈",
+        "report_title": "OPEC+, 4월부터 증산 재개"
+    },
+    "specific_data": {
+        "strategy_theme": null,
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "OPEC+의 증산 결정에도 유가는 급등",
+            "이스라엘-이란 전쟁에 따른 지정학적 리스크",
+            "유가 추가 급등 가능성은 호르무즈 해협 봉쇄 기간 및 중동 산유국의 생산 차질 여부에 따라 달라질 것"
+        ],
+        "quant_factors": [
+            "OPEC+ 8개국의 증산 규모",
+            "중동 지정학적 리스크",
+            "유가 상승세"
+        ]
+    }
+}

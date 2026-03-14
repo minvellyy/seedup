@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-03",
+        "brokerage": "유진투자증권",
+        "analyst_name": "한병화",
+        "report_title": "미국 설치량 확대와 대한민국 정책 효과 시작"
+    },
+    "specific_data": {
+        "sector_name": "그린산업/ESG",
+        "industry_rating": "OVERWEIGHT",
+        "top_picks": [
+            "씨에스윈드",
+            "SK오션플랜트"
+        ],
+        "industry_trends": [
+            "미국 재생에너지+BESS 수요 급증",
+            "대한민국 재생에너지+BESS 설치량 증가 예상",
+            "대기업들의 재생에너지 확대 사례 증가"
+        ],
+        "risk_factors": [
+            "정책 변화에 따른 시장 변동성",
+            "기술 발전 속도에 따른 경쟁 심화"
+        ]
+    }
+}

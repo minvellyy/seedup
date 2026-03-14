@@ -1,0 +1,33 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-19",
+        "brokerage": "IBK투자증권",
+        "analyst_name": null,
+        "report_title": "[IBKS Daily] 인터넷게임"
+    },
+    "specific_data": {
+        "sector_name": "인터넷/SW/게임",
+        "industry_rating": null,
+        "top_picks": [
+            "NAVER",
+            "카카오",
+            "삼성에스디에스",
+            "현대오토에버",
+            "더존비즈온",
+            "크래프톤",
+            "엔씨소프트",
+            "넷마블",
+            "NHN",
+            "컴투스"
+        ],
+        "industry_trends": [
+            "크래프톤, ‘윈드리스’ 공개···’배그’ 이을 차기 대작 노린다",
+            "AI, 일자리 흔드나…‘3N1K’ 대형 게임사 불안감 엄습"
+        ],
+        "risk_factors": [
+            "AI 활용 기업 증가에 따른 경쟁 심화",
+            "글로벌 경제 불확실성"
+        ]
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-23",
+        "brokerage": "키움증권",
+        "analyst_name": "김승혁",
+        "report_title": "[미국은 지금] 대법원 관세 위헌 판결, 종결이 아닌 .."
+    },
+    "specific_data": {
+        "strategy_theme": "관세 재설계에 따른 투자 전략",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "관세 부과 경로의 복잡성 증가로 기업의 가격·발주·재고·투자 의사결정이 보수적으로 집행될 가능성",
+            "관세 위헌 판결 이후 증시 상승세와 불확실성 증가",
+            "주도주 중심의 투자 전략이 유리할 것으로 판단"
+        ],
+        "quant_factors": [
+            "관세의 중복 구조",
+            "수입 원가 노출도",
+            "정책 리스크",
+            "채권 금리 레벨"
+        ]
+    }
+}

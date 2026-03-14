@@ -1,0 +1,17 @@
+{
+    "common_metadata": {
+        "report_type": null,
+        "report_date": null,
+        "brokerage": null,
+        "analyst_name": null,
+        "report_title": "이것이 밸류업"
+    },
+    "specific_data": {
+        "company_name": "삼성 SDI",
+        "ticker": null,
+        "investment_rating": null,
+        "investment_points": [],
+        "risk_factors": [],
+        "shareholder_structure": null
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "DS투자증권",
+        "analyst_name": "최승호",
+        "report_title": "수비수에서 공격수로의 포지션 변화 긍정적"
+    },
+    "specific_data": {
+        "company_name": "NAVER",
+        "ticker": "035420",
+        "investment_rating": "매수",
+        "investment_points": [
+            "4Q25 실적은 매출액 3조 1,951억원(YoY+10.7%), 영업이익 6,106억원(YoY+12.7%)으로 컨센서스에 부합",
+            "클라우드 매출액은 1,719억원으로 16.6% 성장",
+            "AI에 대한 투자가 수익으로 돌아오고 있어 긍정적",
+            "목표주가 400,000원 유지"
+        ],
+        "risk_factors": [
+            "마진율 감소 가능성",
+            "쿠팡과의 가격경쟁"
+        ],
+        "shareholder_structure": "국민연금공단(외 1인) 9.3%, BlackRock Fund Advisors(외 14인) 6.1%"
+    }
+}

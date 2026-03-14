@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-05",
+        "brokerage": "DS증권",
+        "analyst_name": "강태호",
+        "report_title": "[DS Defense Daily] 2026-03-05"
+    },
+    "specific_data": {
+        "market_summary": "이스라엘은 이란과의 전쟁이 수주간 지속될 것으로 예상하며, 방산 5사의 시가총액 총합 추이가 감소하고 있다.",
+        "macro_indicators": null,
+        "fund_flows": null,
+        "key_news": [
+            "이스라엘의 군사공세가 이란 정권 전복을 목표로 하고 있다.",
+            "미국은 중동에 더 많은 군사자산을 배치할 계획이다.",
+            "스페인 총리는 이란 전쟁을 '재앙'이라고 비난했다."
+        ]
+    }
+}

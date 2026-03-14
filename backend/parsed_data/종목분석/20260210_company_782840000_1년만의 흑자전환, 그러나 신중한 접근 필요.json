@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "하나증권",
+        "analyst_name": "안도현",
+        "report_title": "1년만의 흑자전환, 그러나 신중한 접근 필요"
+    },
+    "specific_data": {
+        "company_name": "제주항공",
+        "ticker": "089590",
+        "investment_rating": "Not Rated",
+        "investment_points": [
+            "1년만의 흑자전환, 그러나 신중한 접근 필요",
+            "4분기 영업이익 186억원으로 서프라이즈",
+            "일본 노선 수요가 강하고, 중국 노선도 LCC 중 가장 많이 보유"
+        ],
+        "risk_factors": [
+            "부채비율이 900% 이상으로 상승",
+            "현금 부족 우려",
+            "경쟁 심화 구간 지속"
+        ],
+        "shareholder_structure": "에이케이홀딩스 외 6 인 53.64%"
+    }
+}

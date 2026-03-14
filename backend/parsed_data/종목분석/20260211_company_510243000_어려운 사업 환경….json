@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "교보증권",
+        "analyst_name": "권우정",
+        "report_title": "어려운 사업 환경…"
+    },
+    "specific_data": {
+        "company_name": "CJ제일제당",
+        "ticker": "004200",
+        "investment_rating": "BU및Y",
+        "investment_points": [
+            "어려운 사업 환경 속 반등 모멘텀이 필요한 구간임.",
+            "식품은 원가 부담 지속되는 가운데, 소비 둔화, 경쟁 심화 등 아쉬운 요인 지속.",
+            "바이오 역시 중국 경쟁 심화가 아쉬운 상황."
+        ],
+        "risk_factors": [
+            "원가 부담 지속",
+            "소비 둔화",
+            "경쟁 심화",
+            "중국 업체 경쟁 심화"
+        ],
+        "shareholder_structure": "주요 주주 지분율에 대한 정보는 제공되지 않음."
+    }
+}

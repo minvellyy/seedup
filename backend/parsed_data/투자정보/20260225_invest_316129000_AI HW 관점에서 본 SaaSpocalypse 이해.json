@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2023-10-01",
+        "brokerage": "메리츠증권",
+        "analyst_name": "황수욱",
+        "report_title": "AI HW 관점에서 본 SaaSpocalypse 이해"
+    },
+    "specific_data": {
+        "strategy_theme": "AI 에이전트 및 메모리 수요 증가",
+        "recommended_portfolio": [
+            "알파벳",
+            "엔비디아"
+        ],
+        "strategy_logic": [
+            "AI 에이전트의 확산으로 메모리 수요 증가",
+            "OpenAI와 Anthropic의 경쟁 심화",
+            "OpenClaw의 안정성 및 접근성 문제"
+        ],
+        "quant_factors": [
+            "AI 에이전트의 메모리 사용량 증가",
+            "로컬 하드웨어의 메모리 아키텍처 효율성",
+            "AI 모델의 성능 제한 요인으로서의 메모리"
+        ]
+    }
+}

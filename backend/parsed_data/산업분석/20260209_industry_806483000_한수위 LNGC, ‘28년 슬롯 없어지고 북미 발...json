@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-08",
+        "brokerage": "SK증권",
+        "analyst_name": "한승한",
+        "report_title": "한수위 LNGC, ‘28년 슬롯 없어지고 북미 발.."
+    },
+    "specific_data": {
+        "sector_name": "조선업",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "HD현대중공업",
+            "한화오션"
+        ],
+        "industry_trends": [
+            "북미 LNG 프로젝트 발주 본격화",
+            "사우디 해군 현대화 프로그램 참여",
+            "중국 조선소의 공격적 수주로 인한 슬롯 제한"
+        ],
+        "risk_factors": [
+            "중국 조선소의 경쟁 심화",
+            "모잠비크 LNG 프로젝트 재개에 따른 불확실성"
+        ]
+    }
+}

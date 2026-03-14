@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-03",
+        "brokerage": "iM증권",
+        "analyst_name": "배세호",
+        "report_title": "호르무즈 사태로 해운주 상승"
+    },
+    "specific_data": {
+        "sector_name": "운송",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "팬오션",
+            "HMM"
+        ],
+        "industry_trends": [
+            "호르무즈 해협 폐쇄 위협으로 해운주 상승",
+            "VLCC 운임 급등",
+            "컨테이너 운임 상승"
+        ],
+        "risk_factors": [
+            "이란의 호르무즈 해협 폐쇄 가능성",
+            "중동의 지정학적 리스크",
+            "선사들의 안전 우려로 인한 물동량 감소"
+        ]
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-03",
+        "brokerage": "유진투자증권",
+        "analyst_name": "황성현",
+        "report_title": "정유화학 Weekly - 전쟁과 국제유가"
+    },
+    "specific_data": {
+        "sector_name": "에너지",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "미국과 이스라엘의 이란 공습으로 중동 긴장",
+            "OPEC+는 4월부터 하루 20만6천배럴을 증산하기로 합의",
+            "호르무즈 해협 봉쇄 장기화 여부가 중요"
+        ],
+        "risk_factors": [
+            "전쟁의 지속 기간에 따라 영향은 달라질 수 있음",
+            "이란 수출 중단에 따른 국제유가 상승 리스크",
+            "호르무즈 해협 봉쇄 시 물류 마찰과 운송비 상승 가능성"
+        ]
+    }
+}

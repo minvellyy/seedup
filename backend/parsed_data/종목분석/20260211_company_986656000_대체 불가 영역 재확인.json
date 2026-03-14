@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "SK증권",
+        "analyst_name": "이동주",
+        "report_title": "대체 불가 영역 재확인"
+    },
+    "specific_data": {
+        "company_name": "리노공업",
+        "ticker": "058470",
+        "investment_rating": "매수(유지)",
+        "investment_points": [
+            "4Q25 실적 시장 컨센서스 상회",
+            "AP R&D 소켓의 독보적 우위",
+            "판가 상승세 지속",
+            "2027년 신공장 증설로 캐파 확대"
+        ],
+        "risk_factors": [
+            "단기 주가 급등에 따른 피로감"
+        ],
+        "shareholder_structure": "이채윤 34.66%, 미래에셋자산운용(외1) 6.92%, 외국인 지분율 27.40%"
+    }
+}

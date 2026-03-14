@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "DS투자증권",
+        "analyst_name": "최승호",
+        "report_title": "올해의 KEY도 아이온, 글로벌 흥행전망"
+    },
+    "specific_data": {
+        "company_name": "엔씨소프트",
+        "ticker": "036570",
+        "investment_rating": "매수",
+        "investment_points": [
+            "아이온2는 성공적으로 국내 PC MMORPG 시장에 안착했다.",
+            "아이온2의 글로벌 흥행이 예상된다.",
+            "리니지M의 매출 하락에도 불구하고 아이온2의 매출 증가가 기대된다."
+        ],
+        "risk_factors": [
+            "리니지클래식의 부정적 출시 영향",
+            "MMORPG 시장의 경쟁 심화"
+        ],
+        "shareholder_structure": "김택진(외 15인) 12.4%, 자사주(외 1인) 10.0%, 외국인 지분율 33.9%"
+    }
+}

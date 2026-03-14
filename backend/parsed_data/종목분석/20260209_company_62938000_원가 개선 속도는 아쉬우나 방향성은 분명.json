@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "키움증권",
+        "analyst_name": "박상준, CFA",
+        "report_title": "원가 개선 속도는 아쉬우나 방향성은 분명"
+    },
+    "specific_data": {
+        "company_name": "롯데웰푸드",
+        "ticker": "280360",
+        "investment_rating": "BUY(Maintain)",
+        "investment_points": [
+            "원가 개선 속도는 아쉬우나 방향성은 분명",
+            "글로벌 코코아 시세의 하락 흐름을 감안할 때, 수익성 개선이 나타나는 것은 시간의 문제",
+            "주력 제품 판가 인상과 국내 건과 매출 증가에도 불구하고 원재료비 상승 부담이 존재"
+        ],
+        "risk_factors": [
+            "원재료비 상승 부담",
+            "달러 강세에 따른 부정적 영향",
+            "코코아 투입단가 하락 반영 지연"
+        ],
+        "shareholder_structure": "주요 주주 롯데지주 외 12 인 68.6%"
+    }
+}

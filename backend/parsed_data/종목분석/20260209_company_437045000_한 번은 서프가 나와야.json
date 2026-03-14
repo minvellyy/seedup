@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "한화투자증권",
+        "analyst_name": "송유림, 김예인",
+        "report_title": "한 번은 서프가 나와야"
+    },
+    "specific_data": {
+        "company_name": "HDC현대산업개발",
+        "ticker": "294870",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "저가 매수가 유효한 구간",
+            "목표주가 32,000원 유지",
+            "영업이익률 개선 전망"
+        ],
+        "risk_factors": [
+            "4분기 영업이익 시장 기대치 하회",
+            "일회성 비용으로 실적 추정치 하향 조정"
+        ],
+        "shareholder_structure": "HDC (외 7인) 43.0%, 국민연금공단 (외 1인) 10.0%, 자사주 (외 1인) 4.6%"
+    }
+}

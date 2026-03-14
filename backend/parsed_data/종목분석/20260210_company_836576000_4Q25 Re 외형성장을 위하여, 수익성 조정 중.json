@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "DS투자증권",
+        "analyst_name": "김민정",
+        "report_title": "4Q25 Re 외형성장을 위하여, 수익성 조정 중"
+    },
+    "specific_data": {
+        "company_name": "동아에스티",
+        "ticker": "170900",
+        "investment_rating": "매수",
+        "investment_points": [
+            "외형성장을 위한 도입 신약의 매출 비중 상승",
+            "자큐보의 매출이 수익구간으로 진입할 것으로 기대",
+            "2026년 연간 매출액 약 8,104억원(+8.8% YoY) 성장 전망"
+        ],
+        "risk_factors": [
+            "고수익 품목의 소비 감소",
+            "바이오시밀러 시장 업황 변화에 따른 추정치 하향조정"
+        ],
+        "shareholder_structure": "강정석(외 30인) 41.0%, 국민연금공단(외 1인) 5.8%"
+    }
+}

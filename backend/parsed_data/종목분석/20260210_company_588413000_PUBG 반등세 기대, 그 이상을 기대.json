@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "한화투자증권",
+        "analyst_name": "김소혜, 김나우",
+        "report_title": "PUBG 반등세 기대, 그 이상을 기대"
+    },
+    "specific_data": {
+        "company_name": "크래프톤",
+        "ticker": "259960",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "현재 밸류에이션은 26E P/E 11배로 박스권 하단 수준까지 내려왔음",
+            "PUBG 반등세 기대",
+            "목표주가 380,000원 유지"
+        ],
+        "risk_factors": [
+            "일회성 비용 및 모바일 매출 부진",
+            "중국의 과금 조절 영향"
+        ],
+        "shareholder_structure": "장병규 (외 33인) 35.9%, 국민연금공단 (외 1인) 7.2%, 자사주 (외 1인) 5.8%"
+    }
+}

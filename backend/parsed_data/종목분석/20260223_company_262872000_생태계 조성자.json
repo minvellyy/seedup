@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-23",
+        "brokerage": "IBK투자증권",
+        "analyst_name": "남성현",
+        "report_title": "생태계 조성자"
+    },
+    "specific_data": {
+        "company_name": "CJ프레시웨이",
+        "ticker": "051500",
+        "investment_rating": "매수 (유지)",
+        "investment_points": [
+            "마켓보로 지분 인수를 통한 온라인 플랫폼 확대",
+            "경영권 확보 예상",
+            "시장 침투율 확대 및 지속 가능 성장"
+        ],
+        "risk_factors": [
+            "중소형 사업자와의 경쟁 심화",
+            "코로나19로 인한 거래 감소"
+        ],
+        "shareholder_structure": "CJ 외 5 인 47.89%, EFG PRIVATE BANK SA 10.95%"
+    }
+}

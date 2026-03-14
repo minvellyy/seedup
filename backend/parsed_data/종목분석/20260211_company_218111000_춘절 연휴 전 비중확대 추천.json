@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "IBK투자증권",
+        "analyst_name": "김유혁",
+        "report_title": "춘절 연휴 전 비중확대 추천"
+    },
+    "specific_data": {
+        "company_name": "파라다이스",
+        "ticker": "034230",
+        "investment_rating": "매수",
+        "investment_points": [
+            "춘절 연휴 전 비중확대 추천",
+            "영업이익 167억원(-14.0% YoY)으로 시장기대치 하회",
+            "드랍액이 두자릿 수 성장",
+            "홀드율 개선",
+            "지방세 환급금 85억원이 영업이익에 반영"
+        ],
+        "risk_factors": [
+            "영업비용 증가",
+            "기대치 하회"
+        ],
+        "shareholder_structure": "파라다이스글로벌 외 7 45.26%, 인국민 연금공단 7.13%"
+    }
+}

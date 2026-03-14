@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-05",
+        "brokerage": "키움증권",
+        "analyst_name": "이성훈",
+        "report_title": "0305, 미 증시, 이란발 지정학적 긴장감 완화 기대감.."
+    },
+    "specific_data": {
+        "strategy_theme": "지정학적 리스크 완화에 따른 위험선호 심리 회복",
+        "recommended_portfolio": [
+            "반도체",
+            "기술주"
+        ],
+        "strategy_logic": [
+            "지정학적 리스크 완화가 위험 자산에 대한 선호 심리를 강화",
+            "국내 증시의 급락은 과도한 차익 실현과 유가 급등에 따른 우려 반영",
+            "현재 PER이 역사적 평균치 하회로 매수 기회"
+        ],
+        "quant_factors": [
+            "VIX 지수",
+            "국제유가",
+            "코스피 PER"
+        ]
+    }
+}

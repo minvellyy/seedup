@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-23",
+        "brokerage": "한화투자증권",
+        "analyst_name": "배성조",
+        "report_title": "[4Q25 Review] 고스트로보틱스, 우려가 기대.."
+    },
+    "specific_data": {
+        "company_name": "LIG넥스원",
+        "ticker": "079550",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "고스트로보틱스 실적 개선 가능성",
+            "수출 OPM 개선 기대",
+            "목표주가 유지"
+        ],
+        "risk_factors": [
+            "영업이익 시장 기대치 하회",
+            "저수익성 매출 비중 증가",
+            "일회성 손실 발생"
+        ],
+        "shareholder_structure": "엘아이지 (외 8인) 38.2%, 국민연금공단 8.7%, ArtisanPartnersLimitedPartners 8.2%"
+    }
+}

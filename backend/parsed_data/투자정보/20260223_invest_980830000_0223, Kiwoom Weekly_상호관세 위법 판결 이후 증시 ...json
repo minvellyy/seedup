@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-02-23",
+        "brokerage": "키움증권",
+        "analyst_name": "한지영, 이성훈",
+        "report_title": "0223, Kiwoom Weekly_상호관세 위법 판결 이후 증시 .."
+    },
+    "specific_data": {
+        "strategy_theme": "상호관세 위법 판결 이후 증시 변화",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "트럼프 행동 변화",
+            "AI업체 실적",
+            "중동발 지정학적 뉴스플로우",
+            "미국 1월 PPI 발표 이후 시장금리 향방",
+            "기술적 과열 부담"
+        ],
+        "quant_factors": [
+            "KOSPI 예상 레인지 5,500~6,000pt",
+            "코스피 지수 상승률 37.8%",
+            "대형주, 중형주, 소형주 수익률"
+        ]
+    }
+}

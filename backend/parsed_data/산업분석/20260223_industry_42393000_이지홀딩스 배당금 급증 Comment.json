@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2025-02-23",
+        "brokerage": "유진투자증권",
+        "analyst_name": "허준서",
+        "report_title": "이지홀딩스 배당금 급증 Comment"
+    },
+    "specific_data": {
+        "sector_name": "거버넌스",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "이지홀딩스"
+        ],
+        "industry_trends": [
+            "배당금 급증",
+            "감액배당 재원 활용",
+            "정책 불확실성"
+        ],
+        "risk_factors": [
+            "감액배당과 관련된 정책 불확실성"
+        ]
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-27",
+        "brokerage": "유진투자증권",
+        "analyst_name": "박종선",
+        "report_title": "4Q25P Review 삼성전자 투자 수혜"
+    },
+    "specific_data": {
+        "company_name": "AJ 네트웍스",
+        "ticker": "095570",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "목표주가를 기존 6,000원에서 7,000원으로 상향조정",
+            "2분기 연속 전년동기 대비 매출액이 두 자리 수 성장률 달성",
+            "렌탈 부문 및 창고/유통 부문 매출액이 전년동기 대비 각각 21.4%, 27.1% 증가"
+        ],
+        "risk_factors": [
+            "미국법인의 일시적인 비용(렌탈 자산 감액 등 76억원)",
+            "시장 컨센서스 소폭 하회"
+        ],
+        "shareholder_structure": "문덕영 (외 5인) 55.9%, 자사주 (외 1인) 1.1%"
+    }
+}

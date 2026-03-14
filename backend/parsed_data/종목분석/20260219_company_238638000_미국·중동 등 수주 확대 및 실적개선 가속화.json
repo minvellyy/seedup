@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-19",
+        "brokerage": "iM증권",
+        "analyst_name": "이상헌, 장호",
+        "report_title": "미국·중동 등 수주 확대 및 실적개선 가속화"
+    },
+    "specific_data": {
+        "company_name": "SNT에너지",
+        "ticker": "100840",
+        "investment_rating": "NR",
+        "investment_points": [
+            "미국∙중동 등 수주 확대 및 실적개선 가속화",
+            "레버리지 효과 본격화로 어닝 서프라이즈 기록",
+            "LNG 수출 확대를 위한 규제 완화 환경"
+        ],
+        "risk_factors": [
+            "글로벌 에너지 시장의 변동성",
+            "정치적 리스크",
+            "환율 변동"
+        ],
+        "shareholder_structure": "주요 주주 지분율: 외국인 6.4%"
+    }
+}

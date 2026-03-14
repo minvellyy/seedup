@@ -1,0 +1,22 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "한국IR협의회",
+        "analyst_name": "백종석, 김혜빈",
+        "report_title": "반도체 제조공정 로봇 분야 글로벌 리더를 꿈.."
+    },
+    "specific_data": {
+        "company_name": "라온로보틱스",
+        "ticker": "232680",
+        "investment_rating": null,
+        "investment_points": [
+            "주 고객의 설비투자 증가에 따른 수혜 기대",
+            "수출비중 확대 기대"
+        ],
+        "risk_factors": [
+            "메모리 반도체 업황의 변동 가능성"
+        ],
+        "shareholder_structure": "최대주주 김원경 외 8인 37.21% 보유"
+    }
+}

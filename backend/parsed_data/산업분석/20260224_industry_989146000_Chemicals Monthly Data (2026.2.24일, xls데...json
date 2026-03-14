@@ -1,0 +1,35 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-24",
+        "brokerage": "유안타증권",
+        "analyst_name": "황규원",
+        "report_title": "Chemicals Monthly Data (2026.2.24일, xls데.."
+    },
+    "specific_data": {
+        "sector_name": "화학/에너지",
+        "industry_rating": "BUY",
+        "top_picks": [
+            "SK이노베이션",
+            "LG화학",
+            "롯데케미칼",
+            "한화솔루션",
+            "대한유화",
+            "금호석유",
+            "코오롱인더",
+            "SKC",
+            "TKG휴켐스"
+        ],
+        "industry_trends": [
+            "석화 제품 가격 상승",
+            "정유 마진 회복",
+            "아시아 석화 구조조정 진행",
+            "OPEC+ 증산 가능성"
+        ],
+        "risk_factors": [
+            "글로벌 경제 둔화",
+            "원자재 가격 변동성",
+            "정치적 불안정성"
+        ]
+    }
+}

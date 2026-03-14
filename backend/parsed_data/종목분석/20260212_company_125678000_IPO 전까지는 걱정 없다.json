@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "미래에셋증권",
+        "analyst_name": "우도형",
+        "report_title": "IPO 전까지는 걱정 없다"
+    },
+    "specific_data": {
+        "company_name": "미래에셋증권",
+        "ticker": "006800",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "4Q25 순이익 컨센서스 50.8% 상회",
+            "xAI 반영으로 목표주가 61,500원으로 상향",
+            "스페이스x IPO 전까지 추가 상승 가능"
+        ],
+        "risk_factors": [
+            "지분율 희석",
+            "주가 변동성"
+        ],
+        "shareholder_structure": "주요주주: 미래에셋캐피탈 외 17인"
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-05",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "[높은 산 깊은 골, 3 월의 낙폭과대 종목들]"
+    },
+    "specific_data": {
+        "strategy_theme": "AI 인프라 테마",
+        "recommended_portfolio": [
+            "테스",
+            "피에스케이",
+            "서진시스템",
+            "에스엘",
+            "현대위아",
+            "코오롱인더"
+        ],
+        "strategy_logic": [
+            "모멘텀과 저평가 요건을 동시에 충족하는 종목 선별",
+            "과도한 고밸류 종목 제외",
+            "특정 이벤트 의존도 분산"
+        ],
+        "quant_factors": [
+            "Momentum",
+            "Volume",
+            "Valuation"
+        ]
+    }
+}

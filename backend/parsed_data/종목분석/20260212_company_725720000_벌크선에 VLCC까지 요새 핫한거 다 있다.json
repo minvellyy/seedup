@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "하나증권",
+        "analyst_name": "안도현",
+        "report_title": "벌크선에 VLCC까지 요새 핫한거 다 있다"
+    },
+    "specific_data": {
+        "company_name": "팬오션",
+        "ticker": "028670",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "목표주가 6,400원으로 상향",
+            "현재주가 4,910원으로 저평가",
+            "VLCC 시장의 수요 증가",
+            "포트폴리오 다변화에 따른 긍정적 전망"
+        ],
+        "risk_factors": [
+            "운임 변동성",
+            "글로벌 경제 불확실성"
+        ],
+        "shareholder_structure": "하림지주 외 12 인 54.92%, 국민연금공단 6.55%"
+    }
+}

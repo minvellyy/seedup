@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-09",
+        "brokerage": "하나증권",
+        "analyst_name": "박성봉, 김승규",
+        "report_title": "발개위, 중국 철강시장 2월에도 약세 전망"
+    },
+    "specific_data": {
+        "sector_name": "철강금속",
+        "industry_rating": "Neutral",
+        "top_picks": [
+            "POSCO홀딩스",
+            "세아베스틸지주"
+        ],
+        "industry_trends": [
+            "중국 철강시장 2월에도 약세 전망",
+            "국내 철강 유통가격 보합세",
+            "중국 철강 유통가격 하락세 지속"
+        ],
+        "risk_factors": [
+            "중국의 수요 둔화",
+            "원자재 가격 상승",
+            "비관적인 시장 심리"
+        ]
+    }
+}

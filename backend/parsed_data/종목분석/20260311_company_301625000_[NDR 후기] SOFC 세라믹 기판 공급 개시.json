@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-11",
+        "brokerage": "SK증권",
+        "analyst_name": "허선재",
+        "report_title": "[NDR 후기] SOFC 세라믹 기판 공급 개시"
+    },
+    "specific_data": {
+        "company_name": "아모센스",
+        "ticker": "357580",
+        "investment_rating": "Not Rated",
+        "investment_points": [
+            "SOFC 세라믹 기판 공급 개시",
+            "구조적 실적 성장과 멀티플 리레 이팅 이뤄질 전망",
+            "고객사 캐파 확대 사이클에 따른 구조적 성장 구간 진입"
+        ],
+        "risk_factors": [
+            "고온에서 24시간 연속 가동되는 특성으로 인한 부품 교체 필요성",
+            "유지보수 계약 잔고 증가에 따른 수요 변동성"
+        ],
+        "shareholder_structure": "김병규(외9) 61.44%, 외국인 지분율 2.47%"
+    }
+}

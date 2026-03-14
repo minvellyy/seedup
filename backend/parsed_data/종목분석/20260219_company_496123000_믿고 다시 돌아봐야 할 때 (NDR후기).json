@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-19",
+        "brokerage": "하나증권",
+        "analyst_name": "김선아, 유창근",
+        "report_title": "믿고 다시 돌아봐야 할 때 (NDR후기)"
+    },
+    "specific_data": {
+        "company_name": "알테오젠",
+        "ticker": "196170",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "목표주가(12M) 580,000원",
+            "현재주가(2.13) 382,000원",
+            "본업은 잘 해 나가는 중",
+            "JPMHC 이후 첫 LO 스타트를 끊었고, 최근 AZ의 rilvegostomig가 SC로 임상1상에 진입",
+            "안전성 이슈 없이 순조롭게 임상1상이 진행되고 있음"
+        ],
+        "risk_factors": [
+            "MSD 로열티 이슈",
+            "기술이전 계약의 불확실성",
+            "경쟁 심화에 따른 매출 감소 우려"
+        ],
+        "shareholder_structure": "주요주주 지분율: 박순재 외 4 인 20.38%, 형인우 외 2 인 5.09%"
+    }
+}

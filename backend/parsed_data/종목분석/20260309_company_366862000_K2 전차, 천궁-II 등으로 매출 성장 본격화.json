@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-09",
+        "brokerage": "iM증권",
+        "analyst_name": "이상헌, 장호",
+        "report_title": "K2 전차, 천궁-II 등으로 매출 성장 본격화"
+    },
+    "specific_data": {
+        "company_name": "코츠테크놀로지",
+        "ticker": "448710",
+        "investment_rating": "NR",
+        "investment_points": [
+            "K2 전차, 천궁-II 등 방산수출 증가로 매출 성장 본격화",
+            "수주잔고 확대에 따른 매출 성장 지속성 높아질 듯"
+        ],
+        "risk_factors": [
+            "방산업체 수출 증가에 따른 신규수주 증가 가능성",
+            "정치적 리스크 및 국제 정세 변화"
+        ],
+        "shareholder_structure": "조지원 외 특수관계인 20.8%, 자사주 3.7%"
+    }
+}

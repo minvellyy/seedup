@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-13",
+        "brokerage": "SK증권",
+        "analyst_name": "나민식",
+        "report_title": "성장사업 위주의 외형 및 수익성 성장"
+    },
+    "specific_data": {
+        "company_name": "두산에너빌리티",
+        "ticker": "034020",
+        "investment_rating": "매수",
+        "investment_points": [
+            "수주잔고 외형 및 수익성 개선되는 추세 확인",
+            "추가 원전사업 가시성 높아질 목표 주가 상향 가능",
+            "성장사업 비중이 확대되고 있으며, 수익성 개선 기대"
+        ],
+        "risk_factors": [
+            "해외 자회사 매각차익 및 자회사 평가손 환입에 따른 변동성",
+            "정치적 요인에 따른 원전 사업의 불확실성"
+        ],
+        "shareholder_structure": "주요 주주 지분율에 대한 정보는 제공되지 않음"
+    }
+}

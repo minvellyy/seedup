@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-12",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "SK증권 아침에 슥_2026.02.12"
+    },
+    "specific_data": {
+        "market_summary": "미국 빅테크 약세 및 미국 재정 불안 확대에 고용 호조 및 반도체 강세에도 약보합 코스피. 유럽 국제유가 변동 및 기업 실적 엇갈림에 혼조 마감. 중국 1월 CPI 둔화에 소비재 중심 약세 나타나 혼조 마감. 국내 미국 통화정책 완화 기대 속 외국인·기관 동반 매수세에 상승 마감.",
+        "macro_indicators": null,
+        "fund_flows": {
+            "foreign_investors": {
+                "net_buy": 12000,
+                "net_sell": 0
+            },
+            "institutions": {
+                "net_buy": 0,
+                "net_sell": -24000
+            }
+        },
+        "key_news": [
+            "미국 실적발표(시스코, 에르메스, 지멘스, 맥도날드)",
+            "한국 실적발표(카카오, 펄어비스)"
+        ]
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-09",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "SK증권 Global Carbon Market Daily_260309"
+    },
+    "specific_data": {
+        "market_summary": "국내외 배출권 가격 추이 및 원자재 가격 동향",
+        "macro_indicators": null,
+        "fund_flows": null,
+        "key_news": [
+            "[뉴욕유가] 원유 공급 마르기 시작했다…WTI 사상 최대 상승률",
+            "EU ETS 개편 막판 '진통'...탄소 비용 인하 요구 청원 기업 수 과장 논란",
+            "中 탄소집약도 17% 감축…총배출 늘어날 수도"
+        ]
+    }
+}

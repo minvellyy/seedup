@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-05",
+        "brokerage": "하나증권",
+        "analyst_name": "이기훈, 김현수",
+        "report_title": "빅뱅 컴백 오피셜"
+    },
+    "specific_data": {
+        "company_name": "와이지엔터테인먼트",
+        "ticker": "122870",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "빅뱅의 글로벌 투어 계획이 공식화되면서 실적과 모멘텀이 동시에 높아지는 구간",
+            "2026년 예상 영업이익 935억원",
+            "신인 남자/여자 그룹 각각 1팀씩 데뷔 예정"
+        ],
+        "risk_factors": [
+            "신인 라인업 부족",
+            "글로벌 투어 수요 변동성"
+        ],
+        "shareholder_structure": "양현석 외 5인 22.95%, 네이버 8.89%"
+    }
+}

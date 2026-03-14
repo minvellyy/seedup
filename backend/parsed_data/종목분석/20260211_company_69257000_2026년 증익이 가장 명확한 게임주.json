@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "대신증권",
+        "analyst_name": "이지은",
+        "report_title": "2026년 증익이 가장 명확한 게임주"
+    },
+    "specific_data": {
+        "company_name": "엔씨소프트",
+        "ticker": "036570",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "2026년 확실한 증익",
+            "낮은 밸류 부담 고려 시 매수하기 좋은 시점",
+            "아이온2의 흥행과 실적 기여가 가능한 M&A를 통한 안정적인 성장 예상"
+        ],
+        "risk_factors": [
+            "신작 게임의 흥행 성과",
+            "인건비 및 마케팅비 증가"
+        ],
+        "shareholder_structure": "주요 주주 김택진 외 14인 12.37%, 국민연금공단 8.2%, 넷마블 8.9%, Public Investment Fund 9.3%"
+    }
+}

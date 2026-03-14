@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-09",
+        "brokerage": "null",
+        "analyst_name": "null",
+        "report_title": "AI랠리 재점화되며 미 증시 일제히 상승 마감"
+    },
+    "specific_data": {
+        "market_summary": "AI랠리 재점화되며 미 증시 일제히 상승 마감. 국내 증시는 AI 수익성 우려로 하락.",
+        "macro_indicators": "미국 비농업 고용자수, 실업률, 시간당 임금 발표.",
+        "fund_flows": "남북경협 테마주 강세, 미국 대북 인도적 지원 가능성 확대.",
+        "key_news": [
+            "AI 자본지출 상향 소식에 AI랠리 재점화",
+            "사우디 글로벌 방위산업 전시회",
+            "일본 중의원 선거 자민당 대승"
+        ]
+    }
+}

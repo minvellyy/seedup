@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-04",
+        "brokerage": "대신증권",
+        "analyst_name": "박강호, 서지원RA",
+        "report_title": "2Q에 회복을 예상"
+    },
+    "specific_data": {
+        "company_name": "심텍",
+        "ticker": "222800",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "2026년 GDDR7, 소캠2, FC CSP 등 고부가 제품 매출 확대",
+            "2026년 2Q부터 수익성 회복 예상",
+            "양호한 실적과 목표주가 60,000원 유지"
+        ],
+        "risk_factors": [
+            "원자재 가격 상승에 따른 수익성 하락",
+            "비수기 영향으로 1Q26 실적 약세"
+        ],
+        "shareholder_structure": "주요주주 심텍홀딩스 외 6인 33.33%, 삼성자산운용 5.31%"
+    }
+}

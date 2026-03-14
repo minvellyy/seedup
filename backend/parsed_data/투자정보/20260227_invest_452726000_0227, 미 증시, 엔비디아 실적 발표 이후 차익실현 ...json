@@ -1,0 +1,38 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-27",
+        "brokerage": "키움증권",
+        "analyst_name": "이성훈",
+        "report_title": "0227, 미 증시, 엔비디아 실적 발표 이후 차익실현 .."
+    },
+    "specific_data": {
+        "strategy_theme": null,
+        "recommended_portfolio": [
+            "애플",
+            "마이크로소프트",
+            "알파벳",
+            "메타",
+            "아마존",
+            "테슬라",
+            "엔비디아",
+            "브로드컴",
+            "AMD",
+            "마이크론"
+        ],
+        "strategy_logic": [
+            "엔비디아 실적 발표 이후 차익실현 매물 출회",
+            "기술주 중심으로 하락 마감",
+            "AI 산업에 대한 버블 경고",
+            "주요 하이퍼스케일러의 Capex 전망치 상향"
+        ],
+        "quant_factors": [
+            "기술주",
+            "AI 반도체",
+            "하드웨어",
+            "소프트웨어",
+            "금융",
+            "산업재"
+        ]
+    }
+}

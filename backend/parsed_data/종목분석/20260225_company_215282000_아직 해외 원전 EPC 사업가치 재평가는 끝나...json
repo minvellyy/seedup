@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2023-02-26",
+        "brokerage": "대신증권",
+        "analyst_name": "허민호",
+        "report_title": "아직 해외 원전 EPC 사업가치 재평가는 끝나.."
+    },
+    "specific_data": {
+        "company_name": "한국전력",
+        "ticker": "015760",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "미국과 원전 협력을 통해 대형 원전 및 SMR 건설 예상",
+            "2026년 전기요금 인상 효과 기대",
+            "해외 원전 EPC 사업 가치 재평가 기대"
+        ],
+        "risk_factors": [
+            "전기요금 정책 변화",
+            "원자재 가격 변동",
+            "해외 시장 진출 리스크"
+        ],
+        "shareholder_structure": "주요 주주: 한국산업은행 51.11%, 국민연금공단 7.90%"
+    }
+}

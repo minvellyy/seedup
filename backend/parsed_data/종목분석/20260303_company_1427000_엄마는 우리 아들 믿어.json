@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-03",
+        "brokerage": "유안타증권",
+        "analyst_name": "이승웅",
+        "report_title": "엄마는 우리 아들 믿어"
+    },
+    "specific_data": {
+        "company_name": "SK스퀘어",
+        "ticker": "402340",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "목표주가 840,000원으로 상향",
+            "자회사 SK하이닉스의 지분가치 상승 반영",
+            "주가 상승 여력 충분"
+        ],
+        "risk_factors": [
+            "시장 변동성",
+            "자회사 실적 부진 가능성"
+        ],
+        "shareholder_structure": "주요주주 SK 외 10 인"
+    }
+}

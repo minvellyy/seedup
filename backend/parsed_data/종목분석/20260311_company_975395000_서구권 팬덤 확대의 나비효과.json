@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-11",
+        "brokerage": "iM증권",
+        "analyst_name": "황지원",
+        "report_title": "서구권 팬덤 확대의 나비효과"
+    },
+    "specific_data": {
+        "company_name": "JYP Ent.",
+        "ticker": "035900",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "서구권 팬덤 확대에 따른 실적 서프라이즈",
+            "저연차 그룹의 성장성 증명 필요",
+            "밸류에이션 매력적"
+        ],
+        "risk_factors": [
+            "고연차 그룹에 대한 실적 의존도",
+            "투어 규모가 시장 기대치를 상회하지 못할 경우"
+        ],
+        "shareholder_structure": "외국인지분율 13.8%"
+    }
+}

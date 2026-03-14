@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "iM증권",
+        "analyst_name": "변용진",
+        "report_title": "4Q25 서프가 줄었지 체력이 줄었나"
+    },
+    "specific_data": {
+        "company_name": "한화에어로스페이스",
+        "ticker": "012450",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "4분기 매출 8조 3,261억원, 영업이익 7,528억원으로 기대에 부합한 실적",
+            "목표주가 1,680,000원으로 상향",
+            "K9, 천무 등의 인도 원활히 진행"
+        ],
+        "risk_factors": [
+            "일회성 비용 -950억원",
+            "러-우전쟁 종전 협상 지지부진"
+        ],
+        "shareholder_structure": "주요 주주 지분율: 외국인지분율 44.4%"
+    }
+}

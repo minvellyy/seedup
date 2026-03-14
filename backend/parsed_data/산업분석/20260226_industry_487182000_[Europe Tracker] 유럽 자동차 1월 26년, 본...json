@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-26",
+        "brokerage": "IBKS",
+        "analyst_name": "이현욱",
+        "report_title": "[Europe Tracker] 유럽 자동차 1월 26년, 본.."
+    },
+    "specific_data": {
+        "sector_name": "자동차/2차전지",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "2026년 본격적인 전기차 판매량 증가의 해",
+            "BEV 점유율 19.3%로 작년 14.9% 대비 YoY +4.4%p 증가",
+            "가솔린 및 디젤 차량의 시장 점유율은 30.1%로 YoY -9.4%p 감소"
+        ],
+        "risk_factors": [
+            "유럽 내 자동차 이산화탄소 배출 규제 관련 Action Plan",
+            "가솔린, 디젤 차량 판매 감소"
+        ]
+    }
+}

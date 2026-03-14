@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2023-10-31",
+        "brokerage": "유진투자증권",
+        "analyst_name": "박종선",
+        "report_title": "2026년 AR Glass 본격적 출시의 수혜 기대"
+    },
+    "specific_data": {
+        "company_name": "사피엔반도체",
+        "ticker": "452430",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "AR 글래스 출시를 앞두고 북미 및 아시아 글로벌 기업과의 계약 증가",
+            "2026년부터 제품 매출 본격화 예상",
+            "2027년 폭발적인 실적 성장 가능성"
+        ],
+        "risk_factors": [
+            "영업손실 지속 가능성",
+            "신규 고객 대응을 위한 인력 충원으로 인한 비용 증가"
+        ],
+        "shareholder_structure": "주요 주주 지분율은 유진투자증권이 56.8% 보유"
+    }
+}

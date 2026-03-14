@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-13",
+        "brokerage": "하나증권",
+        "analyst_name": "이기훈, 김현수",
+        "report_title": "이제부터 1년 내내 BTS"
+    },
+    "specific_data": {
+        "company_name": "하이브",
+        "ticker": "352820",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "BTS의 역사적인 컴백을 앞두고 실적 개선 기대",
+            "위버스와 메가IP 성장 모멘텀",
+            "2026년 연간 최대 영업이익 예상"
+        ],
+        "risk_factors": [
+            "1회성 비용으로 인한 실적 하회 가능성",
+            "북미 사업 구조조정에 따른 불확실성"
+        ],
+        "shareholder_structure": "방시혁 외 10인 31.54%, 넷마블 9.17%"
+    }
+}

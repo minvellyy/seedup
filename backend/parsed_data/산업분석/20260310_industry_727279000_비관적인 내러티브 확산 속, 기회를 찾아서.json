@@ -1,0 +1,29 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-10",
+        "brokerage": "키움증권",
+        "analyst_name": "조재원",
+        "report_title": "비관적인 내러티브 확산 속, 기회를 찾아서"
+    },
+    "specific_data": {
+        "sector_name": "유틸리티",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "한국전력",
+            "포스코인터내셔널",
+            "두산에너빌리티"
+        ],
+        "industry_trends": [
+            "비관적인 내러티브 확산",
+            "유가 급등에 따른 실적 악화 우려",
+            "전기 요금 인상 효과 누적",
+            "발전 믹스 개선"
+        ],
+        "risk_factors": [
+            "유가 변동성",
+            "환율 변동",
+            "데이터센터 투자 위축 우려"
+        ]
+    }
+}

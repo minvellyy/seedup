@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "키움증권",
+        "analyst_name": "김소원",
+        "report_title": "5년 만의 OLED 사이클과 자회사 가치 주목"
+    },
+    "specific_data": {
+        "company_name": "덕산네오룩스",
+        "ticker": "213420",
+        "investment_rating": "BUY(Maintain)",
+        "investment_points": [
+            "5년 만의 OLED 사이클과 자회사 가치 주목",
+            "2026년 연간 영업이익 893억원으로 사상 최대 실적 전망",
+            "IT OLED 침투율 확대 사이클이 예상되는 가운데 동사의 최대 수혜로 판단"
+        ],
+        "risk_factors": [
+            "전방 수요 불확실성",
+            "메모리 가격 상승에 따른 불확실성",
+            "연말 성과급과 현대중공업터보기계 인수에 따른 무형자산 상각비 반영"
+        ],
+        "shareholder_structure": "주요 주주 이수훈 외 11인 44.1%"
+    }
+}

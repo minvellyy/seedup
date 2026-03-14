@@ -1,0 +1,47 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-20",
+        "brokerage": "대신증권",
+        "analyst_name": "문남중, 문건우",
+        "report_title": "THE GLOBAL 주간 증시 전략"
+    },
+    "specific_data": {
+        "strategy_theme": "미국 증시 및 AI 기술기업에 대한 투자",
+        "recommended_portfolio": [
+            "iShares Core MSCI Emerging Markets",
+            "Invesco QQQ Trust Series 1",
+            "Xtrackers Harvest CSI300 China A-Shares ETF",
+            "iShares MSCI India ETF",
+            "iShares MSCI Taiwan ETF",
+            "iShares MSCI South Korea ETF",
+            "Technology Select Sector SPDR",
+            "Materials Select Sector SPDR",
+            "Industrial Select Sector SPDR Fund",
+            "Global x Artificial Intelligence & Technology ETF",
+            "iShares Semiconductor ETF",
+            "Health Care Select Sector SPDR",
+            "Global X Management Co LLC URA",
+            "Defiance Quantum ETF",
+            "2X BTCN STRG",
+            "Global X Robotics & Artificial Intelligence ETF",
+            "iShares 7-10 Year Treasury Bond ETF",
+            "SPDR Gold Shares",
+            "United States Copper Index Fund",
+            "Vanguard Real Estate Index Fund",
+            "Invesco DB US Dollar Index Bearish Fund",
+            "Invesco CurrencyShares Japanese Yen Trust"
+        ],
+        "strategy_logic": [
+            "미국 증시는 물가 지표에 긍정적으로 반응하고 있으며, AI 기술에 대한 투자 심리가 회복되고 있다.",
+            "1월 CPI 발표 이후 연준의 금리 인하 기대가 커지고 있다.",
+            "계절적 요인으로 1/4분기 미국 증시는 상승세를 보일 것으로 예상된다."
+        ],
+        "quant_factors": [
+            "물가 안정",
+            "AI 기술 발전",
+            "금리 인하 기대",
+            "계절적 상승 패턴"
+        ]
+    }
+}

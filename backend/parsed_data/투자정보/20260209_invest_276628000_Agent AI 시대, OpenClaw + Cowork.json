@@ -1,0 +1,31 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-06",
+        "brokerage": "대신증권",
+        "analyst_name": "서영재",
+        "report_title": "Agent AI 시대, OpenClaw + Cowork"
+    },
+    "specific_data": {
+        "strategy_theme": "Agent AI 시대의 시작",
+        "recommended_portfolio": [
+            "Clawdbot",
+            "Claude Opus 4.5",
+            "Maia 200",
+            "BlueField 4",
+            "HBF"
+        ],
+        "strategy_logic": [
+            "AI가 유저의 질문에 답하는 수준을 넘어 자율형 에이전트 역할 수행",
+            "코딩을 모르는 일반인들도 AI를 쉽게 활용할 수 있는 기대감",
+            "레거시 소프트웨어 기업들이 AI 기반 신생 기업들의 성장으로 위협받고 있음",
+            "자율주행 산업 진출을 본격화하는 엔비디아"
+        ],
+        "quant_factors": [
+            "AI 모델의 성능",
+            "시장 점유율",
+            "기술 혁신",
+            "메모리 수요 증가"
+        ]
+    }
+}

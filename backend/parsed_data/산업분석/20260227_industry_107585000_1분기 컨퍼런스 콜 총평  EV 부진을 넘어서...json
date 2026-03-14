@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-27",
+        "brokerage": "하나증권",
+        "analyst_name": "김현수, 홍지원",
+        "report_title": "1분기 컨퍼런스 콜 총평  EV 부진을 넘어서.."
+    },
+    "specific_data": {
+        "sector_name": "2차전지",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "LG에너지솔루션(373220)",
+            "삼성SDI(006400)",
+            "엘앤에프(066970)"
+        ],
+        "industry_trends": [
+            "EV 시장 부진 불가피하나 차세대 기술 투자 지속 확대",
+            "ESS 수요에 대한 모든 기업들이 매우 강한 성장 전망"
+        ],
+        "risk_factors": [
+            "EV 시장 부진",
+            "북미 EV 수요 회복 지연",
+            "경쟁 심화"
+        ]
+    }
+}

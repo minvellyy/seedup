@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "한화투자증권",
+        "analyst_name": "이진협, 김나우",
+        "report_title": "4Q25 Review  백화점 모멘텀 강화 전망"
+    },
+    "specific_data": {
+        "company_name": "현대백화점",
+        "ticker": "069960",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "내수 소비 회복의 강도가 강해지고 있다.",
+            "한일령 등 요인에 따른 인바운드 모멘텀 강화.",
+            "백화점의 성장률이 26년 상반기 두 자릿 수까지 확대될 전망."
+        ],
+        "risk_factors": [
+            "VIP 관련 충당금과 성과급 등 비용 증가.",
+            "지누스의 부진 지속."
+        ],
+        "shareholder_structure": "현대지에프홀딩스 (41.3%), 국민연금공단 (13.5%), FIDELITYFUNDS (5.0%)"
+    }
+}

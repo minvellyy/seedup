@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-11",
+        "brokerage": "한국IR협의회",
+        "analyst_name": "박선영, 정수현",
+        "report_title": "실적 레버리지 구간 진입과 글로벌 확장 모멘.."
+    },
+    "specific_data": {
+        "company_name": "피엔케이피부임상연구센타",
+        "ticker": "347740",
+        "investment_rating": "매수",
+        "investment_points": [
+            "2025년 사상 최대 매출 달성",
+            "2026년 이익 레버리지 본격화",
+            "글로벌 사업 확장 모멘텀"
+        ],
+        "risk_factors": [
+            "전방산업 성장 둔화 가능성",
+            "K-뷰티 업황 둔화 시 수주 둔화 리스크"
+        ],
+        "shareholder_structure": "대봉엘에스 외 4 인 59.41%"
+    }
+}

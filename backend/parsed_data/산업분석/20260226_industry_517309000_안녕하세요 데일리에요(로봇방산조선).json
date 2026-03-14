@@ -1,0 +1,29 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2023-02-25",
+        "brokerage": "데일리",
+        "analyst_name": null,
+        "report_title": "안녕하세요 데일리에요(로봇방산조선)"
+    },
+    "specific_data": {
+        "sector_name": "로봇, 방산, 조선",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "AI로봇산업협회 제12대 회장 선임",
+            "KAI, 신임 사장 선임 무산",
+            "韓·캐나다 국방장관회담",
+            "티로보틱스, 자체 개발 휴머노이드 내달 공개",
+            "LIG 넥스원, AI 군집 무인기 '에어 소드' 최초 공개",
+            "케이조선 본입찰 3월로",
+            "샤오펑, 휴머노이드 양산 준비 돌입",
+            "일본 방산 수출 제도 철폐 계획"
+        ],
+        "risk_factors": [
+            "글로벌 경제적 압박",
+            "공급 능력 부족",
+            "고비용 구조"
+        ]
+    }
+}

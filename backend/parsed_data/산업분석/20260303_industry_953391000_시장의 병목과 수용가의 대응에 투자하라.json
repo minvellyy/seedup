@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-03",
+        "brokerage": "유진투자증권",
+        "analyst_name": "허준서",
+        "report_title": "시장의 병목과 수용가의 대응에 투자하라"
+    },
+    "specific_data": {
+        "sector_name": "전력기기",
+        "industry_rating": "BUY",
+        "top_picks": [
+            "효성중공업",
+            "HD현대일렉트릭",
+            "LS일렉트릭"
+        ],
+        "industry_trends": [
+            "전력 수요의 폭발적 증가",
+            "하이퍼스케일러의 데이터센터 건설",
+            "BTM 인프라 확충 가속화"
+        ],
+        "risk_factors": [
+            "환경 규제",
+            "공급망 병목 현상",
+            "리드타임 증가"
+        ]
+    }
+}

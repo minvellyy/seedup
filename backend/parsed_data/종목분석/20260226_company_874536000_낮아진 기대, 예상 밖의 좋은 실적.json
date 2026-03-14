@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-26",
+        "brokerage": "DS INVESTMENT & SECURITIES",
+        "analyst_name": "안주원, 조한",
+        "report_title": "낮아진 기대, 예상 밖의 좋은 실적"
+    },
+    "specific_data": {
+        "company_name": "씨에스베어링",
+        "ticker": "297090",
+        "investment_rating": "매수",
+        "investment_points": [
+            "낮아진 기대 속 예상 밖의 좋은 실적",
+            "미국, 유럽 등 육상풍력 중심의 수요 유지",
+            "씨에스베어링의 시장점유율 상승",
+            "Vestas향 매출 증가",
+            "밸류에이션 매력도 높음"
+        ],
+        "risk_factors": [
+            "고금리",
+            "미국의 반 재생에너지 정책 기조"
+        ],
+        "shareholder_structure": "씨에스윈드(외 1인) 53.6%, 씨에스베어링우리사주(외 1인) 2.5%"
+    }
+}

@@ -1,0 +1,21 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-09",
+        "brokerage": "대신증권",
+        "analyst_name": "문건우, 문남중",
+        "report_title": "THE GLOBAL 마켓 파인더"
+    },
+    "specific_data": {
+        "strategy_theme": "소프트웨어 저가 매수세, 이란 지정학적 우려에 에너지/방산/해상 상승",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "소프트웨어 업종의 저가 매수세 유입",
+            "이란 지정학적 우려로 인한 에너지 및 방산 업종 상승"
+        ],
+        "quant_factors": [
+            "S&P500 소프트웨어 업종 상승",
+            "국제유가 급등"
+        ]
+    }
+}

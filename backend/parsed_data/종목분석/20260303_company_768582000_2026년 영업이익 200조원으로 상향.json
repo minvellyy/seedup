@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-03",
+        "brokerage": "키움증권",
+        "analyst_name": "박유악",
+        "report_title": "2026년 영업이익 200조원으로 상향"
+    },
+    "specific_data": {
+        "company_name": "삼성전자",
+        "ticker": "005930",
+        "investment_rating": "BUY(Maintain)",
+        "investment_points": [
+            "2026년 영업이익 200조원으로 상향",
+            "범용 DRAM과 NAND 가격 전망치 각각 +145%YoY와 +135%YoY",
+            "업종 top pick으로 매수 추천 지속"
+        ],
+        "risk_factors": [
+            "메모리 가격 급등 흐름 마무리 단계",
+            "CapEx 확대와 출하 증가 사이클 진입"
+        ],
+        "shareholder_structure": "삼성생명보험 외 16인 19.8%"
+    }
+}

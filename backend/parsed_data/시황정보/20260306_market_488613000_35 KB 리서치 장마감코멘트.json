@@ -1,0 +1,22 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-05",
+        "brokerage": "KB증권",
+        "analyst_name": "임정은, 태윤선, 김상엽",
+        "report_title": "35 KB 리서치 장마감코멘트"
+    },
+    "specific_data": {
+        "market_summary": "KOSPI 5,583pt (+9.63%), KOSDAQ 1,116pt (+14.10%) - 지정학적 긴장 완화 및 저가매수세 유입으로 국내 양 지수는 어제의 낙폭을 상당 부분 회복. 미 증시는 3대 지수 모두 상승 전환.",
+        "macro_indicators": "2월 ISM 서비스업 PMI는 56.1을 기록하며 20개월 연속 확장 국면, 2월 ADP 민간 고용은 전월 대비 6.3만명 증가로 컨센서스 (5만명 증가) 상회.",
+        "fund_flows": {
+            "individual": "+17,919",
+            "foreign": "-1,569",
+            "institution": "-17,141"
+        },
+        "key_news": [
+            "이재명 대통령이 주식 및 환율 변동에 대응하기 위한 ‘100조원 금융 안정조치’ 집행을 지시했다는 소식에 따른 정책적 기대감.",
+            "외국인은 오늘도 약 8,400억원 규모로 5거래일 연속 KOSDAQ 순매수, KOSPI는 다시 순매도 전환."
+        ]
+    }
+}

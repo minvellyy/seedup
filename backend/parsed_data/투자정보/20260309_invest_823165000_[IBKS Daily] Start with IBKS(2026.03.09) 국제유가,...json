@@ -1,0 +1,37 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-09",
+        "brokerage": "투자분석부",
+        "analyst_name": null,
+        "report_title": "[IBKS Daily] Start with IBKS(2026.03.09) 국제유가,.."
+    },
+    "specific_data": {
+        "strategy_theme": null,
+        "recommended_portfolio": [
+            "한화에어로스페이스",
+            "삼성전자",
+            "현대로템",
+            "SK하이닉스",
+            "SK스퀘어",
+            "LIG넥스원",
+            "KODEX 레버리지",
+            "현대건설",
+            "한화시스템"
+        ],
+        "strategy_logic": [
+            "중동 사태 확대 우려 속 강보합",
+            "미 증시 하락에도 방산주 강세",
+            "유가 급등과 고용 둔화 우려",
+            "KOSDAQ 2차전지주 강세",
+            "중국의 이란 협상 소식에 상승"
+        ],
+        "quant_factors": [
+            "KOSPI 상승",
+            "KOSDAQ 상승",
+            "미국 고용지표 부진",
+            "유럽증시 하락",
+            "국제유가 급등"
+        ]
+    }
+}

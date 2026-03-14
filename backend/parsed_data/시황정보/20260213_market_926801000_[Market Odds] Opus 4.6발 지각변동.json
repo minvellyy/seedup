@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-13",
+        "brokerage": "SK증권",
+        "analyst_name": "조준기",
+        "report_title": "[Market Odds] Opus 4.6발 지각변동"
+    },
+    "specific_data": {
+        "market_summary": "예측시장 주간 총 거래량 등 시장 전체 지표들은 높은 수준을 유지하고 있음. 작년 4분기~올해 1월까지의 급격한 성장세는 다소 둔화되는 모습 보이고 있으나 시간 점차 지나며 규모의 확장 재차 나타날 가능성 높다는 판단.",
+        "macro_indicators": "연방대법원 트럼프에게 유리한 판결 가능성, 미국 셧다운 재발 가능성, 2026년 내 미국 그린란드 취득 가능성, 미국 올해 말까지 경기침체 발생 가능성 등.",
+        "fund_flows": "SpaceX와 Anthropic, OpenAI의 연내 IPO 확률 올라가는 가운데 SpaceX의 IPO 시가총액에 대한 낙관론 추가 확산 중.",
+        "key_news": [
+            "Anthropic의 Claude Opus 4.6 발표 이후 엄청난 호평이 이어지는 중.",
+            "주식시장에서의 변동: 전통 B2B 소프트웨어 급락, 인프라/하드웨어 급등.",
+            "1위 AI 모델 보유 기업이 Google에서 Anthropic으로 변화."
+        ]
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "키움증권",
+        "analyst_name": "박상준, CFA",
+        "report_title": "실적 가시성 확보가 관건"
+    },
+    "specific_data": {
+        "company_name": "CJ제일제당",
+        "ticker": "097950",
+        "investment_rating": null,
+        "investment_points": [
+            "실적 가시성 확보가 관건",
+            "식품 부문은 원재료비 상승 부담과 부정적 환율 영향 지속",
+            "중국 경쟁사 공급 물량 증가에 따른 사료용 아미노산 업황 악화 우려",
+            "재무구조 개선 전략과 중장기 K-Food 성장 기대감 유효"
+        ],
+        "risk_factors": [
+            "원재료비 상승",
+            "부정적 환율 영향",
+            "중국 경쟁사 공급 증가"
+        ],
+        "shareholder_structure": "주요 주주 지분율에 대한 정보는 제공되지 않음"
+    }
+}

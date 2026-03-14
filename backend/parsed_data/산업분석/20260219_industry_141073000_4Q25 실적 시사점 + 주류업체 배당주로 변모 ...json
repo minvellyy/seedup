@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-19",
+        "brokerage": "하나증권",
+        "analyst_name": "심은주, 고찬결",
+        "report_title": "4Q25 실적 시사점 + 주류업체 배당주로 변모 .."
+    },
+    "specific_data": {
+        "sector_name": "음식료/담배",
+        "industry_rating": null,
+        "top_picks": [
+            "삼양식품",
+            "CJ프레시웨이",
+            "오리온"
+        ],
+        "industry_trends": [
+            "주류업체 배당주로 변모 중",
+            "배당주 매력 부각",
+            "실적 개선주에 비중 확대"
+        ],
+        "risk_factors": [
+            "내수 소비 회복 속도 둔화",
+            "일회성 비용 증가",
+            "주류/음료 총수요 감소"
+        ]
+    }
+}

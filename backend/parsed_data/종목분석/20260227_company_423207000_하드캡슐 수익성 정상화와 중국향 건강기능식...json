@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-27",
+        "brokerage": "한국IR협의회",
+        "analyst_name": "서진경, 이금민",
+        "report_title": "하드캡슐 수익성 정상화와 중국향 건강기능식.."
+    },
+    "specific_data": {
+        "company_name": "서흥",
+        "ticker": "008490",
+        "investment_rating": null,
+        "investment_points": [
+            "하드캡슐 부문 재고 정상화 이후 수익성 개선 국면 진입",
+            "건강기능식품 사업부 중국 중심 수출 고성장"
+        ],
+        "risk_factors": [
+            "건강기능식품 부문 수익성 상단 제한",
+            "고객사 의존에 따른 물량 변동 리스크"
+        ],
+        "shareholder_structure": "양주환 외 6인 52.83% 보유, 양주환 회장 25% 보유"
+    }
+}

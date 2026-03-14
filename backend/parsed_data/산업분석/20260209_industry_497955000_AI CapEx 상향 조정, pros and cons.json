@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-09",
+        "brokerage": "키움증권",
+        "analyst_name": "박유악",
+        "report_title": "AI CapEx 상향 조정, pros and cons"
+    },
+    "specific_data": {
+        "sector_name": "반도체",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "미국 CSPs의 2026년 CapEx 상향 조정",
+            "메모리 가격 급등 영향 상쇄",
+            "CSPs의 CapEx 하향 조정 risk 점검 필요"
+        ],
+        "risk_factors": [
+            "자금 조달 가능성에 대한 우려 확대",
+            "AI 투자 증가 지속 가능성에 대한 의문"
+        ]
+    }
+}

@@ -11,9 +11,16 @@
 from __future__ import annotations
 
 import json
+import sys
+from pathlib import Path
 
 from crewai import Agent, Task, Crew
 from crewai.tools import tool
+
+# backend/ 를 sys.path 에 추가 (news_model 이 backend/ 안으로 이동됨)
+_BACKEND_DIR = Path(__file__).resolve().parent.parent.parent  # backend/
+if str(_BACKEND_DIR) not in sys.path:
+    sys.path.insert(0, str(_BACKEND_DIR))
 
 from news_model.pipeline_news_analysis_mvp import search_news_context
 

@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-02-10",
+        "brokerage": "키움증권",
+        "analyst_name": "김유미, 안예하, 심수빈",
+        "report_title": "0210 달러, 고용 지표 앞두고 하락"
+    },
+    "specific_data": {
+        "strategy_theme": "달러 하락, 국제유가 상승",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "중국 정부의 미 국채 보유 축소 권고로 달러 하락 압력",
+            "1월 미국 고용보고서 발표를 앞두고 경계감 증가",
+            "유로화 강세, 엔화 외환당국 개입 후 강세",
+            "국제유가 상승, 지정학적 리스크 재부각"
+        ],
+        "quant_factors": [
+            "달러/원 환율",
+            "국제유가",
+            "금리",
+            "고용 지표"
+        ]
+    }
+}

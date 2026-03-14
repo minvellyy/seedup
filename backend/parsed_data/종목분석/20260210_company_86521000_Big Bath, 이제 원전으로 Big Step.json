@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "유진투자증권",
+        "analyst_name": "류태환",
+        "report_title": "Big Bath, 이제 원전으로 Big Step"
+    },
+    "specific_data": {
+        "company_name": "대우건설",
+        "ticker": "047040",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "어닝 쇼크를 기록했으나, 대규모 빅배스를 통해 원가율 정상화 및 대손 부담 완화를 선제적으로 달성",
+            "상반기 내 체코 두코바니 원전 본계약 가시화 예정",
+            "원전 CAPA 확대가 멀티플 리레이팅의 열쇠가 될 것으로 판단"
+        ],
+        "risk_factors": [
+            "해외현장 비용 반영",
+            "미분양 관련 대손충당금 설정"
+        ],
+        "shareholder_structure": "중흥토건 (외 3인) 50.8%, 국민연금공단 (외 1인) 5.7%"
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-23",
+        "brokerage": "하나증권",
+        "analyst_name": "김록호, 김영규",
+        "report_title": "Nvidia 실적보다 중요한 메모리 가격"
+    },
+    "specific_data": {
+        "sector_name": "반도체 및 소부장",
+        "industry_rating": "비중확대",
+        "top_picks": [
+            "삼성전자",
+            "SK하이닉스",
+            "테스",
+            "주성엔지니어링",
+            "파크시스템스",
+            "피에스케이홀딩스"
+        ],
+        "industry_trends": [
+            "메모리 가격 상승",
+            "수출 증가",
+            "하이퍼 스케일러 업체들의 Capex 증가"
+        ],
+        "risk_factors": [
+            "메모리 가격 변동성",
+            "글로벌 경제 불확실성",
+            "경쟁 심화"
+        ]
+    }
+}

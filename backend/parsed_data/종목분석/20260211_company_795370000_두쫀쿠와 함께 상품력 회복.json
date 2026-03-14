@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "대신증권",
+        "analyst_name": "유정현",
+        "report_title": "두쫀쿠와 함께 상품력 회복"
+    },
+    "specific_data": {
+        "company_name": "BGF리테일",
+        "ticker": "282330",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "상품력 회복으로 4분기 기존점 성장률 (+) 반전",
+            "유정현 매출 회복과 판관비 효율적 통제로 영업이익률 개선",
+            "2026년 경기 회복과 업계 구조조정 효과로 실적 개선 전망",
+            "목표주가를 170,000원으로 상향(+13%)"
+        ],
+        "risk_factors": [
+            "기존점 성장률의 변동성",
+            "업계 구조조정의 불확실성"
+        ],
+        "shareholder_structure": "주요주주 비지에프 외 18 인 51.35%, 국민연금공단 9.31%"
+    }
+}

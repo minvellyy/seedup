@@ -1,0 +1,32 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "DS투자증권",
+        "analyst_name": "안주원, 김민정, 조대형, 최승호",
+        "report_title": "DS와 함께하는 Weekly TalkTalk Vol. 247"
+    },
+    "specific_data": {
+        "strategy_theme": "재생에너지, 제약·바이오, IT/전기전자, 인터넷/게임",
+        "recommended_portfolio": [
+            "한화솔루션(009830)",
+            "HD현대에너지솔루션(322000)",
+            "한미약품(128940)",
+            "티엘비(356860)",
+            "넷마블(251270)",
+            "NAVER(035420)"
+        ],
+        "strategy_logic": [
+            "재생에너지 이격거리 규제 완화로 태양광 발전 기대",
+            "힘스앤허스의 저가 비만치료제 출시로 제약 시장 변화",
+            "MLCC 시장 양극화 및 AI 연관 응용처 수요 증가",
+            "AR 글라스 시장의 OLEDoS 채택 확산"
+        ],
+        "quant_factors": [
+            "비트코인 가격 하락",
+            "주담대 금리 상승",
+            "서울 아파트값 상승폭 확대",
+            "국민연금 사모펀드 투자 증가"
+        ]
+    }
+}

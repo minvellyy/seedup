@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2023-10-30",
+        "brokerage": "유진투자증권",
+        "analyst_name": "박종선",
+        "report_title": "사업다변화에 성공, 역대 최대 매출 달성 지.."
+    },
+    "specific_data": {
+        "company_name": "헥토이노베이션",
+        "ticker": "214180",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "사업다변화를 통한 지속적인 매출 성장세",
+            "IT정보서비스, 핀테크, 헬스케어 부문에서의 안정적인 성장"
+        ],
+        "risk_factors": [
+            "경기 둔화에 따른 소비자 지출 감소",
+            "경쟁 심화로 인한 가격 압박"
+        ],
+        "shareholder_structure": "주요 주주 지분율: 지배주주 58.5%, 비지배주주 41.5%"
+    }
+}

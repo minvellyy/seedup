@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-23",
+        "brokerage": "유진투자증권",
+        "analyst_name": "양승윤",
+        "report_title": "안녕하세요 위클리에요(로봇방산항공조선.."
+    },
+    "specific_data": {
+        "sector_name": "로봇/기계/운송/조선",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "로봇 산업의 효용성 확보에 대한 관심 증가",
+            "중동 긴장감 고조로 방산 수요 증가",
+            "조선 산업의 LNGC 및 탱커 수요 강세",
+            "항공 산업의 드론 및 무인기 사업 확대",
+            "해운 산업의 ZIM 합병 가능성"
+        ],
+        "risk_factors": [
+            "중동 내 군사적 충돌 가능성",
+            "이스라엘 정부의 합병 승인 리스크",
+            "글로벌 경제 불확실성"
+        ]
+    }
+}

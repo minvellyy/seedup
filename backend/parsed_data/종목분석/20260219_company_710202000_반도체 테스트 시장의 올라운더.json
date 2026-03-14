@@ -1,0 +1,22 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-19",
+        "brokerage": "한국IR협의회",
+        "analyst_name": "김혜빈, 박성순",
+        "report_title": "반도체 테스트 시장의 올라운더"
+    },
+    "specific_data": {
+        "company_name": "오킨스전자",
+        "ticker": "080580",
+        "investment_rating": null,
+        "investment_points": [
+            "고효율 CLT 장비용 소켓 수요 증가 수혜 기대",
+            "AI향 메모리 수요 증가에 따른 실적 확대 기대"
+        ],
+        "risk_factors": [
+            "메모리 업황과의 실적 연동성"
+        ],
+        "shareholder_structure": "전진국 대표이사 12.72%, ㈜제이피케이 5.68%, 외국인 지분율 10.53%"
+    }
+}

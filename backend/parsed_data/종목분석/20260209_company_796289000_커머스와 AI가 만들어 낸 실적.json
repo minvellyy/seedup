@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "유안타증권",
+        "analyst_name": "이창영",
+        "report_title": "커머스와 AI가 만들어 낸 실적"
+    },
+    "specific_data": {
+        "company_name": "NAVER",
+        "ticker": "035420",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "커머스와 AI가 만들어 낸 실적",
+            "영업이익 기준 시장 기대치 부합",
+            "커머스 전체 매출 YoY +36.0% 고성장 지속",
+            "AI에 의한 광고 효율성 증대"
+        ],
+        "risk_factors": [
+            "지식검색 쿼리수 감소로 성장률 하락 전망",
+            "글로벌 AI 검색 서비스의 위협",
+            "경쟁 AI 서비스 및 플랫폼의 사용자 급증"
+        ],
+        "shareholder_structure": "주요주주 국민연금공단, 외인지분율 40.33%"
+    }
+}

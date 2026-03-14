@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-03",
+        "brokerage": "삼성증권",
+        "analyst_name": "장영임",
+        "report_title": "조용히 강한 리테일의 품격"
+    },
+    "specific_data": {
+        "company_name": "삼성증권",
+        "ticker": "016360",
+        "investment_rating": "매수(신규편입)",
+        "investment_points": [
+            "고액자산가를 기반으로 한 리테일 경쟁력 부각",
+            "BK와 WM이 실적을 견인하며 경쟁사 대비 높은 이익성장률",
+            "발행어음 인가 시, 북 비즈니스까지 더해져 매력도 부각"
+        ],
+        "risk_factors": [
+            "발행어음 사업 인가 지연"
+        ],
+        "shareholder_structure": "삼성생명보험(외2) 29.62%, 국민연금공단 13.31%, 외국인 지분율 27.83%"
+    }
+}

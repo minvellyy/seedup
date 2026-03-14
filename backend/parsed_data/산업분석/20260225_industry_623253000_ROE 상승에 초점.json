@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-24",
+        "brokerage": "유안타증권",
+        "analyst_name": "우도형",
+        "report_title": "ROE 상승에 초점"
+    },
+    "specific_data": {
+        "sector_name": "은행",
+        "industry_rating": "Buy",
+        "top_picks": [
+            "KB금융",
+            "하나금융지주"
+        ],
+        "industry_trends": [
+            "ROE 상승에 초점",
+            "은행업종 PBR 상승",
+            "주주환원율 목표 조기 달성 기대감"
+        ],
+        "risk_factors": [
+            "COE 하락 기대 어려움",
+            "금리 인하 지연에 따른 연체율 및 충당금 우려"
+        ]
+    }
+}

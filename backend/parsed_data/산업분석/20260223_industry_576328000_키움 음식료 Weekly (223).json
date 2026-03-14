@@ -1,0 +1,32 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-23",
+        "brokerage": "키움증권",
+        "analyst_name": "박상준, CFA, 권용일",
+        "report_title": "키움 음식료 Weekly (223)"
+    },
+    "specific_data": {
+        "sector_name": "음식료/유통",
+        "industry_rating": null,
+        "top_picks": [
+            "CJ제일제당",
+            "풀무원",
+            "농심",
+            "삼양식품",
+            "빙그레"
+        ],
+        "industry_trends": [
+            "CJ제일제당 헝가리 공장 가동 계획",
+            "풀무원 미국 두부 매출 증가",
+            "농심 일본 시장 공략",
+            "삼양식품 일본 한정판 신제품 출시",
+            "하이트진로 일본 현지화 강화"
+        ],
+        "risk_factors": [
+            "해외 짝퉁 제품 확산",
+            "원자재 가격 변동",
+            "글로벌 경제 불확실성"
+        ]
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "유진투자증권",
+        "analyst_name": "양승윤",
+        "report_title": "높아진 실적 기저, 성장은 불변"
+    },
+    "specific_data": {
+        "company_name": "한화에어로스페이스",
+        "ticker": "012450",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "높아진 실적 기저, 성장은 불변",
+            "2026년 폴란드 K-9과 천무 인도 가이던스는 크게 감소할 것으로 예상되지만, 수출 PJ 수익성은 견조할 것으로 전망",
+            "올해 수주로 이미 노르웨이 천무 1.3조원을 확보"
+        ],
+        "risk_factors": [
+            "지상방산의 영업이익이 예상보다 낮을 수 있음",
+            "저마진 내수 비중 증가"
+        ],
+        "shareholder_structure": "한화 (외 7인) 35.8%, 국민연금공단 (외 1인) 7.9%"
+    }
+}

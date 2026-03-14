@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "iM증권",
+        "analyst_name": "이상헌, 장호",
+        "report_title": "배당소득 분리과세 및 자사주 소각 기대됨"
+    },
+    "specific_data": {
+        "company_name": "SK네트웍스",
+        "ticker": "001740",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "배당소득 분리과세 및 자사주 소각 기대됨",
+            "매출 상승 속도에 따라서 수익성 개선 여부가 결정될 것으로 판단됨",
+            "고배당기업 배당소득 분리과세 요건 충족될 듯"
+        ],
+        "risk_factors": [
+            "영업이익이 컨센서스를 대폭 하회할 것으로 예상됨",
+            "웰니스 로봇 A1의 개발비 및 마케팅 비용 증가"
+        ],
+        "shareholder_structure": "㈜SK 외 특수관계인 44.8%, 자사주 12.4%, 국민연금 5.2%"
+    }
+}

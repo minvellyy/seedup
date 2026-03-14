@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-09",
+        "brokerage": "iM증권",
+        "analyst_name": "전유진, 장호",
+        "report_title": "이란 사태 팔로웝, 그리고 향후 고민해야 할 .."
+    },
+    "specific_data": {
+        "sector_name": "정유/화학/에너지",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "이란 사태로 인한 에너지 시장 영향",
+            "정유/화학/유틸리티 업종 영향 점검 및 전망",
+            "미국의 진짜 의도와 종결 시나리오별 영향 점검"
+        ],
+        "risk_factors": [
+            "이란 사태 장기화로 인한 에너지 시장 타격",
+            "정유사들의 원유 조달 차질",
+            "유틸리티 업체의 연료비 부담 증가"
+        ]
+    }
+}

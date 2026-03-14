@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-03",
+        "brokerage": "한화투자증권",
+        "analyst_name": "박세연, 김예인",
+        "report_title": "[ESG & Transition] 통키[通 Keys] Transitio.."
+    },
+    "specific_data": {
+        "sector_name": "에너지",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "중동발 지정학 리스크 심화",
+            "정책 불확실성 지속",
+            "에너지 가격 상승",
+            "풍력 발전량 급감"
+        ],
+        "risk_factors": [
+            "정책 불확실성",
+            "지정학적 리스크",
+            "LNG 공급 차질"
+        ]
+    }
+}

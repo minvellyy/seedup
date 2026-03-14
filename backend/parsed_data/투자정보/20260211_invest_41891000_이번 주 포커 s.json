@@ -1,0 +1,36 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "null",
+        "analyst_name": "null",
+        "report_title": "이번 주 포커 s"
+    },
+    "specific_data": {
+        "strategy_theme": "저평가 우량주, 고배당 유망주",
+        "recommended_portfolio": [
+            "삼성전자",
+            "삼성바이오로직스",
+            "HD현대중공업",
+            "HD한국조선해",
+            "삼성에피스홀딩",
+            "제일기획",
+            "삼성증권",
+            "강원랜드",
+            "기업은행",
+            "삼성카드"
+        ],
+        "strategy_logic": [
+            "밸류에이션(P/B, P/E)이 최근 5년 내 하위 5% 수준에 있는 기업",
+            "최근 3년 내 배당을 늘리거나 유지했으며 배당수익률 상위인 기업"
+        ],
+        "quant_factors": [
+            "P/B",
+            "P/E",
+            "3M 수익률",
+            "1Y 수익률",
+            "예상 배당 수익률",
+            "자본유보율"
+        ]
+    }
+}

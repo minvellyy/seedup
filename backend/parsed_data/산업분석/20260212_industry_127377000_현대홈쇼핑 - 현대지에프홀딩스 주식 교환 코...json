@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-12",
+        "brokerage": "한화투자증권",
+        "analyst_name": "이진협, 김나우",
+        "report_title": "현대홈쇼핑 - 현대지에프홀딩스 주식 교환 코.."
+    },
+    "specific_data": {
+        "sector_name": "홈쇼핑",
+        "industry_rating": "Positive",
+        "top_picks": [
+            "현대홈쇼핑"
+        ],
+        "industry_trends": [
+            "내수 소비 회복 흐름",
+            "현대홈쇼핑의 시가총액 상승",
+            "저평가 상태 해소를 위한 구조적 변화 요구"
+        ],
+        "risk_factors": [
+            "홈쇼핑업의 구조적 한계",
+            "사업 연계성이 떨어지는 자회사의 실적 변동성"
+        ]
+    }
+}

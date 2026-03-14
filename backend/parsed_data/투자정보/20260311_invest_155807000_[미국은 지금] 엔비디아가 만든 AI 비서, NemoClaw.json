@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-11",
+        "brokerage": "키움증권",
+        "analyst_name": "김승혁",
+        "report_title": "[미국은 지금] 엔비디아가 만든 AI 비서, NemoClaw"
+    },
+    "specific_data": {
+        "strategy_theme": "AI 플랫폼 시장 진출",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "NemoClaw는 오픈소스 AI 에이전트 플랫폼으로, 기업들이 자사 직원에게 AI 에이전트를 배포할 수 있도록 지원한다.",
+            "NemoClaw는 엔비디아 칩 없이도 작동 가능하여, 다양한 하드웨어 환경에서 사용될 수 있다.",
+            "파트너십을 통해 엔비디아의 기술이 전 세계 수만 개 기업에 스며들 수 있는 기회를 제공한다."
+        ],
+        "quant_factors": [
+            "AI 에이전트의 자율적 업무 처리",
+            "오픈소스 접근 방식",
+            "파트너십을 통한 시장 확장"
+        ]
+    }
+}

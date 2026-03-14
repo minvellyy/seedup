@@ -1,5 +1,5 @@
 from fastapi import APIRouter, Depends, HTTPException
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Dict, Any, List, Optional
 from datetime import datetime, timedelta
 import asyncio
@@ -1534,13 +1534,19 @@ async def portfolio_ai_enrich(req: PortfolioAiEnrichRequest):
 # ── 포트폴리오 리스크 자연어 분석 ─────────────────────────────────────────────
 
 class PortfolioRiskItem(BaseModel):
-    ticker: str
-    name: str
+    ticker: str = Field(..., description="종목코드 (6자리, 예: 005930)")
+    name: str = Field(..., description="종목명 (예: 삼성전자)")
 
 
 class PortfolioRiskRequest(BaseModel):
-    items: List[PortfolioRiskItem]
-    risk_tier: str = ""
+    items: List[PortfolioRiskItem] = Field(
+        ...,
+        description="포트폴리오 편입 종목 목록 (최대 10개)",
+    )
+    risk_tier: str = Field(
+        default="",
+        description="투자 성향 등급 (예: 안정형, 중립형, 공격형)",
+    )
 
 
 @router.post("/portfolio-risk-analysis")

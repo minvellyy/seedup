@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "한화투자증권",
+        "analyst_name": "권지우",
+        "report_title": "SST 가동 앞둔 일시적 흔들림"
+    },
+    "specific_data": {
+        "company_name": "세아베스틸지주",
+        "ticker": "001430",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "2026년 본업 회복 전망",
+            "SST 가동 앞둔 긍정적 전망",
+            "목표주가 89,000원 유지"
+        ],
+        "risk_factors": [
+            "전방 산업의 재고 조정",
+            "일회성 비용 발생",
+            "판매량 감소"
+        ],
+        "shareholder_structure": "세아홀딩스 62.7%, 국민연금공단 7.4%, 세아베스틸지주우리사주 2.1%"
+    }
+}

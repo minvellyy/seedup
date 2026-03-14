@@ -1,0 +1,36 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-11",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "SK증권 아침에 슥_2026.02.11"
+    },
+    "specific_data": {
+        "market_summary": "미국 소매판매 우려 속 혼조 마감. 미국 경제의 핵심인 소비가 둔화 조짐을 보이며 기술주 중심의 나스닥 지수 하락. 유럽 기업 실적 호조에 일제히 상승. 기업 M&A 관련 호재와 양호한 실적 맞물리며 시너지 효과 발생하면서 지수 상승 견인.",
+        "macro_indicators": null,
+        "fund_flows": {
+            "foreign_investors": {
+                "net_buy": -12000,
+                "net_sell": 0
+            },
+            "institutions": {
+                "net_buy": null,
+                "net_sell": null
+            },
+            "pension_funds": {
+                "net_buy": null,
+                "net_sell": null
+            },
+            "investment_trusts": {
+                "net_buy": null,
+                "net_sell": null
+            }
+        },
+        "key_news": [
+            "중 - 1월 소비자물가지수",
+            "한 - 1월 실업률",
+            "미 - 1월 비농업고용지수"
+        ]
+    }
+}

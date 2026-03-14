@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-10",
+        "brokerage": "키움증권",
+        "analyst_name": "sb.shim, shl076, yhahn, 김유미, 이성훈",
+        "report_title": "국제유가 변동성 확대와 금융시장 영향 점검"
+    },
+    "specific_data": {
+        "strategy_theme": "중동 지정학적 리스크와 유가",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "호르무즈 해협 봉쇄가 정상화되기 전까지 원유시장 내 공급 불안 지속 예상",
+            "지정학적 뉴스플로우 및 국제유가 방향성에 민감도 높은 변동성 장세 불가피",
+            "전쟁 불안 심리는 잔존하나 이익 경로가 훼손되지 않는 수준으로 전쟁 양상이 전개된다면 코스피 밴드는 4,850~6,200pt 전망"
+        ],
+        "quant_factors": [
+            "국제유가",
+            "환율",
+            "금리",
+            "지정학적 리스크"
+        ]
+    }
+}

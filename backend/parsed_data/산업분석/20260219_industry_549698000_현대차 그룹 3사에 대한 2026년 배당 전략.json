@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-19",
+        "brokerage": "하나증권",
+        "analyst_name": "송선재, 강민아",
+        "report_title": "현대차 그룹 3사에 대한 2026년 배당 전략"
+    },
+    "specific_data": {
+        "sector_name": "자동차",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "현대차(005380)",
+            "기아(000270)",
+            "현대모비스(012330)"
+        ],
+        "industry_trends": [
+            "배당기준일이 다가오고 있다.",
+            "주가가 급등하면서 결산배당금 기준 수익률이 크게 낮아졌다.",
+            "EV/HEV, SDV/자율주행차, 로보틱스에서의 진전이 중요하다."
+        ],
+        "risk_factors": [
+            "배당금 증가의 폭이 크지 않음",
+            "주가는 크게 오른 상태"
+        ]
+    }
+}

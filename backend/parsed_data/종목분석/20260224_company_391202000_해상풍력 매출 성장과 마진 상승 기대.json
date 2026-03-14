@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-24",
+        "brokerage": "하나증권",
+        "analyst_name": "유재선, 성무규",
+        "report_title": "해상풍력 매출 성장과 마진 상승 기대"
+    },
+    "specific_data": {
+        "company_name": "SK오션플랜트",
+        "ticker": "100090",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "해상풍력 매출 성장과 마진 상승 기대",
+            "목표주가 25,000원, 현재주가 18,770원",
+            "4분기 실적은 시장 기대치를 하회했지만, 해상풍력 수주와 매출액 모두 역대 최대 수준 기록"
+        ],
+        "risk_factors": [
+            "공사 지연으로 인한 매출 이연 발생",
+            "특수선 매출 감소"
+        ],
+        "shareholder_structure": "에스케이에코플랜트 35.62%, 송무석 외 4인 14.96%"
+    }
+}

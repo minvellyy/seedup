@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "대신증권",
+        "analyst_name": "유정현",
+        "report_title": "고단가 제품 수주 불구, 가동률 하락으로 마.."
+    },
+    "specific_data": {
+        "company_name": "한세실업",
+        "ticker": "105630",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "고단가 제품 수주로 매출 성장",
+            "배당 증액을 통해 주주가치 제고를 위한 노력 보여준 점 긍정적 평가",
+            "6개월 목표주가 18,000원 유지"
+        ],
+        "risk_factors": [
+            "가동률 하락으로 마진 훼손",
+            "하반기 실적 흐름은 확 인하고 갈 필요"
+        ],
+        "shareholder_structure": "주요주주 한세예스24홀딩스 외 10 인 64.69%, 국민연금공단 6.10%"
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-03",
+        "brokerage": "한국IR협의회",
+        "analyst_name": "이나연, 권지승",
+        "report_title": "K2 수출 다변화와 차세대 무기체계 확장 기대"
+    },
+    "specific_data": {
+        "company_name": "삼양컴텍",
+        "ticker": "484590",
+        "investment_rating": "매수",
+        "investment_points": [
+            "K2 전차 수출 확대에 따른 매출 증가",
+            "차세대 무기체계 참여로 장기 성장 기반 확보",
+            "고마진 항공부품 및 연구개발 매출 비중 증가"
+        ],
+        "risk_factors": [
+            "보호예수 해제에 따른 오버행 리스크",
+            "해외 수출 계약의 불확실성"
+        ],
+        "shareholder_structure": "제오홀딩스 외 4인 44.69%"
+    }
+}

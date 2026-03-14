@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-05",
+        "brokerage": "한화투자증권",
+        "analyst_name": "송유림, 김예인",
+        "report_title": "배당이 아쉬우니"
+    },
+    "specific_data": {
+        "company_name": "한국가스공사",
+        "ticker": "036460",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "배당성향 축소",
+            "민수용 미수금 감소",
+            "목표주가 하향"
+        ],
+        "risk_factors": [
+            "영업이익 부진",
+            "유가 하락으로 인한 자산손상",
+            "가스요금 인상 필요성"
+        ],
+        "shareholder_structure": "대한민국정부(기획재정부) 46.6%, 2국인민연금공단 7.7%, 자사주 5.5%"
+    }
+}

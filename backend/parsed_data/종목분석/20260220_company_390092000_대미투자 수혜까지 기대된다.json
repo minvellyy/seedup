@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-20",
+        "brokerage": "SK증권",
+        "analyst_name": "나민식",
+        "report_title": "대미투자 수혜까지 기대된다"
+    },
+    "specific_data": {
+        "company_name": "LS ELECTRIC",
+        "ticker": "010120",
+        "investment_rating": "매수(유지)",
+        "investment_points": [
+            "대미투자 기대감이 아니라 실제로 수혜 가능",
+            "유틸리티 + 빅테크 + 대미투자 모두 다 누릴 수 있음",
+            "구조적 성장을 반영해 목표주가 상향"
+        ],
+        "risk_factors": [
+            "국내기업의 미국투자에 대한 시장의 주목 부족",
+            "정치적 리스크"
+        ],
+        "shareholder_structure": "LS(외3) 48.47%, 국민연금공단 8.79%, 외국인 지분율 22.85%"
+    }
+}

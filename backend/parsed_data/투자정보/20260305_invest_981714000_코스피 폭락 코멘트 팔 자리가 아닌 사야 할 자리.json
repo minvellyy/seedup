@@ -1,0 +1,29 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-05",
+        "brokerage": "키움증권",
+        "analyst_name": "한지영",
+        "report_title": "코스피 폭락 코멘트 팔 자리가 아닌 사야 할 자리"
+    },
+    "specific_data": {
+        "strategy_theme": "주식 비중 유지 및 주도주 매수",
+        "recommended_portfolio": [
+            "반도체",
+            "조선",
+            "방산",
+            "금융"
+        ],
+        "strategy_logic": [
+            "서킷브레이커 발동 후 평균 수익률 회복 패턴 존재",
+            "현재 주가 레벨에서 저평가 영역 도달",
+            "과거 지정학적 리스크 반영 패턴과 유사"
+        ],
+        "quant_factors": [
+            "코스피 12개월 선행 PER 8.1배",
+            "코스피 일간 하락률 -12.1%",
+            "코스닥 일간 하락률 -14.0%",
+            "코스피 누적 하락률 -18.4%"
+        ]
+    }
+}

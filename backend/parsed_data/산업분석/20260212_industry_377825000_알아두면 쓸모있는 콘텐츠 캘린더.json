@@ -1,0 +1,21 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-02-11",
+        "brokerage": "하나금융투자",
+        "analyst_name": "이기훈, 김현수",
+        "report_title": "알아두면 쓸모있는 콘텐츠 캘린더"
+    },
+    "specific_data": {
+        "sector_name": null,
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "[음악] 코르티스 데뷔 앨범 1월 기준 누적 약 176만장 (HYBE)",
+            "[음악] 1/16 엔하이픈 초동 약 208만장 (-3%) (HYBE)",
+            "[음악] 1/19 EXO 초동 약 91만장 (-42%) (SM)",
+            "[영화] <왕과 사는 남자> 개봉 1주차 누적 관객 수 약 120만명 (콘텐트리중앙)"
+        ],
+        "risk_factors": []
+    }
+}

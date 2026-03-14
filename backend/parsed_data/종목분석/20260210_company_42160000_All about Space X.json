@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "미래에셋증권",
+        "analyst_name": "박혜진, 권용수",
+        "report_title": "All about Space X"
+    },
+    "specific_data": {
+        "company_name": "미래에셋증권",
+        "ticker": "006800",
+        "investment_rating": "Marketperform",
+        "investment_points": [
+            "신용잔고 증가로 이자이익 정상화",
+            "트레이딩 사상 최대 경신",
+            "목표주가 53,000원으로 상향"
+        ],
+        "risk_factors": [
+            "주가가 Space X 기업가치에 대한 기대감에 연동",
+            "Valuation Re-rating에 대한 의문"
+        ],
+        "shareholder_structure": "주요주주: 미래에셋캐피탈 외 17인 33.23%"
+    }
+}

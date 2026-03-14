@@ -1,0 +1,35 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2025-02-10",
+        "brokerage": "투자분석부",
+        "analyst_name": null,
+        "report_title": "[IBKS Daily] Start with IBKS(2026.02.10) 글로벌 증.."
+    },
+    "specific_data": {
+        "strategy_theme": "반도체 관련주 강세 및 AI 투자 심리 회복",
+        "recommended_portfolio": [
+            "삼성전자",
+            "SK하이닉스",
+            "두산에너빌리티",
+            "현대차",
+            "한화솔루션",
+            "NAVER",
+            "KB금융",
+            "LG생활건강",
+            "아모레퍼시픽"
+        ],
+        "strategy_logic": [
+            "AI 과잉 투자 우려 완화",
+            "대형 반도체주 중심으로 매수세 유입",
+            "기술주 반등",
+            "고용·물가 지표 발표를 앞둔 투자 심리 회복"
+        ],
+        "quant_factors": [
+            "KOSPI 상승률",
+            "KOSDAQ 상승률",
+            "외국인 순매수",
+            "기관 순매수"
+        ]
+    }
+}

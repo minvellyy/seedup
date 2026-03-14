@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-09",
+        "brokerage": "대신증권",
+        "analyst_name": "문건우, 문남중",
+        "report_title": "중국 양회(兩會), 단기 지표보 다 산업 구조 전환에 .."
+    },
+    "specific_data": {
+        "strategy_theme": "산업 구조 전환",
+        "recommended_portfolio": [
+            "MCHI",
+            "A283580"
+        ],
+        "strategy_logic": [
+            "AI·반도체·첨단 제조 중심의 산업 구조 전환",
+            "내수 회복 및 인프라 투자 정책 기대",
+            "중장기 산업 구조의 질적 상승"
+        ],
+        "quant_factors": [
+            "경제성장률 목표치",
+            "소비자물가지수",
+            "재정적자율",
+            "도시 실업률",
+            "신규 일자리 창출"
+        ]
+    }
+}

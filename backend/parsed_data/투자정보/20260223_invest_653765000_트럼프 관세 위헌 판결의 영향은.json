@@ -1,0 +1,32 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-23",
+        "brokerage": "iM증권",
+        "analyst_name": "김준영",
+        "report_title": "트럼프 관세 위헌 판결의 영향은"
+    },
+    "specific_data": {
+        "strategy_theme": "트럼프 관세 위헌 판결의 영향",
+        "recommended_portfolio": [
+            "나이키",
+            "크록스",
+            "Fedex",
+            "UPS",
+            "화장품",
+            "음식료",
+            "가전",
+            "의류 OEM"
+        ],
+        "strategy_logic": [
+            "관세 부담 감소로 인한 소비재 주가 상승",
+            "미국향 수출 비중이 높은 섹터로의 쏠림 예상",
+            "관세 이슈가 완전히 해소되지 않음"
+        ],
+        "quant_factors": [
+            "관세율 변화",
+            "소비재 마진 압박",
+            "유동성 환경"
+        ]
+    }
+}

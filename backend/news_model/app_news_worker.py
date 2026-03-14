@@ -2,7 +2,7 @@ from fastapi import FastAPI, Query, HTTPException
 from pydantic import BaseModel
 from typing import List, Dict, Any
 
-from news_model.pipeline_news_analysis_mvp import search_news_context
+from pipeline_news_analysis_mvp import search_news_context
 
 app = FastAPI(
     title="SeedUp News Worker API",

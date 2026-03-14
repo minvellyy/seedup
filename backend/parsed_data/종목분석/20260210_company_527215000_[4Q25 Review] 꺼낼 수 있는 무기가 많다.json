@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "한화리서치",
+        "analyst_name": "배성조",
+        "report_title": "[4Q25 Review] 꺼낼 수 있는 무기가 많다"
+    },
+    "specific_data": {
+        "company_name": "한화에어로스페이스",
+        "ticker": "012450",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "영업이익 기준 컨센서스를 약 36% 하회했으나, 방산 믹스 악화와 일회성 비용 발생이 주요 요인",
+            "주가 상승 여력 25.7%로 목표주가 1,500,000원으로 상향",
+            "수출 모멘텀과 MCS 생산능력 확대에 따른 긍정적 전망"
+        ],
+        "risk_factors": [
+            "방산 믹스 악화",
+            "일회성 비용 발생",
+            "내수 매출 비중 증가"
+        ],
+        "shareholder_structure": "한화 (외 6인) 35.8%, 국민연금공단 7.9%, 한화에어로스페이스우리사주 1.3%"
+    }
+}

@@ -1,0 +1,30 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-23",
+        "brokerage": "대신증권",
+        "analyst_name": "박강호, 류형근, 서지원",
+        "report_title": "IT Weekly"
+    },
+    "specific_data": {
+        "sector_name": "IT/전기전자",
+        "industry_rating": "긍정적",
+        "top_picks": [
+            "삼성전자",
+            "SK하이닉스",
+            "LG전자",
+            "삼성전기",
+            "LG이노텍"
+        ],
+        "industry_trends": [
+            "KOSPI 및 대형 IT 기업의 주가 상승",
+            "AI 및 MLCC, 반도체 공급 부족",
+            "메모리 가격 상승 전망"
+        ],
+        "risk_factors": [
+            "갤럭시S26 출고 가격 인상에 따른 수익성 불확실성",
+            "중국 스마트폰 업체 판매량 감소 가능성",
+            "IT 기기 전반의 역성장 가능성"
+        ]
+    }
+}

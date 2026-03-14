@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "하나증권",
+        "analyst_name": "이기훈, 김현수",
+        "report_title": "본업과 자회사 모두 상당히 좋았다"
+    },
+    "specific_data": {
+        "company_name": "에스엠",
+        "ticker": "041510",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "본업과 자회사 모두 상당히 좋았다",
+            "중장기 성장 방향성은 상당히 명확",
+            "2026년에는 드디어 영업이익 2,000억원 레벨에 안착할 것"
+        ],
+        "risk_factors": [
+            "타 사 대비 아티스트들의 미국향 모멘텀 부재",
+            "자회사 C&C와 키이스트의 매각이 변수"
+        ],
+        "shareholder_structure": "카카오 외 7 인 41.65%, Tencent Music Entertainment 9.66%"
+    }
+}

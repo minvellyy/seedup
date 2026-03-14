@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-09",
+        "brokerage": "null",
+        "analyst_name": "null",
+        "report_title": "[Morning Brief] 중동 전쟁으로 유가 상승세 지속, 미.."
+    },
+    "specific_data": {
+        "market_summary": "중동 전쟁으로 유가 상승세 지속, 미 증시 하락 마감. 국내 증시는 변동성 장세로 코스피는 보합세를 보였고, 코스닥은 상승.",
+        "macro_indicators": "미국 2월 고용보고서 발표, 비농업 일자리는 -9.2만명으로 시장 예상치 -5만명을 큰 폭으로 하회.",
+        "fund_flows": "국내 증시에서 외국인 순매수 금액은 -1100억원, 기관 순매수 금액은 34억원.",
+        "key_news": [
+            "이란 호르무즈 해협 봉쇄 이후 유가 급등",
+            "미 정부의 AI칩 수출 통제 강화",
+            "중동 전쟁 장기화 우려"
+        ]
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-13",
+        "brokerage": "키움증권",
+        "analyst_name": "김진구",
+        "report_title": "시간이 지날수록 유리"
+    },
+    "specific_data": {
+        "company_name": "카카오페이",
+        "ticker": "377300",
+        "investment_rating": "BUY(Maintain)",
+        "investment_points": [
+            "목표주가 130,000원 유지",
+            "인터넷 업종 내 최선호주 입지",
+            "AI 및 스테이블코인 접목에 따른 TPV 확대",
+            "자산관리 구독경제 밸류 창출"
+        ],
+        "risk_factors": [
+            "금리 인하 자동신청 리스크",
+            "대출 과정에서의 데이터 결합 리스크"
+        ],
+        "shareholder_structure": "주요 주주 카카오 외 2 인 46.2%"
+    }
+}

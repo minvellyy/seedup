@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "하나증권",
+        "analyst_name": "유재선, 성무규",
+        "report_title": "일회성 비용에도 전분기대비 증익 달성"
+    },
+    "specific_data": {
+        "company_name": "HD현대중공업",
+        "ticker": "329180",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "일회성 비용에도 전분기대비 증익 달성",
+            "목표주가 740,000원 유지",
+            "4분기 실적은 시장 기대치를 상회"
+        ],
+        "risk_factors": [
+            "일회성 비용 발생",
+            "환율 변동",
+            "조선 부문 매출 Mix 변화"
+        ],
+        "shareholder_structure": "에이치디한국조선해양 외 1 인 69.27%, 국민연금공단 6.24%"
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "유진투자증권",
+        "analyst_name": "류태환",
+        "report_title": "외형보다 내실, 질적 성장의 원년"
+    },
+    "specific_data": {
+        "company_name": "HDC 현대산업개발",
+        "ticker": "294870",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "외형보다 내실, 질적 성장의 원년",
+            "자체주택과 외주주택 모두 이익 개선세 기록",
+            "서울원 아이파크 등 자체사업 매출 비중 확대",
+            "도시정비 수주 시장에서의 성과",
+            "적극적인 주주환원 정책 지속"
+        ],
+        "risk_factors": [
+            "대손충당금으로 인한 판관비 증가",
+            "대형 일반건축 현장 착공 지연"
+        ],
+        "shareholder_structure": "HDC (외 7인) 43.0%, 국민연금공단 (외 1인) 10.0%"
+    }
+}

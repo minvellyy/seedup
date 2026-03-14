@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-24",
+        "brokerage": "하나증권",
+        "analyst_name": "김승준, 하민호",
+        "report_title": "다양했던 원전 뉴스"
+    },
+    "specific_data": {
+        "sector_name": "건설업",
+        "industry_rating": "BUY",
+        "top_picks": [
+            "GS건설",
+            "삼성물산",
+            "아이에스동서"
+        ],
+        "industry_trends": [
+            "원전 관련 종목 상승",
+            "유가 상승 분위기",
+            "저PBR 관심 환기"
+        ],
+        "risk_factors": [
+            "국제 정세에 따른 변동성",
+            "유가 변동성"
+        ]
+    }
+}

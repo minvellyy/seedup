@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-20",
+        "brokerage": "현대차증권",
+        "analyst_name": "백주호",
+        "report_title": "식지 않을 기대감으로"
+    },
+    "specific_data": {
+        "sector_name": "조선",
+        "industry_rating": "OVERWEIGHT",
+        "top_picks": [
+            "HD현대중공업",
+            "한화오션"
+        ],
+        "industry_trends": [
+            "미국 조선업 협력 모멘텀 구체화",
+            "LNG선 중심 수주 증가",
+            "특수선 수주 확대"
+        ],
+        "risk_factors": [
+            "글로벌 발주 소폭 증가",
+            "중국의 저가 수주 우려",
+            "미국 조선업의 인력 부족"
+        ]
+    }
+}

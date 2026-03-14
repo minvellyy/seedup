@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-10",
+        "brokerage": "유진투자증권",
+        "analyst_name": "황성현",
+        "report_title": "정유화학 Weekly - 다시 가동을 시작하는 정.."
+    },
+    "specific_data": {
+        "sector_name": "에너지",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "러시아산 원유에 대한 해상서비스 전면 금지",
+            "미국과 이란의 핵 협상 실패",
+            "세계 석유 정제시설 가동중단 규모 감소",
+            "정유사들의 주가가 실적을 선행할 것으로 예상"
+        ],
+        "risk_factors": [
+            "지정학적 이슈로 인한 국제유가 상승",
+            "미국의 파업과 나이지리아 단고테 설비의 정상 가동 여부"
+        ]
+    }
+}
