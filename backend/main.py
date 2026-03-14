@@ -236,18 +236,30 @@ async def _db_full_price_sync(skip_ws_codes: set = None) -> int:
     today = datetime.now().strftime("%Y-%m-%d")
     results: dict = {}
 
-    # KIS REST API rate limit 고려: 최대 10 병렬, 배치 간 0.1초 대기
-    max_workers = min(10, len(target_codes))
+    # KIS REST API rate limit 대응: 초당 최대 ~10건 (100ms 간격)
+    # 1423종목 기준 약 2~3분 소요 (백그라운드 작업이므로 허용)
+    _RATE_LIMIT_DELAY = float(os.getenv("KIS_REST_RATE_DELAY", "0.1"))  # 초
+    _BATCH_SIZE = int(os.getenv("KIS_REST_BATCH_SIZE", "3"))            # 동시 요청 수
+    _BATCH_PAUSE = float(os.getenv("KIS_REST_BATCH_PAUSE", "0.35"))     # 배치 간 대기(초)
+
+    logger.info("DB 전체 가격 갱신 시작: %d개 종목 (배치=%d, 간격=%.2fs)", len(target_codes), _BATCH_SIZE, _BATCH_PAUSE)
+
     loop = asyncio.get_event_loop()
-    with ThreadPoolExecutor(max_workers=max_workers) as pool:
-        future_map = {pool.submit(get_current_price, code): code for code in target_codes}
-        for fut in as_completed(future_map):
-            code = future_map[fut]
-            try:
-                data = fut.result()
-                results[code] = data["current_price"]
-            except Exception as e:
-                logger.debug("REST 가격 조회 실패 [%s]: %s", code, e)
+    with ThreadPoolExecutor(max_workers=_BATCH_SIZE) as pool:
+        for batch_start in range(0, len(target_codes), _BATCH_SIZE):
+            if not target_codes:
+                break
+            batch = target_codes[batch_start: batch_start + _BATCH_SIZE]
+            future_map = {pool.submit(get_current_price, code): code for code in batch}
+            for fut in as_completed(future_map):
+                code = future_map[fut]
+                try:
+                    data = fut.result()
+                    results[code] = data["current_price"]
+                except Exception as e:
+                    logger.debug("REST 가격 조회 실패 [%s]: %s", code, e)
+            # 배치 간 대기: KIS 초당 요청 제한(EGW00201) 방지
+            await asyncio.sleep(_BATCH_PAUSE)
 
     if not results:
         return 0
@@ -415,6 +427,11 @@ async def startup_event():
                 print(f"DB 종목 로드 실패 (빈 목록으로 시작): {db_err}")
 
             is_mock = os.getenv("KIS_MOCK", "false").lower() == "true"
+            # KIS 서버가 이전 세션을 정리할 시간 확보 (ALREADY IN USE 방지)
+            _ws_startup_delay = int(os.getenv("KIS_WS_STARTUP_DELAY", "20"))
+            if _ws_startup_delay > 0:
+                print(f"KIS WebSocket 연결 전 {_ws_startup_delay}초 대기 (이전 세션 정리)...")
+                await asyncio.sleep(_ws_startup_delay)
             await init_manager(initial_codes, is_mock=is_mock)
             print(f"KIS WebSocket manager initialized! ({len(initial_codes)}개 종목 구독 등록)")
         except Exception as ws_err:

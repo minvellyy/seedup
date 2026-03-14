@@ -113,21 +113,70 @@ def _get_token(force_refresh: bool = False) -> str:
 
 
 def _kis_get(url: str, tr_id: str, params: Dict, retry: bool = True):
-    """KIS GET 요청 헬퍼. 500(토큰 만료) 시 토큰 갱신 후 1회 재시도.
-    
-    재시도 후에도 500 오류가 발생하면 HTTPError를 발생시킵니다.
+    """KIS GET 요청 헬퍼.
+
+    - EGW00201 (초당 거래건수 초과): 1초 대기 후 최대 3회 재시도
+    - 토큰 만료(500 + 토큰 오류 메시지): 토큰 갱신 후 1회 재시도
     """
     import logging as _logging
     _logger = _logging.getLogger("kis_client")
-    
+
+    _TOKEN_EXPIRED_KEYWORDS = ("접근토큰", "기간이 만료", "token", "expired", "invalid token", "인증")
+    _RATE_LIMIT_CODE = "EGW00201"
+    _RATE_LIMIT_WAIT = 1.0   # 초당 한도 초과 시 대기 시간(초)
+    _RATE_LIMIT_MAX_RETRY = 3
+
+    def _is_token_error(resp: requests.Response) -> bool:
+        try:
+            body = resp.json()
+            msg = (body.get("msg1", "") + body.get("msg", "")).lower()
+            rt_cd = str(body.get("rt_cd", ""))
+            if rt_cd == "1" and any(k in msg for k in _TOKEN_EXPIRED_KEYWORDS):
+                return True
+        except Exception:
+            pass
+        try:
+            text = resp.text.lower()
+            return any(k in text for k in _TOKEN_EXPIRED_KEYWORDS)
+        except Exception:
+            return False
+
+    def _is_rate_limit(resp: requests.Response) -> bool:
+        try:
+            body = resp.json()
+            return body.get("message") == _RATE_LIMIT_CODE or _RATE_LIMIT_CODE in body.get("msg1", "")
+        except Exception:
+            return False
+
     try:
         r = requests.get(url, headers=_headers(tr_id), params=params, timeout=10)
-        if r.status_code == 500 and retry:
-            _logger.warning("KIS 500 수신 — 토큰 갱신 후 1회 재시도 (%s)", url)
-            _get_token(force_refresh=True)
-            r = requests.get(url, headers=_headers(tr_id), params=params, timeout=10)
-            if r.status_code == 500:
-                _logger.error("KIS 500 재시도 후에도 실패 — API 호출 중단 (%s)", url)
+
+        # ── Rate Limit 재시도 (토큰 갱신 없이 대기 후 재요청) ──────────────
+        if r.status_code == 500 and retry and _is_rate_limit(r):
+            for attempt in range(1, _RATE_LIMIT_MAX_RETRY + 1):
+                _logger.debug("KIS 초당 한도 초과 — %.1f초 대기 후 재시도 %d/%d (%s)",
+                              _RATE_LIMIT_WAIT, attempt, _RATE_LIMIT_MAX_RETRY, url)
+                time.sleep(_RATE_LIMIT_WAIT)
+                r = requests.get(url, headers=_headers(tr_id), params=params, timeout=10)
+                if not (r.status_code == 500 and _is_rate_limit(r)):
+                    break
+            else:
+                _logger.warning("KIS 초당 한도 초과 반복 — 최종 실패 (%s)", url)
+
+        # ── 토큰 만료 재시도 ───────────────────────────────────────────────
+        elif r.status_code == 500 and retry:
+            if _is_token_error(r):
+                _logger.warning("KIS 토큰 만료 감지 — 토큰 갱신 후 1회 재시도 (%s)", url)
+                _get_token(force_refresh=True)
+                r = requests.get(url, headers=_headers(tr_id), params=params, timeout=10)
+                if r.status_code == 500:
+                    _logger.error("KIS 500 재시도 후에도 실패 (%s)\n응답: %s", url, r.text[:300])
+            else:
+                _logger.warning(
+                    "KIS 500 수신 (알 수 없는 오류) (%s)\n응답: %s",
+                    url, r.text[:300],
+                )
+
         r.raise_for_status()
         return r
     except Exception as e:
