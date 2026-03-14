@@ -1,0 +1,31 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-02-23",
+        "brokerage": "하나증권",
+        "analyst_name": "이재만, 박성제",
+        "report_title": "화수분전략"
+    },
+    "specific_data": {
+        "strategy_theme": "화수분전략",
+        "recommended_portfolio": [
+            "캐터필라",
+            "어플라이드 머티어리얼즈",
+            "알파벳",
+            "마이크로소프트",
+            "팔란티어"
+        ],
+        "strategy_logic": [
+            "미국 M2 증가율 상승과 금 가격 반등으로 유동성 확장 기조 유지",
+            "Non M7 중심의 주가 상승 순환매",
+            "소프트웨어 업종 내 하이퀄리티 기업의 저가 매수세 유입 가능성",
+            "국내 증시의 추가 상승 여력"
+        ],
+        "quant_factors": [
+            "PER 상승률",
+            "이익 증가율",
+            "FCF 비율",
+            "신용스프레드"
+        ]
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "하나증권",
+        "analyst_name": "유재선, 성무규",
+        "report_title": "신규 사업이 필요한 시기"
+    },
+    "specific_data": {
+        "company_name": "SK가스",
+        "ticker": "018670",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "신규 사업이 필요한 시기",
+            "목표주가 330,000원, 현재주가 221,500원",
+            "2026년 온기 가동으로 증익 전망",
+            "LPG 판매량 증가 및 환율 상승으로 외형 성장"
+        ],
+        "risk_factors": [
+            "북미 천연가스 및 아시아 LNG 가격 변동성 확대",
+            "발전소 지분율 하락 시 배당성향 증가 가능성"
+        ],
+        "shareholder_structure": "SK디스커버리 외 1 인 72.12%, 국민연금공단 5.00%"
+    }
+}

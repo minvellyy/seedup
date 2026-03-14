@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-20",
+        "brokerage": "IBK투자증권",
+        "analyst_name": "이현욱",
+        "report_title": "보유자산 매각 추진 검토 공시 관련 코멘트"
+    },
+    "specific_data": {
+        "company_name": "삼성SDI",
+        "ticker": "006400",
+        "investment_rating": null,
+        "investment_points": [
+            "삼성SDI가 보유 중인 삼성디스플레이(SDC) 지분 매각 추진",
+            "지분 매각을 통해 최소 4.4조원의 자금 확보 예상",
+            "장기적인 투자 재원 확보와 안정적인 재무 구조 구축을 위한 긍정적인 평가"
+        ],
+        "risk_factors": [
+            "투자 규모, 조건, 시기 등 미정",
+            "영업 적자 지속 가능성"
+        ],
+        "shareholder_structure": "삼성SDI는 삼성디스플레이의 15.2% 지분을 보유하고 있으며, 주요 주주로는 삼성그룹이 포함됨."
+    }
+}

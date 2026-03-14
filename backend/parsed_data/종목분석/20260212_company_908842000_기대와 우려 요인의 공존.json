@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "키움증권",
+        "analyst_name": "박상준, CFA",
+        "report_title": "기대와 우려 요인의 공존"
+    },
+    "specific_data": {
+        "company_name": "이마트",
+        "ticker": "139480",
+        "investment_rating": null,
+        "investment_points": [
+            "내수 소비경기 회복과 홈플러스 폐점에 따른 반사수혜",
+            "할인점 의무휴업 규제 완화가 실적 추정치를 크게 상향시킬 수 있음"
+        ],
+        "risk_factors": [
+            "지분법 손실 증가",
+            "규제 완화에 대한 과도한 기대"
+        ],
+        "shareholder_structure": "주요 주주 지분율에 대한 정보는 제공되지 않음"
+    }
+}

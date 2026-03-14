@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-13",
+        "brokerage": "SK증권",
+        "analyst_name": "나승두",
+        "report_title": "단순 테마 아닌 구조적 성장 가능성을 확인하.."
+    },
+    "specific_data": {
+        "company_name": "빅텍",
+        "ticker": "065450",
+        "investment_rating": "Not Rated",
+        "investment_points": [
+            "2025년 영업이익 YoY +141% 증가",
+            "수주잔고 3배 급증",
+            "K-방산 주요 수출 품목에 모두 포함된 아이템",
+            "정밀 전력 제어 기술은 현대전의 핵심 트렌드로 떠오름"
+        ],
+        "risk_factors": [
+            "북한 도발 테마주로 분류되던 과거의 꼬리표",
+            "지정학적 갈등 심화에 따른 리스크"
+        ],
+        "shareholder_structure": "박승운(외3) 26.46%, 자사주 0.00%, 외국인 지분율 0.00%"
+    }
+}

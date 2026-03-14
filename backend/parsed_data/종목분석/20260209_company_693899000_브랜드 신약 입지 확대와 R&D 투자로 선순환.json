@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "키움증권",
+        "analyst_name": "허혜민",
+        "report_title": "브랜드 신약 입지 확대와 R&D 투자로 선순환"
+    },
+    "specific_data": {
+        "company_name": "SK바이오팜",
+        "ticker": "326030",
+        "investment_rating": "Buy(Maintain)",
+        "investment_points": [
+            "브랜드 신약 입지 확대와 R&D 투자로 선순환",
+            "1분기 실적 기대감이 반영되기 시작하면서 재차 우상향할 것으로 기대",
+            "경쟁약물 아제투칼너의 3상 결과 발표를 주가 저점으로"
+        ],
+        "risk_factors": [
+            "저마진의 DP사업부 매출 확대로 이익은 기대치를 하회",
+            "경쟁약물 아제투칼너의 3상 결과 발표에 따른 주가 변동성"
+        ],
+        "shareholder_structure": "주요 주주 SK 외 6 인 64.0%"
+    }
+}

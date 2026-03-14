@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "키움증권",
+        "analyst_name": "안영준",
+        "report_title": "6%대 주주환원수익률 부각, 더 올라도 이상할.."
+    },
+    "specific_data": {
+        "company_name": "메리츠금융지주",
+        "ticker": "138040",
+        "investment_rating": "BUY (Maintain)",
+        "investment_points": [
+            "6%대 주주환원수익률 부각",
+            "2026년 순이익 2.48조원 예상",
+            "주주환원 1.55조원, 주주환원수익률 6.7% 예상",
+            "목표주가 170,000원으로 상향 조정"
+        ],
+        "risk_factors": [
+            "화재의 업황 부진",
+            "증권의 성장이 상쇄"
+        ],
+        "shareholder_structure": "주요 주주 조정호 외 9인 56.13%"
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-20",
+        "brokerage": "한화투자증권",
+        "analyst_name": "이용욱",
+        "report_title": "양극재 1월 수출액 코멘트"
+    },
+    "specific_data": {
+        "sector_name": "2차전지",
+        "industry_rating": "Neutral",
+        "top_picks": [],
+        "industry_trends": [
+            "양극재 수출량 5년만에 최저치",
+            "리튬 가격 상승 효과는 2Q26 부터 양극재 판가에 본격적으로 반영될 것으로 예상",
+            "미국향 수출 물량 급감",
+            "전동화 전략의 속도 조절",
+            "유럽의 산업 가속화법(IAA) 발표 예정"
+        ],
+        "risk_factors": [
+            "단기적으로 리튬 가격 반등에 따른 뚜렷한 수익성 개선 기대 어려움",
+            "전방 판매 부진",
+            "미국 EV 시장 악재"
+        ]
+    }
+}

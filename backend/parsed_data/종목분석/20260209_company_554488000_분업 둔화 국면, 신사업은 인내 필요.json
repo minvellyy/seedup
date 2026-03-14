@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "대신증권",
+        "analyst_name": "이지은",
+        "report_title": "분업 둔화 국면, 신사업은 인내 필요"
+    },
+    "specific_data": {
+        "company_name": "NAVER",
+        "ticker": "035420",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "신사업 리레이팅 여지는 있으나, 본업 둔화 속 신사업 기대감의 주가 반영엔 시간 필요",
+            "목표주가는 SOTP 방식으로 산출",
+            "부문별 적정가치는 서치 플랫폼 21.1조원, 커머스 18.9조원, 파이낸셜 3.4조원, 웹툰 0.8조원, 엔터프라이즈 2.5조원, LY 지분가치 5.2조원 등"
+        ],
+        "risk_factors": [
+            "광고 성장률 둔화",
+            "신사업의 실적 가시화까지 시간 필요"
+        ],
+        "shareholder_structure": "주요주주 국민연금공단 9.33%, BlackRock Fund Advisors 외 13인 6.12%, 외국인지분율 40.17%"
+    }
+}

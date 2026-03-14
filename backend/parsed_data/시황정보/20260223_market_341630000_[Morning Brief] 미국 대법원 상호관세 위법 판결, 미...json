@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-23",
+        "brokerage": "null",
+        "analyst_name": "null",
+        "report_title": "[Morning Brief] 미국 대법원 상호관세 위법 판결, 미.."
+    },
+    "specific_data": {
+        "market_summary": "미국 대법원 상호관세 위법 판결로 미 증시 상승 마감. 코스피 5,800pt 돌파, AI로 인한 반도체 슈퍼 사이클 국면에서 블랙록이 SK하이닉스 5% 지분 보유 공시 소식에 주목.",
+        "macro_indicators": "미국 1월 시카고 연준 국가활동지수, 독일 2월 IFO 기업환경지수",
+        "fund_flows": "보험업종으로 순환매 유입, 외국인 수급강도 순매수 금액 증가",
+        "key_news": [
+            "미-이란 전면전 가능성",
+            "미국 대법원 관세 판결",
+            "사이버보안주 급락"
+        ]
+    }
+}

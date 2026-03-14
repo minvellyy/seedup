@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-04",
+        "brokerage": "하나증권",
+        "analyst_name": "김홍식, 이상훈",
+        "report_title": "5G SA 시대에도 큰 수혜 예상됩니다"
+    },
+    "specific_data": {
+        "company_name": "이노와이어리스",
+        "ticker": "073490",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "방산 부문 매출 증가",
+            "2026년 이익 턴어라운드 및 유의미한 이익 성장 예상",
+            "통신장비 업종 내에서 상대적으로 오름 폭이 적은 상태로 밸류에이션 매력도 높음"
+        ],
+        "risk_factors": [
+            "단기 실적 부진",
+            "외부 경제 환경 변화"
+        ],
+        "shareholder_structure": "엘아이지 외 4 인 30.18%"
+    }
+}

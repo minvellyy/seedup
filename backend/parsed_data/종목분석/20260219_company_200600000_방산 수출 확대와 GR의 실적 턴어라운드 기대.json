@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-19",
+        "brokerage": "키움증권",
+        "analyst_name": "이한결",
+        "report_title": "방산 수출 확대와 GR의 실적 턴어라운드 기대"
+    },
+    "specific_data": {
+        "company_name": "LIG넥스원",
+        "ticker": "079550",
+        "investment_rating": "BUY(Maintain)",
+        "investment_points": [
+            "방산 수출 확대와 GR의 실적 턴어라운드 기대",
+            "UAE향 양산 납품의 증가 등 본격적인 해외 매출 성장 기대",
+            "자회사 고스트로보틱스의 흑자전환 기대"
+        ],
+        "risk_factors": [
+            "수익성 개선 둔화 우려",
+            "해외 사업의 수익성 낮음"
+        ],
+        "shareholder_structure": "주요 주주 엘아이지 외 8 인 38.2%"
+    }
+}

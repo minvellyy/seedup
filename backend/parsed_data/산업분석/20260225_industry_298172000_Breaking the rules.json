@@ -1,0 +1,35 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-25",
+        "brokerage": "대신증권",
+        "analyst_name": "류형근, 서지원RA",
+        "report_title": "Breaking the rules"
+    },
+    "specific_data": {
+        "sector_name": "반도체",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            {
+                "종목명": "삼성전자",
+                "투자의견": "Buy",
+                "목표주가": "270,000원"
+            },
+            {
+                "종목명": "SK하이닉스",
+                "투자의견": "Buy",
+                "목표주가": "1,450,000원"
+            }
+        ],
+        "industry_trends": [
+            "서버 중심의 수요 폭증과 공급의 제한적 성장",
+            "메모리반도체 수요-공급 괴리율은 역사상 최대 격차로 확대",
+            "AI 패권 장악을 위한 경쟁적 투자 기조 지속"
+        ],
+        "risk_factors": [
+            "고객들의 가격 저항 심화",
+            "중국산 메모리반도체 대체 활용 가능성",
+            "미국의 공장 투자 압박"
+        ]
+    }
+}

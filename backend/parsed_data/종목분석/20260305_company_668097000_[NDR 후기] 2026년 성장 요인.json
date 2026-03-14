@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-05",
+        "brokerage": "유안타증권",
+        "analyst_name": "권명준",
+        "report_title": "[NDR 후기] 2026년 성장 요인"
+    },
+    "specific_data": {
+        "company_name": "슈프리마",
+        "ticker": "236200",
+        "investment_rating": "NOT RATED",
+        "investment_points": [
+            "4Q25 실적 개선: 매출액 456.2억원, 영업이익 129.6억원",
+            "AI 적용 제품 비중 확대: 2026년 60% 이상",
+            "북미 매출 성장 기대: 2024년 272억원에서 2025년 333억원으로 증가 예상"
+        ],
+        "risk_factors": [
+            "고객 고지 리스크",
+            "경쟁 심화",
+            "글로벌 경제 불확실성"
+        ],
+        "shareholder_structure": "주요주주 이재원 외 5 인"
+    }
+}

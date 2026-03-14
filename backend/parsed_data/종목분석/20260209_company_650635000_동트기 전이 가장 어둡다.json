@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "유진투자증권",
+        "analyst_name": "류태환",
+        "report_title": "동트기 전이 가장 어둡다"
+    },
+    "specific_data": {
+        "company_name": "GS건설",
+        "ticker": "006360",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "4Q25 실적은 매출액 2조 9,835억원(-11.9%yoy), 영업이익 569억원(+41.5%yoy)으로 매출액은 당사 추정치에 부합",
+            "신사업 부문(GS이니마 UAE 사업장)의 대규모 손실에도 불구하고, 잠재 매수자(TAQA)가 해당 프로젝트의 대주주로서 상황을 공유하고 있어 매각 딜에 미치는 영향은 제한적일 것으로 판단",
+            "재무 건전성 개선 중, 현금성자산 3.5조원 확보"
+        ],
+        "risk_factors": [
+            "신사업 부문에서 발생한 대규모 손실",
+            "준공 사업장 개발부담금 이슈",
+            "자회사 자이S&D의 손실 반영"
+        ],
+        "shareholder_structure": "허창수 (외 17인) 23.6%, 국민연금공단 (외 1인) 6.9%"
+    }
+}

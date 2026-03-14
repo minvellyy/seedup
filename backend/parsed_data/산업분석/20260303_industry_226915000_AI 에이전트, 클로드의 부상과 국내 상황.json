@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-03",
+        "brokerage": "하나증권",
+        "analyst_name": "이준호",
+        "report_title": "AI 에이전트, 클로드의 부상과 국내 상황"
+    },
+    "specific_data": {
+        "sector_name": "AI/인터넷",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "NAVER (035420)",
+            "카카오 (035720)"
+        ],
+        "industry_trends": [
+            "클로드의 부상과 국내 상황",
+            "AI 시장의 경쟁은 아직 초입",
+            "국내 기업들의 AI 서비스 시장 개화"
+        ],
+        "risk_factors": [
+            "앤트로픽의 국방부와의 대립",
+            "국가 안보에 대한 공급망 위험"
+        ]
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-13",
+        "brokerage": "유진투자증권",
+        "analyst_name": "박종선",
+        "report_title": "4Q25P Review 3분기 연속 두 자리 수 매출 .."
+    },
+    "specific_data": {
+        "company_name": "뷰웍스",
+        "ticker": "100120",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "3분기 연속 두 자리 수 매출 성장",
+            "목표주가 34,000원으로 상향 조정",
+            "신제품 효과로 실적 성장 기대"
+        ],
+        "risk_factors": [
+            "산업용 디텍터 매출 감소",
+            "북미 및 일본 지역 매출 감소"
+        ],
+        "shareholder_structure": "김후식 (외 8인) 30.4%, FIDELITY MANAGEMENT & RESEARCH 10.7%, FIL LIMITED (외 6인) 9.8%"
+    }
+}

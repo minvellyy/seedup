@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-20",
+        "brokerage": "DS증권",
+        "analyst_name": "강태호",
+        "report_title": "[DS Defense Daily] 2026-02-20"
+    },
+    "specific_data": {
+        "market_summary": "트럼프 대통령은 향후 10일 안에 미국이 이란을 공격할지 여부를 결정할 것이라고 밝힘. 방산 5사 시가총액 총합 추이 및 방산 관련 기업 1D 수익률 비교.",
+        "macro_indicators": null,
+        "fund_flows": null,
+        "key_news": [
+            "트럼프 대통령은 미국이 이란을 공격할지, 아니면 협상을 할지는 향후 10일 안에 결정될 것이라고 밝힘.",
+            "브렌트유 가격이 지난 이틀 동안 6% 이상 급등하여 배럴당 약 72달러를 기록하며 6개월 만에 최고치를 경신.",
+            "미국은 이란의 공격에 대한 보복을 다짐하고 중동의 미군 기지와 이스라엘을 공격하겠다고 위협."
+        ]
+    }
+}

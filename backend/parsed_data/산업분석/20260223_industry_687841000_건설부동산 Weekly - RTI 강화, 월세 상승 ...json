@@ -1,0 +1,33 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-23",
+        "brokerage": "유진투자증권",
+        "analyst_name": "류태환, 임범수",
+        "report_title": "건설부동산 Weekly - RTI 강화, 월세 상승 .."
+    },
+    "specific_data": {
+        "sector_name": "건설/부동산",
+        "industry_rating": "BUY",
+        "top_picks": [
+            "현대건설",
+            "삼성E&A",
+            "GS건설",
+            "대우건설",
+            "DL이앤씨",
+            "HDC현대산업개발"
+        ],
+        "industry_trends": [
+            "전국 아파트 매매가격지수 상승",
+            "서울시 전세가격지수 3개월 연속 최고치 경신",
+            "임대사업자 대출 규제 강화",
+            "강북 지역 교통망 확충 및 산업 거점 개발"
+        ],
+        "risk_factors": [
+            "건설 경기 침체",
+            "금융 규제 강화",
+            "임대사업자의 자본력 약화",
+            "부동산 신탁사 수익성 악화"
+        ]
+    }
+}

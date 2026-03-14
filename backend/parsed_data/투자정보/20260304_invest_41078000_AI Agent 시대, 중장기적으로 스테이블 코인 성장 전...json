@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2025-03-04",
+        "brokerage": "iM증권",
+        "analyst_name": "양현경",
+        "report_title": "AI Agent 시대, 중장기적으로 스테이블 코인 성장 전.."
+    },
+    "specific_data": {
+        "strategy_theme": "AI Agent 시대, 중장기적으로 스테이블 코인 성장 전망",
+        "recommended_portfolio": [
+            "USDT",
+            "USDC"
+        ],
+        "strategy_logic": [
+            "Clarity Act 통과 가능성",
+            "AI 에이전트 시대 결제 수요 기반으로 중장기 성장 유효"
+        ],
+        "quant_factors": [
+            "스테이블 코인 시가총액",
+            "AI 에이전트의 결제 수요"
+        ]
+    }
+}

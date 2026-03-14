@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "iM증권",
+        "analyst_name": "배세호",
+        "report_title": "최악의 업황을 반영한 주가, 희망을 보여준 4.."
+    },
+    "specific_data": {
+        "company_name": "제주항공",
+        "ticker": "089590",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "최악의 업황 가운데 전략적인 노선 조절로 4Q25 흑자를 달성",
+            "목표주가 8,500원으로 상향",
+            "영업이익 흑자 전환 기대"
+        ],
+        "risk_factors": [
+            "유동성 우려",
+            "Capex 부담"
+        ],
+        "shareholder_structure": "외국인지분율 3.7%, 자본금 81십억원, 발행주식수 8,064만주"
+    }
+}

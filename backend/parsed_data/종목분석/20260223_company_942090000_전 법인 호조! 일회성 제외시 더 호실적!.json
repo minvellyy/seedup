@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-23",
+        "brokerage": "교보증권",
+        "analyst_name": "권우정",
+        "report_title": "전 법인 호조! 일회성 제외시 더 호실적!"
+    },
+    "specific_data": {
+        "company_name": "코스메카코리아",
+        "ticker": "241710",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "일회성 비용 제외시 더 호실적!",
+            "4분기 연결 매출액 및 영업이익은 각각 1,781억원(YoY 39%), 209억원(YoY 57%)으로 시장기대치 부합.",
+            "자동화 설비 가동이 본격화되며 수익성 개선 기대."
+        ],
+        "risk_factors": [
+            "일회성 비용 증가",
+            "사옥 감가비 확대"
+        ],
+        "shareholder_structure": "박은희 외 3인 38.95%, 국민연금공단 11.99%"
+    }
+}

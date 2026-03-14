@@ -1,0 +1,30 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-03",
+        "brokerage": "하나증권",
+        "analyst_name": "안도현",
+        "report_title": "미국이스라엘의 이란 공습 관련 코멘트"
+    },
+    "specific_data": {
+        "sector_name": "운송",
+        "industry_rating": "Neutral",
+        "top_picks": [
+            "대한항공(003490)",
+            "진에어(272450)",
+            "팬오션(028670)",
+            "HMM(011200)"
+        ],
+        "industry_trends": [
+            "미국/이스라엘의 이란 공습 관련 코멘트",
+            "유가의 급등 전망",
+            "컨테이너선 시황 하락 방어 효과",
+            "VLCC 운임 상승"
+        ],
+        "risk_factors": [
+            "유가 상승에 따른 항공사 비용 증가",
+            "전쟁 장기화 가능성",
+            "VLCC 공급 부족"
+        ]
+    }
+}

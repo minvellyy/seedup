@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-13",
+        "brokerage": "DS INVESTMENT & SECURITIES",
+        "analyst_name": "강태호",
+        "report_title": "[NDR 후기]우주 사업 가치 반영으로 목표가 .."
+    },
+    "specific_data": {
+        "company_name": "한화시스템",
+        "ticker": "272210",
+        "investment_rating": "매수",
+        "investment_points": [
+            "우주 사업 가치 반영으로 목표가 상향",
+            "방산 매출 성장 본격화",
+            "필리 하반기 턴어라운드 예상",
+            "수출 확대 및 양산 본격화로 외형과 이익 동반 성장 전망"
+        ],
+        "risk_factors": [
+            "이익 성장이 제한적일 전망",
+            "단기적 주가 급등에 따른 변동성 우려"
+        ],
+        "shareholder_structure": "한화에어로스페이스(외 3인) 59.5%, 국민연금공단(외 1인) 7.2%"
+    }
+}

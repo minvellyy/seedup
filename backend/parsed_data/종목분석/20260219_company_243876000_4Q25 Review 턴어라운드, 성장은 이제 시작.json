@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-19",
+        "brokerage": "유안타증권",
+        "analyst_name": "이승은",
+        "report_title": "4Q25 Review 턴어라운드, 성장은 이제 시작"
+    },
+    "specific_data": {
+        "company_name": "한스바이오메드",
+        "ticker": "042520",
+        "investment_rating": "NOT RATED",
+        "investment_points": [
+            "분기 최대 매출 달성",
+            "실적 턴어라운드",
+            "피부이식재 매출 급증"
+        ],
+        "risk_factors": [
+            "일회성 비용 반영",
+            "시장 기대치 부합 여부"
+        ],
+        "shareholder_structure": "주요주주 황호찬 외 2 인"
+    }
+}

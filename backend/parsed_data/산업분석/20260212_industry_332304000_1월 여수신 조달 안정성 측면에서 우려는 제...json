@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-12",
+        "brokerage": "한화투자증권",
+        "analyst_name": "김도하",
+        "report_title": "1월 여수신 조달 안정성 측면에서 우려는 제.."
+    },
+    "specific_data": {
+        "sector_name": "은행",
+        "industry_rating": "Positive",
+        "top_picks": [],
+        "industry_trends": [
+            "1월 예금은행 대출잔액은 2,542조원(+3% YoY)으로 월 중 5조원 증가",
+            "가계 대출에서 규제 효과가 본격화되고 있는 가운데 기업 차주에서도 아직은 뚜렷한 성장 축이 나타나지 않는 상황",
+            "수신 자금 이탈에 대한 우려는 다소 과도하다는 판단"
+        ],
+        "risk_factors": [
+            "여신과 수신 모두 저성장 기조가 지속되고 있음",
+            "주택대출이 연속 감소한 것은 이번이 두 번째"
+        ]
+    }
+}

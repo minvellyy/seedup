@@ -1,0 +1,17 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-27",
+        "brokerage": "SK증권",
+        "analyst_name": "조준기",
+        "report_title": "Market Odds"
+    },
+    "specific_data": {
+        "market_summary": "예측시장 주간 거래량 하락 후 보합세, 수수료의 경우에도 소폭 하락 추세를 이어가고 있음. 당장 빅 이벤트 부재한 상황에서 거래 자체는 활발하지 않더라도 시장에 들어와 있는 돈의 양은 견조한 수준 유지 중.",
+        "macro_indicators": "지난 주 미국과 이란의 핵협상 난항에 따라 미국/이스라엘의 이란 직접 공격 가능성 상승 이후 비슷한 확률 유지되는 중. 위 아래로의 확률 변동이 지속적으로 나타나고 있는데, 아직 어느 쪽으로의 결과도 확실하지 않은 상황 대변.",
+        "fund_flows": null,
+        "key_news": [
+            "AI 모델은 최근 주식시장 파괴전차 역할을 하는 Claude의 독주 체제 지속 중. Arena.ai 리더보드에서 gemini-3.1-pro-preview가 3위까지 올라오긴 했으나 여전히 1, 2위는 claude-opus-4-6과 claude-opus-4-6-thinking이 차지하고 있음."
+        ]
+    }
+}

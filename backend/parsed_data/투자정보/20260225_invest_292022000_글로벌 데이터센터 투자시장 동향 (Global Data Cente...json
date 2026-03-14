@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2023-10-01",
+        "brokerage": "대신증권",
+        "analyst_name": "김다은",
+        "report_title": "글로벌 데이터센터 투자시장 동향 (Global Data Cente.."
+    },
+    "specific_data": {
+        "strategy_theme": "AI 수요 확산에 따른 데이터센터 투자시장 변화",
+        "recommended_portfolio": [
+            "AI-Ready 데이터센터",
+            "고전력 밀도 서버",
+            "액체냉각 시스템"
+        ],
+        "strategy_logic": [
+            "전력 수요 증가에 따른 데이터센터 투자 확대",
+            "AI 워크로드의 변화에 따른 설계 기준 재정의",
+            "전력망 연결 지연으로 인한 공급 병목 현상"
+        ],
+        "quant_factors": [
+            "전력 소비량",
+            "CapEx 증가율",
+            "PUE 및 WUE 지표"
+        ]
+    }
+}

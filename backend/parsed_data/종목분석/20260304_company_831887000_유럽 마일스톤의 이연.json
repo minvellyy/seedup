@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-04",
+        "brokerage": "교보증권",
+        "analyst_name": "정희령",
+        "report_title": "유럽 마일스톤의 이연"
+    },
+    "specific_data": {
+        "company_name": "유한양행",
+        "ticker": "000100",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "유럽 출시 마일스톤 이연",
+            "레이저티닙 병용 요법 중국 출시에 따른 마일스톤 유입",
+            "유한 화학 매출 26% 성장",
+            "2026년 가이던스 매출 두자리수 성장 및 영업이익 30% 성장"
+        ],
+        "risk_factors": [
+            "유럽 마일스톤 이연",
+            "약품 사업부 매출 하회"
+        ],
+        "shareholder_structure": "유한재단 외 2 인 16.03%"
+    }
+}

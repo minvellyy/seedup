@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-19",
+        "brokerage": "유안타증권",
+        "analyst_name": "백종민",
+        "report_title": "4Q25 Review 좀 더 멀리보자"
+    },
+    "specific_data": {
+        "company_name": "LIG넥스원",
+        "ticker": "079550",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "영업이익 컨센 대비 -40.2% 하회",
+            "매출액은 +13.5% 상회",
+            "‘26E 매출액 YoY +15% 이상 성장 예상",
+            "고스트로보틱스 외인지분율 28.77% 회복 전망"
+        ],
+        "risk_factors": [
+            "저마진 인도네시아 사업 종료에 따른 믹스 악화",
+            "신규 사업 손실 충당금 발생",
+            "환율 변동에 따른 수익성 영향"
+        ],
+        "shareholder_structure": "주요주주 엘아이지 외 8 인"
+    }
+}

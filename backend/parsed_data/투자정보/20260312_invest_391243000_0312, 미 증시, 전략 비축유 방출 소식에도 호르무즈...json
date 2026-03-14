@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-12",
+        "brokerage": "키움증권",
+        "analyst_name": "한지영, 이성훈",
+        "report_title": "0312, 미 증시, 전략 비축유 방출 소식에도 호르무즈.."
+    },
+    "specific_data": {
+        "strategy_theme": "중동 사태와 유가 변동성",
+        "recommended_portfolio": [
+            "반도체",
+            "조선",
+            "방산",
+            "금융"
+        ],
+        "strategy_logic": [
+            "유가 변동성이 주식시장에 미치는 영향",
+            "패시브 수급의 영향력 확대",
+            "기존 주도주 중심의 포트폴리오 유지"
+        ],
+        "quant_factors": [
+            "CPI",
+            "에너지 가격",
+            "주가 급등락"
+        ]
+    }
+}

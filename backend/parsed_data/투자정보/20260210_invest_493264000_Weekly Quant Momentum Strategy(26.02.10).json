@@ -1,0 +1,35 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-10",
+        "brokerage": "유진투자증권",
+        "analyst_name": "안지선",
+        "report_title": "Weekly Quant Momentum Strategy(26.02.10)"
+    },
+    "specific_data": {
+        "strategy_theme": "반복적인 급등락에 대응하는 자세",
+        "recommended_portfolio": [
+            "종근당",
+            "에스티팜",
+            "셀트리온",
+            "BGF리테일",
+            "신세계",
+            "신한지주",
+            "KB금융",
+            "JB금융지주",
+            "한국금융지주",
+            "해성디에스"
+        ],
+        "strategy_logic": [
+            "코스피 영업이익, 당기순이익 상향 조정 지속",
+            "2월간 개인 10.4조원 순매수",
+            "업종별 가격과 이익의 변화 추이 모니터링"
+        ],
+        "quant_factors": [
+            "12MF P/E",
+            "TTM P/B",
+            "영업이익 추정치",
+            "당기순이익 추정치"
+        ]
+    }
+}

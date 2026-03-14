@@ -1,0 +1,30 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-03",
+        "brokerage": "하나증권",
+        "analyst_name": "윤재성, 김형준",
+        "report_title": "호르무즈 사실 상 봉쇄 에너지 산업 Update(.."
+    },
+    "specific_data": {
+        "sector_name": "에너지/화학",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "S-Oil",
+            "SK이노베이션",
+            "유니드",
+            "롯데정밀화학"
+        ],
+        "industry_trends": [
+            "호르무즈 해협 봉쇄로 인한 에너지 가격 급등",
+            "정제마진 상승",
+            "LNG 수출 증가",
+            "중국 석유화학 선물 가격 상승"
+        ],
+        "risk_factors": [
+            "중동 정세 불안정",
+            "원유 수출 차질",
+            "글로벌 에너지 가격 변동성"
+        ]
+    }
+}

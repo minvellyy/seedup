@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-09",
+        "brokerage": "키움증권",
+        "analyst_name": "허혜민, 재신철, 신민수, 이하곤",
+        "report_title": "제약바이오의료기기 Kiwoom Healthcare 종.."
+    },
+    "specific_data": {
+        "sector_name": "제약/바이오",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "제약/바이오/의료기기 향후 한달간 주요 예상 이벤트",
+            "헬스케어 수익률 상위 및 하위 종목",
+            "52주 신고가/신저가 종목"
+        ],
+        "risk_factors": [
+            "약가 인하 개편안 시행 유예 검토",
+            "해외 일정 변동 가능성"
+        ]
+    }
+}

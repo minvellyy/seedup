@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-10",
+        "brokerage": "한화리서치",
+        "analyst_name": "김성래, 김예인",
+        "report_title": "로봇화(Robotization) 산업의 변모"
+    },
+    "specific_data": {
+        "sector_name": "자동차/로봇",
+        "industry_rating": "Positive",
+        "top_picks": [
+            "현대차",
+            "로보티즈"
+        ],
+        "industry_trends": [
+            "로봇 상용화 속도의 증가",
+            "AI/로보틱스 영역의 자금 유입 증가",
+            "로봇화의 파급: 모빌리티 산업에 주목"
+        ],
+        "risk_factors": [
+            "고령화/저출산에 따른 인력 부족 문제",
+            "기술적 신뢰성 확보의 어려움",
+            "비정형적 상황에서의 로봇 신뢰성 문제"
+        ]
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-09",
+        "brokerage": "유진투자증권",
+        "analyst_name": "이승우, 박재환",
+        "report_title": "IT 발전 단계와 Capex 부담의 구조적 변화"
+    },
+    "specific_data": {
+        "sector_name": "반도체",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "2025년 하이퍼스케일러의 합산 캐팩스는 약 4,100억달러로 집계.",
+            "2026년 4사의 합산 캐팩스는 약 7,000억달러에 육박할 전망.",
+            "AI 시대에 이루어지는 캐팩스는 PC나 스마트폰 시대와는 다르게 진행되고 있음."
+        ],
+        "risk_factors": [
+            "막대한 투자 부담은 메모리 기업 밸류에이션의 디스카운트 요인으로 작용해왔음.",
+            "자유현금흐름(FCF)은 다시 마이너스를 기록하게 될 것이라는 우려가 확대됨."
+        ]
+    }
+}

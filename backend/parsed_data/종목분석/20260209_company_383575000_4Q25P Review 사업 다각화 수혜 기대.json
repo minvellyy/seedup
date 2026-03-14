@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "유진투자증권",
+        "analyst_name": "박종선",
+        "report_title": "4Q25P Review 사업 다각화 수혜 기대"
+    },
+    "specific_data": {
+        "company_name": "하이비젼시스템",
+        "ticker": "126700",
+        "investment_rating": "NR",
+        "investment_points": [
+            "신규사업 및 인도공장 인프라 구축을 위한 비용 증가",
+            "2차전지 부문 사업 다각화 성공",
+            "2026년 실적 기준 PER 7.9배로 할인 거래 중"
+        ],
+        "risk_factors": [
+            "전방산업 시장내 장비 수요 감소",
+            "연결대상 종속회 사업 부진",
+            "인도 법인 구축 및 사업다각화를 위한 비용 증가"
+        ],
+        "shareholder_structure": "최두원 (외 4인) 16.2%, 자사주 (외 1인) 14.0%"
+    }
+}

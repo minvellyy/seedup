@@ -1,0 +1,17 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-20",
+        "brokerage": "SK증권",
+        "analyst_name": "조준기",
+        "report_title": "[Market Odds] 높아지는 긴장감"
+    },
+    "specific_data": {
+        "market_summary": "예측시장 주간 거래량은 다소 하락했으나 Total Platform Value는 크게 빠지지 않는 모습 보여 소강 상태 국면으로 판단. 당장 예측시장 입장에서의 빅 이벤트 제한적이나 여전히 모니터링할 가치는 충분함.",
+        "macro_indicators": "미국과 이란 간의 핵 협상이 난항을 겪는 가운데 실제 전면전으로 이어질 가능성이 매우 높다는 의견이 힘을 얻고 있는 상황.",
+        "fund_flows": "미국/이스라엘의 이란 공격에 대한 베팅이 크게 증가하는 상황.",
+        "key_news": [
+            "Google(Gemini 3.1)과 OpenAI(GPT 5.3)가 차기 모델을 월중 발표할 가능성이 높다는 루머가 확산되며 어느 정도의 기대감이 예측 시장 확률에 반영되는 중이었으나 Gemini 3.1 발표 이후 재차 Anthropic으로 무게중심이 쏠리는 중."
+        ]
+    }
+}

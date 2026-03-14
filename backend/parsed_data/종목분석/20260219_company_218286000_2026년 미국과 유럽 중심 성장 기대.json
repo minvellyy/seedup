@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-19",
+        "brokerage": "하나증권",
+        "analyst_name": "유재선, 성무규",
+        "report_title": "2026년 미국과 유럽 중심 성장 기대"
+    },
+    "specific_data": {
+        "company_name": "씨에스윈드",
+        "ticker": "112610",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "2026년 미국과 유럽 중심 성장 기대",
+            "목표주가 68,000원, 현재주가 42,600원",
+            "4분기 실적이 시장 기대치를 상회",
+            "유럽향 타워 물량 증가와 하부구조물 인센티브로 실적 개선",
+            "미국에서 대규모 수주가 지속되고 있어 긍정적"
+        ],
+        "risk_factors": [
+            "정책 불확실성",
+            "미국 법인 생산성 제고에 대한 의존"
+        ],
+        "shareholder_structure": "김성권 외 14인 39.78%, 국민연금공단 7.88%"
+    }
+}

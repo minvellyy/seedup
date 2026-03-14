@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-20",
+        "brokerage": "키움증권",
+        "analyst_name": "김진구",
+        "report_title": "BM 변화가 주는 함의"
+    },
+    "specific_data": {
+        "company_name": "엔씨소프트",
+        "ticker": "036570",
+        "investment_rating": "BUY(Maintain)",
+        "investment_points": [
+            "목표주가 430,000원 유지",
+            "게임 업종 최선호주로 지속 제시",
+            "아이온2 매출 지속성 확보",
+            "리니지 클래식 호조에 따른 매출 증가"
+        ],
+        "risk_factors": [
+            "기존 리니지 연계 라인업별 P2W BM에 대한 매출 감소 리스크"
+        ],
+        "shareholder_structure": "주요 주주 김택진 외 14인 12.4%"
+    }
+}

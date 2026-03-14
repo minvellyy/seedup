@@ -1,0 +1,15 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-10",
+        "brokerage": "SK증권",
+        "analyst_name": "황지우",
+        "report_title": "DAILY RECAP_2026.03.10"
+    },
+    "specific_data": {
+        "market_summary": "전일 Pre-market 변동성은 0.001으로 보합권을 기록했으며 이로 인한 지수 영향은 크지 않을 것으로 예상됩니다.",
+        "macro_indicators": "환율과 금리, 글로벌 위험선호도를 종합했을 때 금일 외국인 수급은 차익 실현 또는 관망 가능성이 높은 환경으로 판단됩니다.",
+        "fund_flows": "다만 WTI가격 하락 및 상대적 위험 자산(암호화폐, 성장주 등)들, 그리고 IT 기업들의 반등으로 인해 국내 증시에도 전일 낙폭을 되돌리는 흐름이 관찰될 확률이 높습니다.",
+        "key_news": []
+    }
+}

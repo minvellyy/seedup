@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-25",
+        "brokerage": "키움증권",
+        "analyst_name": "이한결",
+        "report_title": "단단해진 펀더멘털, 높아진 성장 가시성"
+    },
+    "specific_data": {
+        "company_name": "인텔리안테크",
+        "ticker": "189300",
+        "investment_rating": "BUY(Maintain)",
+        "investment_points": [
+            "단단해진 펀더멘털, 높아진 성장 가시성",
+            "LEO 사업 부문의 매출 증가",
+            "글로벌 LEO 통신망 시장의 개화"
+        ],
+        "risk_factors": [
+            "미국 현지 생산 라인 증설에 따른 비용 증가",
+            "고객사의 수요 변화"
+        ],
+        "shareholder_structure": "주요 주주 성상엽 외 6 인 23.1%"
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "대신증권",
+        "analyst_name": "허민호",
+        "report_title": "지금은 실적이 아니라, 대형 원전 AE의 가치.."
+    },
+    "specific_data": {
+        "company_name": "한전기술",
+        "ticker": "052690",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "목표주가 200,000원으로 상향(기존 대비 +33%)",
+            "대형원전 A/E 부족",
+            "2026년 매출액 5,917억원(+14% YoY), 영업이익 756억원(+139%) 예상"
+        ],
+        "risk_factors": [
+            "고객 고지 리스크: 미국 원전 및 NRC 인허가 경험 제한적",
+            "인허가 엔지니어 부족"
+        ],
+        "shareholder_structure": "주요주주: 한국전력공사 53.06%, 국민연금공단 10.27%"
+    }
+}

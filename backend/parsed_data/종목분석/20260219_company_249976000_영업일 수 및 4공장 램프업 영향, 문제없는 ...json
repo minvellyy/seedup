@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-19",
+        "brokerage": "교보증권",
+        "analyst_name": "권우정",
+        "report_title": "영업일 수 및 4공장 램프업 영향, 문제없는 .."
+    },
+    "specific_data": {
+        "company_name": "펌텍코리아",
+        "ticker": "251970",
+        "investment_rating": "Not Rated",
+        "investment_points": [
+            "4분기 연결 매출액 및 영업이익은 각각 771억원(YoY -14%), 83억원(YoY -36%)으로 시장기대치 하회.",
+            "4공장 준공 지연으로 일부 램프업 영향이 있었으며, 1분기까지 영향 지속 예상.",
+            "생산 차질 이슈가 해소될 경우 실적 우상향 흐름은 유효할 전망."
+        ],
+        "risk_factors": [
+            "영업일 수 감소에 따른 매출 감소",
+            "4공장 램프업 지연으로 인한 생산 차질"
+        ],
+        "shareholder_structure": "이도훈 외 4 인 60.0%, 브이아이피자산운용 9.6%, 외국인지분 17.75%"
+    }
+}

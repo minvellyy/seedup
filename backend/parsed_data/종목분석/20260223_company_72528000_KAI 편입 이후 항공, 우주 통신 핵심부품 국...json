@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-21",
+        "brokerage": "대신증권",
+        "analyst_name": "김아영",
+        "report_title": "KAI 편입 이후 항공, 우주 통신 핵심부품 국.."
+    },
+    "specific_data": {
+        "company_name": "제노코",
+        "ticker": "361390",
+        "investment_rating": "N/R",
+        "investment_points": [
+            "KAI 체계 편입에 따른 구조적 수혜 본격화",
+            "정부의 우주, 방산 투자 확대의 직접적 수혜 기대",
+            "KAI 편입에 따른 항공, 우주 체계 내 역할 고도화"
+        ],
+        "risk_factors": [
+            "현 주가는 턴어라운드 기대를 상당 부분 반영하고 있어 실적 확인 후 점진적 리레이팅이 필요"
+        ],
+        "shareholder_structure": "KAI가 지분 37.95%를 확보하며 최대주주로 등극, 주요주주 한국항공우주 외 1인 47.00%"
+    }
+}

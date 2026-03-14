@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-20",
+        "brokerage": "한화리서치",
+        "analyst_name": "최윤영",
+        "report_title": "암호화폐 코인베이스, 암호화폐 담보대출 자.."
+    },
+    "specific_data": {
+        "sector_name": "디지털자산",
+        "industry_rating": "Positive",
+        "top_picks": [
+            "코인베이스"
+        ],
+        "industry_trends": [
+            "암호화폐 담보대출 상품의 담보 자산 범위 확대",
+            "디파이 프로토콜 모포를 통한 대출 구조",
+            "리테일 중심 알트코인의 디파이 담보 시장 편입"
+        ],
+        "risk_factors": [
+            "가격 급락 시 자동 청산 리스크",
+            "변동성이 높은 알트코인 편입으로 인한 청산 민감도 증가",
+            "래핑 과정에서의 세무 리스크"
+        ]
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-27",
+        "brokerage": "SK증권",
+        "analyst_name": "나승두",
+        "report_title": "ESG snapshot"
+    },
+    "specific_data": {
+        "strategy_theme": "ESG 공시 의무화",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "2028년부터 연결기준 자산총액 30조원 이상 코스피 상장기업 대상 ESG 공시 의무화",
+            "2029년부터 연결기준 자산총액 10조원 이상 코스피 상장기업으로 확대 적용",
+            "기후공시부터 먼저 의무화, 기후 외 E/S/G 주제는 기업이 선택하여 공시",
+            "Scope 3 기준 원칙적으로 2031년 공시 시작",
+            "ESG 공시 먼저 대응한 기업일수록 해외 시장 선점 가능성 높음"
+        ],
+        "quant_factors": [
+            "자산 규모별 공시 기업 수",
+            "상장 기업 수 비중",
+            "국가별 탄소 배출 강도"
+        ]
+    }
+}

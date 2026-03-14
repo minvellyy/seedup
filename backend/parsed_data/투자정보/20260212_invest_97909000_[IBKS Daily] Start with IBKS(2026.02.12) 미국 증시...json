@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2025-02-12",
+        "brokerage": "투자분석부",
+        "analyst_name": null,
+        "report_title": "[IBKS Daily] Start with IBKS(2026.02.12) 미국 증시.."
+    },
+    "specific_data": {
+        "strategy_theme": null,
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "미국 고용보고서 공개를 앞두고 상승",
+            "경기 침체 우려가 야기되는 과도한 부진이 아닐 경우 금리 인하 기대감이 커지며 투자 심리 개선",
+            "총선 이후 정책 기대감이 이어지며 일본 증시가 상승 흐름 지속한 것도 국내 증시에 훈풍으로 작용",
+            "KOSDAQ은 개인 매도세 이어지며 하락"
+        ],
+        "quant_factors": [
+            "KOSPI 5,354.49P, 1.00% 상승",
+            "KOSDAQ 1,114.87P, 0.03% 하락",
+            "미국 1월 비농업 고용 증감 13만명, 예상(6.8만명) 상회",
+            "미국 1월 실업률 4.3%, 예상(4.4%) 하회"
+        ]
+    }
+}

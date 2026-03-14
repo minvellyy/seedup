@@ -1,0 +1,30 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-09",
+        "brokerage": "키움증권",
+        "analyst_name": "박상준, CFA, 권용일",
+        "report_title": "키움 음식료 Weekly (39)"
+    },
+    "specific_data": {
+        "sector_name": "음식료/유통",
+        "industry_rating": null,
+        "top_picks": [
+            "빙그레",
+            "풀무원",
+            "SPC삼립",
+            "오리온",
+            "롯데칠성"
+        ],
+        "industry_trends": [
+            "고환율 기조가 장기화하고 인건비·물류비 등 제반 비용 상승",
+            "K-푸드 관심도 증가",
+            "중국 시장에서의 매출 증가"
+        ],
+        "risk_factors": [
+            "정부의 물가 압박",
+            "국제유가와 물류비 상승에 대한 불확실성",
+            "담합·독과점 구조와 유통 단계의 불합리한 관행"
+        ]
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-10",
+        "brokerage": "한화리서치",
+        "analyst_name": "null",
+        "report_title": "3월 디지털자산 정책 인사이트"
+    },
+    "specific_data": {
+        "sector_name": "디지털자산",
+        "industry_rating": "null",
+        "top_picks": [],
+        "industry_trends": [
+            "디지털자산 정책 인사이트",
+            "스테이블코인 규제 체계 구축",
+            "디지털유로 도입 추진"
+        ],
+        "risk_factors": [
+            "스테이블코인 이자 지급 규제",
+            "거래소 대주주 지분 제한",
+            "법안 발의 지연"
+        ]
+    }
+}

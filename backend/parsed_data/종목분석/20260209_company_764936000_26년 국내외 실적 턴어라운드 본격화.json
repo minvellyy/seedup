@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "DS투자증권",
+        "analyst_name": "장지혜, 강태호",
+        "report_title": "26년 국내외 실적 턴어라운드 본격화"
+    },
+    "specific_data": {
+        "company_name": "롯데웰푸드",
+        "ticker": "280360",
+        "investment_rating": "매수",
+        "investment_points": [
+            "26년 실적 턴어라운드 본격화 전망",
+            "다양한 실적 개선 모멘텀 보유",
+            "해외 매출 호조"
+        ],
+        "risk_factors": [
+            "원재료 단가 상승",
+            "일회성 비용 증가"
+        ],
+        "shareholder_structure": "주요주주 롯데지주(외 13인) 68.6%, 국민연금공단(외 1인) 7.2%"
+    }
+}

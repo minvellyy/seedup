@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "iM증권",
+        "analyst_name": "전유진, 장호",
+        "report_title": "26년 외형확대 제한 vs 점차 확대될 LNG 포트.."
+    },
+    "specific_data": {
+        "company_name": "SK가스",
+        "ticker": "018670",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "목표주가를 34만원에서 30만원으로 하향하고, 매수의견 유지",
+            "상반기 KET #3탱크 준공 및 SKMU 상업가동으로 트레이딩 이익 창출 기회 확보",
+            "울산GPS 상업가동과 SMP 강세로 영업이익 증가"
+        ],
+        "risk_factors": [
+            "SMP 약세에 따른 실적 추정치 변경",
+            "지정학적 갈등으로 인한 유가 변동성",
+            "SK어드밴스드 업황 부진으로 인한 지분법 손실"
+        ],
+        "shareholder_structure": "외국인지분율 7.5%, 지배주주지분 2,729억원"
+    }
+}

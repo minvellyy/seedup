@@ -1,0 +1,29 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-05",
+        "brokerage": "유안타증권",
+        "analyst_name": "김용구",
+        "report_title": "[Conviction Call] 긴급 대응전략 투매보단 보유, 관.."
+    },
+    "specific_data": {
+        "strategy_theme": "긴급 대응전략: 투매보단 보유, 관망보단 매수",
+        "recommended_portfolio": [
+            "반도체",
+            "IT하드웨어",
+            "IT가전",
+            "디스플레이",
+            "증권"
+        ],
+        "strategy_logic": [
+            "현재 시장의 극단적 과민반응을 기회로 활용",
+            "중동 지정학적 불확실성에 대한 보유 전략",
+            "낙폭과대 주가/밸류 여건과 장래 실적 모멘텀 고려"
+        ],
+        "quant_factors": [
+            "KOSPI 12개월 선행 P/E 8.5배",
+            "Maximum Drawdown -19.2%",
+            "글로벌 경기침체 및 추세적 위기 가능성"
+        ]
+    }
+}

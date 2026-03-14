@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "한화투자증권",
+        "analyst_name": "한유정, 고예진",
+        "report_title": "대장주 자리 되찾으러 왔습니다"
+    },
+    "specific_data": {
+        "company_name": "아모레퍼시픽",
+        "ticker": "090430",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "COSRX의 이른 턴어라운드가 2026년 실적 회복 기대감을 높임",
+            "화장품 업종 최선호주 관점을 유지"
+        ],
+        "risk_factors": [
+            "일회성 인건비 반영으로 영업이익 하회",
+            "중국 법인의 실적 변동성"
+        ],
+        "shareholder_structure": "아모레퍼시픽그룹 (외 19인) 50.2%, 국민연금공단 (외 1인) 7.4%, 자사주 (외 1인) 0.1%"
+    }
+}

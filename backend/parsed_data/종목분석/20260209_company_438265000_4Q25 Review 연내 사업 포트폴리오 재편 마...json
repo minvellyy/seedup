@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "IBK투자증권",
+        "analyst_name": "조정현",
+        "report_title": "4Q25 Review 연내 사업 포트폴리오 재편 마.."
+    },
+    "specific_data": {
+        "company_name": "GS건설",
+        "ticker": "006360",
+        "investment_rating": "매수",
+        "investment_points": [
+            "2025년 말 기준 현금성 자산은 3.6조 원, 순차입금은 2.5조 원으로 전년 대비 약 5,700억 원 감소하였다.",
+            "GS이니마 매각이 가시화될 경우 재무 구조 개선이 이어질 가능성이 크다.",
+            "부채비율은 현재 234.2%에서 200% 이하로 낮아질 여지가 있다."
+        ],
+        "risk_factors": [
+            "신사업 부문에서의 손실 반영",
+            "자회사 GS이니마의 UAE 담수화 플랜트 EPC 프로젝트에서의 공정 지연"
+        ],
+        "shareholder_structure": "허창수 외 16 인 23.64%, 국민연금공단 6.93%"
+    }
+}

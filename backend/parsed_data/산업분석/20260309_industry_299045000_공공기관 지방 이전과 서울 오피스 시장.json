@@ -1,0 +1,33 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-09",
+        "brokerage": "유진투자증권",
+        "analyst_name": "류태환, 임범수",
+        "report_title": "공공기관 지방 이전과 서울 오피스 시장"
+    },
+    "specific_data": {
+        "sector_name": "건설/부동산",
+        "industry_rating": null,
+        "top_picks": [
+            "현대건설",
+            "삼성E&A",
+            "GS건설",
+            "대우건설",
+            "DL이앤씨",
+            "HDC현대산업개발"
+        ],
+        "industry_trends": [
+            "주간 아파트가격 동향",
+            "전세가격지수 상승",
+            "공공기관 이전 이슈",
+            "서울 오피스 시장 수급 불균형",
+            "이차전지 폐수 처리 시장 공략"
+        ],
+        "risk_factors": [
+            "공공기관 이전으로 인한 공간 수요 감소",
+            "임대료 상승률 둔화",
+            "개발사업 수익성 악화"
+        ]
+    }
+}

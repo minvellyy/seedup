@@ -1,0 +1,34 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-09",
+        "brokerage": "유진투자증권",
+        "analyst_name": "류태환",
+        "report_title": "가까이서 보면 비극, 멀리서 보면 희극"
+    },
+    "specific_data": {
+        "sector_name": "건설/부동산",
+        "industry_rating": "OVERWIGHT",
+        "top_picks": [
+            "현대건설",
+            "HDC현대산업개발",
+            "삼성E&A",
+            "DL이앤씨",
+            "GS건설",
+            "대우건설"
+        ],
+        "industry_trends": [
+            "에너지 가격 상승으로 인한 건설 원가 상승",
+            "중동 프로젝트 매출 둔화",
+            "신규 프로젝트 발주 지연",
+            "에너지 안보 강화",
+            "산유국 CAPEX 여력 확대",
+            "전후 재건사업 추진"
+        ],
+        "risk_factors": [
+            "공사비 상승 압력",
+            "중동 프로젝트 수행 불확실성",
+            "지정학적 불확실성"
+        ]
+    }
+}

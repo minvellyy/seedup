@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-27",
+        "brokerage": "SK증권",
+        "analyst_name": "이동주",
+        "report_title": "올해도 순항 예정"
+    },
+    "specific_data": {
+        "company_name": "한화비전",
+        "ticker": "489790",
+        "investment_rating": "매수(신규편입)",
+        "investment_points": [
+            "안정적인 재원 기반",
+            "AI 보안 카메라 수요 증가",
+            "신규 장비 실적 가시성 확보시 rerating 기대"
+        ],
+        "risk_factors": [
+            "미주 지역 매출 비중",
+            "베트남 생산 거점 관세 영향",
+            "HBM 업체의 TC 본더 총 구매 수량 감소"
+        ],
+        "shareholder_structure": "한화 33.95%, Orbis Investment Management 7.59%, 외국인 지분율 20.36%"
+    }
+}

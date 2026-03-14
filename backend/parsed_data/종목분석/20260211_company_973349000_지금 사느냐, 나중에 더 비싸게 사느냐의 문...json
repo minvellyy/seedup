@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "대신증권",
+        "analyst_name": "김아영",
+        "report_title": "지금 사느냐, 나중에 더 비싸게 사느냐의 문.."
+    },
+    "specific_data": {
+        "company_name": "쎄트렉아이",
+        "ticker": "099320",
+        "investment_rating": "N/R",
+        "investment_points": [
+            "위성 제조에서 데이터, 플랫폼으로 확장 중인 국내 유일 EO/SAR 회사",
+            "SpaceEye-T로 열리는 ‘다른 시장’: 반복 매출 창출 가능성",
+            "국방 전략기술 과제와 2026년 이후 드라마틱한 성장 가능성"
+        ],
+        "risk_factors": [
+            "해외 정부, 기관의 발주에 따른 수주 불확실성",
+            "기술 검증 및 성능 평가의 성공 여부"
+        ],
+        "shareholder_structure": "주요 주주: 한화에어로스페이스 36.43%, 박성동 7.52%"
+    }
+}

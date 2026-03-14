@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-25",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "SK증권 Global Carbon Market Daily_260225"
+    },
+    "specific_data": {
+        "market_summary": "국내외 배출권 가격 추이 및 원자재 가격 동향",
+        "macro_indicators": null,
+        "fund_flows": null,
+        "key_news": [
+            "[뉴욕유가] 이란, 핵 협상 두고 \"합의 가시권\"…WTI 1%↓",
+            "탄소투자 나서는 기업에 신규 융자 지원한다",
+            "미국 압박에…‘기후대응’, 국제에너지기구 우선순위 목록에서 빠져"
+        ]
+    }
+}

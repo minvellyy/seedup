@@ -1,0 +1,20 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2025-02-01",
+        "brokerage": "유진투자증권",
+        "analyst_name": "이재일 CFA",
+        "report_title": "2월 미국 신차 판매"
+    },
+    "specific_data": {
+        "sector_name": "Mobility/EV",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "미국 주요 브랜드별 LV 판매 성장률",
+            "미국 도심 소비자 신차 가격 지수",
+            "미국 월별 SAAR"
+        ],
+        "risk_factors": []
+    }
+}

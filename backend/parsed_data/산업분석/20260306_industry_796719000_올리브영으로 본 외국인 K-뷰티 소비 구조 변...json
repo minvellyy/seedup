@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-06",
+        "brokerage": "교보증권",
+        "analyst_name": "권우정, 강민석",
+        "report_title": "올리브영으로 본 외국인 K-뷰티 소비 구조 변.."
+    },
+    "specific_data": {
+        "sector_name": "화장품",
+        "industry_rating": "Overweight",
+        "top_picks": [],
+        "industry_trends": [
+            "방한 외국인 관광객 증가",
+            "K-뷰티 소비 구조 변화",
+            "구매 브랜드 수의 확대",
+            "구매 카테고리의 다양화"
+        ],
+        "risk_factors": [
+            "내수 화장품 시장의 저성장",
+            "소수 브랜드 집중에서 다수 브랜드로의 변화"
+        ]
+    }
+}

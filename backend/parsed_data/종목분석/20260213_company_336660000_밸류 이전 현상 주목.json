@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-13",
+        "brokerage": "키움증권",
+        "analyst_name": "김진구",
+        "report_title": "밸류 이전 현상 주목"
+    },
+    "specific_data": {
+        "company_name": "카카오",
+        "ticker": "035720",
+        "investment_rating": "BUY(Maintain)",
+        "investment_points": [
+            "AI 본격 진입을 통한 글로벌 빅테크 중심 변혁",
+            "인터넷 업종내 최선호주 의견 지속",
+            "유연한 전략 변화로 지속 성장성 견고"
+        ],
+        "risk_factors": [
+            "시장 변동성",
+            "경쟁 심화",
+            "규제 리스크"
+        ],
+        "shareholder_structure": "주요 주주 김범수 외 75 인 24.1%"
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-08",
+        "brokerage": "하나증권",
+        "analyst_name": "송선재, 김민경",
+        "report_title": "연결을 넘어 지능의 시대로"
+    },
+    "specific_data": {
+        "sector_name": "IT / Mobility",
+        "industry_rating": "BUY",
+        "top_picks": [
+            "삼성전자",
+            "화웨이",
+            "Xiaomi",
+            "ZTE",
+            "Apple"
+        ],
+        "industry_trends": [
+            "AI와 Connectivity의 융합",
+            "스마트 글라스의 발전",
+            "자율주행차의 SDV 및 AIDV로의 전환",
+            "로봇 기술의 발전과 통신 인프라의 중요성"
+        ],
+        "risk_factors": [
+            "기술 상용화 지연",
+            "정책 및 규제의 변화",
+            "경쟁 심화"
+        ]
+    }
+}

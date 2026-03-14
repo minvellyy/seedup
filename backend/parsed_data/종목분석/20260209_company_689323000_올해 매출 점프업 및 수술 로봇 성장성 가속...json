@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "iM증권",
+        "analyst_name": "이상헌, 장호",
+        "report_title": "올해 매출 점프업 및 수술 로봇 성장성 가속.."
+    },
+    "specific_data": {
+        "company_name": "리브스메드",
+        "ticker": "491000",
+        "investment_rating": "NR",
+        "investment_points": [
+            "올해 ArtiSential 매출 성장 본격화",
+            "미국 등 해외매출 증가 가시화",
+            "수술 로봇 Stark의 성장성 가속화"
+        ],
+        "risk_factors": [
+            "해외 인증 지연 가능성",
+            "경쟁 심화"
+        ],
+        "shareholder_structure": "주요 주주 지분율: 외국인 2.2%, 기타 97.8%"
+    }
+}

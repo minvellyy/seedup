@@ -1,21 +1,14 @@
-"""키움증권 Open Trading API 클라이언트.
-
-한국투자증권(KIS) API에서 키움증권 REST API로 교체.
-함수 인터페이스는 동일하게 유지되어 기존 import 변경 불필요.
+"""한국투자증권 오픈 API 클라이언트.
 
 사용 예:
     from kis_client import get_current_price, get_daily_prices_1y
 
     price_info = get_current_price("005930")   # 삼성전자 현재가
     history    = get_daily_prices_1y("005930") # 1년 일별 데이터
-
-키움증권 Open Trading API 공식 문서: https://apiportal.kiwoom.com/
-※ 응답 필드명은 공식 문서와 대조하여 확인하세요.
 """
 from __future__ import annotations
 
 import json
-import logging
 import os
 import time
 from datetime import datetime, timedelta
@@ -25,21 +18,25 @@ from typing import List, Dict, Optional
 import requests
 from dotenv import load_dotenv
 
-_logger = logging.getLogger(__name__)
-
 # .env 로드 (backend/ 기준)
 load_dotenv(dotenv_path=Path(__file__).parent / ".env")
 
-BASE_URL = "https://api.kiwoom.com"
+# KIS API 서버 URL 설정 (모의투자 / 실거래 구분)
+IS_MOCK = os.getenv("KIS_MOCK", "false").lower() == "true"
+if IS_MOCK:
+    BASE_URL = "https://openapivts.koreainvestment.com:29443"  # 모의투자
+    print("[KIS] 모의투자 모드로 설정됨")
+else:
+    BASE_URL = "https://openapi.koreainvestment.com:9443"      # 실거래
+    print("[KIS] 실거래 모드로 설정됨")
 
-# 토큰 캐시 파일 경로
-_TOKEN_FILE = Path(__file__).parent / ".kiwoom_token_cache"
+# 토큰 캐시 파일 경로 (project root 는 backend/ )
+_TOKEN_FILE = Path(__file__).parent / ".kis_token_cache"
 
 # ── 토큰 캐시 (메모리 + 파일 이중 저장) ──────────────────────────────────────
 import threading as _threading
 _token_cache: Dict = {"token": None, "expires_at": 0.0}
 _token_lock = _threading.Lock()  # 다중 스레드 동시 갱신 방지
-_pykrx_log_lock = _threading.Lock()  # pykrx 호출 시 root logger 레벨 임시 변경 — 레이스 컨디션 방지
 
 
 def _load_token_from_file() -> bool:
@@ -58,11 +55,6 @@ def _load_token_from_file() -> bool:
     return False
 
 
-_LEGACY_TOKEN_FILES = [
-    Path(__file__).parent / ".kis_token_cache",
-]
-
-
 def _save_token_to_file(token: str, expires_at: float) -> None:
     try:
         _TOKEN_FILE.write_text(
@@ -71,13 +63,6 @@ def _save_token_to_file(token: str, expires_at: float) -> None:
         )
     except Exception:
         pass
-    # 구버전 캐시 파일 삭제
-    for legacy in _LEGACY_TOKEN_FILES:
-        try:
-            if legacy.exists():
-                legacy.unlink()
-        except Exception:
-            pass
 
 
 def _get_token(force_refresh: bool = False) -> str:
@@ -107,20 +92,19 @@ def _get_token(force_refresh: bool = False) -> str:
                 except Exception:
                     pass
 
-        # 키움증권 토큰 발급 (grant_type, appkey, secretkey)
         resp = requests.post(
-            f"{BASE_URL}/oauth2/token",
+            f"{BASE_URL}/oauth2/tokenP",
             json={
                 "grant_type": "client_credentials",
                 "appkey":     os.getenv("APP_KEY", "").strip(),
-                "secretkey":  os.getenv("APP_SECRET", "").strip(),
+                "appsecret":  os.getenv("APP_SECRET", "").strip(),
             },
             timeout=10,
         )
         resp.raise_for_status()
         data = resp.json()
 
-        token      = data["token"]
+        token      = data["access_token"]
         expires_at = now + int(data.get("expires_in", 86400))
         _token_cache["token"]      = token
         _token_cache["expires_at"] = expires_at
@@ -128,70 +112,42 @@ def _get_token(force_refresh: bool = False) -> str:
         return token
 
 
-# ── Rate limiter (초당 거래건수 초과 방지) ────────────────────────────────────
-import time as _time_module
-
-_rate_lock = _threading.Lock()
-_last_call_time: float = 0.0
-_MIN_INTERVAL = 0.07  # 초 (≈ 14 req/s)
-
-
-def _rate_limited_post(url: str, headers: Dict, body: Dict, timeout: int = 10):
-    """초당 요청 수를 제한하며 POST 요청."""
-    global _last_call_time
-    with _rate_lock:
-        now = _time_module.monotonic()
-        elapsed = now - _last_call_time
-        if elapsed < _MIN_INTERVAL:
-            _time_module.sleep(_MIN_INTERVAL - elapsed)
-        _last_call_time = _time_module.monotonic()
-    return requests.post(url, headers=headers, json=body, timeout=timeout)
-
-
-def _kiwoom_post(url: str, tr_id: str, body: Dict, retry: bool = True):
-    """키움증권 POST 요청 헬퍼. 토큰 만료 시 갱신 후 1회 재시도."""
+def _kis_get(url: str, tr_id: str, params: Dict, retry: bool = True):
+    """KIS GET 요청 헬퍼. 500(토큰 만료) 시 토큰 갱신 후 1회 재시도.
+    
+    재시도 후에도 500 오류가 발생하면 HTTPError를 발생시킵니다.
+    """
     import logging as _logging
-    _logger = _logging.getLogger("kiwoom_client")
-
-    r = _rate_limited_post(url, headers=_headers(tr_id), body=body, timeout=10)
-
-    if r.status_code in (401, 500) and retry:
-        try:
-            body_j = r.json()
-            msg = body_j.get("msg", body_j.get("message", ""))
-            err_cd = body_j.get("return_code", "")
-        except Exception:
-            msg, err_cd = r.text[:500], ""
-
-        _logger.warning("키움 API 오류 — status=%s msg=%r url=%s", r.status_code, msg, url)
-
-        # 토큰 만료로 판단되면 재발급 후 재시도
-        if r.status_code == 401 or "token" in msg.lower() or "인증" in msg:
-            _logger.info("토큰 만료 감지 — force_refresh 후 재시도")
+    _logger = _logging.getLogger("kis_client")
+    
+    try:
+        r = requests.get(url, headers=_headers(tr_id), params=params, timeout=10)
+        if r.status_code == 500 and retry:
+            _logger.warning("KIS 500 수신 — 토큰 갱신 후 1회 재시도 (%s)", url)
             _get_token(force_refresh=True)
-            r = _rate_limited_post(url, headers=_headers(tr_id), body=body, timeout=10)
-        elif "초과" in msg or "한도" in msg:
-            _logger.warning("Rate limit — 0.5초 대기 후 재시도")
-            _time_module.sleep(0.5)
-            r = _rate_limited_post(url, headers=_headers(tr_id), body=body, timeout=10)
-        else:
-            _logger.warning("재시도 불필요 오류, 생략")
-
-    r.raise_for_status()
-    return r
+            r = requests.get(url, headers=_headers(tr_id), params=params, timeout=10)
+            if r.status_code == 500:
+                _logger.error("KIS 500 재시도 후에도 실패 — API 호출 중단 (%s)", url)
+        r.raise_for_status()
+        return r
+    except Exception as e:
+        _logger.debug("KIS API 요청 실패 [%s]: %s", url, e)
+        raise
 
 
 def _headers(tr_id: str) -> Dict[str, str]:
     return {
         "authorization": f"Bearer {_get_token()}",
-        "api-id":        tr_id,
+        "appkey":        os.getenv("APP_KEY", "").strip(),
+        "appsecret":     os.getenv("APP_SECRET", "").strip(),
+        "tr_id":         tr_id,
         "content-type":  "application/json; charset=utf-8",
     }
 
 
 # ── 현재가 조회 ─────────────────────────────────────────────────────────────
 def get_current_price(stock_code: str) -> Dict:
-    """국내 주식 현재가 조회 (키움 ka10001).
+    """국내 주식 현재가 조회.
 
     Returns:
         {
@@ -203,42 +159,33 @@ def get_current_price(stock_code: str) -> Dict:
             "price_date":    str,     # 기준일 'YYYY-MM-DD'
         }
     """
-    r = _kiwoom_post(
-        f"{BASE_URL}/api/dostk/stkinfo",
-        "ka10001",
-        {"stk_cd": stock_code},
+    r = _kis_get(
+        f"{BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-price",
+        "FHKST01010100",
+        {
+            "FID_COND_MRKT_DIV_CODE": "J",
+            "FID_INPUT_ISCD":         stock_code,
+        },
     )
     data = r.json()
 
-    # 키움 응답: return_code=0 이면 성공
-    if str(data.get("return_code", "0")) != "0":
-        raise ValueError(f"키움 API 오류 [{stock_code}]: {data.get('return_msg', '')}")
+    if data.get("rt_cd") != "0":
+        raise ValueError(f"KIS API 오류 [{stock_code}]: {data.get('msg1', '')}")
 
-    # ka10001 /api/dostk/stkinfo 응답은 flat dict (output 래퍼 없음)
-    out = data
-
-    def _f(key: str) -> float:
-        v = out.get(key, 0) or 0
-        try:
-            return abs(float(str(v).replace(",", "").replace("+", "").replace("-", "")))
-        except ValueError:
-            return 0.0
-
-    def _signed(key: str) -> float:
-        """부호 포함 float (키움은 음수를 '-'로 표기)."""
-        v = str(out.get(key, "0") or "0").replace(",", "")
-        try:
-            return float(v)
-        except ValueError:
-            return 0.0
+    o = data["output"]
+    raw_date = o.get("stck_bsop_date", "")  # 'YYYYMMDD' — 장중에는 비어있을 수 있음
+    if len(raw_date) == 8:
+        fmt_date = f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:]}"
+    else:
+        fmt_date = datetime.today().strftime("%Y-%m-%d")  # fallback: 오늘
 
     return {
-        "current_price": _f("cur_prc"),
-        "prev_close":    _f("base_pric"),   # 기준가 = 전일 종가
-        "change":        _signed("pred_pre"),  # 전일 대비 (부호 포함)
-        "change_rate":   _signed("flu_rt"),
-        "volume":        int(_f("trde_qty")),
-        "price_date":    datetime.today().strftime("%Y-%m-%d"),
+        "current_price": float(o.get("stck_prpr", 0) or 0),
+        "prev_close":    float(o.get("stck_sdpr", 0) or 0),
+        "change":        float(o.get("prdy_vrss", 0) or 0),
+        "change_rate":   float(o.get("prdy_ctrt", 0) or 0),
+        "volume":        int(o.get("acml_vol", 0) or 0),
+        "price_date":    fmt_date,
     }
 
 
@@ -248,56 +195,41 @@ def _get_daily_chunk(
     start_yyyymmdd: str,
     end_yyyymmdd: str,
 ) -> List[Dict]:
-    """특정 기간 일별 종가 조회 (키움 ka10081).
-
-    ka10081: base_dt 기준 이전 데이터를 최대 N건 반환 (start 필터는 클라이언트에서 처리).
-    """
-    r = _kiwoom_post(
-        f"{BASE_URL}/api/dostk/chart",
-        "ka10081",
+    """특정 기간 일별 종가 조회 (최대 ~100 거래일)."""
+    r = _kis_get(
+        f"{BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-daily-itemchartprice",
+        "FHKST03010100",
         {
-            "stk_cd":       stock_code,
-            "base_dt":      end_yyyymmdd,   # 기준일자 (YYYYMMDD)
-            "upd_stkpc_tp": "1",            # 수정주가 적용
+            "FID_COND_MRKT_DIV_CODE": "J",
+            "FID_INPUT_ISCD":         stock_code,
+            "FID_INPUT_DATE_1":       start_yyyymmdd,
+            "FID_INPUT_DATE_2":       end_yyyymmdd,
+            "FID_PERIOD_DIV_CODE":    "D",
+            "FID_ORG_ADJ_PRC":        "0",
         },
     )
     data = r.json()
 
-    if str(data.get("return_code", "0")) != "0":
+    if data.get("rt_cd") != "0":
         return []
 
-    # 응답: stk_dt_pole_chart_qry 배열
-    rows = data.get("stk_dt_pole_chart_qry", [])
-    if not rows:
-        # fallback — 일부 버전에서 output1 키 사용
-        rows = data.get("output1", data.get("output", []))
-    if isinstance(rows, dict):
-        rows = [rows]
-
     result: List[Dict] = []
-    for row in rows:
-        d = str(row.get("dt", "")).replace("-", "")
-        c = row.get("cur_prc", "")   # 현재가(종가)
+    for row in data.get("output2", []):
+        d = row.get("stck_bsop_date", "")
+        c = row.get("stck_clpr", "")
         if not d or not c:
             continue
-        if len(d) == 8 and d < start_yyyymmdd:   # start보다 이전 날짜 skip
-            continue
         fmt_date = f"{d[:4]}-{d[4:6]}-{d[6:]}" if len(d) == 8 else d
-
-        def _fv(k):
-            v = row.get(k, "")
-            try:
-                return abs(float(str(v).replace(",", "").replace("+", ""))) if v else None
-            except ValueError:
-                return None
-
+        o = row.get("stck_oprc", "")
+        h = row.get("stck_hgpr", "")
+        l = row.get("stck_lwpr", "")
         result.append({
             "date":   fmt_date,
-            "open":   _fv("open_pric"),
-            "high":   _fv("high_pric"),
-            "low":    _fv("low_pric"),
-            "close":  abs(float(str(c).replace(",", "").replace("+", "") or 0)),
-            "volume": int(_fv("trde_qty") or 0) or None,
+            "open":   float(o) if o else None,
+            "high":   float(h) if h else None,
+            "low":    float(l) if l else None,
+            "close":  float(c),
+            "volume": int(row.get("acml_vol", 0) or 0) or None,
         })
     return result
 
@@ -305,7 +237,7 @@ def _get_daily_chunk(
 def get_daily_prices_1y(stock_code: str) -> List[Dict]:
     """최근 1년 일별 OHLCV 리스트 (오름차순).
 
-    키움 ka10081 최대 ~100건 → 4회로 나눠 1년 커버.
+    KIS API 1회 호출 최대 100건 한계 → 3회로 나눠 1년 커버.
     반환: [{"date": "YYYY-MM-DD", "open": float|None, "high": float|None, "low": float|None, "close": float, "volume": int|None}, ...]
     """
     today   = datetime.today()
@@ -337,255 +269,274 @@ def get_daily_prices_1y(stock_code: str) -> List[Dict]:
 
 
 # ── 시장 지수 조회 ──────────────────────────────────────────────────────────
-# 키움 지수 코드: 001=KOSPI, 101=KOSDAQ
-_INDEX_MRKT = {"KOSPI": "001", "KOSDAQ": "101"}
-# 장 휴장일에 모든 데이터 소스 실패 시 반환할 직전 성공값 캐시 (프로세스 수명 동안 유지)
-_last_known_index: Dict[str, Dict] = {}
+# ISCD 코드: 0001=KOSPI, 1001=KOSDAQ
+_INDEX_ISCD = {"KOSPI": "0001", "KOSDAQ": "1001"}
 
 
 def get_index_price(market: str) -> Dict:
-    """국내 주요 지수 현재가 조회 (키움 ka20004).
+    """국내 주요 지수 현재가 조회.
 
     Args:
         market: "KOSPI" 또는 "KOSDAQ"
 
     Returns:
         {
-            "market":      str,
-            "index":       float,
-            "prev_close":  float,
-            "change":      float,
-            "change_rate": float,
-            "open":        float,
-            "high":        float,
-            "low":         float,
-            "price_date":  str,
+            "market":      str,    # "KOSPI" | "KOSDAQ"
+            "index":       float,  # 현재 지수
+            "prev_close":  float,  # 전일 종가
+            "change":      float,  # 전일 대비
+            "change_rate": float,  # 등락률 (%)
+            "open":        float,  # 시가
+            "high":        float,  # 고가
+            "low":         float,  # 저가
+            "price_date":  str,    # 기준일 'YYYY-MM-DD' (장중이면 오늘)
         }
     """
-    mrkt_tp = _INDEX_MRKT.get(market.upper())
-    if not mrkt_tp:
+    iscd = _INDEX_ISCD.get(market.upper())
+    if not iscd:
         raise ValueError(f"지원하지 않는 시장: {market}")
 
-    YAHOO_IDX = {"KOSPI": "^KS11", "KOSDAQ": "^KQ11"}
-    yf_ticker = YAHOO_IDX.get(market.upper())
+    r = _kis_get(
+        f"{BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-index-price",
+        "FHPUP02100000",
+        {
+            "FID_COND_MRKT_DIV_CODE": "U",
+            "FID_INPUT_ISCD":         iscd,
+        },
+    )
+    data = r.json()
 
-    # 1순위: yfinance (^KS11 / ^KQ11)
-    try:
-        import yfinance as _yf
-        yt = _yf.Ticker(yf_ticker)
-        hist = yt.history(period="5d")
-        if hist is not None and len(hist) >= 1:
-            cur = float(hist["Close"].iloc[-1])
-            prev_close = float(hist["Close"].iloc[-2]) if len(hist) >= 2 else cur
-            chg = cur - prev_close
-            chg_rt = round(chg / prev_close * 100, 2) if prev_close else 0.0
-            result = {
-                "market":      market.upper(),
-                "index":       round(cur, 2),
-                "prev_close":  round(prev_close, 2),
-                "change":      round(chg, 2),
-                "change_rate": chg_rt,
-                "open":        round(float(hist["Open"].iloc[-1]), 2),
-                "high":        round(float(hist["High"].iloc[-1]), 2),
-                "low":         round(float(hist["Low"].iloc[-1]), 2),
-                "price_date":  datetime.today().strftime("%Y-%m-%d"),
-            }
-            _last_known_index[market.upper()] = result
-            return result
-    except Exception as _yf_err:
-        _logger.debug("yfinance 지수 조회 실패: %s", _yf_err)
+    if data.get("rt_cd") != "0":
+        raise ValueError(f"KIS 지수 조회 오류 [{market}]: {data.get('msg1', '')}")
 
-    # 2순위: pykrx (get_index_ohlcv_by_date — KRX 서버 상태에 따라 실패할 수 있음)
-    try:
-        import logging as _logging
-        from pykrx import stock as _pykrx_stock
-        idx_ticker = "1001" if market.upper() == "KOSPI" else "2001"
-        today_str = datetime.today().strftime("%Y%m%d")
-        # pykrx util.py 버그: logging.info(args, kwargs) 형식 오류로 --- Logging error --- 발생
-        # root logger도 일시 억제 (pykrx는 내부적으로 root logging 사용)
-        # _pykrx_log_lock 으로 멀티스레드 환경에서 log level 레이스 컨디션 방지
-        with _pykrx_log_lock:
-            _root = _logging.getLogger()
-            _prev_lvl = _root.level
-            _root.setLevel(_logging.CRITICAL)
-            try:
-                df = _pykrx_stock.get_index_ohlcv_by_date(
-                    (datetime.today() - timedelta(days=10)).strftime("%Y%m%d"),
-                    today_str, idx_ticker
-                )
-            finally:
-                _root.setLevel(_prev_lvl)
-        if df is not None and len(df) >= 1:
-            row = df.iloc[-1]
-            prev_close = float(df.iloc[-2]["종가"]) if len(df) >= 2 else float(row["시가"])
-            cur = float(row["종가"])
-            chg = cur - prev_close
-            chg_rt = round(chg / prev_close * 100, 2) if prev_close else 0.0
-            result = {
-                "market":      market.upper(),
-                "index":       cur,
-                "prev_close":  prev_close,
-                "change":      round(chg, 2),
-                "change_rate": chg_rt,
-                "open":        float(row["시가"]),
-                "high":        float(row["고가"]),
-                "low":         float(row["저가"]),
-                "price_date":  datetime.today().strftime("%Y-%m-%d"),
-            }
-            _last_known_index[market.upper()] = result
-            return result
-    except Exception as _pykrx_err:
-        _logger.debug("pykrx 지수 조회 실패: %s", _pykrx_err)
+    o = data["output"]
 
-    # 모든 소스 실패 시 직전 성공값 반환 (휴장일 대응)
-    if market.upper() in _last_known_index:
-        _logger.debug("지수 조회 실패 — 직전 성공값 반환 (%s)", market.upper())
-        return _last_known_index[market.upper()]
+    # 기준일: 응답에 날짜 필드가 없으면 오늘
+    raw_date = o.get("bstp_nmix_prdy_vrss_sign", "")  # 사용 불가 → 오늘 날짜 사용
+    price_date = datetime.today().strftime("%Y-%m-%d")
 
-    # 완전 초기 상태에서도 실패하면 0 구조 반환
     return {
-        "market": market.upper(), "index": 0.0, "prev_close": 0.0,
-        "change": 0.0, "change_rate": 0.0, "open": 0.0, "high": 0.0,
-        "low": 0.0, "price_date": datetime.today().strftime("%Y-%m-%d"),
+        "market":      market.upper(),
+        "index":       float(o.get("bstp_nmix_prpr",    0) or 0),
+        "prev_close":  float(o.get("prdy_nmix",          0) or 0),
+        "change":      float(o.get("bstp_nmix_prdy_vrss", 0) or 0),
+        "change_rate": float(o.get("bstp_nmix_prdy_ctrt", 0) or 0),
+        "open":        float(o.get("bstp_nmix_opnprc",   0) or 0),
+        "high":        float(o.get("bstp_nmix_hgprc",    0) or 0),
+        "low":         float(o.get("bstp_nmix_lwprc",    0) or 0),
+        "price_date":  price_date,
     }
 
 
 def get_investor_trading(market: str = "KOSPI") -> Dict:
-    """시장별 투자자 매매동향 당일 — pykrx 폴백 (키움 ka10064 미서비스)."""
+    """KIS API - 시장별 투자자매매동향(시세) [국내주식-074] FHPTJ04030000.
+
+    당일 실시간 누적 매도/매수/순매수를 반환합니다. 단위: 십억원.
+
+    Args:
+        market: "KOSPI" (FID_INPUT_ISCD_2=S001) 또는 "KOSDAQ" (Q001)
+
+    Returns dict 키:
+        institution_sell / institution_buy / institution_net
+        foreign_sell     / foreign_buy     / foreign_net
+        individual_sell  / individual_buy  / individual_net
+        date
+    """
+    iscd_2 = "S001" if market.upper() == "KOSPI" else "Q001"
+
+    r = _kis_get(
+        f"{BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-investor-time-by-market",
+        "FHPTJ04030000",
+        {
+            "FID_INPUT_ISCD":   "999",
+            "FID_INPUT_ISCD_2": iscd_2,
+        },
+    )
+    data = r.json()
+
+    if data.get("rt_cd") != "0":
+        raise ValueError(f"KIS 투자자 조회 오류 [{market}]: {data.get('msg1', '')}")
+
+    output = data.get("output", [])
+    if not output:
+        raise ValueError(f"KIS 투자자 데이터 없음 [{market}]")
+
+    row = output[0]
+
+    def _sbj(field: str) -> float:
+        """백만원 → 십억원 변환 (÷1000), 소수 1자리."""
+        try:
+            return round(float(row.get(field, 0) or 0) / 1000, 1)
+        except (ValueError, TypeError):
+            return 0.0
+
     today_str = datetime.today().strftime("%Y-%m-%d")
-    try:
-        import logging as _logging
-        # pykrx 내부 logging.info(args, kwargs) 버그로 인한 --- Logging error --- 억제
-        # pykrx는 named logger가 아닌 root logging 직접 사용하므로 root도 억제
-        # _pykrx_log_lock 으로 멀티스레드 환경에서 log level 레이스 컨디션 방지
-        _pykrx_logger = _logging.getLogger("pykrx")
-        _pykrx_logger.setLevel(_logging.CRITICAL)
-        with _pykrx_log_lock:
-            _root = _logging.getLogger()
-            _prev_lvl = _root.level
-            _root.setLevel(_logging.CRITICAL)
-            from pykrx import stock as _pykrx_stock
-            today_ymd = datetime.today().strftime("%Y%m%d")
-            from_ymd = (datetime.today() - timedelta(days=7)).strftime("%Y%m%d")
-            ticker = "KOSPI" if market.upper() == "KOSPI" else "KOSDAQ"
-            try:
-                df = _pykrx_stock.get_market_trading_value_by_investor(from_ymd, today_ymd, ticker)
-            finally:
-                _root.setLevel(_prev_lvl)
-        if df is not None and len(df) > 0:
-            row = df.iloc[-1]  # 가장 최근 거래일 데이터 사용 (주말/공휴일 대응)
-            data_date = df.index[-1].strftime("%Y-%m-%d") if hasattr(df.index[-1], "strftime") else today_str
-            def _gbj(col):
-                try:
-                    return round(float(row[col]) / 1e8, 1)  # 원 → 억원
-                except Exception:
-                    return 0.0
-            # pykrx columns: 외국인, 기관, 개인, ...
-            frgn = _gbj("외국인")
-            orgn = _gbj("기관")
-            indv = _gbj("개인")
-            return {
-                "date": data_date, "market": market.upper(),
-                "institution_sell": 0.0, "institution_buy": 0.0, "institution_net": orgn,
-                "foreign_sell":     0.0, "foreign_buy":     0.0, "foreign_net":     frgn,
-                "individual_sell":  0.0, "individual_buy":  0.0, "individual_net":  indv,
-            }
-    except Exception as _e:
-        logger.debug("pykrx 투자자 조회 실패: %s", _e)
-    return _empty_investor(market, today_str)
-
-
-def _empty_investor(market: str, date_str: str) -> Dict:
     return {
-        "date": date_str, "market": market.upper(),
-        "institution_sell": 0.0, "institution_buy": 0.0, "institution_net": 0.0,
-        "foreign_sell":     0.0, "foreign_buy":     0.0, "foreign_net":     0.0,
-        "individual_sell":  0.0, "individual_buy":  0.0, "individual_net":  0.0,
+        "date":             today_str,
+        "market":           market.upper(),
+        # 기관
+        "institution_sell": _sbj("orgn_seln_tr_pbmn"),
+        "institution_buy":  _sbj("orgn_shnu_tr_pbmn"),
+        "institution_net":  _sbj("orgn_ntby_tr_pbmn"),
+        # 외국인
+        "foreign_sell":     _sbj("frgn_seln_tr_pbmn"),
+        "foreign_buy":      _sbj("frgn_shnu_tr_pbmn"),
+        "foreign_net":      _sbj("frgn_ntby_tr_pbmn"),
+        # 개인
+        "individual_sell":  _sbj("prsn_seln_tr_pbmn"),
+        "individual_buy":   _sbj("prsn_shnu_tr_pbmn"),
+        "individual_net":   _sbj("prsn_ntby_tr_pbmn"),
     }
 
 
 def get_investor_trading_daily(market: str = "KOSPI") -> Dict:
-    """당일 최종 집계 투자자 매매동향 (키움 ka10064)."""
-    return get_investor_trading(market)
+    """KIS API - 시장별 투자자매매동향(일별) [국내주식-075] FHPTJ04040000.
+
+    당일 최종 집계 (장 마감 후 또는 시세 API 실패 시 fallback). 단위: 십억원.
+    KOSPI:  FID_INPUT_ISCD=0001, FID_INPUT_ISCD_1=KSP, FID_INPUT_ISCD_2=0001
+    KOSDAQ: FID_INPUT_ISCD=1001, FID_INPUT_ISCD_1=KSQ, FID_INPUT_ISCD_2=1001
+    """
+    today_ymd = datetime.today().strftime("%Y%m%d")
+    today_str  = datetime.today().strftime("%Y-%m-%d")
+
+    is_kosdaq = market.upper() == "KOSDAQ"
+    iscd  = "1001" if is_kosdaq else "0001"
+    iscd1 = "KSQ"  if is_kosdaq else "KSP"
+
+    r = _kis_get(
+        f"{BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-investor-daily-by-market",
+        "FHPTJ04040000",
+        {
+            "FID_COND_MRKT_DIV_CODE": "U",
+            "FID_INPUT_ISCD":         iscd,
+            "FID_INPUT_DATE_1":       today_ymd,
+            "FID_INPUT_ISCD_1":       iscd1,
+            "FID_INPUT_DATE_2":       today_ymd,
+            "FID_INPUT_ISCD_2":       iscd,
+        },
+    )
+    data = r.json()
+
+    if data.get("rt_cd") != "0":
+        raise ValueError(f"KIS 투자자 일별 조회 오류 [{market}]: {data.get('msg1', '')}")
+
+    output = data.get("output", [])
+    if not output:
+        raise ValueError(f"KIS 투자자 일별 데이터 없음 [{market}]")
+
+    row = output[0]
+
+    def _sbj(field: str) -> float:
+        try:
+            return round(float(row.get(field, 0) or 0) / 1000, 1)
+        except (ValueError, TypeError):
+            return 0.0
+
+    return {
+        "date":             today_str,
+        "market":           market.upper(),
+        # 일별 API는 순매수(net)만 제공 — 매도/매수는 0으로 채움
+        "institution_sell": 0.0,
+        "institution_buy":  0.0,
+        "institution_net":  _sbj("orgn_ntby_tr_pbmn"),
+        "foreign_sell":     0.0,
+        "foreign_buy":      0.0,
+        "foreign_net":      _sbj("frgn_ntby_tr_pbmn"),
+        "individual_sell":  0.0,
+        "individual_buy":   0.0,
+        "individual_net":   _sbj("prsn_ntby_tr_pbmn"),
+    }
 
 
 # ── 투자자 데이터 (일별 API 우선) ────────────────────────────────────────────
 def get_investor_trading_best(market: str = "KOSPI") -> Dict:
-    """당일 투자자별 매매동향 반환. 실패 시 빈 구조 반환 (예외 raise 없음)."""
-    today_str = datetime.today().strftime("%Y-%m-%d")
+    """당일 투자자별 매매동향 반환.
+
+    FHPTJ04040000 (일별 API)를 1순위로 사용한다.
+    - KOSPI·KOSDAQ 모두 정확한 순매수(net) 제공.
+    - 매도/매수 세부 데이터는 동 API에서 미제공 → 0으로 반환(프론트에서 '-' 표시).
+
+    NOTE: FHPTJ04030000 (시세 시간별 API)는 FID_INPUT_ISCD=999 시 특정
+          업종코드(섹터)의 데이터를 반환하여 시장 전체 합계와 불일치하므로 사용 안 함.
+    """
     try:
         return get_investor_trading_daily(market)
     except Exception:
-        pass
-    return _empty_investor(market, today_str)
+        # fallback: 시세 API (부정확하지만 데이터 없음보다 나음)
+        try:
+            return get_investor_trading(market)
+        except Exception:
+            raise ValueError(f"투자자 데이터 조회 실패 [{market}]")
 
 
 def get_investor_trading_history(market: str = "KOSPI", days: int = 20) -> list:
-    """투자자별 매매동향 히스토리 조회 (키움 ka10008 반복 조회).
+    """KIS FHPTJ04040000으로 투자자별 매매동향 히스토리 조회.
 
     Args:
         market: "KOSPI" 또는 "KOSDAQ"
-        days:   최근 N 영업일
+        days:   최근 N 영업일 (최대 300)
 
     Returns:
         [{"date": "YYYY-MM-DD", "market": str,
           "institution": float, "foreign": float, "individual": float}, ...]
-        단위: 억원. 최신순 정렬.
+        단위: 억원 (1e8원). 최신순 정렬.
     """
     today_ymd = datetime.today().strftime("%Y%m%d")
+    # days보다 넉넉하게 조회 (공휴일·주말 포함하므로 *2+10 여유)
     from_dt = (datetime.today() - timedelta(days=days * 2 + 10)).strftime("%Y%m%d")
-    mrkt_tp = "001" if market.upper() == "KOSPI" else "101"
 
-    try:
-        r = _kiwoom_post(
-            f"{BASE_URL}/api/dostk/invstdivtrnd",
-            "ka10064",
-            {
-                "mrkt_tp":    mrkt_tp,
-                "amt_qty_tp": "1",
-                "trde_tp":    "0",
-                "stk_cd":     "",
-            },
-        )
-        data = r.json()
-    except Exception:
-        return []
+    is_kosdaq = market.upper() == "KOSDAQ"
+    iscd  = "1001" if is_kosdaq else "0001"
+    iscd1 = "KSQ"  if is_kosdaq else "KSP"
 
-    if str(data.get("return_code", "0")) != "0":
-        return []
+    r = _kis_get(
+        f"{BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-investor-daily-by-market",
+        "FHPTJ04040000",
+        {
+            "FID_COND_MRKT_DIV_CODE": "U",
+            "FID_INPUT_ISCD":         iscd,
+            "FID_INPUT_DATE_1":       from_dt,
+            "FID_INPUT_ISCD_1":       iscd1,
+            "FID_INPUT_DATE_2":       today_ymd,
+            "FID_INPUT_ISCD_2":       iscd,
+        },
+    )
+    data = r.json()
 
-    rows = data.get("opmr_invsr_trde_chart", [])
-    if isinstance(rows, dict):
-        rows = [rows]
+    if data.get("rt_cd") != "0":
+        raise ValueError(f"KIS 투자자 히스토리 오류 [{market}]: {data.get('msg1', '')}")
 
-    today_str = datetime.today().strftime("%Y-%m-%d")
+    output = data.get("output", [])
+    if not output:
+        raise ValueError(f"KIS 투자자 히스토리 없음 [{market}]")
+
     results = []
-    for row in rows[:days]:
-        # tm 필드가 HHMMSS 형식이면 당일 시간별 → 날짜는 오늘로 처리
-        tm = str(row.get("tm", ""))
-        date_str = today_str
+    for row in output[:days]:   # 최신순이므로 앞에서 days개 취득
+        raw_date = row.get("stck_bsop_date", "")
+        if len(raw_date) == 8:
+            date_str = f"{raw_date[:4]}-{raw_date[4:6]}-{raw_date[6:]}"
+        else:
+            date_str = raw_date
 
-        def _to_eok(k: str) -> float:
-            """매매금액(백만원) → 억원 (÷100)."""
-            v = str(row.get(k, 0) or 0).replace(",", "")
+        def _to_eok(field: str) -> float:
+            """백만원 → 억원 (÷100), 소수 2자리."""
             try:
-                return round(float(v) / 100, 2)
-            except ValueError:
+                return round(float(row.get(field, 0) or 0) / 100, 2)
+            except (ValueError, TypeError):
                 return 0.0
 
-        orgn = _to_eok("orgn")
-        frgn = _to_eok("frgnr_invsr")
         results.append({
             "date":        date_str,
             "market":      market.upper(),
-            "institution": orgn,
-            "foreign":     frgn,
-            "individual":  round(-(orgn + frgn), 2),
+            "institution": _to_eok("orgn_ntby_tr_pbmn"),
+            "foreign":     _to_eok("frgn_ntby_tr_pbmn"),
+            "individual":  _to_eok("prsn_ntby_tr_pbmn"),
         })
+
     return results
 
 
-# ── KRX ETF 목록 조회 ───────────────────────────────────────────────────────
+# ── KRX ETF 목록 조회 (pykrx) ───────────────────────────────────────────────
 
 def get_etf_list_from_krx(date_str: str = None) -> List[Dict]:
     """네이버 금융 ETF API로 상장 ETF 전체 목록 조회.

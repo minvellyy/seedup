@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-03",
+        "brokerage": "하나증권",
+        "analyst_name": "채운샘",
+        "report_title": "미국이스라엘의 이란 공격과 글로벌 방산 투.."
+    },
+    "specific_data": {
+        "sector_name": "방위산업",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "한국항공우주(047810)",
+            "LIG넥스원(079550)"
+        ],
+        "industry_trends": [
+            "미국/이스라엘의 이란 공격에 따른 방산 투자 증가",
+            "중동 지역의 무기 수입 증가 가능성"
+        ],
+        "risk_factors": [
+            "전쟁의 장기화 가능성",
+            "이란의 후속 공격 가능성"
+        ]
+    }
+}

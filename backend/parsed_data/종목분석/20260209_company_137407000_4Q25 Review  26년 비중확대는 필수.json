@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "한화투자증권",
+        "analyst_name": "이진협, 김나우",
+        "report_title": "4Q25 Review  26년 비중확대는 필수"
+    },
+    "specific_data": {
+        "company_name": "롯데쇼핑",
+        "ticker": "023530",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "4Q25 매출액 3.5조원(+1.3% YoY), 영업이익 2,277억원",
+            "목표주가(상향): 150,000원 (+54.7% YoY)",
+            "내수 회복에 더해 외국인 매출 성장(+37% YoY)",
+            "해외사업은 베트남 중심으로 고성장",
+            "e커머스는 BEP 전환 목표의 가시성"
+        ],
+        "risk_factors": [
+            "일회성 비용 발생",
+            "국내 할인점의 매출 감소",
+            "외부 경제 환경 변화"
+        ],
+        "shareholder_structure": "롯데지주 60.1%, 국민연금공단 8.1%, 자사주 0.1%"
+    }
+}

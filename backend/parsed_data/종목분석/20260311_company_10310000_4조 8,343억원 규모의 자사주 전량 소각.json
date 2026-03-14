@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-11",
+        "brokerage": "DS INVESTMENT & SECURITIES",
+        "analyst_name": "null",
+        "report_title": "4조 8,343억원 규모의 자사주 전량 소각"
+    },
+    "specific_data": {
+        "company_name": "SK",
+        "ticker": "034730",
+        "investment_rating": "매수",
+        "investment_points": [
+            "자사주 전량 소각 결정으로 주주환원 강화",
+            "재무 건전성 개선",
+            "자회사 가치 증가"
+        ],
+        "risk_factors": [
+            "부채 상환 부담",
+            "시장 변동성"
+        ],
+        "shareholder_structure": "최태원(외 32인) 25.4%, 자사주(외 1인) 24.8%"
+    }
+}

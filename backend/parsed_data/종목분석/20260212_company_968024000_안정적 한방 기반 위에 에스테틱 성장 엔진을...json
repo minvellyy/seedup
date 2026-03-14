@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "한국IR협의회",
+        "analyst_name": "박선영, 정수현",
+        "report_title": "안정적 한방 기반 위에 에스테틱 성장 엔진을.."
+    },
+    "specific_data": {
+        "company_name": "동방메디컬",
+        "ticker": "240550",
+        "investment_rating": "매수",
+        "investment_points": [
+            "인도네시아 공장 가동 정상화에 따른 한방침 매출 회복 및 수익성 개선",
+            "해외 주요 파트너와의 통합 계약 기반 미용 필러 중심의 구조적 해외 매출 확대",
+            "브라질 ANVISA 승인 및 중국 NMPA 승인을 통한 대형 시장 진입 기대"
+        ],
+        "risk_factors": [
+            "인도네시아 공장 가동 정상화 지연 가능성",
+            "미용·성형 의료기기 시장 내 경쟁 심화 및 해외 인허가 불확실성"
+        ],
+        "shareholder_structure": "최대주주 김근식 외 4인 48.62% 보유"
+    }
+}

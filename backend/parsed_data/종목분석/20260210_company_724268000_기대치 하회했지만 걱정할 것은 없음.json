@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "삼성증권",
+        "analyst_name": "안영준",
+        "report_title": "기대치 하회했지만 걱정할 것은 없음"
+    },
+    "specific_data": {
+        "company_name": "삼성증권",
+        "ticker": "016360",
+        "investment_rating": "BUY (Maintain)",
+        "investment_points": [
+            "목표주가 120,000원으로 상향",
+            "브로커리지 호조와 견조한 운용손익",
+            "거래대금 증가로 실적 호조 예상"
+        ],
+        "risk_factors": [
+            "일회성 비용 반영",
+            "금리 상승에 따른 채권평가손실 우려"
+        ],
+        "shareholder_structure": "주요 주주: 삼성생명보험 외 3인, 지분율 29.62%"
+    }
+}

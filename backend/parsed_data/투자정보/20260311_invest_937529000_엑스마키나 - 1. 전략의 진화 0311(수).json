@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-11",
+        "brokerage": "DS INVESTMENT & SECURITIES",
+        "analyst_name": "김남욱",
+        "report_title": "엑스마키나 - 1. 전략의 진화 0311(수)"
+    },
+    "specific_data": {
+        "strategy_theme": "EPS 추정치 변화 기반 전략",
+        "recommended_portfolio": [
+            "KOSPI200"
+        ],
+        "strategy_logic": [
+            "EPS 추정치 상향 종목에 투자",
+            "주가 반영 지연 현상 활용"
+        ],
+        "quant_factors": [
+            "EPS 추정치",
+            "거래량",
+            "PER",
+            "PBR"
+        ]
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "교보증권",
+        "analyst_name": "장민지",
+        "report_title": "4Q25 Review 본업과 주주환원의 동반 확대"
+    },
+    "specific_data": {
+        "company_name": "현대백화점",
+        "ticker": "069960",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "본업 성장에 따른 실적 개선 확인",
+            "지누스는 단기 부담",
+            "목표주가 130,000원 상향"
+        ],
+        "risk_factors": [
+            "미국 관세 불확실성에 따른 지누스 실적 부진"
+        ],
+        "shareholder_structure": "현대지에프홀딩스 외 2 인 41.34%, 국민연금공단 13.46%, 외국인지분 23.47%"
+    }
+}

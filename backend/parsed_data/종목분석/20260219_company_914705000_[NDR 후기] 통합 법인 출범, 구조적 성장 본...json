@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-19",
+        "brokerage": "한화리서치",
+        "analyst_name": "배성조",
+        "report_title": "[NDR 후기] 통합 법인 출범, 구조적 성장 본.."
+    },
+    "specific_data": {
+        "company_name": "HD건설기계",
+        "ticker": "267270",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "통합 법인 출범으로 인한 구조적 성장",
+            "북미 및 유럽 시장에서의 매출 성장",
+            "신흥 시장에서의 가격 경쟁력 확보"
+        ],
+        "risk_factors": [
+            "일회성 비용 반영",
+            "환율 변동",
+            "경쟁 심화"
+        ],
+        "shareholder_structure": "HD현대사이트솔루션 (외 5인) 37.1%, 현대건설기계우리사주 0.0%, 자사주신탁 0.0%"
+    }
+}

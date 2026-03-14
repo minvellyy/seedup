@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2023-03-09",
+        "brokerage": "데일리",
+        "analyst_name": null,
+        "report_title": "안녕하세요 데일리에요(로봇방산조선)"
+    },
+    "specific_data": {
+        "sector_name": "로봇, 방산, 조선",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "코스닥 액티브 ETF 첫 상장",
+            "천궁-Ⅱ 유도탄 UAE 도착",
+            "로보티즈, 우즈벡 1000명 규모 데이터팩토리 구축",
+            "두산로보틱스, 광진그룹에 제조용 로봇 100대 공급",
+            "큐렉소, 보행재활로봇 ‘모닝워크’ 유럽 MDR 획득"
+        ],
+        "risk_factors": [
+            "글로벌 무기거래 증가",
+            "로봇 도입 제동 우려"
+        ]
+    }
+}

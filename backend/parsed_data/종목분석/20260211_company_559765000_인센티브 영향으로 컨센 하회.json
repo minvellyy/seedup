@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "키움증권",
+        "analyst_name": "임수진",
+        "report_title": "인센티브 영향으로 컨센 하회"
+    },
+    "specific_data": {
+        "company_name": "파라다이스",
+        "ticker": "034230",
+        "investment_rating": "BUY(Maintain)",
+        "investment_points": [
+            "견조한 매출 체력 확인",
+            "3월 하얏트 호텔 개장으로 VIP와 MASS의 동반 성장 기대",
+            "구조적 성장에 대한 기대"
+        ],
+        "risk_factors": [
+            "일회성 비용 증가",
+            "인건비 상승"
+        ],
+        "shareholder_structure": "주요 주주 지분율: 파라다이스글로벌 45.3%, 외국인 지분율 8.5%"
+    }
+}

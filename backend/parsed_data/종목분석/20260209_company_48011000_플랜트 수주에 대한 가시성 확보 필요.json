@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "키움증권",
+        "analyst_name": "신대현",
+        "report_title": "플랜트 수주에 대한 가시성 확보 필요"
+    },
+    "specific_data": {
+        "company_name": "DL이앤씨",
+        "ticker": "375500",
+        "investment_rating": "Outperform (Downgrade)",
+        "investment_points": [
+            "4분기 영업이익은 시장 컨센서스를 상회",
+            "토목과 주택건축 부문의 수익성 개선",
+            "최근주가 상승에 따라 투자의견을 Outperform으로 하향"
+        ],
+        "risk_factors": [
+            "플랜트 부문의 매출 부진",
+            "신규 수주가 부재할 경우 매출 악영향"
+        ],
+        "shareholder_structure": "주요 주주 DL 외 7인 24.8%"
+    }
+}

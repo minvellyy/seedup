@@ -1,0 +1,30 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-10",
+        "brokerage": "유진투자증권",
+        "analyst_name": "권해순, 이다빈",
+        "report_title": "BioPharma Compass Vol.4 - 기다림의 시간(기.."
+    },
+    "specific_data": {
+        "sector_name": "바이오/제약",
+        "industry_rating": "N/R",
+        "top_picks": [
+            "한올바이오파마",
+            "한미약품",
+            "리가켐바이오",
+            "에이비엘바이오",
+            "셀트리온"
+        ],
+        "industry_trends": [
+            "국내 제약업종 지수 약세",
+            "RNA 치료제 시장에 대한 높은 관심",
+            "신약 개발 대표 바이오텍 3사 매출액 약 750~2,000억원 내외 달성"
+        ],
+        "risk_factors": [
+            "중동발 지정학적 리스크",
+            "거시경제 불확실성",
+            "임상 결과 미달"
+        ]
+    }
+}

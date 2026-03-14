@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-25",
+        "brokerage": "iM증권",
+        "analyst_name": "고의영",
+        "report_title": "2Q26 수익성 개선 기울기에 주목"
+    },
+    "specific_data": {
+        "company_name": "심텍",
+        "ticker": "222800",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "2Q26부터 본게임 시작",
+            "목표주가 65,000원 유지",
+            "수익성 개선이 본격화할 것",
+            "고부가 중심으로 제품 믹스 개선"
+        ],
+        "risk_factors": [
+            "원가 부담 지속",
+            "파생상품평가 관련 회계적 손실"
+        ],
+        "shareholder_structure": "주요 주주 지분율에 대한 정보는 제공되지 않음"
+    }
+}

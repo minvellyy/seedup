@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-10",
+        "brokerage": "하나증권",
+        "analyst_name": "송선재",
+        "report_title": "글로벌에서 가장 저평가된 공작기계 회사"
+    },
+    "specific_data": {
+        "company_name": "DN오토모티브",
+        "ticker": "007340",
+        "investment_rating": "Not Rated",
+        "investment_points": [
+            "글로벌에서 가장 저평가된 공작기계 회사",
+            "영업이익률 15.5% 기록",
+            "고부가 제품 위주의 믹스 효과와 미국 등 수출 물량에 대한 환율 효과가 긍정적인 기여"
+        ],
+        "risk_factors": [
+            "원/달러 환율 상승에 따른 외형 성장 효과",
+            "합병된 튜브의 매출 기여"
+        ],
+        "shareholder_structure": "김상헌 외 5 인 52.16%, 국민연금공단 5.14%"
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-09",
+        "brokerage": "SK증권",
+        "analyst_name": "허선재, 나승두",
+        "report_title": "우주 경제 리프라이싱 시대"
+    },
+    "specific_data": {
+        "sector_name": "우주산업",
+        "industry_rating": "긍정적",
+        "top_picks": [
+            "스피어(A347700/KQ/Not Rated)",
+            "에이치브이엠(A295310/KQ/Not Rated)",
+            "나라스페이스테크놀로지(A478340/KQ/Not Rated)"
+        ],
+        "industry_trends": [
+            "우주 데이터 및 인프라 활용 서비스 기업으로의 전환",
+            "재사용 발사체 기술 발전으로 발사 비용 절감",
+            "우주 산업의 상업적 활용 단계 진입"
+        ],
+        "risk_factors": [
+            "기술적 난이도와 발사 실패 리스크",
+            "막대한 CAPEX와 긴 투자 회수 기간",
+            "국제 규제 강화에 따른 운영 리스크"
+        ]
+    }
+}

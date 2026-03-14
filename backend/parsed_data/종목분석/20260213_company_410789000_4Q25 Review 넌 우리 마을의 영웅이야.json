@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-13",
+        "brokerage": "유진투자증권",
+        "analyst_name": "이주형",
+        "report_title": "4Q25 Review 넌 우리 마을의 영웅이야"
+    },
+    "specific_data": {
+        "company_name": "두산",
+        "ticker": "000150",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "4Q25 실적이 시장 컨센서스를 상회",
+            "하이엔드 제품 비중 증가로 사상 최대 매출 경신",
+            "AI 서버 확장에 따른 범용 디램 수요 증가",
+            "차세대 아키텍처 대응을 위한 캐파 증설 검토"
+        ],
+        "risk_factors": [
+            "원자재 가격 변동성",
+            "경쟁사 대비 캐파 약점"
+        ],
+        "shareholder_structure": "박정원 (외 27인) 40.9%, 자사주 16.3%"
+    }
+}

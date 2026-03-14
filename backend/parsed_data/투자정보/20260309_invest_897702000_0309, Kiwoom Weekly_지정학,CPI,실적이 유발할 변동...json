@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-09",
+        "brokerage": "키움증권",
+        "analyst_name": "이성훈",
+        "report_title": "0309, Kiwoom Weekly_지정학,CPI,실적이 유발할 변동.."
+    },
+    "specific_data": {
+        "strategy_theme": "지정학, CPI, 실적이 유발할 변동성 확대 구간",
+        "recommended_portfolio": [
+            "방산",
+            "정유주"
+        ],
+        "strategy_logic": [
+            "전쟁 리스크 우려 반영",
+            "주가 하방 압력 가중",
+            "자금 로테이션"
+        ],
+        "quant_factors": [
+            "CPI",
+            "PCE",
+            "오라클 실적",
+            "어도비 실적"
+        ]
+    }
+}

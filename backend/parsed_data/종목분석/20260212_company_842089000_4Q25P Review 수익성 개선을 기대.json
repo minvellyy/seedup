@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "유진투자증권",
+        "analyst_name": "박종선",
+        "report_title": "4Q25P Review 수익성 개선을 기대"
+    },
+    "specific_data": {
+        "company_name": "KT 나스미디어",
+        "ticker": "089600",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "플랫폼 사업부문의 최고 매출 달성",
+            "옥외광고 플랫폼 매출이 전년동기 대비 150% 이상 성장",
+            "1Q26 매출 증가 및 수익성 개선 기대"
+        ],
+        "risk_factors": [
+            "일시적 비용 증가",
+            "일부 대행사 부실화로 인한 대손상각비 반영"
+        ],
+        "shareholder_structure": "케이티 (외 2인) 43.2%, 자사주 (외 1인) 2.3%"
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-13",
+        "brokerage": "한국IR협의회",
+        "analyst_name": "박성순, 김혜빈",
+        "report_title": "고부가제품 확대 기대"
+    },
+    "specific_data": {
+        "company_name": "덕산네오룩스",
+        "ticker": "213420",
+        "investment_rating": "매수",
+        "investment_points": [
+            "Black PDL의 채용 범위 확대",
+            "2026년 매출액 4,243억 원(+23.2% YoY) 전망",
+            "고부가가치 소재 공급 확대"
+        ],
+        "risk_factors": [
+            "스마트폰 수요 둔화",
+            "폴더블 스마트폰 흥행 여부",
+            "PSPI 양산 승인 지연 가능성"
+        ],
+        "shareholder_structure": "최대주주 덕산하이메탈㈜ 36.67%, 특수관계인 포함 44.15%, 국민연금공단 8.97%"
+    }
+}

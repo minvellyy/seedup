@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-19",
+        "brokerage": "교보증권",
+        "analyst_name": "이상호",
+        "report_title": "4Q25 Review 본업은 잘 진행 중입니다"
+    },
+    "specific_data": {
+        "company_name": "두산에너빌리티",
+        "ticker": "034020",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "본업은 잘 진행 중입니다",
+            "목표주가 113,000원으로 상향",
+            "풍부한 파이프라인과 수주 기대감"
+        ],
+        "risk_factors": [
+            "영업이익 감소",
+            "수익인식 지연효과"
+        ],
+        "shareholder_structure": "두산 외 28 인 30.68%, 국민연금공단 7.86%, 외국인지분 24.00%"
+    }
+}

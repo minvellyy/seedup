@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-06",
+        "brokerage": "한화투자증권",
+        "analyst_name": "한유정, 고예진",
+        "report_title": "실적은 부진했지만 반가운 변화"
+    },
+    "specific_data": {
+        "company_name": "롯데웰푸드",
+        "ticker": "280360",
+        "investment_rating": "Hold",
+        "investment_points": [
+            "실적 부진에도 불구하고 명확한 문제 의식과 실행 전략이 표명됨",
+            "특정 원재료 가격 하락에 따른 수혜 여부를 떠나 체질 개선 확인 시 프리미엄이 정당화될 것으로 기대"
+        ],
+        "risk_factors": [
+            "원재료 가격 상승 부담",
+            "신공장 가동에 따른 초기 고정비 부담"
+        ],
+        "shareholder_structure": "롯데지주 (68.6%), 국민연금공단 (7.2%), 브이아이피자산운용 (5.0%)"
+    }
+}

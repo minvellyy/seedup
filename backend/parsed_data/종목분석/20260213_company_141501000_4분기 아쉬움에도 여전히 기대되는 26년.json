@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-13",
+        "brokerage": "키움증권",
+        "analyst_name": "이종형, 손예빈",
+        "report_title": "4분기 아쉬움에도 여전히 기대되는 26년"
+    },
+    "specific_data": {
+        "company_name": "LS",
+        "ticker": "006260",
+        "investment_rating": "BUY(Maintain)",
+        "investment_points": [
+            "2026년 실적개선 전망 유효",
+            "금속가격 상승과 고부가 제품 확대",
+            "목표주가 35만원으로 상향"
+        ],
+        "risk_factors": [
+            "계절적 요인에 따른 LS전선과 엠트론 부진",
+            "LS엠트론의 수익성 회복 여부 불투명"
+        ],
+        "shareholder_structure": "주요 주주 구자열 외 44인 32.6%"
+    }
+}

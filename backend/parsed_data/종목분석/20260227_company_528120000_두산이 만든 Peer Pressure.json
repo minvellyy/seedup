@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-27",
+        "brokerage": "DS INVESTMENT & SECURITIES",
+        "analyst_name": "김수현, 강태호",
+        "report_title": "두산이 만든 Peer Pressure"
+    },
+    "specific_data": {
+        "company_name": "두산",
+        "ticker": "000150",
+        "investment_rating": "매수",
+        "investment_points": [
+            "자사주 12.2% 전량 소각 결정",
+            "목표주가 200만원으로 상향 조정",
+            "상법 개정에 따른 Peer Pressure 작용"
+        ],
+        "risk_factors": [
+            "상법 개정에 따른 자사주 소각 의무화",
+            "대형 M&A 추진 중의 불확실성"
+        ],
+        "shareholder_structure": "주요주주 박정원(외 27인) 40.9%, 자사주(외 1인) 16.3%"
+    }
+}

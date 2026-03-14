@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "DS투자증권",
+        "analyst_name": "최승호",
+        "report_title": "Asset Allocation 전략 재검토 필요"
+    },
+    "specific_data": {
+        "company_name": "크래프톤",
+        "ticker": "259960",
+        "investment_rating": "매수",
+        "investment_points": [
+            "PUBG의 성장 가능성",
+            "신작 서브노티카2의 기대감",
+            "목표주가 하향 조정에도 불구하고 상승 여력 존재"
+        ],
+        "risk_factors": [
+            "모바일 부진",
+            "소송 관련 리스크",
+            "비용 증가"
+        ],
+        "shareholder_structure": "장병규(외 33인) 35.9%, 국민연금공단(외 1인) 7.2%"
+    }
+}

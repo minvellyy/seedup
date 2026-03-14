@@ -1,0 +1,34 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-11",
+        "brokerage": "키움증권",
+        "analyst_name": "한지영, 이성훈",
+        "report_title": "0311, 미 증시, 유가 폭등 진정에도, 호르루즈 해협 .."
+    },
+    "specific_data": {
+        "strategy_theme": "유가 안정 및 전쟁 조기 종식",
+        "recommended_portfolio": [
+            "애플",
+            "마이크로소프트",
+            "알파벳",
+            "메타",
+            "아마존",
+            "테슬라",
+            "엔비디아",
+            "브로드컴",
+            "AMD",
+            "마이크론"
+        ],
+        "strategy_logic": [
+            "유가의 추가 레벨 다운 -> 증시 회복 궤도 강화",
+            "미국의 2월 CPI 발표 주시",
+            "인플레이션 지표가 낮을수록 증시에 긍정적"
+        ],
+        "quant_factors": [
+            "유가 변동성",
+            "CPI 발표",
+            "미국 증시 반등"
+        ]
+    }
+}

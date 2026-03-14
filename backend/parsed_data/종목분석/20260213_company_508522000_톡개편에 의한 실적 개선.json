@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-13",
+        "brokerage": "유안타증권",
+        "analyst_name": "이창영",
+        "report_title": "톡개편에 의한 실적 개선"
+    },
+    "specific_data": {
+        "company_name": "카카오",
+        "ticker": "035720",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "톡개편에 의한 실적 개선",
+            "광고 매출은 마진율이 높아 전체 영업이익률 개선 기대",
+            "커머스, 모빌리티, 핀테크 성장률 견조"
+        ],
+        "risk_factors": [
+            "콘텐츠 사업의 성장 모멘트 불확실",
+            "게임, 음악, 웹툰 등 콘텐츠 사업의 성장 둔화"
+        ],
+        "shareholder_structure": "주요주주 김범수 외 75 인"
+    }
+}

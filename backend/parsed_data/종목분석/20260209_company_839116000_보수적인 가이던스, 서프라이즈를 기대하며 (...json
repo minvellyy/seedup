@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "하나증권",
+        "analyst_name": "김선아, 유창근",
+        "report_title": "보수적인 가이던스, 서프라이즈를 기대하며 (.."
+    },
+    "specific_data": {
+        "company_name": "삼성에피스홀딩스",
+        "ticker": "0126Z0",
+        "investment_rating": "Neutral(하향)",
+        "investment_points": [
+            "보수적인 가이던스, 서프라이즈를 기대하며",
+            "목표주가는 610,000원으로 유지",
+            "제품 매출 YoY%가 Peer 대비 높음"
+        ],
+        "risk_factors": [
+            "변동성이 큰 시장 분위기",
+            "조심스러운 가이던스"
+        ],
+        "shareholder_structure": "삼성물산 외 6 인 74.34%, 국민연금공단 6.70%"
+    }
+}

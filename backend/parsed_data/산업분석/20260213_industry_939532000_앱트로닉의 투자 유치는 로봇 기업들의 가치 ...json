@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-13",
+        "brokerage": "하나증권",
+        "analyst_name": "송선재, 강민아",
+        "report_title": "앱트로닉의 투자 유치는 로봇 기업들의 가치 .."
+    },
+    "specific_data": {
+        "sector_name": "자동차",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "앱트로닉"
+        ],
+        "industry_trends": [
+            "휴머노이드 로봇 시장의 개화가 본격적으로 다가옴에 따라 시장 선점에 대한 기업들의 속도 경쟁이 시작됨.",
+            "휴머노이드 로봇 기업들의 투자 유치는 데이터 수집과 로봇 훈련 시설, 생산 시설 등을 구축하는데 사용될 예정."
+        ],
+        "risk_factors": [
+            "로봇 개발 및 생산 단계에서의 기술적 리스크",
+            "시장 경쟁 심화에 따른 기업 가치 변동성"
+        ]
+    }
+}

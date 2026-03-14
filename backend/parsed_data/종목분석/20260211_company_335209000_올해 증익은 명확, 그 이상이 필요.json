@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "한화리서치",
+        "analyst_name": "김소혜, 김나우",
+        "report_title": "올해 증익은 명확, 그 이상이 필요"
+    },
+    "specific_data": {
+        "company_name": "엔씨소프트",
+        "ticker": "036570",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "올해 증익은 명확, 그 이상이 필요",
+            "아이온2와 리니지클래식으로 영업이익 성장폭이 가장 큰 기업이 될 것으로 본다.",
+            "현재 주가 대비 목표주가 상승 여력 존재"
+        ],
+        "risk_factors": [
+            "아이온2 글로벌 및 모바일 캐쥬얼 M&A에서 예상을 뛰어넘는 성과가 나와야만 추정치 상향 가능",
+            "기존 게임 PC 리니지 매출 카니발 발생 가능성"
+        ],
+        "shareholder_structure": "김택진 (외 15인) 12.4%, 자사주 (외 1인) 10.0%, Saudi Electronic Gaming Holding Co 9.4%"
+    }
+}

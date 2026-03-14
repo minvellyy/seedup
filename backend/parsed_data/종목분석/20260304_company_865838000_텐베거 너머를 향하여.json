@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-04",
+        "brokerage": "하나증권",
+        "analyst_name": "김홍식, 이상훈",
+        "report_title": "텐베거 너머를 향하여"
+    },
+    "specific_data": {
+        "company_name": "RF머트리얼즈",
+        "ticker": "327260",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "데이터센터향 펌프 레이저 수주 증가",
+            "미국과 유럽의 중국산 통신 부품 퇴출 강화",
+            "NXP의 통신 부문 철수 및 RFHIC의 에릭슨과 신규 계약 논의",
+            "PBR이 글로벌 광모듈 업체들에 비해 낮은 수준"
+        ],
+        "risk_factors": [
+            "CPO 도입 초기 단계로 실적 성장세 반영 지연",
+            "중국 업체들의 미국 퇴출에 따른 시장 변동성"
+        ],
+        "shareholder_structure": "알에프에이치아이씨 외 9 인 50.63%"
+    }
+}

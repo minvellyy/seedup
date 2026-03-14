@@ -1,0 +1,29 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-13",
+        "brokerage": "SK증권",
+        "analyst_name": "이선경",
+        "report_title": "패러다임의 전환, 혁신 신약 진화에 주목"
+    },
+    "specific_data": {
+        "sector_name": "제약/바이오",
+        "industry_rating": "긍정적",
+        "top_picks": [
+            "Avidity Biosciences",
+            "Eli Lilly",
+            "Novo Nordisk"
+        ],
+        "industry_trends": [
+            "FDA 정책 변화로 신약 개발 가속화",
+            "미국 약가 시스템의 구조적 재편",
+            "특허 절벽에 따른 M&A 수요 지속",
+            "회복 사이클에 진입한 IPO"
+        ],
+        "risk_factors": [
+            "약가 인하 압박",
+            "임상 실패 리스크",
+            "정치적 불확실성"
+        ]
+    }
+}

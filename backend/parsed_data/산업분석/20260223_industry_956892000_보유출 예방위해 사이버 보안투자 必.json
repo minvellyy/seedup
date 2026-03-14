@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-23",
+        "brokerage": "유안타증권",
+        "analyst_name": "권명준",
+        "report_title": "보유출 예방위해 사이버 보안투자 必"
+    },
+    "specific_data": {
+        "sector_name": "스몰캡",
+        "industry_rating": null,
+        "top_picks": [
+            "지니언스",
+            "라온시큐어"
+        ],
+        "industry_trends": [
+            "개인정보 보호 관련 규제 강화",
+            "사이버 보안 투자 증가",
+            "AI 기반 해킹 기술의 발전"
+        ],
+        "risk_factors": [
+            "해킹 사고 증가",
+            "정보보호 투자 부족",
+            "중소기업의 보안 환경 취약"
+        ]
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "common_metadata": {
+        "report_type": null,
+        "report_date": null,
+        "brokerage": null,
+        "analyst_name": null,
+        "report_title": "주가는 인바운드 모멘텀을 타고"
+    },
+    "specific_data": {
+        "company_name": "신세계",
+        "ticker": "280",
+        "investment_rating": null,
+        "investment_points": [],
+        "risk_factors": [],
+        "shareholder_structure": null
+    }
+}

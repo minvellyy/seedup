@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "유진투자증권",
+        "analyst_name": "황성현",
+        "report_title": "일회성 비용 반영으로 부진"
+    },
+    "specific_data": {
+        "company_name": "한전 KPS",
+        "ticker": "051600",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "원전 밸류체인 멀티플 상승 반영해 목표주가를 67,000원(+15%)으로 상향",
+            "2026년 매출액 1.6조원(+0%yoy), 영업이익 1,878억원(+34%yoy)으로 실적 정상화 전망",
+            "한, 미 원자력 협정 개정 및 추가 원전 수주 가능성 등 기대감 존재"
+        ],
+        "risk_factors": [
+            "원안위 규제 강화로 고리, 월성 원전 정비가 연기",
+            "민간정비 외주 확대와 재료비 증가로 대외 사업의 수익성 하락"
+        ],
+        "shareholder_structure": "한국전력공사 51.0%, 국민연금공단 9.4%"
+    }
+}

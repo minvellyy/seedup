@@ -24,8 +24,16 @@ const DashboardPage = () => {
   const [chatMessages, setChatMessages] = useState([])
   const [chatInput, setChatInput] = useState('')
   const [holdingsSummary, setHoldingsSummary] = useState(null)
+  const chatMessagesEndRef = useRef(null)
 
   const API_BASE_URL = ''
+
+  // 채팅 메시지가 업데이트될 때마다 스크롤을 맨 아래로
+  useEffect(() => {
+    if (chatMessagesEndRef.current) {
+      chatMessagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
+    }
+  }, [chatMessages])
 
   useEffect(() => {
     fetchDashboardData()
@@ -337,29 +345,81 @@ const DashboardPage = () => {
     return 'neutral'
   }
 
-  const handleSendMessage = () => {
+  const handleSendMessage = async () => {
     if (!chatInput.trim()) return
 
-    const newMessage = {
+    const userMessage = {
       id: Date.now(),
       text: chatInput,
       sender: 'user',
       timestamp: new Date()
     }
 
-    setChatMessages([...chatMessages, newMessage])
+    setChatMessages(prev => [...prev, userMessage])
+    const currentMessage = chatInput
     setChatInput('')
 
-    // 봇 응답 시뮬레이션
-    setTimeout(() => {
-      const botResponse = {
-        id: Date.now(),
-        text: '안녕하세요! 투자 관련 질문이 있으시면 언제든지 물어보세요.',
-        sender: 'bot',
-        timestamp: new Date()
+    // 로딩 메시지 추가
+    const loadingMessage = {
+      id: Date.now() + 1,
+      text: '답변을 생성하는 중...',
+      sender: 'bot',
+      timestamp: new Date(),
+      loading: true
+    }
+    setChatMessages(prev => [...prev, loadingMessage])
+
+    try {
+      console.log('[챗봇] API 호출 시작:', currentMessage)
+      
+      // 실제 챗봇 API 호출
+      const response = await fetch(`${API_BASE_URL}/api/chat/send`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_id: user?.userId || 999999,
+          message: currentMessage,
+          session_id: null // 대시보드에서는 간단한 질의응답만 지원
+        })
+      })
+
+      console.log('[챗봇] API 응답 상태:', response.status)
+
+      if (!response.ok) {
+        const errorText = await response.text()
+        console.error('[챗봇] API 오류 응답:', errorText)
+        throw new Error(`챗봇 응답 실패: ${response.status}`)
       }
-      setChatMessages(prev => [...prev, botResponse])
-    }, 500)
+
+      const data = await response.json()
+      console.log('[챗봇] API 응답 데이터:', data)
+
+      // 로딩 메시지 제거 후 실제 응답 추가
+      setChatMessages(prev => {
+        const filtered = prev.filter(msg => !msg.loading)
+        return [...filtered, {
+          id: Date.now(),
+          text: data.message || data.response || '응답을 받았지만 내용이 비어있습니다.',
+          sender: 'bot',
+          timestamp: new Date()
+        }]
+      })
+    } catch (error) {
+      console.error('[챗봇] 오류 발생:', error)
+      // 로딩 메시지 제거 후 오류 메시지 추가
+      setChatMessages(prev => {
+        const filtered = prev.filter(msg => !msg.loading)
+        return [...filtered, {
+          id: Date.now(),
+          text: `죄송합니다. 오류가 발생했습니다: ${error.message}`,
+          sender: 'bot',
+          timestamp: new Date(),
+          error: true
+        }]
+      })
+    }
   }
 
   if (loading) {
@@ -961,11 +1021,14 @@ const DashboardPage = () => {
                 <p>안녕하세요! 투자 관련 질문이 있으시면 언제든지 물어보세요.</p>
               </div>
             ) : (
-              chatMessages.map((msg) => (
-                <div key={msg.id} className={`chat-message ${msg.sender}`}>
-                  <p>{msg.text}</p>
-                </div>
-              ))
+              <>
+                {chatMessages.map((msg) => (
+                  <div key={msg.id} className={`chat-message ${msg.sender} ${msg.loading ? 'loading' : ''} ${msg.error ? 'error' : ''}`}>
+                    <p>{msg.text}</p>
+                  </div>
+                ))}
+                <div ref={chatMessagesEndRef} />
+              </>
             )}
           </div>
           <div className="chatbot-input">

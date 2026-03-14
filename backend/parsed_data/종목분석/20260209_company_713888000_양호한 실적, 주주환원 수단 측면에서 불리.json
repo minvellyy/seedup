@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "키움증권",
+        "analyst_name": "김은갑, 손예빈",
+        "report_title": "양호한 실적, 주주환원 수단 측면에서 불리"
+    },
+    "specific_data": {
+        "company_name": "기업은행",
+        "ticker": "024110",
+        "investment_rating": "BUY (Maintain)",
+        "investment_points": [
+            "양호한 실적",
+            "비은행 실적 개선으로 역대 최고 실적",
+            "목표주가 28,000원 유지"
+        ],
+        "risk_factors": [
+            "주주환원 수단 측면에서 불리",
+            "자기주식 매입소각 및 감액배당이 활용 안됨",
+            "타 은행주 대비 상대적 매력 약해짐"
+        ],
+        "shareholder_structure": "기획재정부 외 2인 68.50%"
+    }
+}

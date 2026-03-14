@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-04",
+        "brokerage": "키움증권",
+        "analyst_name": "고연수",
+        "report_title": "사야 한다"
+    },
+    "specific_data": {
+        "company_name": "키움증권",
+        "ticker": "039490",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "거래대금 확대에 따른 수수료수익 성장이 실적 하방을 지지할 전망",
+            "3월 중 2개년 주주환원 정책 발표가 예정되어 있어 배당 확대에 대한 기대감",
+            "하반기 퇴직연금 사업을 통해 ETF LP 비즈니스 경쟁력 강화 예상"
+        ],
+        "risk_factors": [
+            "주가 변동성 확대",
+            "M/S 하락 우려"
+        ],
+        "shareholder_structure": "다우기술 외 4인 41.10%, 국민연금공단 11.67%"
+    }
+}

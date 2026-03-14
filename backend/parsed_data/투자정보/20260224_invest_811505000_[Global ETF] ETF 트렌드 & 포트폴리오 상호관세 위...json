@@ -1,0 +1,42 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-23",
+        "brokerage": "하나증권",
+        "analyst_name": "박승진, 신민건",
+        "report_title": "[Global ETF] ETF 트렌드 & 포트폴리오 상호관세 위.."
+    },
+    "specific_data": {
+        "strategy_theme": "관세 정책과 Nvidia 실적에 따른 투자 전략",
+        "recommended_portfolio": [
+            "SMH",
+            "PAVE",
+            "MADE",
+            "CHAT",
+            "ZAP",
+            "URA",
+            "NLR",
+            "ARKQ",
+            "BOTZ",
+            "ARKX",
+            "SHLD",
+            "KDEF",
+            "XLE",
+            "GDX",
+            "QDF",
+            "QGRO"
+        ],
+        "strategy_logic": [
+            "관세 정책의 변동성에 따른 시장 반응",
+            "Nvidia 실적 발표에 따른 AI 산업의 성장 모멘텀",
+            "정책 수혜 및 내수 익스포저 기반의 수혜 기대"
+        ],
+        "quant_factors": [
+            "AI 산업 수요",
+            "정책 변화",
+            "금리 변동성",
+            "반도체 시장 성장",
+            "리쇼어링 현상"
+        ]
+    }
+}

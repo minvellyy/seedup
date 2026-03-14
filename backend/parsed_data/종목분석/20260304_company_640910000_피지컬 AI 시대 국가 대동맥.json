@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-04",
+        "brokerage": "하나증권",
+        "analyst_name": "김홍식, 이상훈",
+        "report_title": "피지컬 AI 시대 국가 대동맥"
+    },
+    "specific_data": {
+        "company_name": "유비쿼스",
+        "ticker": "264450",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "광케이블 보급률이 91%에서 98%로 확대됨에 따라 매출 증가 예상",
+            "급증하는 백본망 트래픽으로 인한 스위치 교체 및 신규 수요 발생",
+            "주주 친화적인 정책으로 주주에게 혜택 환원 기대",
+            "2026년 FWD PBR이 역사적 저점으로 저평가",
+            "재무 건전성이 우수하여 공격적인 M&A 가능"
+        ],
+        "risk_factors": [
+            "시장 경쟁 심화",
+            "정책 변화에 따른 불확실성"
+        ],
+        "shareholder_structure": "유비쿼스홀딩스 외 5인 43.26%, 국민연금공단 5.00%"
+    }
+}

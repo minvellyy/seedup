@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-11",
+        "brokerage": "키움증권",
+        "analyst_name": "임수진, 박정현",
+        "report_title": "2026년 MD 전략 변화에 주목할 시점"
+    },
+    "specific_data": {
+        "company_name": "JYP Ent.",
+        "ticker": "035900",
+        "investment_rating": "BUY(Maintain)",
+        "investment_points": [
+            "2026년 MD 전략 변화에 주목할 시점",
+            "현재 주가는 2026년 기준 PER 17.5배 수준으로 밸류에이션 매력이 높음",
+            "향후 IP 사업 다변화에 따른 실적 개선이 주가 반등의 핵심 동력"
+        ],
+        "risk_factors": [
+            "1분기 비활동기에 따른 모멘텀 부재",
+            "매크로 불확실성 확대에 따른 외국인 수급 이탈"
+        ],
+        "shareholder_structure": "주요 주주 박진영 외 3 인 16.0%"
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-23",
+        "brokerage": "키움증권",
+        "analyst_name": "안영준",
+        "report_title": "4Q25 Re 기대치 상회, 추가 주주환원 기대감.."
+    },
+    "specific_data": {
+        "company_name": "DB손해보험",
+        "ticker": "005830",
+        "investment_rating": "BUY (Maintain)",
+        "investment_points": [
+            "손해율 관리 능력이 두드러지며 양호한 예실차가 호실적 견인",
+            "추가 주주환원 기대감 확대가 주가 상승으로 이어질 것으로 전망"
+        ],
+        "risk_factors": [
+            "부진한 업황",
+            "자동차보험손익 적자폭 확대"
+        ],
+        "shareholder_structure": "주요 주주 김남호 외 12인 23.43%"
+    }
+}

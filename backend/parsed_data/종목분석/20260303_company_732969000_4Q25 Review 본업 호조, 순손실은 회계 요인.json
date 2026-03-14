@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-03",
+        "brokerage": "유안타증권",
+        "analyst_name": "이승은",
+        "report_title": "4Q25 Review 본업 호조, 순손실은 회계 요인"
+    },
+    "specific_data": {
+        "company_name": "엘앤씨바이오",
+        "ticker": "290650",
+        "investment_rating": "NOT RATED",
+        "investment_points": [
+            "본업 호조",
+            "순손실은 회계 요인",
+            "리투오 매출 증가",
+            "글로벌 확장 가시성 증가"
+        ],
+        "risk_factors": [
+            "회계상 평가손실",
+            "중국 자회사 관련 손실"
+        ],
+        "shareholder_structure": "주요주주 이환철 외 8 인"
+    }
+}

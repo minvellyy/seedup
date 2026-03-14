@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-23",
+        "brokerage": "유진투자증권",
+        "analyst_name": "박종선",
+        "report_title": "4Q25P Review 9분기 만에 매출 성장"
+    },
+    "specific_data": {
+        "company_name": "레이언스",
+        "ticker": "228850",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "9분기 만에 매출 성장세 전환",
+            "VET 및 산업용 부문 성장세 지속",
+            "매출처 다변화 효과 기대 및 수익성 개선 예상"
+        ],
+        "risk_factors": [
+            "인플레이션으로 인한 매출원가 및 판매관리비 증가",
+            "영업이익 적자 지속"
+        ],
+        "shareholder_structure": "바텍 (외 6인) 64.9%, 자사주 (외 1인) 5.2%"
+    }
+}

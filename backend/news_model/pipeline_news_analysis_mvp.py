@@ -33,7 +33,7 @@ DB_USER = os.getenv("DB_USER")
 DB_PASSWORD = os.getenv("DB_PASSWORD")
 DB_NAME = os.getenv("DB_NAME")
 
-CHROMA_PATH = os.getenv("CHROMA_PATH", "./chroma_db")
+NEWS_CHROMA_PATH = os.getenv("NEWS_CHROMA_PATH", "./news_chroma_db")
 
 ANALYSIS_VERSION = "news_mvp_v2_dedup"
 
@@ -129,9 +129,50 @@ EVENT_SYNONYMS = {
     "노조 리스크": "노조리스크",
 }
 
-client = OpenAI()
-chroma_client = chromadb.PersistentClient(path=CHROMA_PATH)
-news_analysis_index = chroma_client.get_or_create_collection(name="news_analysis_index")
+# ── OpenAI client lazy 초기화 ────────────────────────────────────────────────
+_openai_client = None
+
+
+def _get_openai_client():
+    global _openai_client
+    if _openai_client is None:
+        _openai_client = OpenAI()
+    return _openai_client
+
+
+# ── ChromaDB lazy 초기화 ──────────────────────────────────────────────────────
+# 모듈 import 시점이 아닌 실제 첫 사용 시점에 연결 (서버 기동 보호)
+_chroma_client = None
+_news_analysis_index = None
+
+
+def _get_chroma_index():
+    """ChromaDB 클라이언트와 컬렉션을 lazy 싱글턴으로 반환합니다."""
+    global _chroma_client, _news_analysis_index
+    if _news_analysis_index is None:
+        _chroma_client = chromadb.PersistentClient(path=NEWS_CHROMA_PATH)
+        _news_analysis_index = _chroma_client.get_or_create_collection(
+            name="news_analysis_index"
+        )
+    return _news_analysis_index
+
+
+# 하위 호환성: 기존 코드가 news_analysis_index 를 직접 참조하는 경우를 위한 proxy
+class _CollectionProxy:
+    """news_analysis_index 를 직접 쓰는 기존 코드를 그대로 동작하게 하는 프록시."""
+    def upsert(self, *a, **kw):
+        return _get_chroma_index().upsert(*a, **kw)
+    def delete(self, *a, **kw):
+        return _get_chroma_index().delete(*a, **kw)
+    def query(self, *a, **kw):
+        return _get_chroma_index().query(*a, **kw)
+    def get(self, *a, **kw):
+        return _get_chroma_index().get(*a, **kw)
+    def add(self, *a, **kw):
+        return _get_chroma_index().add(*a, **kw)
+
+
+news_analysis_index = _CollectionProxy()
 
 # =========================================================
 # 유틸
@@ -289,7 +330,7 @@ def get_embedding(text: str):
     text = (text or "").strip()
     if not text:
         return []
-    res = client.embeddings.create(
+    res = _get_openai_client().embeddings.create(
         model=OPENAI_EMBED_MODEL,
         input=text
     )
@@ -643,7 +684,7 @@ def llm_analyze_news_freeform(title, body):
 }}
 """
     try:
-        res = client.chat.completions.create(
+        res = _get_openai_client().chat.completions.create(
             model=OPENAI_MODEL,
             messages=[{"role": "user", "content": prompt}],
             temperature=0
@@ -784,6 +825,61 @@ def index_news_analysis(news_row, analysis):
             "importance_score": analysis["importance_score"]
         }]
     )
+
+
+def reindex_all_to_chroma(batch_size: int = 50) -> int:
+    """MySQL news_analysis 전체를 ChromaDB에 재색인합니다.
+    ChromaDB가 비어있거나 손상된 경우 복구용으로 사용합니다.
+    Returns: 색인된 문서 수
+    """
+    conn = get_mysql()
+    cur = conn.cursor(dictionary=True)
+    cur.execute("""
+        SELECT
+            nr.news_id, nr.title, nr.published_at, nr.query_topic,
+            na.article_summary,
+            na.themes_json, na.events_json, na.companies_json,
+            na.organizations_json, na.industries_json,
+            na.risk_points_json, na.opportunity_points_json,
+            na.sentiment, na.importance_score
+        FROM news_raw nr
+        JOIN news_analysis na ON nr.news_id = na.news_id
+        WHERE nr.is_duplicate = 0
+        ORDER BY nr.published_at DESC
+    """)
+    rows = cur.fetchall()
+    conn.close()
+
+    if not rows:
+        print("재색인할 데이터가 없습니다.")
+        return 0
+
+    print(f"총 {len(rows)}건 재색인 시작...")
+    indexed = 0
+
+    for i, row in enumerate(rows, 1):
+        try:
+            analysis = {
+                "article_summary": row["article_summary"] or "",
+                "themes":        json.loads(row["themes_json"] or "[]"),
+                "events":        json.loads(row["events_json"] or "[]"),
+                "companies":     json.loads(row["companies_json"] or "[]"),
+                "organizations": json.loads(row["organizations_json"] or "[]"),
+                "industries":    json.loads(row["industries_json"] or "[]"),
+                "risk_points":   json.loads(row["risk_points_json"] or "[]"),
+                "opportunity_points": json.loads(row["opportunity_points_json"] or "[]"),
+                "sentiment":     row["sentiment"] or "neutral",
+                "importance_score": float(row["importance_score"] or 0.5),
+            }
+            index_news_analysis(row, analysis)
+            indexed += 1
+            if i % batch_size == 0:
+                print(f"  진행: {i}/{len(rows)}건")
+        except Exception as e:
+            print(f"  [SKIP] {row['news_id']}: {e}")
+
+    print(f"✅ 재색인 완료: {indexed}건")
+    return indexed
 
 
 # =========================================================

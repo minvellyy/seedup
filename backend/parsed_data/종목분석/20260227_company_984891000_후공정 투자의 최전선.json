@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-27",
+        "brokerage": "SK증권",
+        "analyst_name": "이동주",
+        "report_title": "후공정 투자의 최전선"
+    },
+    "specific_data": {
+        "company_name": "피에스케이홀딩스",
+        "ticker": "031980",
+        "investment_rating": "Not Rated",
+        "investment_points": [
+            "후공정 투자의 최전선",
+            "CoWoS 공격적 증설로 리플로우 기대감 확대",
+            "HBM 투자 반등, 디스컴 장비 수혜"
+        ],
+        "risk_factors": [
+            "고객 고지 리스크"
+        ],
+        "shareholder_structure": "박경수(외21) 67.10%, 자사주 0.00%, 외국인 지분율 2.76%"
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "하나증권",
+        "analyst_name": "심은주, 고찬결",
+        "report_title": "배당 당사 기대치 상회 + 올해는 실적도 회복"
+    },
+    "specific_data": {
+        "company_name": "오리온",
+        "ticker": "271560",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "배당 당사 기대치 상회",
+            "올해는 실적도 회복"
+        ],
+        "risk_factors": [
+            "중국 시장의 불확실성",
+            "원자재 가격 변동"
+        ],
+        "shareholder_structure": "오리온홀딩스 외 9 인 43.81%, 국민연금공단 8.12%"
+    }
+}

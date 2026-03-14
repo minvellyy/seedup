@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-12",
+        "brokerage": "하나증권",
+        "analyst_name": "김홍식, 이상훈",
+        "report_title": "최소한 시총 1조원은 되어야 정상입니다"
+    },
+    "specific_data": {
+        "company_name": "쏠리드",
+        "ticker": "050890",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "최소한 시총 1조원은 되어야 정상입니다",
+            "목표주가(12M) 20,000원(상향)",
+            "현재주가(3.11) 11,710원",
+            "2025년 4분기 어닝 서프라이즈",
+            "통신장비 업종 Multiple 상승을 감안한 결과",
+            "2026년~2027년 미국/유럽/국내 시장 회복을 바탕으로 이익 성장을 지속할 전망",
+            "5G/6G 시대에서도 인빌딩 장비 시장 확대가 지속될 것"
+        ],
+        "risk_factors": [
+            "막연한 실적 우려로 주가가 오르지 못함",
+            "과도한 실적 우려가 주가 상승 장애 요인"
+        ],
+        "shareholder_structure": "정준 외 2 인 10.52%"
+    }
+}

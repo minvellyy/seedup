@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-27",
+        "brokerage": "교보증권",
+        "analyst_name": "장민지",
+        "report_title": "4Q25 Review 전 연차가 만들어 갈 꽃길"
+    },
+    "specific_data": {
+        "company_name": "와이지엔터테인먼트",
+        "ticker": "122870",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "유지 시장 기대치 부합",
+            "베이비몬스터 콘서트 개런티 상승 기대",
+            "연말을 목표로 하는 신규 IP 데뷔",
+            "빅뱅 활동 재개 가능성 등 다수의 주가 모멘텀 존재"
+        ],
+        "risk_factors": [
+            "일회성 인센티브 반영",
+            "판매관리비율 QoQ 증가",
+            "TME 보유지분 평가손실 영향"
+        ],
+        "shareholder_structure": "양현석 외 5인 22.95%, 네이버 8.89%"
+    }
+}

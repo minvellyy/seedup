@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "한화투자증권",
+        "analyst_name": "이진협, 김나우",
+        "report_title": "4Q25 Review  신규 카테고리 확장으로 성장.."
+    },
+    "specific_data": {
+        "company_name": "코웨이",
+        "ticker": "021240",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "신규 카테고리 확장으로 성장률 방어 도모",
+            "현재 주가 대비 상승여력 79.0%",
+            "영업이익 기준 시장 기대치 소폭 상회"
+        ],
+        "risk_factors": [
+            "인건비 관련 일회성 비용 약 340억원",
+            "소유권 도래 계정 감소"
+        ],
+        "shareholder_structure": "외국인 지분율 58.0%, 넷마블 (외 7인) 25.8%, 국민연금공단 (외 1인) 6.6%, Impax Asset Management Group 5.4%"
+    }
+}

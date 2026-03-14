@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-12",
+        "brokerage": "교보증권",
+        "analyst_name": "권우정",
+        "report_title": "해외 성장이 아쉬워"
+    },
+    "specific_data": {
+        "company_name": "농심",
+        "ticker": "004370",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "해외 성장이 아쉬워",
+            "가격 인상으로 GPM 개선",
+            "마케팅비 확대 기조 상반기 중 마무리 예상"
+        ],
+        "risk_factors": [
+            "해외 성장이 더딘 점",
+            "마케팅비 확대에 따른 전체 수익성 부담"
+        ],
+        "shareholder_structure": "농심홀딩스 외 5인 44.24%, 국민연금공단 7.91%, 외국인지분 23.07%"
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-20",
+        "brokerage": "한국IR협의회",
+        "analyst_name": "이나연, 권지승",
+        "report_title": "고마진 포트폴리오 전환, 영업이익률 30% 시.."
+    },
+    "specific_data": {
+        "company_name": "비츠로셀",
+        "ticker": "082920",
+        "investment_rating": "매수",
+        "investment_points": [
+            "고마진 포트폴리오 전환",
+            "영업이익률 30% 시대 진입",
+            "캐나다 Innova 인수로 고온전지 글로벌 1위 도약"
+        ],
+        "risk_factors": [
+            "리튬 메탈 단일 공급처 의존 리스크",
+            "계절성으로 인한 단기 주가 변동성 확대 리스크"
+        ],
+        "shareholder_structure": "비츠로테크 34.22%, 기타소액주주 60.44%, 외국인지분율 33.30%"
+    }
+}

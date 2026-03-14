@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "유안타증권",
+        "analyst_name": "백종민",
+        "report_title": "4Q25 Review 일회성 고려 시 양호!!"
+    },
+    "specific_data": {
+        "company_name": "한화에어로스페이스",
+        "ticker": "012450",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "일회성 고려 시 양호한 수익성 기록",
+            "지상방산 부문 매출액 증가",
+            "계단식 성장세 전망"
+        ],
+        "risk_factors": [
+            "일회성 비용 증가",
+            "해외 매출 비중 감소",
+            "국내외 매출 감소"
+        ],
+        "shareholder_structure": "주요주주 한화 외 6 인"
+    }
+}

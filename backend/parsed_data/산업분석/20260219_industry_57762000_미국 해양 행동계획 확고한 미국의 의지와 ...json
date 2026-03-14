@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-19",
+        "brokerage": "iM증권",
+        "analyst_name": "변용진",
+        "report_title": "미국 해양 행동계획 확고한 미국의 의지와 .."
+    },
+    "specific_data": {
+        "sector_name": "조선",
+        "industry_rating": "Overweight",
+        "top_picks": [],
+        "industry_trends": [
+            "미국 해양 행동계획 발표",
+            "조선업 재건 계획 구체화",
+            "한국 조선사 주가 상승 원동력"
+        ],
+        "risk_factors": [
+            "미국 법안 통과 지연",
+            "정치적 불확실성",
+            "미국 내 조선업 이해관계의 복잡성"
+        ]
+    }
+}

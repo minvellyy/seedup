@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "대신증권",
+        "analyst_name": "이지은",
+        "report_title": "비수기 리스크를 확인한 4분기"
+    },
+    "specific_data": {
+        "company_name": "크래프톤",
+        "ticker": "259960",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "4분기 일회성 비용과 ADK 편입 효과를 고려하더라도 영업이익 840억원으로 시장 컨센서스 하회",
+            "신작 '서브노티카2' 출시가 주가 상승의 주요 요인으로 작용할 가능성",
+            "2026 EPS 20,780원에 Target PER 17.9배 적용, 목표주가 370,000원 유지"
+        ],
+        "risk_factors": [
+            "비수기 리스크",
+            "신작 부재에 따른 성장성 제한",
+            "일회성 비용 발생 가능성"
+        ],
+        "shareholder_structure": "장병규 외 31인 21.90%, 외국인지분율 42.37%"
+    }
+}

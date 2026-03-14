@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-06",
+        "brokerage": "Daishin Securities",
+        "analyst_name": "최진영",
+        "report_title": "전쟁에 시달리는 카타르, 다시 각광받는 미국산 LNG"
+    },
+    "specific_data": {
+        "strategy_theme": "미국산 LNG의 수혜",
+        "recommended_portfolio": [
+            "미국 LNG"
+        ],
+        "strategy_logic": [
+            "아시아 국가들의 LNG 수입 다변화",
+            "호르무즈 해협 봉쇄로 인한 카타르 LNG 생산 중단",
+            "미국의 안정된 해상 운송 루트와 공급 능력"
+        ],
+        "quant_factors": [
+            "LNG 가격 상승 가능성",
+            "전 세계 LNG 수출의 20% 중단",
+            "미국의 LNG Capa. 2030년까지 +60% 확장"
+        ]
+    }
+}

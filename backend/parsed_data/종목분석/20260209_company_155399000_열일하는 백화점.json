@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "대신증권",
+        "analyst_name": "유정현",
+        "report_title": "열일하는 백화점"
+    },
+    "specific_data": {
+        "company_name": "롯데쇼핑",
+        "ticker": "023530",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "백화점 기존점 8% 성장하며 전사 실적 개선 견인",
+            "주당 배당금 4,000원으로 상향, 배당을 통한 주주가치 제고",
+            "목표주가를 115,000원으로 상향(+28%)"
+        ],
+        "risk_factors": [
+            "대형마트와 하이마트는 부진 지속",
+            "국내 대형마트 매출은 구조적 수요 부진"
+        ],
+        "shareholder_structure": "주요주주 롯데지주 외 25 인 60.13%, 국민연금공단 8.14%"
+    }
+}

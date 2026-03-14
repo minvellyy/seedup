@@ -1,0 +1,47 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-10",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "SK증권 아침에 슥_2026.02.10"
+    },
+    "specific_data": {
+        "market_summary": "미국 기술주 반등에 상승 마감 코스피, 유럽 M&A 호재 및 양호한 실적 발표에 상승 마감, 중국 반도체 강세에 상승 마감",
+        "macro_indicators": null,
+        "fund_flows": {
+            "foreign_investors": {
+                "net_buy": [
+                    36000,
+                    24000,
+                    12000,
+                    0,
+                    -12000,
+                    -24000
+                ],
+                "net_sell": null
+            },
+            "institutional_investors": {
+                "net_buy": [
+                    0.51,
+                    1.88,
+                    1.85,
+                    0.73
+                ],
+                "net_sell": null
+            },
+            "pension_funds": {
+                "net_buy": null,
+                "net_sell": null
+            },
+            "investment_trusts": {
+                "net_buy": null,
+                "net_sell": null
+            }
+        },
+        "key_news": [
+            "미국의 기술주 강세와 동반해 반도체 관련주 매수세 유입",
+            "기술주 투매 심리 진정되며 AI 관련주 중심의 기관 매수세가 지수 상승을 견인"
+        ]
+    }
+}

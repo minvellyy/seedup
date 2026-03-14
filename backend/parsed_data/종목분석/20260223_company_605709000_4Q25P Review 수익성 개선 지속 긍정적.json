@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-23",
+        "brokerage": "유진투자증권",
+        "analyst_name": "박종선",
+        "report_title": "4Q25P Review 수익성 개선 지속 긍정적"
+    },
+    "specific_data": {
+        "company_name": "쿠콘",
+        "ticker": "294570",
+        "investment_rating": "NR",
+        "investment_points": [
+            "매출액 성장세 유지 및 수익성 개선 지속",
+            "2026년 안정적인 실적 성장 기대",
+            "데이터 부문 매출 성장과 페이먼트 부문 수익성 개선"
+        ],
+        "risk_factors": [
+            "페이먼트 부문 매출 감소",
+            "시장 경쟁 심화"
+        ],
+        "shareholder_structure": "위피앤씨 31.9%, 장영환 6.1%, 엄봉성 6.0%"
+    }
+}

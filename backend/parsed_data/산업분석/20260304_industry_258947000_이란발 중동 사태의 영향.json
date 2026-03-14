@@ -1,0 +1,29 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-04",
+        "brokerage": "하나증권",
+        "analyst_name": "김승준, 하민호",
+        "report_title": "이란발 중동 사태의 영향"
+    },
+    "specific_data": {
+        "sector_name": "건설업",
+        "industry_rating": "BUY",
+        "top_picks": [
+            "아이에스동서",
+            "GS건설"
+        ],
+        "industry_trends": [
+            "수익률은 건설업이 코스피 대비 6.7% 상회",
+            "기관과 연기금이 매도, 외인이 매수",
+            "원전 관련 종목이 크게 상승",
+            "전국 아파트 매매가는 26주 연속 상승",
+            "중동 정세 불안정으로 해외 건설 진행 우려"
+        ],
+        "risk_factors": [
+            "유가 상승으로 인한 인플레이션 압박",
+            "금리 상승으로 자금 조달 부담 증가",
+            "중동 수주 이벤트 지연 가능성"
+        ]
+    }
+}

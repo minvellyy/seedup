@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-03",
+        "brokerage": "유진투자증권",
+        "analyst_name": "황성현",
+        "report_title": "Next Energy(Power & Battery Weekly) - 전쟁.."
+    },
+    "specific_data": {
+        "sector_name": "전력·배터리",
+        "industry_rating": null,
+        "top_picks": [
+            "LG화학",
+            "삼성SDI",
+            "LG에너지솔루션"
+        ],
+        "industry_trends": [
+            "AI 데이터센터용 배터리 공개",
+            "전고체 배터리로 로봇·드론 시장 공략 예정",
+            "전쟁으로 촉발된 AI 경쟁"
+        ],
+        "risk_factors": [
+            "전쟁으로 인한 불확실성",
+            "AI의 군사적 개입 가능성"
+        ]
+    }
+}

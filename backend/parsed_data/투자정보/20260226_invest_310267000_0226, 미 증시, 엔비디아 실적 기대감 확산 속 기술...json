@@ -1,0 +1,36 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-26",
+        "brokerage": "키움증권",
+        "analyst_name": "이성훈",
+        "report_title": "0226, 미 증시, 엔비디아 실적 기대감 확산 속 기술.."
+    },
+    "specific_data": {
+        "strategy_theme": "AI 산업 확장",
+        "recommended_portfolio": [
+            "애플",
+            "마이크로소프트",
+            "알파벳",
+            "메타",
+            "아마존",
+            "테슬라",
+            "엔비디아",
+            "브로드컴",
+            "AMD",
+            "마이크론"
+        ],
+        "strategy_logic": [
+            "엔비디아 실적 발표에 대한 기대감",
+            "AI 공포 심리 완화",
+            "기술주 중심의 저가 매수 자금 유입",
+            "AI 산업 확장 사이클 지속"
+        ],
+        "quant_factors": [
+            "매출 성장",
+            "EPS 증가",
+            "GPM 유지",
+            "정책 동력"
+        ]
+    }
+}

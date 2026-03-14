@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-24",
+        "brokerage": "유진투자증권",
+        "analyst_name": "이현지, 고수영",
+        "report_title": "미디어엔터레저 Weekly 20260210 ~ 2026.."
+    },
+    "specific_data": {
+        "sector_name": "미디어/엔터/레저",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "지난 주 엔터 업종 수익률 전주대비 +2%",
+            "지난 주 미디어 업종 수익률 전주대비 +1%",
+            "지난 주 레저 업종 수익률 전주대비 +1%"
+        ],
+        "risk_factors": [
+            "민희진-하이브 간 풋옵션 소송 리스크",
+            "사법리스크 상존"
+        ]
+    }
+}

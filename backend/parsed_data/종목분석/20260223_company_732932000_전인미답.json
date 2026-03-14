@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-23",
+        "brokerage": "대신증권",
+        "analyst_name": "류형근, 서지원RA",
+        "report_title": "전인미답"
+    },
+    "specific_data": {
+        "company_name": "SK하이닉스",
+        "ticker": "000660",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "2026년 영업이익 전망치를 기존 142조원에서 174조원으로 상향",
+            "판매 정책 변화 현실화 시, 추가 상승 가능",
+            "범용 반도체: 서버 중심의 실수요 폭증과 제한적 생산 증가 속, 가격 상승 폭 확대",
+            "HBM: 제품 불문 DRAM 공급 부족이 지속",
+            "사상 최대 수익성 경신 전망"
+        ],
+        "risk_factors": [
+            "메모리반도체 인플레이션에 따른 세트 출하 부진 우려"
+        ],
+        "shareholder_structure": "주요 주주: 에스케이스퀘어 외 7인 20.07%, 국민연금공단 7.35%"
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "대신증권",
+        "analyst_name": "김회재",
+        "report_title": "조용한 신고가. KT가 찐이다!"
+    },
+    "specific_data": {
+        "company_name": "KT",
+        "ticker": "030200",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "안정적인 실적과 이에 연동한 주주환원으로 조용한 신고가 달성",
+            "6개월 목표주가 74,000원 유지",
+            "현재주가 60,700원",
+            "26E EPS 5,858원에 PER 13배 적용"
+        ],
+        "risk_factors": [
+            "9월 발생한 해킹 사고에 대한 고객 보상 프로그램 발표",
+            "인력 재배치 영향",
+            "경쟁사와의 비교에서 감가비 감소 지연"
+        ],
+        "shareholder_structure": "주요 주주: 현대자동차 외 1인 8.07%, 국민연금공단 7.05%"
+    }
+}

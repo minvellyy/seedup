@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "교보증권",
+        "analyst_name": "김광식",
+        "report_title": "4Q25 NDR Review 완벽한 Risk-Off"
+    },
+    "specific_data": {
+        "company_name": "산일전기",
+        "ticker": "062040",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "4분기 매출액 1,421억원(+31.1% YoY), 영업이익 550억원(+63.4% YoY)으로 컨센서스 상회",
+            "신규수주 1,767억원(+43.6% YoY) 기록",
+            "데이터센터向 수주 성과가 서프라이즈 주요인"
+        ],
+        "risk_factors": [
+            "대손상각비 회수 여부",
+            "신규 수주 추가 확장 여부"
+        ],
+        "shareholder_structure": "박동성 외 2인 55.17%, 국민연금공단 8.25%"
+    }
+}

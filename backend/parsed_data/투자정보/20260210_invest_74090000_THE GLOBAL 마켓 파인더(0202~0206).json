@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-09",
+        "brokerage": "대신증권",
+        "analyst_name": "문건우, 문남중",
+        "report_title": "THE GLOBAL 마켓 파인더(0202~0206)"
+    },
+    "specific_data": {
+        "strategy_theme": "인공지능(AI) 과잉 투자 우려에 인프라/유통/내수 업종 순환매",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "AI 대규모 투자 지속",
+            "미국 및 중국 테마별 주간 수익률 분석",
+            "글로벌 마켓 파인더 분석"
+        ],
+        "quant_factors": [
+            "S&P500 지수 변화율",
+            "NASDAQ 지수 변화율",
+            "NIKKEI225 지수 변화율",
+            "CSI300 지수 변화율"
+        ]
+    }
+}

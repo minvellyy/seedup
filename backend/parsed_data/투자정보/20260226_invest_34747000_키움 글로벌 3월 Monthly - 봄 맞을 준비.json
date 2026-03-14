@@ -1,0 +1,31 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2024-02-24",
+        "brokerage": "키움증권",
+        "analyst_name": "박기현",
+        "report_title": "키움 글로벌 3월 Monthly - 봄 맞을 준비"
+    },
+    "specific_data": {
+        "strategy_theme": "AI 인프라 및 지정학적 리스크 대응",
+        "recommended_portfolio": [
+            "록히드 마틴 (LMT)",
+            "RTX (RTX)",
+            "AST 스페이스모바일 (ASTS)",
+            "버티브 홀딩스 (VRT)",
+            "램버스 (RMBS)",
+            "루멘텀 홀딩스 (LITE)",
+            "블룸 에너지 (BE)"
+        ],
+        "strategy_logic": [
+            "AI 데이터센터 수요 증가에 따른 전력 및 냉각 솔루션 수요 확대",
+            "지정학적 리스크에 따른 방산 및 우주 관련 기업의 성장",
+            "저지연 통신 및 AI 관련 기술의 발전"
+        ],
+        "quant_factors": [
+            "EPS 성장률",
+            "수익성 개선",
+            "시장 점유율 확대"
+        ]
+    }
+}

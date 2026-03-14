@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-12",
+        "brokerage": "유안타증권",
+        "analyst_name": "고선영",
+        "report_title": "서버가 바꾼 수급 방정식, P의 시작과 예고된.."
+    },
+    "specific_data": {
+        "company_name": "삼성전기",
+        "ticker": "009150",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "MLCC 업황의 성장 가능성",
+            "서버 수요 증가",
+            "가격 인상 기대감"
+        ],
+        "risk_factors": [
+            "공급 제약",
+            "시장 변동성"
+        ],
+        "shareholder_structure": "주요주주 삼성전자 외 5 인"
+    }
+}

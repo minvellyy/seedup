@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "대신증권",
+        "analyst_name": "유정현",
+        "report_title": "주요 사업부 실적이 좋았고, 당분간 계속 좋.."
+    },
+    "specific_data": {
+        "company_name": "신세계",
+        "ticker": "004170",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "주요 사업부 실적이 좋았고 당분간 계속 좋을 전망",
+            "백화점 국내 및 인바운드 소비자 매출 호조로 영업이익 개선",
+            "유정현 면세점도 흑자 전환 성공",
+            "백화점 외국인 매출 비중 상승 속도 예상 보다 빠름",
+            "목표주가를 410,000원으로 상향(+28%)"
+        ],
+        "risk_factors": [
+            "달러 대비 위안화 환율 변동",
+            "중국 소비자 심리 지수 변화"
+        ],
+        "shareholder_structure": "정유경 외 2 인 29.17%, 국민연금공단 13.42%, 외국인지분율 17.57%"
+    }
+}

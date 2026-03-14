@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-24",
+        "brokerage": "SK증권",
+        "analyst_name": "한동희",
+        "report_title": "재평가가 필요하다"
+    },
+    "specific_data": {
+        "company_name": "삼성전자",
+        "ticker": "005930",
+        "investment_rating": "매수(유지)",
+        "investment_points": [
+            "AI 수혜 메모리 전체로 확산",
+            "공급은 복합제약 심화",
+            "수요 기반 변화",
+            "경기->AI",
+            "구조적 메모리 위상 격상",
+            "Earnings power의 상향 재정의"
+        ],
+        "risk_factors": [
+            "공급 부족 심화",
+            "생산 믹스, 후공정, 선별이 얽혀 단순 웨이퍼 캐파가 아니게 되는 리스크"
+        ],
+        "shareholder_structure": "삼성생명보험(외15) 19.82%, 국민연금공단 7.75%, 외국인 지분율 51.09%"
+    }
+}

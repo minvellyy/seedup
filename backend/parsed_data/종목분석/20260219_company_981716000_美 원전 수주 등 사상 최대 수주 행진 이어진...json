@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-19",
+        "brokerage": "iM증권",
+        "analyst_name": "이상헌, 장호",
+        "report_title": "美 원전 수주 등 사상 최대 수주 행진 이어진.."
+    },
+    "specific_data": {
+        "company_name": "두산에너빌리티",
+        "ticker": "034020",
+        "investment_rating": "NR",
+        "investment_points": [
+            "미국 원전 수주 증가",
+            "가스터빈 사업 성장",
+            "해외 원전 수주 가시화"
+        ],
+        "risk_factors": [
+            "대미 투자 프로젝트 지연",
+            "원전 건설 역량 부족"
+        ],
+        "shareholder_structure": "외국인지분율 23.6%"
+    }
+}

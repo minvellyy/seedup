@@ -1,0 +1,29 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-03",
+        "brokerage": "키움증권",
+        "analyst_name": "한지영, 최재원, 이성훈",
+        "report_title": "0303, 3월 월간 전망 삼중고 장세 극복 방안"
+    },
+    "specific_data": {
+        "strategy_theme": "삼중고 장세 극복 방안",
+        "recommended_portfolio": [
+            "반도체",
+            "방산",
+            "금융",
+            "백화점",
+            "호텔"
+        ],
+        "strategy_logic": [
+            "저평가된 반도체 중심의 이익 모멘텀 강화",
+            "주주환원 모멘텀 강화",
+            "개인의 국내 증시 참여 확대"
+        ],
+        "quant_factors": [
+            "AI 산업 성장",
+            "반도체 가격 상승",
+            "정치적 불확실성"
+        ]
+    }
+}

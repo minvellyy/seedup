@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-09",
+        "brokerage": "유진투자증권",
+        "analyst_name": "한병화",
+        "report_title": "에너지자립이 필수가 된 대한민"
+    },
+    "specific_data": {
+        "sector_name": "재생에너지",
+        "industry_rating": "OVERWEIGHT",
+        "top_picks": [
+            "SK이터닉스",
+            "대명에너지",
+            "금양그린파워"
+        ],
+        "industry_trends": [
+            "글로벌 정세 변화에 따른 에너지 자립 필요성 증가",
+            "재생에너지 확대를 위한 정책 정당성 증가",
+            "태양광 및 풍력 관련주 주가 강세 지속"
+        ],
+        "risk_factors": [
+            "정부 정책의 일관성 부족",
+            "국제 에너지 가격 변동성",
+            "지정학적 리스크"
+        ]
+    }
+}

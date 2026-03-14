@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "한화투자증권",
+        "analyst_name": "김소혜, 김나우",
+        "report_title": "톡비즈 광고 성장, P와 Q 모두 예상보다 클 .."
+    },
+    "specific_data": {
+        "company_name": "카카오",
+        "ticker": "035720",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "톡비즈 광고 성장",
+            "광고의 인벤토리 증가",
+            "신규 수요 확대",
+            "광고 효율 개선"
+        ],
+        "risk_factors": [
+            "주요 IP 부재로 인한 매출 부진",
+            "보수적인 집행 기조"
+        ],
+        "shareholder_structure": "김범수 (외 76인) 24.1%, 국민연금공단 (외 1인) 7.4%, MAXIMOPTE (외 1인) 6.3%"
+    }
+}

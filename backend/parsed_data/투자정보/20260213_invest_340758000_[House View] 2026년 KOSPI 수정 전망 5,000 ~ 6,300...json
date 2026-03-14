@@ -1,0 +1,45 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-13",
+        "brokerage": "유안타증권",
+        "analyst_name": "김용구",
+        "report_title": "[House View] 2026년 KOSPI 수정 전망 5,000 ~ 6,300.."
+    },
+    "specific_data": {
+        "strategy_theme": "KOSPI 전망 상향조정",
+        "recommended_portfolio": [
+            "삼성전자",
+            "SK하이닉스",
+            "삼성물산",
+            "HD현대중공업",
+            "HD현대일렉트릭",
+            "미래에셋증권",
+            "HD한국조선해양",
+            "KT&G",
+            "NH투자증권",
+            "SK바이오팜",
+            "이수페타시스",
+            "LG이노텍",
+            "한화엔진",
+            "신세계",
+            "미스토홀딩스",
+            "대웅제약",
+            "원텍"
+        ],
+        "strategy_logic": [
+            "반도체 수출의 폭발적 성장",
+            "HBM/D램/낸드 반도체 쇼티지 심화",
+            "KOSPI 순이익 상향조정",
+            "글로벌 매크로 환경의 안정성",
+            "AI 기술혁명 및 AI Capex 슈퍼 사이클"
+        ],
+        "quant_factors": [
+            "KOSPI 예상 순이익",
+            "Target P/E",
+            "글로벌 AI/반도체 슈퍼 사이클",
+            "주주 친화적 재무정책 변화",
+            "외국인 수급 러브콜"
+        ]
+    }
+}

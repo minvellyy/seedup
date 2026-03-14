@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-20",
+        "brokerage": "하나증권",
+        "analyst_name": "김현수, 홍지원",
+        "report_title": "삼성디스플레이 지분 매각에 따른 멀티플 개.."
+    },
+    "specific_data": {
+        "company_name": "삼성SDI",
+        "ticker": "006400",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "삼성디스플레이 지분 매각에 따른 멀티플 개선 전망",
+            "목표주가 상향"
+        ],
+        "risk_factors": [
+            "매각 규모 및 조건이 확정되지 않아 예상 현금 유입 규모 불확실",
+            "지분법이익 감소에 따른 순이익 감소 가능성"
+        ],
+        "shareholder_structure": "삼성전자 외 4 인 20.31%, 국민연금공단 6.87%"
+    }
+}

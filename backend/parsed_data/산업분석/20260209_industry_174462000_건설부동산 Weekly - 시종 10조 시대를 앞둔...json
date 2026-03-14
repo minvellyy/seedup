@@ -1,0 +1,32 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-09",
+        "brokerage": "유진투자증권",
+        "analyst_name": "류태환",
+        "report_title": "건설부동산 Weekly - 시종 10조 시대를 앞둔.."
+    },
+    "specific_data": {
+        "sector_name": "건설/부동산",
+        "industry_rating": null,
+        "top_picks": [
+            "현대건설",
+            "삼성E&A",
+            "GS건설",
+            "대우건설",
+            "DL이앤씨",
+            "HDC현대산업개발"
+        ],
+        "industry_trends": [
+            "주간 아파트가격 동향",
+            "전국 아파트 매매가격지수 상승",
+            "리츠 시장 시가총액 증가",
+            "재개발 및 재건축 프로젝트 증가"
+        ],
+        "risk_factors": [
+            "금리 인상",
+            "부동산 시장의 변동성",
+            "정책 변화에 따른 리스크"
+        ]
+    }
+}

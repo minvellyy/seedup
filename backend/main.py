@@ -52,6 +52,34 @@ except Exception as _e:
     print(f"[WARNING] 분석 라우터 로드 실패: {_e}")
     _ANALYSIS_ROUTER_AVAILABLE = False
 
+# 뉴스 RAG 라우터 (chromadb / news_model 패키지 없이도 서버 기동 가능)
+try:
+    from routers.news import router as news_router
+    from apscheduler.schedulers.background import BackgroundScheduler
+    from apscheduler.triggers.cron import CronTrigger
+    _NEWS_ROUTER_AVAILABLE = True
+except Exception as _e:
+    print(f"[WARNING] 뉴스 라우터 로드 실패: {_e}")
+    _NEWS_ROUTER_AVAILABLE = False
+
+# ESG 분석 라우터 (esg_model / rag_worker 없이도 서버 기동 가능)
+try:
+    from routers.esg import router as esg_router
+    _ESG_ROUTER_AVAILABLE = True
+except Exception as _e:
+    print(f"[WARNING] ESG 라우터 로드 실패: {_e}")
+    _ESG_ROUTER_AVAILABLE = False
+
+# 증권사 리포트 RAG 라우터 (reports_model / rag_worker 없이도 서버 기동 가능)
+try:
+    from routers.reports import router as reports_router
+    _REPORTS_ROUTER_AVAILABLE = True
+except Exception as _e:
+    print(f"[WARNING] 리포트 라우터 로드 실패: {_e}")
+    _REPORTS_ROUTER_AVAILABLE = False
+
+from routers.chatbot import router as chatbot_router
+
 # Pydantic 모델 정의
 class SignupRequest(BaseModel):
     email: str
@@ -250,15 +278,15 @@ async def _db_full_price_sync(skip_ws_codes: set = None) -> int:
 
 
 async def _db_full_price_sync_loop() -> None:
-    """REST API로 WS 미구독 종목(STOCK+ETF)을 주기적으로 갱신 (기본 3시간 주기, 시작 시 즉시 1회 실행)."""
+    """REST API로 WS 미구독 종목(STOCK+ETF)을 주기적으로 갱신 (기본 3시간 주기).
+    
+    NOTE: 시작 직후 즉시 실행을 비활성화했습니다. KIS API 호출량이 많아 500 오류가 발생할 수 있습니다.
+    필요시 주기적 갱신만 사용하거나, 더 긴 간격으로 설정하세요.
+    """
     from kis_ws_client import get_price_store
 
-    # 서버 시작 직후 즉시 1회 실행
-    await asyncio.sleep(5)  # WebSocket 연결 안정화 대기
-    logger.info("DB 전체 가격 갱신 시작 (초기 실행, STOCK+ETF)...")
-    ws_codes = set(get_price_store().keys())
-    updated = await _db_full_price_sync(skip_ws_codes=ws_codes)
-    logger.info("DB 전체 가격 갱신 초기 실행 완료: %d개", updated)
+    # 서버 시작 직후 즉시 실행하지 않음 (KIS API 500 오류 방지)
+    logger.info("DB 전체 가격 갱신: 첫 실행은 %d초 후에 시작됩니다.", _DB_FULL_SYNC_INTERVAL)
 
     while True:
         await asyncio.sleep(_DB_FULL_SYNC_INTERVAL)
@@ -392,6 +420,39 @@ async def startup_event():
         except Exception as ws_err:
             print(f"KIS WebSocket init skipped: {ws_err}")
 
+        # RAG Worker 통합 스케줄러 (뉴스 08:00 / 리포트 ETL 08:05)
+        if _NEWS_ROUTER_AVAILABLE or _REPORTS_ROUTER_AVAILABLE:
+            try:
+                import threading
+                _rag_scheduler = BackgroundScheduler()
+
+                # 뉴스 daily_batch — 매일 08:00
+                if _NEWS_ROUTER_AVAILABLE:
+                    from rag_worker.scheduler import run_news_daily_batch
+                    _rag_scheduler.add_job(
+                        lambda: threading.Thread(target=run_news_daily_batch, daemon=True).start(),
+                        trigger=CronTrigger(hour=8, minute=0),
+                        id="daily_news_update",
+                        replace_existing=True,
+                    )
+                    print("✅ 뉴스 스케줄러 등록 (매일 08:00)")
+
+                # 리포트 ETL — 매일 08:05
+                if _REPORTS_ROUTER_AVAILABLE:
+                    from rag_worker.scheduler import run_reports_etl
+                    _rag_scheduler.add_job(
+                        lambda: threading.Thread(target=run_reports_etl, daemon=True).start(),
+                        trigger=CronTrigger(hour=8, minute=5),
+                        id="daily_reports_etl",
+                        replace_existing=True,
+                    )
+                    print("✅ 리포트 ETL 스케줄러 등록 (매일 08:05)")
+
+                _rag_scheduler.start()
+                app.state.rag_scheduler = _rag_scheduler
+                print("✅ RAG Worker 스케줄러 시작")
+            except Exception as sched_err:
+                print(f"RAG Worker 스케줄러 시작 실패: {sched_err}")
         # DB 가격 동기화 백그라운드 태스크 시작
         asyncio.create_task(_db_price_sync_loop())          # WS 40종목: 60초 주기
         asyncio.create_task(_db_full_price_sync_loop())     # REST 전체: 3시간 주기 + 시작 즉시 1회
@@ -1043,6 +1104,7 @@ async def health():
 
 from routers.stream import router as stream_router
 from routers.holdings import router as holdings_router
+from routers.inquiry import router as inquiry_router
 
 # Include routers
 app.include_router(survey.router, prefix="/survey", tags=["Survey"])
@@ -1051,6 +1113,9 @@ app.include_router(recommendations.router)
 app.include_router(instruments_router)   # /api/instruments/stocks, /etfs
 app.include_router(stream_router)        # /api/stream/prices
 app.include_router(holdings_router, prefix="/api")  # /api/holdings
+app.include_router(inquiry_router)       # /api/inquiries
+
+app.include_router(chatbot_router)  # 챗봇 라우터 등록
 
 # 종목/포트폴리오 추천 라우터 등록 (/api/v1/stocks, /api/v1/portfolio)
 if _RECOMMEND_ROUTERS_AVAILABLE:
@@ -1059,6 +1124,23 @@ if _RECOMMEND_ROUTERS_AVAILABLE:
 
 if _ANALYSIS_ROUTER_AVAILABLE:
     app.include_router(analysis_router, prefix="/api/v1")
+if _ESG_ROUTER_AVAILABLE:
+    app.include_router(esg_router, prefix="/api/v1")
+if _REPORTS_ROUTER_AVAILABLE:
+    app.include_router(reports_router, prefix="/api/v1")
+
+if _NEWS_ROUTER_AVAILABLE:
+    app.include_router(news_router, prefix="/api/v1")
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    for attr in ("rag_scheduler", "news_scheduler"):
+        scheduler = getattr(app.state, attr, None)
+        if scheduler and scheduler.running:
+            scheduler.shutdown(wait=False)
+    print("🛑 RAG Worker 스케줄러 종료")
+
 
 if __name__ == '__main__':
     # FastAPI 앱 실행

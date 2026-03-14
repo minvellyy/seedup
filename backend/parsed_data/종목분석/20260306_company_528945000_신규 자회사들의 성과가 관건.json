@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-06",
+        "brokerage": "한화투자증권",
+        "analyst_name": "김소혜, 김나우",
+        "report_title": "신규 자회사들의 성과가 관건"
+    },
+    "specific_data": {
+        "company_name": "더블유게임즈",
+        "ticker": "192080",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "신규 자회사들의 성과가 관건",
+            "탑라인 성장 및 수익성 제고 전망",
+            "저평가된 밸류에이션 해소 기대"
+        ],
+        "risk_factors": [
+            "글로벌 소셜카지노 기업들 대비 낮은 수익성",
+            "비용 통제 실패 시 수익성 악화 가능성"
+        ],
+        "shareholder_structure": "김가람 (외 7인) 45.0%, 자사주 (외 1인) 8.9%, 국민연금공단 (외 1인) 7.0%"
+    }
+}

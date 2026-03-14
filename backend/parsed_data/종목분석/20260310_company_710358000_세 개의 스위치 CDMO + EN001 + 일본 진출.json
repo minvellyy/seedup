@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-10",
+        "brokerage": "한국IR협의회",
+        "analyst_name": "김승준, 이금민",
+        "report_title": "세 개의 스위치 CDMO + EN001 + 일본 진출"
+    },
+    "specific_data": {
+        "company_name": "이엔셀",
+        "ticker": "456070",
+        "investment_rating": null,
+        "investment_points": [
+            "2026년은 ‘매출원 다변화’가 현실화되는 첫 해",
+            "EN001-CMT는 임상 1b상 반복투여 내약성 신호 확보",
+            "일본 재생의료 신사업은 상업화 경로가 비교적 명확"
+        ],
+        "risk_factors": [
+            "2025년 12월 발행한 AAV 관련 전환사채의 리픽싱 및 전환청구 가능성",
+            "신규 매출원 가시화 과정에서의 수급 변동 가능성"
+        ],
+        "shareholder_structure": "장종욱 대표이사 17.99%, 원앤파트너스 10.55%, 기타 0.14%"
+    }
+}

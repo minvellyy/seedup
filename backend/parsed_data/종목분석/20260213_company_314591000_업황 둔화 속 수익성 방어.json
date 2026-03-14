@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-13",
+        "brokerage": "유안타증권",
+        "analyst_name": "최지운",
+        "report_title": "업황 둔화 속 수익성 방어"
+    },
+    "specific_data": {
+        "company_name": "HMM",
+        "ticker": "011200",
+        "investment_rating": "HOLD",
+        "investment_points": [
+            "업황 둔화 속 수익성 방어",
+            "벌크 부문의 실적 개선",
+            "영업이익 기준 시장 컨센서스를 상회"
+        ],
+        "risk_factors": [
+            "컨테이너 부문 이익 감소",
+            "신조선 인도 확대에 따른 공급 부담",
+            "운임 하방 압력 확대 가능성"
+        ],
+        "shareholder_structure": "주요주주 한국산업은행"
+    }
+}

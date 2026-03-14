@@ -1,0 +1,36 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-05",
+        "brokerage": "투자분석부",
+        "analyst_name": null,
+        "report_title": "[IBKS Daily] Start with IBKS(2026.03.05) 뉴욕증시,.."
+    },
+    "specific_data": {
+        "strategy_theme": null,
+        "recommended_portfolio": [
+            "삼성전자",
+            "셀트리온",
+            "SK하이닉스",
+            "삼성SDI",
+            "기아",
+            "한화솔루션",
+            "한미반도체",
+            "S-Oil"
+        ],
+        "strategy_logic": [
+            "중동 지정학적 불확실성이 장기화할 수 있다는 우려에 하락",
+            "유가 공급 차질이 물가 상승으로 이어질 경우 경기 둔화와 기업 실적 악화",
+            "미국·이란 물밑 접촉설에 상승",
+            "스콧 베선트 미 재무장관의 호르무즈 해협 유조 선 적체 해소 방안 발표 예고",
+            "이란 정보기관이 제3국 정보기관을 통해 전쟁 종식을 위한 협상 가능성을 미 CIA에 타진"
+        ],
+        "quant_factors": [
+            "KOSPI 하락률",
+            "KOSDAQ 하락률",
+            "미국 ISM 서비스 지수",
+            "유로존 HCOB 서비스업 PMI",
+            "유로존 HCOB 종합 PMI"
+        ]
+    }
+}

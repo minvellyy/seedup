@@ -1,0 +1,32 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-03",
+        "brokerage": "유안타증권",
+        "analyst_name": "김용구",
+        "report_title": "Conviction Call"
+    },
+    "specific_data": {
+        "strategy_theme": "미국/이란 무력 충돌과 투자전략 함의 판단",
+        "recommended_portfolio": [
+            "조선",
+            "상사/자본재(방산)",
+            "정유",
+            "화학",
+            "비철",
+            "반도체",
+            "자동차"
+        ],
+        "strategy_logic": [
+            "국내외 증시 원유 공급/가격 리스크 관련 허용한계는 WTI 유가 100$ 수준에 해당",
+            "한국증시는 글로벌 대표 하이 베타 마켓으로 WTI 100$ 내외의 고유가 부담에 맞서는 내성이 크다",
+            "중동 지정학적 불확실성 관련 적극적 사주경계를 유지하더라도, WTI 100$ 이내의 상승이라면 증시 측면에선 통제 및 헤지가 가능"
+        ],
+        "quant_factors": [
+            "WTI 유가",
+            "글로벌 경기/교역/이익 모멘텀",
+            "AI Capex 슈퍼 사이클",
+            "KOSPI 12개월 선행 P/E"
+        ]
+    }
+}

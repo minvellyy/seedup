@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-02",
+        "brokerage": "삼성증권",
+        "analyst_name": "백재승",
+        "report_title": "시황 회복과 재무 계획 모두 관심사"
+    },
+    "specific_data": {
+        "company_name": "현대제철",
+        "ticker": "004020",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "4Q25 연결 기준 영업이익은 433억 원으로, 컨센서스 63% 하회",
+            "봉형강류는 아직 시황 부진 지속 중인 가운데, 판재류는 전분기 대비 판매량 감소에도 스프레드 개선 경험",
+            "미국 전기로 투자 재원 부담 완화 기대 고조"
+        ],
+        "risk_factors": [
+            "자회사 실적 둔화로 인한 영업이익 감소",
+            "철강 시황 회복 지연"
+        ],
+        "shareholder_structure": "주식수 133,445,785주 (62.6% 유동주식 비중)"
+    }
+}

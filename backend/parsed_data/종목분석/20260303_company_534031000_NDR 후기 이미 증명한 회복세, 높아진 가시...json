@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-03",
+        "brokerage": "DS투자증권",
+        "analyst_name": "최태용",
+        "report_title": "NDR 후기 이미 증명한 회복세, 높아진 가시.."
+    },
+    "specific_data": {
+        "company_name": "금호타이어",
+        "ticker": "073240",
+        "investment_rating": "매수",
+        "investment_points": [
+            "화재 이후 빠른 정상화 증명",
+            "판가 인상과 생산지 이원화로 대응",
+            "2026년 매출액 5.1조원, 영업이익 6,449억원 전망"
+        ],
+        "risk_factors": [
+            "EU의 대중국 타이어 관세",
+            "EUDR 시행에 따른 원자재 공급 리스크",
+            "채권단 보유 지분 오버행"
+        ],
+        "shareholder_structure": "함평 싱웨이코리아(외 7인) 60.5%, 금호타이어우리사주(외 1인) 1.5%"
+    }
+}

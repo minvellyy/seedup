@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-25",
+        "brokerage": "한화리서치",
+        "analyst_name": "김도하",
+        "report_title": "12월 연체율 개선 전망"
+    },
+    "specific_data": {
+        "sector_name": "은행",
+        "industry_rating": "Positive",
+        "top_picks": [],
+        "industry_trends": [
+            "2025년 말 연체율 0.50%(+6bp YoY)로 연중 최저 상승폭으로 마감",
+            "신규 연체의 감소와 연체 정리 규모의 증가가 동시에 영향을 미침",
+            "2026년 중 업종 연체율이 개선(YoY) 추세로 전환될 것이라는 전망 유지"
+        ],
+        "risk_factors": [
+            "대출 성장 부진",
+            "시장금리 상승이 건전성 부담으로 전이되는 시점"
+        ]
+    }
+}

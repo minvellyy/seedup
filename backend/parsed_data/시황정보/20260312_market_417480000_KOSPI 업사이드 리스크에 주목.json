@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2023-03-10",
+        "brokerage": "메리츠증권",
+        "analyst_name": "염승준",
+        "report_title": "KOSPI 업사이드 리스크에 주목"
+    },
+    "specific_data": {
+        "market_summary": "KOSPI 업사이드 리스크에 주목",
+        "macro_indicators": "KOSPI 지수에 내재된 할인율을 도출할 수 있다. KOSPI ERP는 8.59%이며, 3월 4일 KOSPI가 -12.1% 급락했을 때 관측된 ERP는 9.43%이다.",
+        "fund_flows": "미국-이란 전쟁 조기 종료 시 KOSPI 적정 PBR은 2.18배, 지수 환산 시 6,806pt가 도출된다.",
+        "key_news": [
+            "미국-이란 공습에 따른 지정학적 리스크 발생",
+            "KOSPI 급락은 펀더멘털 변화에 있기 보다는 Risk Premium 상승에 따른 할인율 체계 변동에 기인",
+            "KOSPI는 역사적으로 중동 전쟁 발발 시 'Buy the dip' 전략을 지지"
+        ]
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-11",
+        "brokerage": "하나증권",
+        "analyst_name": "이기훈, 김현수",
+        "report_title": "스트레이키즈 Everywhere"
+    },
+    "specific_data": {
+        "company_name": "JYP Ent.",
+        "ticker": "035900",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "2026년 예상 P/E 17배로 저평가 구간",
+            "스트레이키즈의 높은 서구권 팬덤으로 앨범/콘서트/MD 등 전 부문에서 호실적을 달성",
+            "2026년에는 사상 최대 영업이익(1,769억원, +14%)을 전망"
+        ],
+        "risk_factors": [
+            "주가는 부진하나 저평가 구간으로 판단",
+            "환율 효과"
+        ],
+        "shareholder_structure": "박진영 외 3 인 15.95%"
+    }
+}

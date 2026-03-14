@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "DS투자증권",
+        "analyst_name": "장지혜, 강태호",
+        "report_title": "플랫폼의 CJ. K-Food 플랫폼으로 성장 필요"
+    },
+    "specific_data": {
+        "company_name": "CJ제일제당",
+        "ticker": "097950",
+        "investment_rating": "매수",
+        "investment_points": [
+            "K-Food 플랫폼으로 성장 필요",
+            "해외 식품 중심 실적 성장 전망",
+            "비용 효율화로 원가 부담 상쇄"
+        ],
+        "risk_factors": [
+            "국내 소비 위축",
+            "원재료비 상승",
+            "경쟁 심화"
+        ],
+        "shareholder_structure": "CJ(외 8인) 45.5%, 국민연금공단(외 1인) 7.8%"
+    }
+}

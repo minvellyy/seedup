@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "키움증권",
+        "analyst_name": "권준수",
+        "report_title": "실적 차별화 행보 지속"
+    },
+    "specific_data": {
+        "company_name": "대주전자재료",
+        "ticker": "078600",
+        "investment_rating": "BUY(Maintain)",
+        "investment_points": [
+            "실적 차별화 행보 지속",
+            "올해도 높은 수익성이 기대됨",
+            "신규 고객사 논의 진행 중"
+        ],
+        "risk_factors": [
+            "전기차 판매 부진에 따른 재고조정",
+            "형광체 사업부의 판매량 증가 미비"
+        ],
+        "shareholder_structure": "주요 주주 임중규 외 10인 27.4%"
+    }
+}

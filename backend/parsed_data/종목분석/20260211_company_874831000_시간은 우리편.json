@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "유진투자증권",
+        "analyst_name": "정의훈",
+        "report_title": "시간은 우리편"
+    },
+    "specific_data": {
+        "company_name": "네오위즈",
+        "ticker": "095660",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "4분기 매출액 1,063억원(+19%yoy), 영업이익 47억원(-32%yoy). 영업이익 컨센서스(100억원) 하회",
+            "'Shape of Dreams'는 2주 만에 글로벌 판매량 50만장을 넘겼으며, 올해 연초까지 누적 100만장 판매량을 달성",
+            "주요 기존작(P의거짓, 브더2 등)의 DLC 출시 및 라이브서비스를 통해 꾸준히 매출을 발생시키고 있음"
+        ],
+        "risk_factors": [
+            "영업비용 증가로 인한 수익성 악화",
+            "신작 출시 지연에 따른 매출 감소 가능성"
+        ],
+        "shareholder_structure": "나성균 (외 13인) 37.7%, 자사주 (외 1인) 9.6%"
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-03",
+        "brokerage": "DS투자증권",
+        "analyst_name": "김민정",
+        "report_title": "FDA, 초희귀질환 대상 규제 완화_RNA 기업들 .."
+    },
+    "specific_data": {
+        "sector_name": "제약·바이오",
+        "industry_rating": null,
+        "top_picks": [
+            "올릭스",
+            "알지노믹스"
+        ],
+        "industry_trends": [
+            "FDA, 초희귀질환 대상 규제 완화",
+            "임상 구조 단순화 및 개발 비용 절감",
+            "gene level valuation 적용 필요"
+        ],
+        "risk_factors": [
+            "제한적인 환자 수",
+            "낮은 PoS(Probability of Success)"
+        ]
+    }
+}

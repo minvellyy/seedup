@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "iM증권",
+        "analyst_name": "배세호",
+        "report_title": "택배 MS 상승, 주가 상승의 핵심 동인"
+    },
+    "specific_data": {
+        "company_name": "CJ대한통운",
+        "ticker": "000120",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "택배 물동량 성장과 택배 시장 점유율 회복",
+            "목표주가 190,000원으로 상향",
+            "주가 상승 여력 39.0%"
+        ],
+        "risk_factors": [
+            "쿠팡의 성장에 따른 택배 물동량 감소 우려",
+            "택배 단가 하락"
+        ],
+        "shareholder_structure": "주요 주주 지분율: 외국인 16.0%"
+    }
+}

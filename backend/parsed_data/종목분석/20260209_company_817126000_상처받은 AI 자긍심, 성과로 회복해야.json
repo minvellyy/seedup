@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-09",
+        "brokerage": "유진투자증권",
+        "analyst_name": "정의훈",
+        "report_title": "상처받은 AI 자긍심, 성과로 회복해야"
+    },
+    "specific_data": {
+        "company_name": "NAVER",
+        "ticker": "035420",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "4분기 매출액 3.19조원(+11%yoy), 영업이익 6,106억원(+13%yoy)으로 시장 컨센서스(6,044억원) 부합",
+            "커머스 광고를 포함한 전체 광고 매출 성장률은 +8.8%yoy로 전분기(+10.5%yoy) 대비 둔화됨",
+            "올해 상반기는 플러스스토어 효과 및 쿠팡 사태로 인한 반사 수혜로 커머스가 실적을 견인할 전망"
+        ],
+        "risk_factors": [
+            "서치플랫폼 매출은 역성장(-0.5%yoy) 기록",
+            "정부의 독자 AI 파운데이션 모델 개발 사업 탈락이 부정적 영향",
+            "AI 서비스에 대한 시장의 기대를 반감시킬 가능성"
+        ],
+        "shareholder_structure": "국민연금공단 9.3%, BlackRock Fund Advisors 6.1%"
+    }
+}

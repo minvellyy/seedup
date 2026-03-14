@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-27",
+        "brokerage": "하나증권",
+        "analyst_name": "유재선, 성무규",
+        "report_title": "올해도 피할 수 없었던 해외사업 손상차손"
+    },
+    "specific_data": {
+        "company_name": "한국가스공사",
+        "ticker": "036460",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "목표주가 55,000원, 투자의견 매수 유지",
+            "4분기 실적은 시장 기대치를 하회했으나 특별히 유의할 사안은 아님",
+            "민수용 미수금 감소가 긍정적이며 안정적인 회수 국면이 이어질 가능성"
+        ],
+        "risk_factors": [
+            "해외사업 손상차손",
+            "장기 유가 전망 하락에 따른 손실",
+            "배당 축소"
+        ],
+        "shareholder_structure": "대한민국정부(기획재정부) 외 1 인 46.63%, 국민연금공단 7.68%"
+    }
+}

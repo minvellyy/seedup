@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-06",
+        "brokerage": "삼성증권",
+        "analyst_name": "최민하, 강영훈",
+        "report_title": "이익 성장 사이클 재개"
+    },
+    "specific_data": {
+        "company_name": "스튜디오드래곤",
+        "ticker": "253450",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "4분기 영업이익은 185억원으로 컨센서스 9% 상회",
+            "제작 편수 증가와 IP 사업 등 신사업 구체화로 이익 턴어라운드 예상"
+        ],
+        "risk_factors": [
+            "해외 공동 제작 드라마의 성과 불확실성",
+            "콘텐츠 공급 플랫폼의 변화에 따른 리스크"
+        ],
+        "shareholder_structure": "주요 주주 지분율: 6.25%, 4.68%, 54.38%"
+    }
+}

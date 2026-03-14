@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-13",
+        "brokerage": "DS투자증권",
+        "analyst_name": "김수현, 강태호",
+        "report_title": "27년 이후 수요까지 대비한 증설 전망"
+    },
+    "specific_data": {
+        "company_name": "두산",
+        "ticker": "000150",
+        "investment_rating": "매수",
+        "investment_points": [
+            "27년 이후 수요 대비한 증설 전망",
+            "N사향 매출 폭발적 증가",
+            "전자 BG 매출이 당사 추정치를 상회"
+        ],
+        "risk_factors": [
+            "Inorganic 딜의 우려",
+            "무산 시 주가에 중립적 영향"
+        ],
+        "shareholder_structure": "박정원(외 27인) 40.9%, 자사주(외 1인) 16.3%"
+    }
+}

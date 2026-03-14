@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "SK증권",
+        "analyst_name": "이선경",
+        "report_title": "4Q25 Review 견조한 실적"
+    },
+    "specific_data": {
+        "company_name": "대웅제약",
+        "ticker": "069620",
+        "investment_rating": "매수(유지)",
+        "investment_points": [
+            "수익성 개선 지속",
+            "톡신과 디지털 헬스케어 사업부 성장에 주목",
+            "디지털 헬스케어의 고성장으로 수익성 개선 지속 기대"
+        ],
+        "risk_factors": [
+            "경쟁 심화",
+            "약가 인하"
+        ],
+        "shareholder_structure": "대웅(외4) 61.20%, 국민연금공단 9.98%, 외국인 지분율 16.00%"
+    }
+}

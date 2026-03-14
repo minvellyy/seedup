@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-02-24",
+        "brokerage": "한화투자증권",
+        "analyst_name": "박세연, 김예인",
+        "report_title": "[ESG & Transition] 통키[通 Keys] Transitio.."
+    },
+    "specific_data": {
+        "sector_name": "탄소배출권",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "EU 탄소배출권 가격 70€/t 안팎의 변동성 장세 형성",
+            "정책 불확실성으로 70€/t 부근의 박스권 장세 지속 전망"
+        ],
+        "risk_factors": [
+            "정책 불확실성",
+            "수요 둔화",
+            "에너지 및 지정학적 요인"
+        ]
+    }
+}

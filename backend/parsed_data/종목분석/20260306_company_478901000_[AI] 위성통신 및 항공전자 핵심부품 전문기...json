@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-03",
+        "brokerage": "한국IR협의회기업리서치센터",
+        "analyst_name": null,
+        "report_title": "[AI] 위성통신 및 항공전자 핵심부품 전문기.."
+    },
+    "specific_data": {
+        "company_name": "제노코",
+        "ticker": "361390",
+        "investment_rating": null,
+        "investment_points": [
+            "X-Band Transmitter에서의 기술력",
+            "750Mbps 전송속도",
+            "국산화된 X-Band Transmitter는 제노코의 장비가 유일",
+            "해외 특허 보유"
+        ],
+        "risk_factors": [
+            "정부 예산 변동에 따른 사업 규모 축소 가능성",
+            "시장 변동성",
+            "환율 변동에 따른 실적 불확실성"
+        ],
+        "shareholder_structure": "최대주주는 한국항공우주산업(주)으로 37.95%의 지분 보유, 2대 주주는 유태삼으로 12.27% 보유. 최대주주와 특수관계인 포함 총 지분율은 50.22%."
+    }
+}

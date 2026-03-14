@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-12",
+        "brokerage": "SK증권",
+        "analyst_name": "이선경",
+        "report_title": "4Q25 Review 26 년을 기대하며"
+    },
+    "specific_data": {
+        "company_name": "유한양행",
+        "ticker": "000100",
+        "investment_rating": "매수(유지)",
+        "investment_points": [
+            "로열티 매출 성장에 따른 수익성 개선 필요",
+            "매출 성장의 핵심은 임상적 이득 증명",
+            "상반기 결과 발표 주목"
+        ],
+        "risk_factors": [
+            "R&D 비용 증가",
+            "유럽 마일스톤 이월로 컨센 하회"
+        ],
+        "shareholder_structure": "유한재단(외2) 16.03%, 국민연금공단 7.88%, 외국인 지분율 17.89%"
+    }
+}

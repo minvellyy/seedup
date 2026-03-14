@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-26",
+        "brokerage": "하나증권",
+        "analyst_name": "윤재성, 김형준",
+        "report_title": "First Solar가 확인해 준 미국 내 공급망 구.."
+    },
+    "specific_data": {
+        "sector_name": "태양광",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "한화솔루션(009830)",
+            "OCI홀딩스(010060)"
+        ],
+        "industry_trends": [
+            "First Solar의 공급망 구축 중요성",
+            "미국 내 공급망 구축의 필요성",
+            "페로브스카이트의 상용화 개발"
+        ],
+        "risk_factors": [
+            "관세 및 물류 비용 증가",
+            "저율 가동에 따른 고정비 부담",
+            "상업화에 필요한 기술적 문제"
+        ]
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-08",
+        "brokerage": "SK증권",
+        "analyst_name": "한승한",
+        "report_title": "한수위 호르무즈 해협 봉쇄 이전과 이후 점.."
+    },
+    "specific_data": {
+        "sector_name": "조선업",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "HD한국조선해양",
+            "HD현대중공업"
+        ],
+        "industry_trends": [
+            "호르무즈 해협 봉쇄로 인한 원유 수송 항로 변화",
+            "VLCC 및 LNGC 운임 급등",
+            "조선업 신조 발주 사이클 가능성"
+        ],
+        "risk_factors": [
+            "이란 전쟁의 장기화 가능성",
+            "호르무즈 해협 봉쇄의 지속"
+        ]
+    }
+}

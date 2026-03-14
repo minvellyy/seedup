@@ -1,0 +1,29 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-03",
+        "brokerage": "하나증권",
+        "analyst_name": "최정욱, CFA, 정소영",
+        "report_title": "배당락보다 더 크게 하락한 주가. MSCI 리밸.."
+    },
+    "specific_data": {
+        "sector_name": "은행",
+        "industry_rating": "매수",
+        "top_picks": [
+            "KB금융",
+            "신한지주"
+        ],
+        "industry_trends": [
+            "5대 시중은행의 다주택자 주담대 잔액 증가",
+            "자사주 소각 의무화 법안 통과",
+            "개인사업자 온라인 대출 갈아타기 서비스 확대",
+            "금감원 제재심의 과징금 논의",
+            "미국과 이란의 긴장 고조"
+        ],
+        "risk_factors": [
+            "지정학적 리스크 확대",
+            "미국 대형 핀테크기업의 대규모 감원",
+            "금융위 정례회의에서의 과징금 결정 불확실성"
+        ]
+    }
+}

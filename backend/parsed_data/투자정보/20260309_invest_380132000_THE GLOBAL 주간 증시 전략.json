@@ -1,0 +1,48 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-06",
+        "brokerage": "대신증권",
+        "analyst_name": "문남중, 문건우",
+        "report_title": "THE GLOBAL 주간 증시 전략"
+    },
+    "specific_data": {
+        "strategy_theme": "지정학 위기와 투자 기회",
+        "recommended_portfolio": [
+            "iShares Core MSCI Emerging Markets (IEMG)",
+            "Invesco QQQ Trust Series 1 (QQQ)",
+            "Xtrackers Harvest CSI300 China A-Shares ETF (ASHR)",
+            "iShares MSCI India ETF (INDA)",
+            "iShares MSCI Taiwan ETF (EWT)",
+            "iShares MSCI South Korea ETF (EWY)",
+            "Technology Select Sector SPDR (XLK)",
+            "Materials Select Sector SPDR (XLB)",
+            "Industrial Select Sector SPDR Fund (XLI)",
+            "Global X Artificial Intelligence & Technology ETF (AIQ)",
+            "iShares Semiconductor ETF (SOXX)",
+            "Health Care Select Sector SPDR (XLV)",
+            "Global X Management Co LLC (URA)",
+            "VanEck Uranium and Nuclear Energy ETF (NLR)",
+            "Defiance Quantum ETF (QTUM)",
+            "Global X Robotics & Artificial Intelligence ETF (BOTZ)",
+            "iShares 7-10 Year Treasury Bond ETF (IEF)",
+            "SPDR Gold Shares (GLD)",
+            "United States Copper Index Fund (CPER)",
+            "Vanguard Real Estate Index Fund (VNQ)",
+            "Invesco DB US Dollar Index Bearish Fund (UDN)",
+            "Invesco CurrencyShares Japanese Yen Trust (FXY)"
+        ],
+        "strategy_logic": [
+            "지정학적 위기 발생 시 증시는 하락 후 빠른 회복",
+            "과거 16번의 지정학적 위기에서 S&P500 지수는 하락 후 상승 전환",
+            "미국의 베네수엘라 공습과 그린란드 확보 의지에 따른 디커플링 예상",
+            "3월 글로벌 증시는 점진적으로 상승 흐름을 보일 것"
+        ],
+        "quant_factors": [
+            "미국 금리 인하 사이클",
+            "AI 관련 기업의 투자 증가",
+            "중국의 경제 성장률",
+            "반도체 및 첨단 기술 제품의 수요 증가"
+        ]
+    }
+}

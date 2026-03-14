@@ -1,0 +1,32 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-09",
+        "brokerage": "대신증권",
+        "analyst_name": "김귀연",
+        "report_title": "중동 전쟁 영향 점검과 시나리오별 투자전략"
+    },
+    "specific_data": {
+        "sector_name": "자동차/부품",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "기아",
+            "현대차",
+            "현대위아",
+            "SNT모티브",
+            "현대오토에버"
+        ],
+        "industry_trends": [
+            "중동 전쟁의 장기화 우려로 자동차 업종 주가 하락",
+            "로봇 및 자율주행 관련 신사업 모멘텀 지속",
+            "중동 리스크에 따른 자동차 수요 위축 우려"
+        ],
+        "risk_factors": [
+            "중동 전쟁의 지속 여부",
+            "에너지 가격 상승",
+            "운임 및 물류 차질",
+            "금리 인하 지연",
+            "글로벌 경기 위축"
+        ]
+    }
+}

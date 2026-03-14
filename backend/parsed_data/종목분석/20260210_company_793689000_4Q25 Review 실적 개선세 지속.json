@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-10",
+        "brokerage": "유진투자증권",
+        "analyst_name": "이주형",
+        "report_title": "4Q25 Review 실적 개선세 지속"
+    },
+    "specific_data": {
+        "company_name": "비에이치",
+        "ticker": "090460",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "북미 고객사의 스마트폰 신제품 판매 호조",
+            "BH EVS의 이익률 회복",
+            "FPCB 매출액이 전년비 11% 증가"
+        ],
+        "risk_factors": [
+            "기존 Bar 타입 제품군의 판매 부진",
+            "북미 고객사 신제품 라인업의 부재"
+        ],
+        "shareholder_structure": "이경환 (외 7인) 21.9%, 국민연금공단 (외 1인) 7.5%"
+    }
+}

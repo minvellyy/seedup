@@ -1,0 +1,29 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-02-19",
+        "brokerage": "하나증권",
+        "analyst_name": "김선아, 유창근",
+        "report_title": "하나 Biweekly 제약바이오 아직 겁먹을 때 .."
+    },
+    "specific_data": {
+        "sector_name": "제약/바이오",
+        "industry_rating": null,
+        "top_picks": [
+            "삼성바이오로직스",
+            "한미약품",
+            "리가켐바이오",
+            "디앤디파마텍"
+        ],
+        "industry_trends": [
+            "비만 치료제 테마의 변화",
+            "ADC 테마의 부각",
+            "유전자 치료제의 시장 확대"
+        ],
+        "risk_factors": [
+            "약가 인하 우려",
+            "비수기 학회 일정",
+            "경쟁 심화"
+        ]
+    }
+}

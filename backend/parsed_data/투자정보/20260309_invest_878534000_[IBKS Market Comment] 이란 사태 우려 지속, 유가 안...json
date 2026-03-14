@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-09",
+        "brokerage": "IBK투자증권",
+        "analyst_name": "변준호",
+        "report_title": "[IBKS Market Comment] 이란 사태 우려 지속, 유가 안.."
+    },
+    "specific_data": {
+        "strategy_theme": "이란 사태 우려 지속, 유가 안정 시 투자 기회 요인도 주시",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "호르무즈 해협 봉쇄 장기화 가능성",
+            "지상전 전개 가능성",
+            "중국, 러시아 등의 이란 지원 가능성"
+        ],
+        "quant_factors": [
+            "유가 급등",
+            "고용 지표 악화",
+            "미국 금리 인하 기대 하락"
+        ]
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-02-11",
+        "brokerage": "iM증권",
+        "analyst_name": "김윤상",
+        "report_title": "견고해지는 전략적 위상  단기 모멘텀 둔화"
+    },
+    "specific_data": {
+        "company_name": "고려아연",
+        "ticker": "010130",
+        "investment_rating": "NR",
+        "investment_points": [
+            "26년 1분기까지 역대 최고 실적 지속 경신 전망",
+            "큰 폭의 매출 증가: 원/달러 환율 상승 및 아연/구리/귀금속 가격 강세 효과",
+            "전분기 인식했던 1회성 인건비 효과 소멸로 별도 영업이익 개선"
+        ],
+        "risk_factors": [
+            "단기 모멘텀 둔화",
+            "귀금속 가격 정체로 인한 저평가 매력 희석"
+        ],
+        "shareholder_structure": "주요 주주 지분율 정보 없음"
+    }
+}

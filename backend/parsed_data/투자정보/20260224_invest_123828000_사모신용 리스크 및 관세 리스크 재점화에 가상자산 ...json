@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2025-02-24",
+        "brokerage": "iM증권",
+        "analyst_name": "양현경",
+        "report_title": "사모신용 리스크 및 관세 리스크 재점화에 가상자산 .."
+    },
+    "specific_data": {
+        "strategy_theme": "가상자산 시장의 약세와 관세 리스크",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "관세 리스크 재점화로 인한 가상자산 약세",
+            "DAT 기업들의 미실현 손실 확대",
+            "중간선거 이전 유동성 완화 가능성",
+            "Clarity Act에 따른 규제 불확실성 완화"
+        ],
+        "quant_factors": [
+            "비트코인 가격",
+            "미실현 손실",
+            "관세 정책",
+            "유동성 지표"
+        ]
+    }
+}
