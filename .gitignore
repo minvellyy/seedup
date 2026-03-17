@@ -114,3 +114,5 @@ build/
 .DS_Store
 Thumbs.db
 desktop.ini
+
+./backend/news_chroma_db
