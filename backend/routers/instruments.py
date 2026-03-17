@@ -340,7 +340,16 @@ def get_stock_scores(stock_code: str):
             return {"stock_code": stock_code, "available": False}
 
         import pandas as pd
-        df = pd.read_parquet(parquet_path)
+
+        def _load_scores_df(path):
+            try:
+                return pd.read_parquet(path)
+            except Exception:
+                import pyarrow.parquet as pq
+                table = pq.read_table(path, use_pandas_metadata=False)
+                return table.to_pandas()
+
+        df = _load_scores_df(parquet_path)
         sub = df[df["ticker"].astype(str).str.zfill(6) == stock_code.zfill(6)]
         if sub.empty:
             return {"stock_code": stock_code, "available": False}

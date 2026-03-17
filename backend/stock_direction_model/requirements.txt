@@ -8,3 +8,4 @@ tqdm
 crewai
 crewai-tools
 python-dotenv
+mlflow
