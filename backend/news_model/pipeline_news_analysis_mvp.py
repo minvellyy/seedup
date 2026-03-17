@@ -984,21 +984,29 @@ def daily_batch(days_back=90, retention_days=90):
 # 조회용
 # =========================================================
 
-def search_news_context(query, n_results=5):
+def search_news_context(query, n_results=5, company_name: str | None = None):
+    """뉴스 ChromaDB에서 관련 기사를 검색한다.
 
+    company_name 이 주어지면 해당 기업명이 문서에 포함된 기사를 우선 반환한다.
+    필터 결과가 부족하면 필터 없이 fallback 재검색한다.
+    """
     query_emb = get_embedding(query)
 
-    try:
-        res = news_analysis_index.query(
-            query_embeddings=[query_emb],
-            n_results=n_results
-        )
-
+    def _query(where_doc=None):
+        kwargs = dict(query_embeddings=[query_emb], n_results=n_results)
+        if where_doc:
+            kwargs["where_document"] = where_doc
+        res = news_analysis_index.query(**kwargs)
         docs = res.get("documents", [[]])[0]
         metas = res.get("metadatas", [[]])[0]
-
         return [{"doc": d, "meta": m} for d, m in zip(docs, metas)]
 
+    try:
+        if company_name:
+            # 회사명 필터 적용 — 결과가 없어도 fallback 하지 않는다.
+            # fallback 시 전혀 무관한 타 산업 뉴스가 반환되는 문제 방지.
+            return _query({"$contains": company_name})
+        return _query()
     except Exception as e:
         print("검색 오류:", e)
         return []

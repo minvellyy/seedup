@@ -40,9 +40,38 @@ else:
     _BASE_URL = "https://openapi.koreainvestment.com:9443"
     _WS_URL   = "ws://ops.koreainvestment.com:21000"
 
+# ── 멀티 appkey 목록 로드 ────────────────────────────────────────────────────
+# .env에 등록된 appkey 쌍을 순서대로 읽음:
+#   APP_KEY   / APP_SECRET    (기존 단일 키, 항상 사용)
+#   APP_KEY_2 / APP_SECRET_2  (추가 키)
+#   APP_KEY_3 / APP_SECRET_3
+#   ...최대 APP_KEY_5 / APP_SECRET_5
+#
+# appkey 1개 = WS 연결 1개 = 최대 40종목
+# 예: 3개 등록 시 최대 120종목 WS 실시간, 나머지는 REST 폴링
+def _load_appkey_pairs() -> list:
+    """등록된 (appkey, appsecret) 쌍 목록 반환."""
+    pairs = []
+    # 첫 번째 키 (APP_KEY / APP_SECRET 또는 APP_KEY_1 / APP_SECRET_1)
+    k1 = os.getenv("APP_KEY", "").strip() or os.getenv("APP_KEY_1", "").strip()
+    s1 = os.getenv("APP_SECRET", "").strip() or os.getenv("APP_SECRET_1", "").strip()
+    if k1 and s1:
+        pairs.append((k1, s1))
+    # APP_KEY_2 ~ APP_KEY_5
+    for n in range(2, 6):
+        k = os.getenv(f"APP_KEY_{n}", "").strip()
+        s = os.getenv(f"APP_SECRET_{n}", "").strip()
+        if k and s:
+            pairs.append((k, s))
+    return pairs
+
+_APPKEY_PAIRS: list = _load_appkey_pairs()  # [(appkey, appsecret), ...]
+
 # ── 전역 상태 ──────────────────────────────────────────────────────────────────
 _price_store: Dict[str, Dict] = {}   # { "005930": {"current_price": 75000, ...} }
+_price_queues: Dict[str, Set] = {}    # { stock_code: {asyncio.Queue, ...} }  fan-out용
 _manager: Optional["KisWebSocketManager"] = None
+_managers: list = []                 # 멀티 appkey 시 복수 manager 목록
 _ws_available: bool = True           # False = WS 포기, REST 폴링 사용 중
 _ws_connect_lock: Optional[asyncio.Lock] = None  # 워커 간 동시 로그인 방지
 
@@ -57,27 +86,37 @@ def _get_connect_lock() -> asyncio.Lock:
 
 # ── Approval Key ──────────────────────────────────────────────────────────────
 # KIS WebSocket 전용 인증키 (access_token과 별도로 발급)
-_approval_key_cache: Dict = {"key": None, "expires_at": 0.0}
+# appkey별로 캐시: { appkey_str: {"key": str, "expires_at": float} }
+_approval_key_cache: Dict = {}
 _approval_key_lock = threading.Lock()
 
 
-def _get_approval_key(force_refresh: bool = False) -> str:
-    """KIS WebSocket approval_key 발급 (24시간 유효)."""
+def _get_approval_key(force_refresh: bool = False, appkey: str = "", appsecret: str = "") -> str:
+    """KIS WebSocket approval_key 발급 (24시간 유효).
+
+    appkey/appsecret을 명시하면 해당 키로 발급, 없으면 기본 APP_KEY 사용.
+    """
+    _appkey    = appkey    or os.getenv("APP_KEY", "").strip()
+    _appsecret = appsecret or os.getenv("APP_SECRET", "").strip()
+    _cache_key = _appkey  # appkey별로 캐시 분리
+
     now = time.time()
-    if not force_refresh and _approval_key_cache["key"] and _approval_key_cache["expires_at"] > now + 60:
-        return _approval_key_cache["key"]
+    if not force_refresh and _approval_key_cache.get(_cache_key, {}).get("key") \
+            and _approval_key_cache[_cache_key]["expires_at"] > now + 60:
+        return _approval_key_cache[_cache_key]["key"]
 
     with _approval_key_lock:
         now = time.time()
-        if not force_refresh and _approval_key_cache["key"] and _approval_key_cache["expires_at"] > now + 60:
-            return _approval_key_cache["key"]
+        if not force_refresh and _approval_key_cache.get(_cache_key, {}).get("key") \
+                and _approval_key_cache[_cache_key]["expires_at"] > now + 60:
+            return _approval_key_cache[_cache_key]["key"]
 
         resp = requests.post(
             f"{_BASE_URL}/oauth2/Approval",
             json={
                 "grant_type": "client_credentials",
-                "appkey":     os.getenv("APP_KEY", "").strip(),
-                "secretkey":  os.getenv("APP_SECRET", "").strip(),
+                "appkey":     _appkey,
+                "secretkey":  _appsecret,
             },
             timeout=10,
         )
@@ -86,9 +125,8 @@ def _get_approval_key(force_refresh: bool = False) -> str:
         key = data.get("approval_key", "")
         if not key:
             raise ValueError(f"approval_key 발급 실패: {data}")
-        _approval_key_cache["key"] = key
-        _approval_key_cache["expires_at"] = now + 86400  # 24시간
-        logger.info("KIS WebSocket approval_key 발급 완료")
+        _approval_key_cache[_cache_key] = {"key": key, "expires_at": now + 86400}
+        logger.info("KIS WebSocket approval_key 발급 완료 (appkey: ...%s)", _appkey[-6:])
         return key
 
 
@@ -186,10 +224,15 @@ def _parse_realtime(msg: str) -> Optional[Dict]:
 class KisWebSocketManager:
     """KIS WebSocket 연결을 유지하며 실시간 체결가를 _price_store에 저장한다."""
 
-    def __init__(self, is_mock: bool = False):
+    def __init__(self, is_mock: bool = False, appkey: str = "", appsecret: str = ""):
         self._ws_url        = "ws://openskh.koreainvestment.com:31000" if is_mock else _WS_URL
+        self._appkey        = appkey    or os.getenv("APP_KEY", "").strip()
+        self._appsecret     = appsecret or os.getenv("APP_SECRET", "").strip()
         self._approval_key: Optional[str] = None
-        self._subscribed:   Set[str] = set()
+        self._subscribed:          Set[str] = set()
+        self._pending_subscribe:   Set[str] = set()
+        self._pending_unsubscribe: Set[str] = set()
+        self._subscribe_event              = asyncio.Event()
         self._running       = False
         self._task: Optional[asyncio.Task] = None
 
@@ -219,8 +262,14 @@ class KisWebSocketManager:
     async def subscribe(self, codes: list[str]) -> None:
         new_codes = [c for c in codes if c not in self._subscribed]
         if new_codes:
-            self._pending_subscribe = getattr(self, "_pending_subscribe", set())
             self._pending_subscribe.update(new_codes)
+            self._subscribe_event.set()  # idle 중인 _run_loop 즉시 깨우기
+
+    async def unsubscribe(self, codes: list[str]) -> None:
+        """구독 해제 요청 — _flush_pending에서 WS 메시지 전송 처리."""
+        for code in codes:
+            self._pending_unsubscribe.add(code)
+            self._pending_subscribe.discard(code)  # 미전송 구독 요청도 취소
 
     # ── 내부 루프 ─────────────────────────────────────────────────────────────
 
@@ -228,16 +277,22 @@ class KisWebSocketManager:
         import websockets  # lazy import
         from websockets.exceptions import InvalidStatus
 
-        self._pending_subscribe: Set[str] = set(initial_codes)
+        self._pending_subscribe.update(initial_codes)
         self._already_in_use    = False   # ALREADY IN USE 감지 플래그
         backoff = 15  # 초기 backoff 15초: KIS 서버 세션 정리 시간 확보
         consecutive_500 = 0
+        consecutive_already_in_use = 0   # ALREADY IN USE 연속 횟수 (지수 백오프용)
         _MAX_CONSECUTIVE_500 = 5   # 500 연속 5회 → 포기 (포털 설정 문제)
         _is_first_connect = True
 
         while self._running:
             if not self._pending_subscribe and not self._subscribed:
-                await asyncio.sleep(5)
+                # 구독 요청이 올 때까지 최대 5초 대기 (이벤트로 즉시 깨어남)
+                try:
+                    await asyncio.wait_for(self._subscribe_event.wait(), timeout=5.0)
+                except asyncio.TimeoutError:
+                    pass
+                self._subscribe_event.clear()
                 continue
 
             # 동시 로그인 방지: 워커들이 순서대로 연결하도록 직렬화
@@ -250,7 +305,7 @@ class KisWebSocketManager:
                 force_key_refresh = not _is_first_connect or self._already_in_use
                 self._already_in_use = False
                 self._approval_key = await asyncio.to_thread(
-                    _get_approval_key, force_key_refresh
+                    _get_approval_key, force_key_refresh, self._appkey, self._appsecret
                 )
                 _is_first_connect = False
 
@@ -268,6 +323,9 @@ class KisWebSocketManager:
                         logger.info("재연결 — %d개 종목 재구독 예약", len(prev_codes))
                     self._ws = ws
                     backoff = 15
+                    # consecutive_already_in_use는 여기서 리셋하지 않음:
+                    # TCP 연결 성공이어도 구독 응답에서 ALREADY IN USE가 다시 올 수 있음.
+                    # 카운터는 ALREADY IN USE 없이 정상 완료된 경우에만 초기화 (else 블록).
 
                     await asyncio.sleep(0.5)
                     _lock.release()
@@ -323,22 +381,45 @@ class KisWebSocketManager:
                 await asyncio.sleep(backoff)
                 backoff = min(backoff * 2, 120)
             except Exception as e:
-                err_msg = str(e)
-                if "no close frame" in err_msg:
-                    logger.debug("KIS WS 연결 종료 — %d초 후 재연결", backoff)
+                if self._already_in_use:
+                    # ALREADY IN USE: KIS appkey 세션이 서버에 살아있음.
+                    # 새 approval_key를 발급해도 appkey 자체가 락되어 있으므로 충분히 대기해야 함.
+                    # 대기 시간: 90→180→300초 (90초 기준 지수 백오프, 최대 5분)
+                    consecutive_already_in_use += 1
+                    wait = min(90 * (2 ** (consecutive_already_in_use - 1)), 300)
+                    logger.info(
+                        "KIS WS ALREADY IN USE (%d회) — appkey 세션 해제 대기 %d초 후 재접속",
+                        consecutive_already_in_use, wait,
+                    )
+                    if not self._running:
+                        break
+                    await asyncio.sleep(wait)
                 else:
-                    logger.warning("KIS WS 연결 오류: %s — %d초 후 재연결", e, backoff)
-                if not self._running:
-                    break
-                await asyncio.sleep(backoff)
-                backoff = min(backoff * 2, 120)
+                    # 일반 연결 오류: ALREADY IN USE가 아니었으므로 카운터 초기화
+                    consecutive_already_in_use = 0
+                    err_msg = str(e)
+                    if "no close frame" in err_msg:
+                        logger.debug("KIS WS 연결 종료 — %d초 후 재연결", backoff)
+                    else:
+                        logger.warning("KIS WS 연결 오류: %s — %d초 후 재연결", e, backoff)
+                    if not self._running:
+                        break
+                    await asyncio.sleep(backoff)
+                    backoff = min(backoff * 2, 120)
             else:
                 if self._running:
                     if self._already_in_use:
-                        logger.info("KIS WS ALREADY IN USE 대기 — 30초 후 재접속")
-                        await asyncio.sleep(30)  # KIS 서버 세션 해제 대기
-                        # backoff 는 초기화하지 않음 — 다음 실패 시 정상 증가
+                        # _sender_loop가 break으로 종료할 경우에도 여기로 옴
+                        # (gather에 예외가 전파되지 않는 경우)
+                        consecutive_already_in_use += 1
+                        wait = min(90 * (2 ** (consecutive_already_in_use - 1)), 300)
+                        logger.info(
+                            "KIS WS ALREADY IN USE (%d회) — appkey 세션 해제 대기 %d초 후 재접속",
+                            consecutive_already_in_use, wait,
+                        )
+                        await asyncio.sleep(wait)
                     else:
+                        consecutive_already_in_use = 0
                         logger.debug("KIS WS 연결 종료 — %d초 후 재연결", backoff)
                         await asyncio.sleep(backoff)
                         backoff = min(backoff * 2, 120)
@@ -398,6 +479,14 @@ class KisWebSocketManager:
                 if parsed:
                     _price_store[parsed["stock_code"]] = parsed
                     logger.debug("수신 %s: %s", parsed["stock_code"], parsed["current_price"])
+                    # fan-out: 해당 종목을 구독 중인 SSE 클라이언트 큐에 푸시
+                    _sc = parsed["stock_code"]
+                    if _sc in _price_queues:
+                        for _q in list(_price_queues[_sc]):
+                            try:
+                                _q.put_nowait({"code": _sc, "data": parsed})
+                            except asyncio.QueueFull:
+                                pass  # 느린 클라이언트: 이번 업데이트 건너뜀
 
     async def _sender_loop(self, ws) -> None:
         while self._running:
@@ -413,7 +502,24 @@ class KisWebSocketManager:
         except ImportError:
             _WsCC = Exception  # type: ignore[misc,assignment]
 
-        pending: Set[str] = getattr(self, "_pending_subscribe", set())
+        # ① 구독 해제 먼저 처리 (tr_type="2")
+        pending_unsub: Set[str] = self._pending_unsubscribe
+        for code in list(pending_unsub):
+            if code in self._subscribed:
+                try:
+                    msg = _build_subscribe_msg(self._approval_key, code, tr_type="2")
+                    await ws.send(msg)
+                    self._subscribed.discard(code)
+                    logger.debug("KIS WS 구독 해제: %s", code)
+                    await asyncio.sleep(0.05)
+                except _WsCC:
+                    raise
+                except Exception as e:
+                    logger.debug("구독 해제 전송 실패 %s: %s", code, e)
+            pending_unsub.discard(code)
+
+        # ② 구독 등록 처리 (tr_type="1")
+        pending: Set[str] = self._pending_subscribe
         for code in list(pending):
             if len(self._subscribed) >= _MAX_SUBSCRIPTIONS:
                 logger.info("KIS WS 구독 한도 (%d) 도달", _MAX_SUBSCRIPTIONS)
@@ -487,6 +593,52 @@ async def _start_rest_polling(initial_codes: list[str]) -> None:
     _rest_polling_task = asyncio.create_task(_loop())
 
 
+# ── SSE fan-out 헬퍼 ─────────────────────────────────────────────────────────
+
+def register_queue(codes: list, queue) -> None:
+    """SSE 연결 시 호출 — 해당 종목 가격 업데이트를 queue로 수신 등록."""
+    for code in codes:
+        if code not in _price_queues:
+            _price_queues[code] = set()
+        _price_queues[code].add(queue)
+
+
+def unregister_queue(codes: list, queue) -> list:
+    """SSE 연결 해제 시 호출 — queue 제거. 구독자 수가 0이 된 코드 목록 반환."""
+    empty_codes: list = []
+    for code in codes:
+        if code in _price_queues:
+            _price_queues[code].discard(queue)
+            if not _price_queues[code]:
+                del _price_queues[code]
+                empty_codes.append(code)
+    return empty_codes
+
+
+async def subscribe_codes(codes: list) -> None:
+    """SSE 연결 시 호출 — 가용 WS managers에 codes를 분산 구독."""
+    remaining = list(codes)
+    for mgr in _managers:
+        if not remaining:
+            break
+        available = _MAX_SUBSCRIPTIONS - len(mgr._subscribed)
+        if available > 0:
+            chunk = remaining[:available]
+            remaining = remaining[available:]
+            await mgr.subscribe(chunk)
+    if remaining:
+        # 모든 WS 슬롯 소진 → REST 폴링으로 처리
+        asyncio.get_event_loop().create_task(_start_rest_polling(remaining))
+
+
+async def unsubscribe_codes(codes: list) -> None:
+    """SSE 연결 해제 시 호출 — 구독자 없어진 codes를 WS managers에서 해제."""
+    for mgr in get_all_managers():
+        targets = [c for c in codes if c in mgr._subscribed]
+        if targets:
+            await mgr.unsubscribe(targets)
+
+
 # ── 전역 접근자 ───────────────────────────────────────────────────────────────
 # KIS는 appkey당 WebSocket 연결을 1개만 허용합니다.
 # 따라서 단일 KisWebSocketManager(Singleton)로 최대 40종목만 구독하고,
@@ -495,23 +647,46 @@ async def _start_rest_polling(initial_codes: list[str]) -> None:
 async def init_manager(initial_codes: list[str], is_mock: bool = False) -> None:
     """FastAPI startup_event에서 1회 호출.
 
-    KIS WebSocket은 appkey당 1연결만 허용하므로 단일 Singleton 연결을 사용합니다.
-    - 상위 _MAX_SUBSCRIPTIONS(40)개 종목만 WebSocket 구독
-    - 나머지 종목은 REST 폴링으로 처리
+    등록된 appkey 수만큼 WS 연결을 생성해 종목을 분산 구독합니다.
+    - appkey 1개당 최대 _MAX_SUBSCRIPTIONS(40)개 WS 구독
+    - appkey 3개 등록 시: 최대 120종목 WS, 나머지 REST 폴링
+    - .env에 APP_KEY_2/APP_SECRET_2 등을 추가하면 자동으로 활용됩니다.
     """
-    global _manager
+    global _manager, _managers
 
-    ws_codes   = initial_codes[:_MAX_SUBSCRIPTIONS]
-    poll_codes = initial_codes[_MAX_SUBSCRIPTIONS:]
+    pairs = _APPKEY_PAIRS
+    if not pairs:
+        logger.warning("APP_KEY/APP_SECRET 미설정 — WS 연결 생략")
+        await _start_rest_polling(initial_codes)
+        return
 
-    _manager = KisWebSocketManager(is_mock=is_mock)
-    await _manager.start(ws_codes)
+    total_ws_slots = len(pairs) * _MAX_SUBSCRIPTIONS
+    ws_codes_all   = initial_codes[:total_ws_slots]
+    poll_codes     = initial_codes[total_ws_slots:]
 
-    if ws_codes:
-        logger.info("KIS WebSocket 단일 연결 시작: %d개 종목 구독", len(ws_codes))
+    _managers = []
+    for idx, (appkey, appsecret) in enumerate(pairs):
+        chunk_start = idx * _MAX_SUBSCRIPTIONS
+        chunk_end   = chunk_start + _MAX_SUBSCRIPTIONS
+        chunk       = ws_codes_all[chunk_start:chunk_end]
+        mgr = KisWebSocketManager(is_mock=is_mock, appkey=appkey, appsecret=appsecret)
+        await mgr.start(chunk)
+        _managers.append(mgr)
+        logger.info(
+            "KIS WS 연결 %d/%d 시작 (appkey: ...%s): %d개 종목",
+            idx + 1, len(pairs), appkey[-6:], len(chunk),
+        )
+
+    # 하위 호환: _manager는 첫 번째 manager를 가리킴
+    _manager = _managers[0] if _managers else None
+
     if poll_codes:
         logger.info("나머지 %d개 종목은 REST 폴링으로 처리", len(poll_codes))
         await _start_rest_polling(poll_codes)
+    logger.info(
+        "KIS WS 초기화 완료: appkey %d개 × 최대 %d종목 = WS %d종목, REST %d종목",
+        len(pairs), _MAX_SUBSCRIPTIONS, len(ws_codes_all), len(poll_codes),
+    )
 
 
 async def add_poll_codes(codes: list[str]) -> None:
@@ -522,7 +697,13 @@ async def add_poll_codes(codes: list[str]) -> None:
 
 
 def get_manager() -> Optional[KisWebSocketManager]:
+    """하위 호환용 — 첫 번째 manager 반환."""
     return _manager
+
+
+def get_all_managers() -> list:
+    """모든 WS manager 목록 반환 (shutdown 등에 사용)."""
+    return _managers if _managers else ([_manager] if _manager else [])
 
 
 def get_price_store() -> Dict[str, Dict]:

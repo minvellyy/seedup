@@ -26,6 +26,14 @@ from schemas import StockRecommendationResponse, PortfolioRecommendationResponse
 from stock_model import get_stock_recommendations  # noqa: E402
 from portfolio_model import get_multi_portfolio_recommendations  # noqa: E402
 
+# CrewAI 기반 추천 (패키지 없으면 graceful fallback)
+try:
+    from manager_agent.crew import run_db_stock_recommendation, run_db_portfolio_recommendation
+    _CREW_AVAILABLE = True
+except Exception as _crew_err:
+    _CREW_AVAILABLE = False
+    _CREW_ERR = str(_crew_err)
+
 router = APIRouter(prefix="/api/recommendations", tags=["recommendations"])
 
 
@@ -57,6 +65,21 @@ def get_stock_recommendations_by_user(
     koscom_score: int = 20,
     conn=Depends(_get_db_conn),
 ) -> StockRecommendationResponse:
+    # CrewAI 경유: run_db_stock_recommendation → get_db_stock_recommendations 툴 호출
+    if _CREW_AVAILABLE:
+        try:
+            import os, json
+            model = os.getenv("MANAGER_LLM_MODEL", "openai/gpt-4o-mini")
+            from crewai import LLM
+            llm = LLM(model=model)
+            raw = run_db_stock_recommendation(llm=llm, user_id=user_id)
+            # LLM 출력에서 JSON 추출 후 Pydantic 모델로 파싱
+            _s = raw.strip()
+            if _s.startswith("```"):
+                _s = _s.split("```")[1].lstrip("json").strip()
+            return StockRecommendationResponse.model_validate_json(_s)
+        except Exception:
+            pass  # CrewAI 실패 시 직접 모델 호출로 fallback
     try:
         return get_stock_recommendations(user_id=user_id, conn=conn, koscom_score=koscom_score)
     except ValueError as e:
@@ -76,6 +99,21 @@ def get_portfolio_recommendations_by_user(
     koscom_score: int = 20,
     conn=Depends(_get_db_conn),
 ) -> list[PortfolioRecommendationResponse]:
+    # CrewAI 경유: run_db_portfolio_recommendation → get_db_multi_portfolio_recommendations 툴 호출
+    if _CREW_AVAILABLE:
+        try:
+            import os, json
+            model = os.getenv("MANAGER_LLM_MODEL", "openai/gpt-4o-mini")
+            from crewai import LLM
+            llm = LLM(model=model)
+            raw = run_db_portfolio_recommendation(llm=llm, user_id=user_id, mode="multi")
+            _s = raw.strip()
+            if _s.startswith("```"):
+                _s = _s.split("```")[1].lstrip("json").strip()
+            data = json.loads(_s)
+            return [PortfolioRecommendationResponse.model_validate(item) for item in data]
+        except Exception:
+            pass  # CrewAI 실패 시 직접 모델 호출로 fallback
     try:
         return get_multi_portfolio_recommendations(
             user_id=user_id, conn=conn, koscom_score=koscom_score
