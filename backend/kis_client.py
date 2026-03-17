@@ -38,6 +38,21 @@ import threading as _threading
 _token_cache: Dict = {"token": None, "expires_at": 0.0}
 _token_lock = _threading.Lock()  # 다중 스레드 동시 갱신 방지
 
+# ── KIS API Rate Limiter (초당 최대 15건, 安全마진 포함) ─────────────────────
+_rate_lock = _threading.Lock()
+_last_call_time: float = 0.0
+_MIN_INTERVAL = 0.1   # 약 10 req/sec (안전 마진 포함)
+
+def _rate_limit() -> None:
+    """KIS API 호출 전 속도 제한 적용. 초당 ~14건 이하로 유지."""
+    global _last_call_time
+    with _rate_lock:
+        now = time.time()
+        wait = _MIN_INTERVAL - (now - _last_call_time)
+        if wait > 0:
+            time.sleep(wait)
+        _last_call_time = time.time()
+
 
 def _load_token_from_file() -> bool:
     """파일에서 캐시된 토큰 로드. 유효하면 True."""
@@ -120,14 +135,42 @@ def _kis_get(url: str, tr_id: str, params: Dict, retry: bool = True):
     import logging as _logging
     _logger = _logging.getLogger("kis_client")
     
+    # KIS 토큰 만료 메시지 코드 (500 응답 바디에 포함)
+    _TOKEN_EXPIRED_CODES = {"EGW00123", "EGW00121"}
+
+    _rate_limit()  # 초당 호출 수 제한
     try:
         r = requests.get(url, headers=_headers(tr_id), params=params, timeout=10)
         if r.status_code == 500 and retry:
-            _logger.warning("KIS 500 수신 — 토큰 갱신 후 1회 재시도 (%s)", url)
-            _get_token(force_refresh=True)
-            r = requests.get(url, headers=_headers(tr_id), params=params, timeout=10)
-            if r.status_code == 500:
-                _logger.error("KIS 500 재시도 후에도 실패 — API 호출 중단 (%s)", url)
+            # 응답 바디로 실제 원인 판별
+            try:
+                body = r.json()
+                msg_cd  = body.get("msg_cd", "")
+                msg1    = body.get("msg1", "")
+            except Exception:
+                body, msg_cd, msg1 = {}, "", r.text[:200]
+
+            is_token_error = msg_cd in _TOKEN_EXPIRED_CODES
+
+            if is_token_error:
+                _logger.warning("KIS 토큰 만료 — 갱신 후 재시도 (%s) msg_cd=%s", url, msg_cd)
+                _get_token(force_refresh=True)
+                r = requests.get(url, headers=_headers(tr_id), params=params, timeout=10)
+                if r.status_code == 500:
+                    _logger.error("KIS 500 재시도 후에도 실패 — API 호출 중단 (%s)", url)
+            else:
+                # 토큰 외 500 (rate limit 등) — backoff 후 1회 재시도
+                import random as _random
+                backoff = 0.5 + _random.uniform(0, 0.3)
+                _logger.warning(
+                    "KIS 500 수신 (토큰 무관) — msg_cd=%s msg1=%s (%s) — %.2f초 대기 후 재시도",
+                    msg_cd, msg1, url, backoff,
+                )
+                time.sleep(backoff)
+                _rate_limit()  # backoff 후 rate limit 재적용
+                r = requests.get(url, headers=_headers(tr_id), params=params, timeout=10)
+                if r.status_code == 500:
+                    _logger.error("KIS 500 재시도 후에도 실패 — 건너뜀 (%s)", url)
         r.raise_for_status()
         return r
     except Exception as e:

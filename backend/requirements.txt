@@ -7,23 +7,9 @@ openai
 python-dotenv
 websockets>=12.0
 requests
-
-# ── RAG Worker (ESG · 뉴스 · 증권사 리포트) ──────────────────────────────────
-crewai>=0.80.0
-apscheduler>=3.10.0
-
-# ESG 모델
-pymysql>=1.1.0
-sentence-transformers>=3.0.0
-numpy>=1.26.0
-
-# 뉴스 모델
-chromadb>=0.5.0
-mysql-connector-python>=8.0.0
-beautifulsoup4>=4.12.0
-
-# 증권사 리포트 모델
-langchain>=0.2.0
-langchain-openai>=0.1.0
-langchain-community>=0.2.0
-pdfplumber>=0.11.0
+sqlalchemy
+pymysql
+mysql-connector-python
+cryptography
+aiofiles
+pathlib

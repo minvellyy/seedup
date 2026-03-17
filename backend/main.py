@@ -221,18 +221,13 @@ async def _db_full_price_sync(skip_ws_codes: set = None) -> int:
     today = datetime.now().strftime("%Y-%m-%d")
     results: dict = {}
 
-    # KIS REST API rate limit 고려: 최대 10 병렬, 배치 간 0.1초 대기
-    max_workers = min(10, len(target_codes))
-    loop = asyncio.get_event_loop()
-    with ThreadPoolExecutor(max_workers=max_workers) as pool:
-        future_map = {pool.submit(get_current_price, code): code for code in target_codes}
-        for fut in as_completed(future_map):
-            code = future_map[fut]
-            try:
-                data = fut.result()
-                results[code] = data["current_price"]
-            except Exception as e:
-                logger.debug("REST 가격 조회 실패 [%s]: %s", code, e)
+    # KIS REST API rate limit 고려: 순차 처리 (kis_client._rate_limit이 간격 보장)
+    for code in target_codes:
+        try:
+            data = get_current_price(code)
+            results[code] = data["current_price"]
+        except Exception as e:
+            logger.debug("REST 가격 조회 실패 [%s]: %s", code, e)
 
     if not results:
         return 0
