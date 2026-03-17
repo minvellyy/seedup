@@ -204,16 +204,78 @@ def _recommend_db(user_id: int, conn, koscom_score: int = 20) -> "StockRecommend
         raise ValueError("지표를 계산할 수 있는 종목이 없습니다.")
 
     # ══════════════════════════════════════════════════════════════════════
-    # 4단계 스코어링 파이프라인
+    # 4+1단계 스코어링 파이프라인
     #
-    # [1] 위험조정수익률 (샤프): 높을수록 좋음 → 순위 정규화
-    # [2] 다중팩터 가중치 스코어링
-    #     - 모멘텀(Momentum) 40점: 기간 맞춤 수익률 (3M/1Y 혼합)
-    #     - 우량성(Quality)  40점: 샤프지수 (위험 대비 초과수익)
-    #     - 저변동성(LowVol) 20점: 연 변동성 역수 → 안정성
-    # [3] 유니버스 그룹핑: CORE / GROWTH 체급 리그 분리
-    # [4] 투자금·목표 미세조정
+    # [0] 하드 리스크 필터: 극단적 고위험 종목 사전 제거
+    #     - 연 변동성 > 75% 제외
+    #     - 52주 MDD < -60% 제외
+    # [1] 재무 점수(Fin) 사전 필터 + 코어 스코어 로드
+    #     - fin_scores parquet: overall_score, stability_score
+    #     - overall_score < 35 (0~100) 이면 제외 (데이터 없는 종목은 통과)
+    # [2] 위험조정수익률 (샤프): 높을수록 좋음 → 순위 정규화
+    # [3] 다중팩터 가중치 스코어링 (4팩터)
+    #     - 모멘텀(Momentum): 기간 맞춤 수익률 (3M/1Y 혼합)
+    #     - 우량성(Quality) : 샤프지수 (위험 대비 초과수익)
+    #     - 저변동성(LowVol): 연 변동성 역수 → 안정성
+    #     - 재무건강성(Fin) : fin_structured overall_score (Piotroski 기반)
+    # [4] 유니버스 그룹핑: CORE / GROWTH 체급 리그 분리
+    # [5] 투자금·목표 미세조정
     # ══════════════════════════════════════════════════════════════════════
+
+    # ── [0] 하드 리스크 필터 ────────────────────────────────────────────
+    _MAX_VOL_ANN = 0.75    # 연 변동성 75% 초과 → 제외
+    _MAX_MDD     = -0.60   # MDD -60% 미만 → 제외
+    _risk_filtered = [
+        s for s in computed
+        if not (s["vol_ann"] is not None and s["vol_ann"] > _MAX_VOL_ANN)
+        and not (s["mdd"] is not None and s["mdd"] < _MAX_MDD)
+    ]
+    if len(_risk_filtered) >= 5:
+        computed = _risk_filtered
+
+    # ── [1] 재무 점수 로드 (fin_structured parquet) ──────────────────────
+    _fin_lookup: dict = {}  # {stock_code_6: {"overall": float(0~100), ...}}
+    try:
+        from config import FIN_MODEL_DIR
+        _parquet_path = (
+            FIN_MODEL_DIR / "data" / "processed"
+            / "fin_scores_v2_2024_CONSOL_with_mc_with_price.parquet"
+        )
+        if _parquet_path.exists():
+            import pandas as _pd_fin
+            _df_fin = _pd_fin.read_parquet(_parquet_path)[
+                ["ticker", "as_of", "overall_score", "stability_score", "valuation_score"]
+            ]
+            # 동일 ticker 중 가장 최근 데이터만 사용
+            _df_fin = _df_fin.sort_values("as_of").groupby("ticker").last().reset_index()
+            for _, _fr in _df_fin.iterrows():
+                _tk = str(_fr["ticker"]).zfill(6)
+                def _safe_fin(v):
+                    try:
+                        f = float(v)
+                        return None if _math.isnan(f) or _math.isinf(f) else f
+                    except Exception:
+                        return None
+                _fin_lookup[_tk] = {
+                    "overall":    _safe_fin(_fr.get("overall_score")),
+                    "stability":  _safe_fin(_fr.get("stability_score")),
+                    "valuation":  _safe_fin(_fr.get("valuation_score")),
+                }
+    except Exception:
+        pass  # fin_scores 없으면 재무 필터·팩터 없이 진행
+
+    # 재무 최소 기준 필터: overall_score < 35 제외 (데이터 없는 종목은 통과)
+    _MIN_FIN_OVERALL = 35.0
+    _fin_filtered = []
+    for _s in computed:
+        _code = _s["stock_code"].zfill(6)
+        _fin_data = _fin_lookup.get(_code, {})
+        _fin_overall = _fin_data.get("overall")
+        if _fin_overall is not None and _fin_overall < _MIN_FIN_OVERALL:
+            continue  # 재무 취약 종목 제외
+        _fin_filtered.append(_s)
+    if len(_fin_filtered) >= 5:
+        computed = _fin_filtered
 
     def _rank_norm(vals: list) -> list:
         """None 처리 포함 순위 정규화 (0~1).
@@ -225,17 +287,18 @@ def _recommend_db(user_id: int, conn, koscom_score: int = 20) -> "StockRecommend
         rank_map = {i: r / (len(srt) - 1) for r, (i, _) in enumerate(srt)}
         return [rank_map.get(i, 0.0) for i in range(len(vals))]
 
-    # ── [2] 다중팩터 가중치 결정 (투자성향별) ────────────────────────────
-    # 형식: (모멘텀 가중치, 우량성/샤프 가중치, 저변동성 가중치)
+    # ── [3] 다중팩터 가중치 결정 (투자성향별, 4팩터) ─────────────────────
+    # 형식: (모멘텀 가중치, 우량성/샤프 가중치, 저변동성 가중치, 재무건강성 가중치)
+    # 합계 = 1.0 / 안전 성향일수록 재무·안정성에 더 높은 비중
     _MF_WEIGHTS = {
-        "공격투자형": (0.55, 0.30, 0.15),
-        "적극투자형": (0.50, 0.35, 0.15),
-        "위험중립형": (0.40, 0.40, 0.20),
-        "안전추구형": (0.30, 0.40, 0.30),
-        "안정추구형": (0.30, 0.40, 0.30),
-        "안정형":     (0.25, 0.40, 0.35),
+        "공격투자형": (0.45, 0.25, 0.10, 0.20),
+        "적극투자형": (0.40, 0.30, 0.10, 0.20),
+        "위험중립형": (0.30, 0.30, 0.15, 0.25),
+        "안전추구형": (0.20, 0.25, 0.20, 0.35),
+        "안정추구형": (0.20, 0.25, 0.20, 0.35),
+        "안정형":     (0.15, 0.20, 0.25, 0.40),
     }
-    _w_mom, _w_qual, _w_vol = _MF_WEIGHTS.get(risk_tier, (0.40, 0.40, 0.20))
+    _w_mom, _w_qual, _w_vol, _w_fin = _MF_WEIGHTS.get(risk_tier, (0.30, 0.30, 0.15, 0.25))
 
     # 기간별 모멘텀 혼합 비율
     if _horizon_years <= 2:
@@ -254,6 +317,13 @@ def _recommend_db(user_id: int, conn, koscom_score: int = 20) -> "StockRecommend
         mom_score   = _w3m * r3m_n[i] + _w1y * r1y_n[i]   # 모멘텀
         qual_score  = sharpe_n[i]                            # 우량성 (샤프)
         lowvol_score = 1.0 - vol_n[i]                       # 저변동성
+
+        # 재무건강성 (fin_structured overall_score, 0~100 → 0~1 정규화)
+        _code6 = s["stock_code"].zfill(6)
+        _fin_data = _fin_lookup.get(_code6, {})
+        _fin_ov = _fin_data.get("overall")
+        fin_score = (_fin_ov / 100.0) if _fin_ov is not None else 0.50  # 데이터 없으면 중립 0.5
+        s["fin_score"] = round(_fin_ov, 1) if _fin_ov is not None else None
 
         # 투자목표 미세조정
         _at = account_type_raw.lower().replace(' ', '')
@@ -276,7 +346,8 @@ def _recommend_db(user_id: int, conn, koscom_score: int = 20) -> "StockRecommend
         s["total_score"] = (
             _w_mom  * mom_score  +
             _w_qual * qual_score +
-            _w_vol  * lowvol_score
+            _w_vol  * lowvol_score +
+            _w_fin  * fin_score
         ) * _adj
 
     # ── [3] 유니버스 그룹핑: CORE / GROWTH 체급 리그 분리 ────────────────
@@ -322,6 +393,10 @@ def _recommend_db(user_id: int, conn, koscom_score: int = 20) -> "StockRecommend
         if s["vol_ann"] is not None:
             v = s["vol_ann"] * 100
             reasons.append(f"연 변동성 {v:.1f}%" + (" (안정)" if v < 25 else ""))
+        if s.get("fin_score") is not None:
+            _fv = s["fin_score"]
+            _flabel = "탁월" if _fv >= 80 else "우수" if _fv >= 60 else "양호" if _fv >= 40 else "보통"
+            reasons.append(f"재무건강성 {_fv:.0f}점 ({_flabel})")
         league_label = "코어(대형)" if s.get("bucket") == "CORE" else "새틀라이트(성장)"
         if not reasons:
             reasons = [league_label]

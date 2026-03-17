@@ -6,6 +6,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 from pathlib import Path
 
@@ -21,6 +22,54 @@ for _p in (str(_BACKEND_DIR), str(_WORKSPACE)):
 from rag_worker.tools.esg_tool import analyze_esg_direct
 from rag_worker.tools.news_tool import search_news_direct
 from rag_worker.tools.reports_tool import search_reports_context
+
+
+def _get_company_name(ticker: str) -> str | None:
+    """ticker → 회사명. esg_reports(MySQL) → universe parquet 순으로 조회."""
+    t = str(ticker).zfill(6)
+
+    # 1차: MySQL esg_reports
+    try:
+        import pymysql
+        from dotenv import load_dotenv
+        load_dotenv()
+        conn = pymysql.connect(
+            host=os.getenv("DB_HOST", "192.168.101.70"),
+            port=int(os.getenv("DB_PORT", 3306)),
+            user=os.getenv("DB_USER"),
+            password=os.getenv("DB_PASSWORD"),
+            database=os.getenv("DB_NAME"),
+            charset="utf8mb4",
+            cursorclass=pymysql.cursors.DictCursor,
+            connect_timeout=3,
+        )
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "SELECT company_name FROM esg_reports WHERE stock_code=%s LIMIT 1",
+                    (t,),
+                )
+                row = cur.fetchone()
+        if row and row.get("company_name"):
+            return row["company_name"]
+    except Exception:
+        pass
+
+    # 2차: universe parquet
+    try:
+        from config import FIN_MODEL_DIR
+        import pandas as pd
+        univ_path = FIN_MODEL_DIR / "data" / "processed" / "universe_k200_k150_fixed.parquet"
+        if univ_path.exists():
+            univ = pd.read_parquet(univ_path)
+            univ["ticker"] = univ["ticker"].astype(str).str.zfill(6)
+            row_df = univ[univ["ticker"] == t]
+            if not row_df.empty:
+                return str(row_df.iloc[0]["name"])
+    except Exception:
+        pass
+
+    return None
 
 
 @tool("read_unstructured_analysis")
@@ -40,16 +89,28 @@ def read_unstructured_analysis(ticker: str) -> str:
     except Exception as exc:
         output["esg"] = {"status": "ERROR", "message": str(exc)}
 
-    # 2. 뉴스 검색
+    # ticker → 회사명 (뉴스·리포트 검색 쿼리에 활용)
+    company_name = (
+        output["esg"].get("company_name")
+        if isinstance(output.get("esg"), dict)
+        else None
+    ) or _get_company_name(t)
+    search_query = company_name or t
+
+    # 2. 뉴스 검색 (회사명 기반, 회사명 포함 기사만 반환 — fallback 없음)
     try:
-        news_results = search_news_direct(t, n_results=5)
-        output["news"] = [{"doc": r["doc"], "meta": r["meta"]} for r in news_results]
+        news_results = search_news_direct(search_query, n_results=5, company_name=company_name)
+        if news_results:
+            output["news"] = [{"doc": r["doc"], "meta": r["meta"]} for r in news_results]
+        else:
+            output["news"] = {"status": "NO_RELEVANT_NEWS",
+                              "message": f"{company_name or t} 관련 뉴스가 없습니다. news_summary는 반드시 null로 설정하세요."}
     except Exception as exc:
         output["news"] = {"status": "ERROR", "message": str(exc)}
 
-    # 3. 증권사 리포트 검색
+    # 3. 증권사 리포트 검색 (ticker 필터 + 회사명 쿼리)
     try:
-        report_results = search_reports_context(t, k=3)
+        report_results = search_reports_context(search_query, k=3, ticker=t)
         output["reports"] = [
             {"content": r["content"], "metadata": r["metadata"]}
             for r in report_results
