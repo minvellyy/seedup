@@ -71,6 +71,39 @@ def _get_alternatives(ticker: str, top_n: int = 3) -> list[dict]:
     return []
 
 
+def _get_db_sector(ticker: str) -> str | None:
+    """DB instruments 테이블에서 종목의 sector 값을 반환합니다."""
+    try:
+        import os
+        import pymysql
+        from dotenv import load_dotenv
+        _here = Path(__file__).resolve().parent.parent.parent  # backend/
+        for _env in (_here / ".env", _here.parent / ".env"):
+            if _env.exists():
+                load_dotenv(_env, override=False)
+                break
+        conn = pymysql.connect(
+            host=os.getenv("DB_HOST", "localhost"),
+            port=int(os.getenv("DB_PORT", 3306)),
+            user=os.getenv("DB_USER"),
+            password=os.getenv("DB_PASSWORD"),
+            db=os.getenv("DB_NAME"),
+            charset="utf8mb4",
+        )
+        try:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "SELECT sector FROM instruments WHERE stock_code = %s LIMIT 1",
+                    (str(ticker).zfill(6),),
+                )
+                row = cur.fetchone()
+        finally:
+            conn.close()
+        return str(row[0]) if row and row[0] else None
+    except Exception:
+        return None
+
+
 def _load_report(ticker: str) -> dict | None:
     """structured_report.json에서 해당 종목 데이터를 읽어 반환합니다.
     없으면 fin_scores parquet에서 fallback으로 읽어 동일 포맷으로 변환합니다."""
@@ -81,12 +114,18 @@ def _load_report(ticker: str) -> dict | None:
     if report_path.exists():
         try:
             data = json.loads(report_path.read_text(encoding="utf-8"))
+            matched: dict | None = None
             if isinstance(data, dict) and str(data.get("ticker", "")).zfill(6) == t:
-                return data
-            if isinstance(data, list):
+                matched = data
+            elif isinstance(data, list):
                 candidates = [r for r in data if str(r.get("ticker", "")).zfill(6) == t]
                 if candidates:
-                    return candidates[-1]
+                    matched = candidates[-1]
+            if matched is not None:
+                # sector가 없거나 비어 있으면 DB에서 보완
+                if not matched.get("sector"):
+                    matched["sector"] = _get_db_sector(t)
+                return matched
         except (json.JSONDecodeError, OSError):
             pass
 
@@ -105,8 +144,31 @@ def _load_report(ticker: str) -> dict | None:
                         return None if math.isnan(float(v)) else float(v)
                     except (TypeError, ValueError):
                         return None
+
+                # 회사명 조회 — universe parquet 우선, 없으면 pykrx
+                company_name: str | None = None
+                try:
+                    if _UNIVERSE_PATH.exists():
+                        univ = pd.read_parquet(_UNIVERSE_PATH)
+                        univ["ticker"] = univ["ticker"].astype(str).str.zfill(6)
+                        univ_row = univ[univ["ticker"] == t]
+                        if not univ_row.empty:
+                            company_name = str(univ_row.iloc[0].get("name", "")) or None
+                except Exception:
+                    pass
+                if not company_name:
+                    try:
+                        from pykrx import stock as _pykrx
+                        _raw_name = _pykrx.get_market_ticker_name(t)
+                        if isinstance(_raw_name, str) and _raw_name:
+                            company_name = _raw_name
+                    except Exception:
+                        pass
+
                 return {
                     "ticker": t,
+                    "company_name": company_name,
+                    "sector": _get_db_sector(t),
                     "as_of": str(row["as_of"])[:10] if "as_of" in row.index else None,
                     "source": "parquet",
                     "summary": {

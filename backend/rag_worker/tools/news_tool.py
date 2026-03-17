@@ -18,9 +18,12 @@ from crewai.tools import tool
 from news_model.pipeline_news_analysis_mvp import search_news_context
 
 
-def search_news_direct(query: str, n_results: int = 5) -> list[dict]:
-    """뉴스 RAG ChromaDB 에서 관련 기사를 검색한다. list of {"doc": str, "meta": dict}"""
-    return search_news_context(query, n_results=n_results)
+def search_news_direct(query: str, n_results: int = 5, company_name: str | None = None) -> list[dict]:
+    """뉴스 RAG ChromaDB 에서 관련 기사를 검색한다. list of {"doc": str, "meta": dict}
+
+    company_name 을 전달하면 해당 기업 관련 뉴스를 우선 필터링한다.
+    """
+    return search_news_context(query, n_results=n_results, company_name=company_name)
 
 
 @tool("news_rag_search")

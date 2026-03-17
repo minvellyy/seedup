@@ -48,13 +48,19 @@ def _get_vectorstore():
     return _vectorstore
 
 
-def search_reports_context(query: str, k: int = 3) -> list[dict]:
+def search_reports_context(query: str, k: int = 3, ticker: str | None = None) -> list[dict]:
     """
     증권사 리포트 ChromaDB 에서 관련 문서를 검색한다.
+    ticker 를 전달하면 해당 종목 리포트만 필터링하고, 결과가 없으면 필터 없이 재검색.
     Returns: list of {"content": str, "metadata": dict}
     """
     db = _get_vectorstore()
-    docs = db.similarity_search(query, k=k)
+    if ticker:
+        docs = db.similarity_search(query, k=k, filter={"ticker": str(ticker).zfill(6)})
+        if not docs:  # 해당 ticker 리포트 없으면 일반 검색으로 fallback
+            docs = db.similarity_search(query, k=k)
+    else:
+        docs = db.similarity_search(query, k=k)
     return [{"content": d.page_content, "metadata": d.metadata} for d in docs]
 
 

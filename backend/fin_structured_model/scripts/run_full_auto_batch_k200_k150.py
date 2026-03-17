@@ -33,7 +33,7 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--as_of", default="latest", help="YYYY-MM-DD or latest")
     ap.add_argument("--target_year", type=int, default=2024)
-    ap.add_argument("--base_year", type=int, default=2023)
+    ap.add_argument("--base_year", type=int, default=None, help="TTM 기준 이전 연도 (기본: target_year - 1)")
     ap.add_argument("--fs_div", default="CONSOL")
     ap.add_argument("--price_start", default="2022-01-01")
     ap.add_argument("--universe_path", default="data/processed/universe_k200_k150.parquet")
@@ -47,6 +47,8 @@ def main():
     processed = Path("data/processed")
     out_dir = Path(args.out_dir) / (args.as_of if args.as_of != "latest" else "latest")
     out_dir.mkdir(parents=True, exist_ok=True)
+
+    base_year = args.base_year if args.base_year is not None else args.target_year - 1
 
     # scores 파일 경로( build_scores.py 규칙 )
     base_scores = processed / f"fin_scores_v2_{args.target_year}_{args.fs_div}.parquet"
@@ -64,7 +66,7 @@ def main():
     # 1) 재무 scores 생성
     run([py, "-m", "scripts.build_scores",
          "--target_year", str(args.target_year),
-         "--base_year", str(args.base_year)], allow_fail=False)
+         "--base_year", str(base_year)], allow_fail=False)
 
     # 2) market cap 생성(실패해도 진행)
     run([py, "-m", "scripts.fetch_market_cap_yfinance",
@@ -74,7 +76,7 @@ def main():
     # 3) market cap 반영 scores 생성
     run([py, "-m", "scripts.build_scores",
          "--target_year", str(args.target_year),
-         "--base_year", str(args.base_year),
+         "--base_year", str(base_year),
          "--with_market_cap"], allow_fail=False)
 
     # 4) 가격 수집 + 피처 생성(실패해도 진행)
@@ -91,7 +93,7 @@ def main():
     # 5) 최종 scores 생성(시총+가격)
     run([py, "-m", "scripts.build_scores",
          "--target_year", str(args.target_year),
-         "--base_year", str(args.base_year),
+         "--base_year", str(base_year),
          "--with_market_cap",
          "--with_price"], allow_fail=False)
 

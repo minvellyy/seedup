@@ -138,8 +138,8 @@ def _kis_get(url: str, tr_id: str, params: Dict, retry: bool = True):
 
     _TOKEN_EXPIRED_KEYWORDS = ("접근토큰", "기간이 만료", "token", "expired", "invalid token", "인증")
     _RATE_LIMIT_CODE = "EGW00201"
-    _RATE_LIMIT_WAIT = 1.0   # 초당 한도 초과 시 대기 시간(초)
-    _RATE_LIMIT_MAX_RETRY = 3
+    _RATE_LIMIT_WAIT = 1.0   # 초당 한도 초과 시 초기 대기 시간(초) — 지수 백오프 적용
+    _RATE_LIMIT_MAX_RETRY = 5
 
     def _is_token_error(resp: requests.Response) -> bool:
         try:
@@ -166,12 +166,14 @@ def _kis_get(url: str, tr_id: str, params: Dict, retry: bool = True):
     try:
         r = requests.get(url, headers=_headers(tr_id), params=params, timeout=10)
 
-        # ── Rate Limit 재시도 (토큰 갱신 없이 대기 후 재요청) ──────────────
+        # ── Rate Limit 재시도 (지수 백오프 + 지터 적용) ─────────────────────
         if r.status_code == 500 and retry and _is_rate_limit(r):
+            import random as _random
             for attempt in range(1, _RATE_LIMIT_MAX_RETRY + 1):
-                _logger.debug("KIS 초당 한도 초과 — %.1f초 대기 후 재시도 %d/%d (%s)",
-                              _RATE_LIMIT_WAIT, attempt, _RATE_LIMIT_MAX_RETRY, url)
-                time.sleep(_RATE_LIMIT_WAIT)
+                wait = _RATE_LIMIT_WAIT * (2 ** (attempt - 1)) + _random.uniform(0, 0.5)
+                _logger.debug("KIS 초당 한도 초과 — %.2f초 대기 후 재시도 %d/%d (%s)",
+                              wait, attempt, _RATE_LIMIT_MAX_RETRY, url)
+                time.sleep(wait)
                 r = requests.get(url, headers=_headers(tr_id), params=params, timeout=10)
                 if not (r.status_code == 500 and _is_rate_limit(r)):
                     break
@@ -406,7 +408,8 @@ def get_investor_trading(market: str = "KOSPI") -> Dict:
         individual_sell  / individual_buy  / individual_net
         date
     """
-    iscd_2 = "S001" if market.upper() == "KOSPI" else "Q001"
+    is_kosdaq = market.upper() == "KOSDAQ"
+    iscd_2 = "Q001" if is_kosdaq else "S001"
 
     r = _kis_get(
         f"{BASE_URL}/uapi/domestic-stock/v1/quotations/inquire-investor-time-by-market",
@@ -516,21 +519,13 @@ def get_investor_trading_daily(market: str = "KOSPI") -> Dict:
 def get_investor_trading_best(market: str = "KOSPI") -> Dict:
     """당일 투자자별 매매동향 반환.
 
-    FHPTJ04040000 (일별 API)를 1순위로 사용한다.
-    - KOSPI·KOSDAQ 모두 정확한 순매수(net) 제공.
-    - 매도/매수 세부 데이터는 동 API에서 미제공 → 0으로 반환(프론트에서 '-' 표시).
-
-    NOTE: FHPTJ04030000 (시세 시간별 API)는 FID_INPUT_ISCD=999 시 특정
-          업종코드(섹터)의 데이터를 반환하여 시장 전체 합계와 불일치하므로 사용 안 함.
+    순매수(net): 일별 API(FHPTJ04040000) — 시장 전체 합계 기준, 정확.
+    매도/매수(sell/buy)는 KIS API에서 시장 전체 단위로 제공하지 않으므로 0 반환.
     """
     try:
         return get_investor_trading_daily(market)
     except Exception:
-        # fallback: 시세 API (부정확하지만 데이터 없음보다 나음)
-        try:
-            return get_investor_trading(market)
-        except Exception:
-            raise ValueError(f"투자자 데이터 조회 실패 [{market}]")
+        raise ValueError(f"투자자 데이터 조회 실패 [{market}]")
 
 
 def get_investor_trading_history(market: str = "KOSPI", days: int = 20) -> list:

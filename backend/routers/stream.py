@@ -22,50 +22,44 @@ router = APIRouter(prefix="/api/stream", tags=["stream"])
 
 
 async def _price_event_generator(codes: list[str]) -> AsyncGenerator[str, None]:
-    """변동된 종목 가격을 SSE 이벤트로 yield."""
-    # 지연 import (순환 참조 방지)
-    from kis_ws_client import get_manager, get_price_store
+    """push 방식 SSE — KIS WS 수신 즉시 해당 클라이언트에만 전달.
 
-    # 요청된 코드들을 WS 관리자에 구독 등록
-    manager = get_manager()
-    if manager:
-        await manager.subscribe(codes)
+    연결 시: codes 구독 + 큐 등록
+    연결 해제 시: 큐 제거 + 구독자 없는 종목 WS 구독 취소
+    """
+    from kis_ws_client import register_queue, unregister_queue, subscribe_codes, unsubscribe_codes
 
-    price_store = get_price_store()
-    last_sent: dict[str, dict] = {}   # 직전 전송 스냅샷
-    keepalive_counter = 0
+    queue: asyncio.Queue = asyncio.Queue(maxsize=200)
+
+    # 큐 등록 & KIS WS 구독 (필요 시)
+    register_queue(codes, queue)
+    await subscribe_codes(codes)
 
     try:
         while True:
-            await asyncio.sleep(0.5)
-            keepalive_counter += 1
-
-            # 변동된 종목만 추려서 전송
-            updates: dict[str, dict] = {}
-            for code in codes:
-                entry = price_store.get(code)
-                if entry is None:
-                    continue
-                prev = last_sent.get(code)
-                if prev is None or prev["current_price"] != entry["current_price"]:
-                    updates[code] = {
-                        "current_price": entry["current_price"],
-                        "change":        entry["change"],
-                        "change_rate":   entry["change_rate"],
-                        "volume":        entry["volume"],
+            try:
+                item = await asyncio.wait_for(queue.get(), timeout=20.0)
+                code = item["code"]
+                data = item["data"]
+                payload = {
+                    code: {
+                        "current_price": data["current_price"],
+                        "change":        data["change"],
+                        "change_rate":   data["change_rate"],
+                        "volume":        data["volume"],
                     }
-                    last_sent[code] = entry.copy()
-
-            if updates:
-                yield f"data: {json.dumps(updates, ensure_ascii=False)}\n\n"
-
-            # 20초(40턴) 마다 keepalive 코멘트
-            if keepalive_counter >= 40:
-                keepalive_counter = 0
+                }
+                yield f"data: {json.dumps(payload, ensure_ascii=False)}\n\n"
+            except asyncio.TimeoutError:
                 yield ": keepalive\n\n"
 
     except asyncio.CancelledError:
         logger.debug("SSE 클라이언트 연결 종료")
+    finally:
+        # 큐 제거 & 구독자 없어진 종목 WS 구독 해제
+        empty_codes = unregister_queue(codes, queue)
+        if empty_codes:
+            asyncio.get_running_loop().create_task(unsubscribe_codes(empty_codes))
 
 
 @router.get("/ws-status")

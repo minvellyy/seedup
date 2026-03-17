@@ -465,3 +465,54 @@ def get_intraday_data(
         raise HTTPException(status_code=500, detail=f"일중 데이터 조회 오류: {e}")
 
 
+@router.get(
+    "/investor-flow",
+    summary="시장별 투자자 매매동향",
+    description="한국투자증권 API로 KOSPI·KOSDAQ 투자자별 순매수 현황 반환. 단위: 십억원.",
+)
+def get_investor_flow():
+    """KOSPI / KOSDAQ 투자자별 순매수 현황.
+
+    Returns:
+        {
+          "kospi":  {institution_net, foreign_net, individual_net, ...},
+          "kosdaq": {institution_net, foreign_net, individual_net, ...},
+          "combined": {institution_net, foreign_net, individual_net}
+        }
+    """
+    try:
+        from kis_client import get_investor_trading_best
+    except ImportError as e:
+        raise HTTPException(status_code=500, detail=f"KIS 클라이언트 임포트 실패: {e}")
+
+    results: dict = {}
+    for market in ["KOSPI", "KOSDAQ"]:
+        try:
+            results[market.lower()] = get_investor_trading_best(market)
+        except Exception as exc:
+            _logger.warning(f"투자자 데이터 조회 실패 [{market}]: {exc}")
+            results[market.lower()] = {
+                "market": market,
+                "error": str(exc),
+                "institution_net": None,
+                "foreign_net":     None,
+                "individual_net":  None,
+            }
+
+    # KOSPI + KOSDAQ 합계 (시장 전체 체온계)
+    def _safe_add(a, b):
+        if a is None and b is None:
+            return None
+        return round((a or 0.0) + (b or 0.0), 1)
+
+    kp = results.get("kospi",  {})
+    kq = results.get("kosdaq", {})
+    results["combined"] = {
+        "institution_net": _safe_add(kp.get("institution_net"), kq.get("institution_net")),
+        "foreign_net":     _safe_add(kp.get("foreign_net"),     kq.get("foreign_net")),
+        "individual_net":  _safe_add(kp.get("individual_net"),  kq.get("individual_net")),
+    }
+
+    return results
+
+
