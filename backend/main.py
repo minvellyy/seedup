@@ -15,20 +15,6 @@ import sys
 import uvicorn
 from datetime import datetime
 
-# ── Windows ProactorEventLoop ConnectionResetError 노이즈 억제 ────────────────
-if sys.platform == "win32":
-    import asyncio
-    _orig_call_exception_handler = asyncio.BaseEventLoop.call_exception_handler
-
-    def _silent_exception_handler(self, context):
-        exc = context.get("exception")
-        if isinstance(exc, ConnectionResetError):
-            return  # WinError 10054 노이즈 무시
-        _orig_call_exception_handler(self, context)
-
-    asyncio.BaseEventLoop.call_exception_handler = _silent_exception_handler
-# ─────────────────────────────────────────────────────────────────────────────
-
 logger = logging.getLogger("main")
 from routers import survey, dashboard, recommendations
 from routers.instruments import router as instruments_router
@@ -52,17 +38,15 @@ except Exception as _e:
     print(f"[WARNING] 분석 라우터 로드 실패: {_e}")
     _ANALYSIS_ROUTER_AVAILABLE = False
 
-# 뉴스 RAG 라우터 (chromadb / news_model 패키지 없이도 서버 기동 가능)
+# 챗봇 라우터 (openai 패키지가 있어야 함)
 try:
-    from routers.news import router as news_router
-    from apscheduler.schedulers.background import BackgroundScheduler
-    from apscheduler.triggers.cron import CronTrigger
-    _NEWS_ROUTER_AVAILABLE = True
+    from routers.chatbot import router as chatbot_router
+    _CHATBOT_ROUTER_AVAILABLE = True
 except Exception as _e:
-    print(f"[WARNING] 뉴스 라우터 로드 실패: {_e}")
-    _NEWS_ROUTER_AVAILABLE = False
+    print(f"[WARNING] 챗봇 라우터 로드 실패: {_e}")
+    _CHATBOT_ROUTER_AVAILABLE = False
 
-# ESG 분석 라우터 (esg_model / rag_worker 없이도 서버 기동 가능)
+# ESG 분석 라우터
 try:
     from routers.esg import router as esg_router
     _ESG_ROUTER_AVAILABLE = True
@@ -70,7 +54,7 @@ except Exception as _e:
     print(f"[WARNING] ESG 라우터 로드 실패: {_e}")
     _ESG_ROUTER_AVAILABLE = False
 
-# 증권사 리포트 RAG 라우터 (reports_model / rag_worker 없이도 서버 기동 가능)
+# 리포트 라우터
 try:
     from routers.reports import router as reports_router
     _REPORTS_ROUTER_AVAILABLE = True
@@ -78,7 +62,13 @@ except Exception as _e:
     print(f"[WARNING] 리포트 라우터 로드 실패: {_e}")
     _REPORTS_ROUTER_AVAILABLE = False
 
-from routers.chatbot import router as chatbot_router
+# 뉴스 라우터
+try:
+    from routers.news import router as news_router
+    _NEWS_ROUTER_AVAILABLE = True
+except Exception as _e:
+    print(f"[WARNING] 뉴스 라우터 로드 실패: {_e}")
+    _NEWS_ROUTER_AVAILABLE = False
 
 # Pydantic 모델 정의
 class SignupRequest(BaseModel):
@@ -411,6 +401,8 @@ async def startup_event():
         if _NEWS_ROUTER_AVAILABLE or _REPORTS_ROUTER_AVAILABLE:
             try:
                 import threading
+                from apscheduler.schedulers.background import BackgroundScheduler
+                from apscheduler.triggers.cron import CronTrigger
                 _rag_scheduler = BackgroundScheduler()
 
                 # 뉴스 daily_batch — 매일 08:00
@@ -1102,7 +1094,8 @@ app.include_router(stream_router)        # /api/stream/prices
 app.include_router(holdings_router, prefix="/api")  # /api/holdings
 app.include_router(inquiry_router)       # /api/inquiries
 
-app.include_router(chatbot_router)  # 챗봇 라우터 등록
+if _CHATBOT_ROUTER_AVAILABLE:
+    app.include_router(chatbot_router)  # 챗봇 라우터 등록
 
 # 종목/포트폴리오 추천 라우터 등록 (/api/v1/stocks, /api/v1/portfolio)
 if _RECOMMEND_ROUTERS_AVAILABLE:

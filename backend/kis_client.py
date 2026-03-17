@@ -38,6 +38,21 @@ import threading as _threading
 _token_cache: Dict = {"token": None, "expires_at": 0.0}
 _token_lock = _threading.Lock()  # 다중 스레드 동시 갱신 방지
 
+# ── KIS API Rate Limiter (초당 최대 15건, 安全마진 포함) ─────────────────────
+_rate_lock = _threading.Lock()
+_last_call_time: float = 0.0
+_MIN_INTERVAL = 0.1   # 약 10 req/sec (안전 마진 포함)
+
+def _rate_limit() -> None:
+    """KIS API 호출 전 속도 제한 적용. 초당 ~14건 이하로 유지."""
+    global _last_call_time
+    with _rate_lock:
+        now = time.time()
+        wait = _MIN_INTERVAL - (now - _last_call_time)
+        if wait > 0:
+            time.sleep(wait)
+        _last_call_time = time.time()
+
 
 def _load_token_from_file() -> bool:
     """파일에서 캐시된 토큰 로드. 유효하면 True."""

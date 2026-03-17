@@ -10,6 +10,7 @@ Endpoints:
 """
 from __future__ import annotations
 
+import logging
 import math
 import os
 import time
@@ -27,6 +28,7 @@ from kis_client import get_current_price, get_daily_prices_1y
 
 load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
 
+_logger = logging.getLogger(__name__)
 router = APIRouter(prefix="/api/instruments", tags=["instruments"])
 
 # ── 현재가 TTL 캐시 (5분) ───────────────────────────────────────────────────
@@ -190,7 +192,7 @@ def list_stocks(
     finally:
         conn.close()
 
-    # ── 2. KIS API 병렬 현재가 조회 ──────────────────────────────────────────
+    # ── 2. KIS API 순차 현재가 조회 (rate limit 방지) ────────────────────────
     codes = [r["stock_code"] for r in rows]
     live_prices: Dict[str, Dict] = {}
 
@@ -254,7 +256,8 @@ def get_stock_detail(stock_code: str):
         cur = conn.cursor()
         cur.execute(
             """
-            SELECT stock_code, name, exchange, sector, asset_type
+            SELECT stock_code, name, exchange, sector, asset_type,
+                   last_price, last_price_date
             FROM instruments
             WHERE stock_code = %s
             """,
@@ -267,10 +270,22 @@ def get_stock_detail(stock_code: str):
     if not row:
         raise HTTPException(status_code=404, detail=f"종목 {stock_code}을 찾을 수 없습니다.")
 
-    # ── 2. KIS API — 현재가 조회 (캐시 우선) ──────────────────────────────────
+    # ── 2. KIS API — 현재가 조회 (캐시 우선, 실패 시 DB fallback) ────────────
     live = _get_price_cached(stock_code)
     if live is None:
-        raise HTTPException(status_code=502, detail=f"KIS 현재가 조회 실패: {stock_code}")
+        # KIS 실패 시 DB 저장 가격으로 폴백
+        db_price = float(row["last_price"] or 0)
+        if db_price <= 0:
+            raise HTTPException(status_code=502, detail=f"KIS 현재가 조회 실패: {stock_code}")
+        _logger.warning(f"KIS 현재가 조회 실패, DB fallback 사용: {stock_code}")
+        live = {
+            "current_price": db_price,
+            "prev_close": None,
+            "change": None,
+            "change_rate": None,
+            "volume": None,
+            "price_date": str(row["last_price_date"] or ""),
+        }
 
     # ── 3. KIS API — 1년 일별 히스토리 ───────────────────────────────────────
     try:
@@ -344,7 +359,16 @@ def get_stock_scores(stock_code: str):
             return {"stock_code": stock_code, "available": False}
 
         import pandas as pd
-        df = pd.read_parquet(parquet_path)
+
+        def _load_scores_df(path):
+            try:
+                return pd.read_parquet(path)
+            except Exception:
+                import pyarrow.parquet as pq
+                table = pq.read_table(path, use_pandas_metadata=False)
+                return table.to_pandas()
+
+        df = _load_scores_df(parquet_path)
         sub = df[df["ticker"].astype(str).str.zfill(6) == stock_code.zfill(6)]
         if sub.empty:
             return {"stock_code": stock_code, "available": False}

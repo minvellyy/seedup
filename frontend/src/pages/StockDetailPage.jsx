@@ -568,7 +568,20 @@ function StockDetailPage() {
   ]
 
   // ── 레이더 점수 ───────────────────────────────────────────────────────────
-  const radarPoints = scores?.available ? scores.radar : null
+  const fallbackRadarPoints = fitScore != null
+    ? [
+      { key: 'profitability', label: '수익성', score: fitScore },
+      { key: 'growth', label: '성장성', score: fitScore },
+      { key: 'stability', label: '안정성', score: fitScore },
+      { key: 'cashflow', label: '현금흐름', score: fitScore },
+      { key: 'valuation', label: '밸류에이션', score: fitScore },
+    ]
+    : null
+
+  const radarPoints =
+    scores?.available && Array.isArray(scores?.radar) && scores.radar.length >= 3
+      ? scores.radar
+      : fallbackRadarPoints
 
   // ── 추천 이유 (분석 API 또는 stockItem) ─────────────────────────────────
   const recText = analysis?.page_summary
