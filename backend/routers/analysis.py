@@ -84,6 +84,10 @@ def _get_llm():
         return ChatOpenAI(model=model.replace("openai/", ""))
 
 
+def _get_llm_model_name() -> str:
+    return os.getenv("MANAGER_LLM_MODEL", "openai/gpt-4o-mini")
+
+
 def _check_crew():
     if not _CREW_AVAILABLE:
         raise HTTPException(
@@ -91,6 +95,17 @@ def _check_crew():
             detail=f"CrewAI 에이전트를 로드할 수 없습니다: {_CREW_ERR}. "
                    "lc_env 환경 및 manager_agent 패키지를 확인하세요.",
         )
+
+
+def _strip_markdown_json(text: str) -> str:
+    """CrewAI 출력에 붙는 ```json ... ``` 마크다운 코드블록을 제거하여 순수 JSON 문자열을 반환한다."""
+    import re
+    stripped = text.strip()
+    # ```json ... ``` 또는 ``` ... ``` 패턴 제거
+    match = re.search(r"```(?:json)?\s*([\s\S]*?)```", stripped)
+    if match:
+        return match.group(1).strip()
+    return stripped
 
 
 # ─────────────────────────────────────────────────────────────────────────────
@@ -106,10 +121,29 @@ def _check_crew():
 def create_analysis_report(req: AnalysisRequest) -> AnalysisResponse:
     _check_crew()
     from datetime import datetime
+    import logging as _logging
+    _log = _logging.getLogger("analysis")
+
+    _log.info("=" * 60)
+    _log.info("[종목분석] 요청 수신")
+    _log.info("  ticker : %s", req.ticker)
+    _log.info("  mode   : %s", req.mode)
+    _log.info("  lang   : %s  style: %s", req.lang, req.style)
+    if req.user_profile_json:
+        try:
+            profile = json.loads(req.user_profile_json)
+            _log.info("  투자성향: %s  기간: %s년  목표: %s",
+                      profile.get("risk_tier", "-"),
+                      profile.get("horizon_years", "-"),
+                      profile.get("goal", "-"))
+        except Exception:
+            pass
+    _log.info("=" * 60)
 
     # stock_detail 모드에서 user_profile_json 미제공 시 샘플 사용
     user_profile_json = req.user_profile_json
     if req.mode == "stock_detail" and not user_profile_json:
+        _log.info("[종목분석] user_profile_json 없음 → 기본값(위험중립형) 사용")
         user_profile_json = json.dumps({
             "risk_tier": "위험중립형",
             "grade": "3등급",
@@ -123,6 +157,8 @@ def create_analysis_report(req: AnalysisRequest) -> AnalysisResponse:
         }, ensure_ascii=False)
 
     try:
+        _log.info("[종목분석] LLM 모델: %s", _get_llm_model_name())
+        _log.info("[종목분석] CrewAI 에이전트 실행 시작 ...")
         llm = _get_llm()
         result = run_manager_analysis(
             llm=llm,
@@ -135,13 +171,25 @@ def create_analysis_report(req: AnalysisRequest) -> AnalysisResponse:
             user_profile_json=user_profile_json,
             stock_item_json=req.stock_item_json,
         )
+        _log.info("[종목분석] CrewAI 완료 — 결과 길이: %d chars", len(result))
     except Exception as e:
+        _log.error("[종목분석] 오류 발생: %s", e)
         raise HTTPException(status_code=500, detail=f"분석 실행 오류: {e}")
+
+    stripped = _strip_markdown_json(result)
+    try:
+        parsed = json.loads(stripped)
+        _log.info("[종목분석] 결과 파싱 성공 — 최상위 키: %s", list(parsed.keys()))
+    except Exception:
+        _log.warning("[종목분석] 결과 JSON 파싱 실패 — raw 반환")
+
+    _log.info("[종목분석] 응답 반환 완료 (ticker=%s)", req.ticker)
+    _log.info("=" * 60)
 
     return AnalysisResponse(
         ticker=req.ticker,
         mode=req.mode,
-        report=result,
+        report=stripped,
         generated_at=datetime.now().isoformat(),
     )
 
@@ -175,7 +223,7 @@ def get_signal_report(
     return AnalysisResponse(
         ticker=ticker,
         mode="signal",
-        report=result,
+        report=_strip_markdown_json(result),
         generated_at=datetime.now().isoformat(),
     )
 

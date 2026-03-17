@@ -47,6 +47,7 @@ _RISK_MAP = {
     "적극투자형":  ("적극투자형",  "2등급"),
     "위험중립형":  ("위험중립형",  "3등급"),
     "안전추구형":  ("안전추구형",  "4등급"),
+    "안정추구형":  ("안전추구형",  "4등급"),  # 구버전 오타 호환
     "안정형":      ("안정형",      "5등급"),
 }
 
@@ -78,9 +79,36 @@ def _recommend_db(user_id: int, conn, koscom_score: int = 20) -> "StockRecommend
     inv_type = row.get("investment_type") or _koscom_to_type(koscom_score)
     risk_tier, risk_grade = _RISK_MAP.get(inv_type, ("위험중립형", "3등급"))
 
-    # 2. 유니버스 종목 (active, STOCK)
+    # 1-1. 배당 선호도 (DIVIDEND_PREF: HIGH / MID / LOW)
+    # 설문 답변 일괄 조회
+    cur.execute(
+        """
+        SELECT sq.code, sa.value_choice, sa.value_text
+        FROM survey_answers sa
+        JOIN survey_questions sq ON sa.question_id = sq.id
+        WHERE sa.user_id = %s AND sq.code IN (
+            'DIVIDEND_PREF', 'TARGET_HORIZON', 'INVEST_GOAL', 'CONTRIBUTION_TYPE', 'ACCOUNT_TYPE'
+        )
+        ORDER BY sa.updated_at DESC
+        """,
+        (user_id,),
+    )
+    _survey: dict = {}
+    for _r in (cur.fetchall() or []):
+        _c = _r["code"] if isinstance(_r, dict) else _r[0]
+        if _c not in _survey:
+            _survey[_c] = _r if isinstance(_r, dict) else {"code": _r[0], "value_choice": _r[1], "value_text": _r[2]}
+
+    dividend_pref = (_survey.get("DIVIDEND_PREF", {}).get("value_choice") or "MID").upper()
+    invest_goal_raw = (_survey.get("INVEST_GOAL", {}).get("value_text") or "").strip()
+    horizon_raw = (_survey.get("TARGET_HORIZON", {}).get("value_text") or "").strip()
+    contribution_type = (_survey.get("CONTRIBUTION_TYPE", {}).get("value_choice") or "").upper()
+    account_type_raw = (_survey.get("ACCOUNT_TYPE", {}).get("value_text") or "").strip()
+
+    # 2. 유니버스 종목 (active, STOCK) — bucket 포함 조회
     cur.execute("""
-        SELECT u.instrument_id, i.stock_code, i.name, u.market
+        SELECT u.instrument_id, i.stock_code, i.name, u.market,
+               COALESCE(u.bucket, 'CORE') AS bucket
         FROM universe_items u
         JOIN instruments i ON u.instrument_id = i.instrument_id
         WHERE u.active = 1
@@ -91,7 +119,7 @@ def _recommend_db(user_id: int, conn, koscom_score: int = 20) -> "StockRecommend
     """)
     stocks = cur.fetchall()
     if not stocks:
-        raise ValueError("추천 가능한 종목이 없습니다.")
+        raise ValueError("universe_items 에서 유효한 종목을 찾을 수 없습니다.")
 
     iids = [s["instrument_id"] for s in stocks]
     placeholders = ",".join(["%s"] * len(iids))
@@ -113,17 +141,26 @@ def _recommend_db(user_id: int, conn, koscom_score: int = 20) -> "StockRecommend
     for r in cur.fetchall():
         price_hist[r["instrument_id"]].append((r["price_date"], float(r["close"])))
 
-    # 4. 지표 계산
+    # 4. 지표 계산 (Sharpe·MDD·모멘텀·변동성 풀 계산)
+    _RF_RATE = 0.035          # 무위험 수익률 3.5% (연)
     ref_date = _date.today()
 
     def _closest_after(hist, target):
-        """target 날짜 이후 첫 번째 종가를 반환(없으면 None)."""
         for d, p in hist:
             if d >= target:
                 return p
         return None
 
-    scored: List[dict] = []
+    import re as _re
+
+    # ── 투자 기간 파싱 ────────────────────────────────────────────────────
+    _horizon_years: int = 3
+    _hm = _re.search(r'(\d+)년', horizon_raw)
+    if _hm:
+        _hy = int(_hm.group(1))
+        _horizon_years = _hy if _hy <= 100 else max(1, _hy - _date.today().year)
+
+    computed: List[dict] = []
     for s in stocks:
         hist = price_hist.get(s["instrument_id"], [])
         if len(hist) < 30:
@@ -131,7 +168,6 @@ def _recommend_db(user_id: int, conn, koscom_score: int = 20) -> "StockRecommend
         prices = [p for _, p in hist]
         cur_price = prices[-1]
 
-        # 수익률
         p3m = _closest_after(hist, ref_date - _timedelta(days=91))
         p6m = _closest_after(hist, ref_date - _timedelta(days=182))
         p1y = _closest_after(hist, ref_date - _timedelta(days=365))
@@ -139,74 +175,158 @@ def _recommend_db(user_id: int, conn, koscom_score: int = 20) -> "StockRecommend
         ret_6m = (cur_price / p6m - 1) if p6m else None
         ret_1y = (cur_price / p1y - 1) if p1y else None
 
-        # 변동성 & MDD (최근 252 거래일)
+        # 변동성·MDD (최근 252 거래일)
         p252 = prices[-252:]
-        vol_ann, mdd = None, None
+        vol_ann, mdd, sharpe_1y = None, None, None
         if len(p252) >= 20:
             daily_r = [p252[i] / p252[i - 1] - 1 for i in range(1, len(p252))]
-            n = len(daily_r)
-            mean_r = sum(daily_r) / n
-            var_r = sum((r - mean_r) ** 2 for r in daily_r) / max(n - 1, 1)
+            n_dr = len(daily_r)
+            mean_r = sum(daily_r) / n_dr
+            var_r = sum((r - mean_r) ** 2 for r in daily_r) / max(n_dr - 1, 1)
             vol_ann = _math.sqrt(var_r) * _math.sqrt(252)
             peak = p252[0]
             min_dd = 0.0
-            for p in p252:
-                peak = max(peak, p)
-                min_dd = min(min_dd, (p - peak) / peak)
+            for px in p252:
+                peak = max(peak, px)
+                min_dd = min(min_dd, (px - peak) / peak)
             mdd = min_dd
+            # ── [1] 샤프 지수: (1Y수익률 - 무위험률) / 연변동성 ──────────
+            if ret_1y is not None and vol_ann > 0:
+                sharpe_1y = (ret_1y - _RF_RATE) / vol_ann
 
-        scored.append({
+        computed.append({
             **s,
             "ret_3m": ret_3m, "ret_6m": ret_6m, "ret_1y": ret_1y,
-            "vol_ann": vol_ann, "mdd": mdd, "beta": None,
+            "vol_ann": vol_ann, "mdd": mdd, "sharpe_1y": sharpe_1y, "beta": None,
         })
 
-    if not scored:
+    if not computed:
         raise ValueError("지표를 계산할 수 있는 종목이 없습니다.")
 
-    # 5. 분위 정규화 후 종합 점수
+    # ══════════════════════════════════════════════════════════════════════
+    # 4단계 스코어링 파이프라인
+    #
+    # [1] 위험조정수익률 (샤프): 높을수록 좋음 → 순위 정규화
+    # [2] 다중팩터 가중치 스코어링
+    #     - 모멘텀(Momentum) 40점: 기간 맞춤 수익률 (3M/1Y 혼합)
+    #     - 우량성(Quality)  40점: 샤프지수 (위험 대비 초과수익)
+    #     - 저변동성(LowVol) 20점: 연 변동성 역수 → 안정성
+    # [3] 유니버스 그룹핑: CORE / GROWTH 체급 리그 분리
+    # [4] 투자금·목표 미세조정
+    # ══════════════════════════════════════════════════════════════════════
+
     def _rank_norm(vals: list) -> list:
-        """None 처리 포함한 순위 정규화 (0~1)."""
+        """None 처리 포함 순위 정규화 (0~1).
+        후보가 1개 이하면 데이터 부족으로 0.0 반환 (불이익 처리)."""
         idxd = [(i, v) for i, v in enumerate(vals) if v is not None]
         if len(idxd) < 2:
-            return [0.5] * len(vals)
+            return [0.0] * len(vals)  # 데이터 부족 → 최하점
         srt = sorted(idxd, key=lambda x: x[1])
         rank_map = {i: r / (len(srt) - 1) for r, (i, _) in enumerate(srt)}
-        return [rank_map.get(i, 0.5) for i in range(len(vals))]
+        return [rank_map.get(i, 0.0) for i in range(len(vals))]
 
-    r3m_n = _rank_norm([s["ret_3m"] for s in scored])
-    r1y_n = _rank_norm([s["ret_1y"] for s in scored])
-    vol_n = _rank_norm([s["vol_ann"] for s in scored])  # 낮을수록 좋음 → 1-norm
-
-    # 투자성향별 가중치: (w_3m모멘텀, w_1y모멘텀, w_안정성)
-    _SCORING_WEIGHTS = {
-        "공격투자형": (0.50, 0.40, 0.10),
-        "적극투자형": (0.45, 0.40, 0.15),
-        "위험중립형": (0.35, 0.40, 0.25),
-        "안전추구형": (0.20, 0.30, 0.50),
-        "안정형":     (0.15, 0.25, 0.60),
+    # ── [2] 다중팩터 가중치 결정 (투자성향별) ────────────────────────────
+    # 형식: (모멘텀 가중치, 우량성/샤프 가중치, 저변동성 가중치)
+    _MF_WEIGHTS = {
+        "공격투자형": (0.55, 0.30, 0.15),
+        "적극투자형": (0.50, 0.35, 0.15),
+        "위험중립형": (0.40, 0.40, 0.20),
+        "안전추구형": (0.30, 0.40, 0.30),
+        "안정추구형": (0.30, 0.40, 0.30),
+        "안정형":     (0.25, 0.40, 0.35),
     }
-    w3m, w1y, wstab = _SCORING_WEIGHTS.get(risk_tier, (0.35, 0.40, 0.25))
+    _w_mom, _w_qual, _w_vol = _MF_WEIGHTS.get(risk_tier, (0.40, 0.40, 0.20))
 
-    for i, s in enumerate(scored):
-        s["total_score"] = w3m * r3m_n[i] + w1y * r1y_n[i] + wstab * (1.0 - vol_n[i])
+    # 기간별 모멘텀 혼합 비율
+    if _horizon_years <= 2:
+        _w3m, _w1y = 0.60, 0.40
+    elif _horizon_years >= 7:
+        _w3m, _w1y = 0.30, 0.70
+    else:
+        _w3m, _w1y = 0.40, 0.60
 
-    scored.sort(key=lambda x: x["total_score"], reverse=True)
-    top5 = scored[:5]
+    r3m_n    = _rank_norm([s["ret_3m"]    for s in computed])
+    r1y_n    = _rank_norm([s["ret_1y"]    for s in computed])
+    sharpe_n = _rank_norm([s["sharpe_1y"] for s in computed])
+    vol_n    = _rank_norm([s["vol_ann"]   for s in computed])  # 낮을수록 좋음
+
+    for i, s in enumerate(computed):
+        mom_score   = _w3m * r3m_n[i] + _w1y * r1y_n[i]   # 모멘텀
+        qual_score  = sharpe_n[i]                            # 우량성 (샤프)
+        lowvol_score = 1.0 - vol_n[i]                       # 저변동성
+
+        # 투자목표 미세조정
+        _at = account_type_raw.lower().replace(' ', '')
+        _gl = invest_goal_raw.replace(' ', '')
+        _adj = 1.0
+        v = s["vol_ann"] or 0.30
+        if contribution_type == "DCA" and v < 0.35:
+            _adj *= 1.05
+        if ('isa' in _at or '연금' in _at) and v < 0.35:
+            _adj *= 1.05
+        if any(kw in _gl for kw in ('노후', '은퇴', '연금', '안전', '보존')) and v < 0.30:
+            _adj *= 1.05
+        elif any(kw in _gl for kw in ('자산증식', '증식', '성장', '수익', '공격')) and v > 0.40:
+            _adj *= 1.05
+        if dividend_pref == "HIGH" and v < 0.30:
+            _adj *= 1.03
+        elif dividend_pref == "LOW" and v > 0.40:
+            _adj *= 1.03
+
+        s["total_score"] = (
+            _w_mom  * mom_score  +
+            _w_qual * qual_score +
+            _w_vol  * lowvol_score
+        ) * _adj
+
+    # ── [3] 유니버스 그룹핑: CORE / GROWTH 체급 리그 분리 ────────────────
+    # CORE = 대형·우량주, GROWTH = 성장·테마주
+    # 성향별 TOP5 구성: (core_n, growth_n)
+    _LEAGUE_SPLIT = {
+        "공격투자형": (2, 3),
+        "적극투자형": (2, 3),
+        "위험중립형": (3, 2),
+        "안전추구형": (4, 1),
+        "안정추구형": (4, 1),
+        "안정형":     (5, 0),
+    }
+    _n_core, _n_growth = _LEAGUE_SPLIT.get(risk_tier, (3, 2))
+
+    core_pool   = sorted([s for s in computed if s.get("bucket") == "CORE"],
+                          key=lambda x: x["total_score"], reverse=True)
+    growth_pool = sorted([s for s in computed if s.get("bucket") != "CORE"],
+                          key=lambda x: x["total_score"], reverse=True)
+
+    # 리그에서 부족분은 상대 리그에서 보충
+    top_core   = core_pool[:_n_core]
+    top_growth = growth_pool[:_n_growth]
+    shortfall  = 5 - len(top_core) - len(top_growth)
+    if shortfall > 0:
+        used = {s["stock_code"] for s in top_core + top_growth}
+        extras = [s for s in computed if s["stock_code"] not in used]
+        extras.sort(key=lambda x: x["total_score"], reverse=True)
+        top_core += extras[:shortfall]
+
+    top5 = sorted(top_core + top_growth, key=lambda x: x["total_score"], reverse=True)[:5]
 
     # 6. 응답 생성
     items: List[StockItem] = []
     for rank, s in enumerate(top5, 1):
         reasons: List[str] = []
+        if s["sharpe_1y"] is not None:
+            reasons.append(f"위험조정수익률(샤프) {s['sharpe_1y']:+.2f}")
         if s["ret_3m"] is not None:
-            reasons.append(f"최근 3개월 수익률 {s['ret_3m']*100:+.1f}%")
+            reasons.append(f"3개월 수익률 {s['ret_3m']*100:+.1f}%")
         if s["ret_1y"] is not None:
-            reasons.append(f"1년 수익률 {s['ret_1y']*100:+.1f}%로 강한 모멘텀")
+            reasons.append(f"1년 수익률 {s['ret_1y']*100:+.1f}%")
         if s["vol_ann"] is not None:
             v = s["vol_ann"] * 100
-            reasons.append(f"연 변동성 {v:.1f}%" + (" (비교적 안정)" if v < 25 else ""))
+            reasons.append(f"연 변동성 {v:.1f}%" + (" (안정)" if v < 25 else ""))
+        league_label = "코어(대형)" if s.get("bucket") == "CORE" else "새틀라이트(성장)"
         if not reasons:
-            reasons = ["모멘텀 기반 상위 종목"]
+            reasons = [league_label]
+        else:
+            reasons.insert(0, league_label)
 
         items.append(StockItem(
             rank=rank,
@@ -216,16 +336,17 @@ def _recommend_db(user_id: int, conn, koscom_score: int = 20) -> "StockRecommend
             total_score=round(s["total_score"], 4),
             reasons=reasons,
             features=StockFeatures(
-                ret_3m=round(s["ret_3m"], 4)  if s["ret_3m"]  is not None else None,
-                ret_6m=round(s["ret_6m"], 4)  if s["ret_6m"]  is not None else None,
-                ret_1y=round(s["ret_1y"], 4)  if s["ret_1y"]  is not None else None,
-                vol_ann=round(s["vol_ann"], 4) if s["vol_ann"] is not None else None,
+                ret_3m=round(s["ret_3m"], 4)    if s["ret_3m"]    is not None else None,
+                ret_6m=round(s["ret_6m"], 4)    if s["ret_6m"]    is not None else None,
+                ret_1y=round(s["ret_1y"], 4)    if s["ret_1y"]    is not None else None,
+                vol_ann=round(s["vol_ann"], 4)  if s["vol_ann"]   is not None else None,
                 beta=None,
-                mdd=round(s["mdd"], 4)         if s["mdd"]     is not None else None,
+                mdd=round(s["mdd"], 4)           if s["mdd"]       is not None else None,
             ),
             explanation=(
-                f"{s['name']}은 최근 {risk_tier} 투자자에게 적합한 모멘텀 상위 종목입니다. "
-                f"최근 1년 수익률 기준 상위권에 위치하며 변동성 대비 성과가 우수합니다."
+                f"{s['name']}은(는) {league_label} 종목으로, {risk_tier} 투자자에게 적합합니다. "
+                f"샤프지수(위험 대비 수익) 기준 상위권이며, "
+                f"모멘텀·우량성·변동성 3개 팩터 종합 평가에서 우수한 점수를 받았습니다."
             ),
         ))
 

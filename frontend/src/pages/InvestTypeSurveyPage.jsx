@@ -224,7 +224,7 @@ function InvestTypeSurveyPage({ onSubmit }) {
     if (score >= 30) return '공격투자형';
     if (score >= 25) return '적극투자형';
     if (score >= 20) return '위험중립형';
-    if (score >= 15) return '안정추구형';
+    if (score >= 15) return '안전추구형';
     return '안정형';
   };
 

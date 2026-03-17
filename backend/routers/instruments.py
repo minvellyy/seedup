@@ -196,10 +196,15 @@ def list_stocks(
     codes = [r["stock_code"] for r in rows]
     live_prices: Dict[str, Dict] = {}
 
-    for code in codes:
-        result = _get_price_cached(code)
-        if result:
-            live_prices[code] = result
+    max_workers = min(10, len(codes))
+    if max_workers > 0:
+        with ThreadPoolExecutor(max_workers=max_workers) as pool:
+            future_map = {pool.submit(_get_price_cached, c): c for c in codes}
+            for fut in as_completed(future_map):
+                code = future_map[fut]
+                result = fut.result()
+                if result:
+                    live_prices[code] = result
 
     # ── 3. 결합 ───────────────────────────────────────────────────────────────
     result_list = []
@@ -424,13 +429,18 @@ def list_etfs(
     finally:
         conn.close()
 
-    # KIS API 순차 현재가 조회 (5분 TTL 캐시, rate limit 방지)
+    # KIS API 병렬 현재가 조회 (5분 TTL 캐시)
     etf_codes = [r["stock_code"] for r in rows]
     live_prices: Dict[str, Dict] = {}
-    for code in etf_codes:
-        result = _get_price_cached(code)
-        if result:
-            live_prices[code] = result
+    max_workers = min(10, len(etf_codes))
+    if max_workers > 0:
+        with ThreadPoolExecutor(max_workers=max_workers) as pool:
+            future_map = {pool.submit(_get_price_cached, c): c for c in etf_codes}
+            for fut in as_completed(future_map):
+                code = future_map[fut]
+                result = fut.result()
+                if result:
+                    live_prices[code] = result
 
     result_list = []
     for r in rows:

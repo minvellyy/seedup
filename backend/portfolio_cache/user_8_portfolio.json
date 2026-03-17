@@ -1,743 +1,187 @@
 {
-  "saved_at": "2026-03-11T02:44:29.085580",
-  "portfolios": [
-    {
-      "portfolio_label": "균형 추천형",
-      "portfolio_style": "balanced",
-      "portfolio_summary": "MC 1년 기대수익률: 하락 시나리오(P10) +15.8%, 중앙값(P50) +65.9%, 상승 시나리오(P90) +137.7%. 기대수익률 +0.0%, 연간변동성 0.0%.",
-      "risk_tier": "공격투자형",
-      "portfolio_items": [
-        {
-          "ticker": "005930",
-          "name": "삼성전자",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "삼성전자는 재무적으로 안정성이 높고, 전체 클리프 점수가 '우수'에 해당하여 안정적인 수익성과 성장이 기대됩니다. 최근 3개월 동안의 상승 확률이 약 48%로, 공격적 투자자의 포트폴리오에 적합합니다.",
-          "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
-        {
-          "ticker": "058470",
-          "name": "리노공업",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "리노공업은 55%의 상승 확률을 보이며, 우수한 수익성과 높은 안정성을 가지고 있어 공격 투자자에게 매우 매력적인 선택입니다.",
-          "ai_fin_grade": "탁월",
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
-        {
-          "ticker": "00680K",
-          "name": "미래에셋증권2우B",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "1년 수익률 +410.1% / 변동성 57.1% 으로 모멘텀 상위 편입",
-          "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
-        {
-          "ticker": "005935",
-          "name": "삼성전자우",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "삼성전자 우선주는 상승 확률이 약 48%로 안정적인 편입니다. 재무 지표에서 우수한 수익성과 안정성을 보여 공격 투자자에게 유망한 선택이 될 수 있습니다.",
-          "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
-        {
-          "ticker": "000720",
-          "name": "현대건설",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "현대글로비스는 최근 상승 확률이 48%로 긍정적인 매력이 있으나, 재무 평가 점수가 '보통'으로 낮아 공격적인 투자자에게는 조심스러운 접근이 필요합니다.",
-          "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
-        {
-          "ticker": "005380",
-          "name": "현대차",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "현대차는 최근 상승 확률이 51%로 이를 기반으로 공격 투자자에게 적합한 투자 기회가 될 수 있습니다. 전체 재무 점수는 '양호'로 양호한 성장이 기대됩니다.",
-          "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
-        {
-          "ticker": "006800",
-          "name": "미래에셋증권",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "미래에셋대우는 상승 확률이 46%로 다소 낮습니다. 재무 성과도 미미하여 매우 공격적인 투자자에게는 적합하지 않을 수 있습니다.",
-          "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        }
-      ],
-      "monte_carlo_1y": {
-        "n_simulations": 1000000,
-        "horizon_days": 252,
-        "p10_pct": 15.8,
-        "p50_pct": 65.9,
-        "p90_pct": 137.7,
-        "interpretation": "1년 후 기대 수익률(중앙값) 65.9%, 하락 시나리오(10%) 15.8%, 상승 시나리오(90%) 137.7%입니다."
-      },
-      "survey_context": {
-        "INVEST_GOAL": "자산증식",
-        "TARGET_HORIZON": "5년 후",
-        "TARGET_AMOUNT": "100000000",
-        "CONTRIBUTION_TYPE": "LUMP_SUM",
-        "LUMP_SUM_AMOUNT": "10000000",
-        "MAX_HOLDINGS": "10",
-        "DIVIDEND_PREF": "MID",
-        "ACCOUNT_TYPE": "일반"
-      },
-      "quant_signals": {
-        "short_term": {
-          "weighted_p_adj": 0.4949,
-          "items": [
-            {
-              "ticker": "005930",
-              "name": "삼성전자",
-              "weight_pct": 14.3,
-              "p_adj": 0.4795
-            },
-            {
-              "ticker": "058470",
-              "name": "리노공업",
-              "weight_pct": 14.3,
-              "p_adj": 0.5547
-            },
-            {
-              "ticker": "00680K",
-              "name": "미래에셋증권2우B",
-              "weight_pct": 14.3,
-              "p_adj": null
-            },
-            {
-              "ticker": "005935",
-              "name": "삼성전자우",
-              "weight_pct": 14.3,
-              "p_adj": 0.4779
-            },
-            {
-              "ticker": "000720",
-              "name": "현대건설",
-              "weight_pct": 14.3,
-              "p_adj": 0.486
-            },
-            {
-              "ticker": "005380",
-              "name": "현대차",
-              "weight_pct": 14.3,
-              "p_adj": 0.5125
-            },
-            {
-              "ticker": "006800",
-              "name": "미래에셋증권",
-              "weight_pct": 14.3,
-              "p_adj": 0.4586
-            }
-          ]
-        },
-        "medium_term": {
-          "weighted_ret_12m_pct": -11.7083,
-          "items": [
-            {
-              "ticker": "005930",
-              "name": "삼성전자",
-              "weight_pct": 14.3,
-              "ret_12m_pct": -27.42
-            },
-            {
-              "ticker": "058470",
-              "name": "리노공업",
-              "weight_pct": 14.3,
-              "ret_12m_pct": -5.62
-            },
-            {
-              "ticker": "00680K",
-              "name": "미래에셋증권2우B",
-              "weight_pct": 14.3,
-              "ret_12m_pct": null
-            },
-            {
-              "ticker": "005935",
-              "name": "삼성전자우",
-              "weight_pct": 14.3,
-              "ret_12m_pct": -25.46
-            },
-            {
-              "ticker": "000720",
-              "name": "현대건설",
-              "weight_pct": 14.3,
-              "ret_12m_pct": -29.35
-            },
-            {
-              "ticker": "005380",
-              "name": "현대차",
-              "weight_pct": 14.3,
-              "ret_12m_pct": 9.96
-            },
-            {
-              "ticker": "006800",
-              "name": "미래에셋증권",
-              "weight_pct": 14.3,
-              "ret_12m_pct": 7.64
-            }
-          ]
-        },
-        "risk": {
-          "weighted_vol_3m_pct": 37.2983,
-          "items": [
-            {
-              "ticker": "005930",
-              "name": "삼성전자",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 36.68
-            },
-            {
-              "ticker": "058470",
-              "name": "리노공업",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 47.35
-            },
-            {
-              "ticker": "00680K",
-              "name": "미래에셋증권2우B",
-              "weight_pct": 14.3,
-              "vol_3m_pct": null
-            },
-            {
-              "ticker": "005935",
-              "name": "삼성전자우",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 35.29
-            },
-            {
-              "ticker": "000720",
-              "name": "현대건설",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 28.11
-            },
-            {
-              "ticker": "005380",
-              "name": "현대차",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 34.61
-            },
-            {
-              "ticker": "006800",
-              "name": "미래에셋증권",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 41.75
-            }
-          ]
-        }
-      }
-    },
-    {
-      "portfolio_label": "모멘텀 집중형",
-      "portfolio_style": "balanced",
-      "portfolio_summary": "MC 1년 기대수익률: 하락 시나리오(P10) +98.1%, 중앙값(P50) +212.2%, 상승 시나리오(P90) +392.2%. 기대수익률 +0.0%, 연간변동성 0.0%.",
-      "risk_tier": "공격투자형",
-      "portfolio_items": [
-        {
-          "ticker": "043260",
-          "name": "성호전자",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "LG전자는 상승 확률이 약 47%로 투자자에게 긍정적인 신호를 제공합니다. 그러나 재무 데이터에서 안정성 점수가 낮아 공격 투자자에게 다소 리스크가 있는 종목입니다.",
-          "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
-        {
-          "ticker": "006800",
-          "name": "미래에셋증권",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "미래에셋대우는 상승 확률이 46%로 다소 낮습니다. 재무 성과도 미미하여 매우 공격적인 투자자에게는 적합하지 않을 수 있습니다.",
-          "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
-        {
-          "ticker": "032820",
-          "name": "우리기술",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "우리기술은 상승 확률이 40%로 낮은 편입니다. 재무 데이터에서도 불리하여 공격 투자형에는 적합하지 않습니다.",
-          "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
-        {
-          "ticker": "187660",
-          "name": "현대ADM",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "현대ADM의 경우 상승 확률이 37%로 낮은 편이며, 재무 데이터도 부정적이어서 공격 투자자에게는 적합하지 않습니다.",
-          "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
-        {
-          "ticker": "319400",
-          "name": "현대무벡스",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "현대미포조선은 상승 확률이 52%로, 특히 성장성이 우수하여 공격 투자자에게 매력적입니다. 전체 점수가 '우수'에 해당하여 기대 수익률이 높을 것으로 예상됩니다.",
-          "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
-        {
-          "ticker": "00680K",
-          "name": "미래에셋증권2우B",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "1년 수익률 +410.1% / 변동성 57.1% 으로 모멘텀 상위 편입",
-          "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
-        {
-          "ticker": "038500",
-          "name": "삼표시멘트",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "보광산업은 약 43%의 상승 확률을 보이지만 재무 안정성 지표는 낮아 공격 투자자에게는 아쉬움이 존재합니다.",
-          "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        }
-      ],
-      "monte_carlo_1y": {
-        "n_simulations": 1000000,
-        "horizon_days": 252,
-        "p10_pct": 98.1,
-        "p50_pct": 212.2,
-        "p90_pct": 392.2,
-        "interpretation": "1년 후 기대 수익률(중앙값) 212.2%, 하락 시나리오(10%) 98.1%, 상승 시나리오(90%) 392.2%입니다."
-      },
-      "survey_context": {
-        "INVEST_GOAL": "자산증식",
-        "TARGET_HORIZON": "5년 후",
-        "TARGET_AMOUNT": "100000000",
-        "CONTRIBUTION_TYPE": "LUMP_SUM",
-        "LUMP_SUM_AMOUNT": "10000000",
-        "MAX_HOLDINGS": "10",
-        "DIVIDEND_PREF": "MID",
-        "ACCOUNT_TYPE": "일반"
-      },
-      "quant_signals": {
-        "short_term": {
-          "weighted_p_adj": 0.443,
-          "items": [
-            {
-              "ticker": "043260",
-              "name": "성호전자",
-              "weight_pct": 14.3,
-              "p_adj": 0.4671
-            },
-            {
-              "ticker": "006800",
-              "name": "미래에셋증권",
-              "weight_pct": 14.3,
-              "p_adj": 0.4586
-            },
-            {
-              "ticker": "032820",
-              "name": "우리기술",
-              "weight_pct": 14.3,
-              "p_adj": 0.4077
-            },
-            {
-              "ticker": "187660",
-              "name": "현대ADM",
-              "weight_pct": 14.3,
-              "p_adj": 0.377
-            },
-            {
-              "ticker": "319400",
-              "name": "현대무벡스",
-              "weight_pct": 14.3,
-              "p_adj": 0.5211
-            },
-            {
-              "ticker": "00680K",
-              "name": "미래에셋증권2우B",
-              "weight_pct": 14.3,
-              "p_adj": null
-            },
-            {
-              "ticker": "038500",
-              "name": "삼표시멘트",
-              "weight_pct": 14.3,
-              "p_adj": 0.4267
-            }
-          ]
-        },
-        "medium_term": {
-          "weighted_ret_12m_pct": -1.0633,
-          "items": [
-            {
-              "ticker": "043260",
-              "name": "성호전자",
-              "weight_pct": 14.3,
-              "ret_12m_pct": -20.72
-            },
-            {
-              "ticker": "006800",
-              "name": "미래에셋증권",
-              "weight_pct": 14.3,
-              "ret_12m_pct": 7.64
-            },
-            {
-              "ticker": "032820",
-              "name": "우리기술",
-              "weight_pct": 14.3,
-              "ret_12m_pct": 27.37
-            },
-            {
-              "ticker": "187660",
-              "name": "현대ADM",
-              "weight_pct": 14.3,
-              "ret_12m_pct": -12.7
-            },
-            {
-              "ticker": "319400",
-              "name": "현대무벡스",
-              "weight_pct": 14.3,
-              "ret_12m_pct": -1.17
-            },
-            {
-              "ticker": "00680K",
-              "name": "미래에셋증권2우B",
-              "weight_pct": 14.3,
-              "ret_12m_pct": null
-            },
-            {
-              "ticker": "038500",
-              "name": "삼표시멘트",
-              "weight_pct": 14.3,
-              "ret_12m_pct": -6.8
-            }
-          ]
-        },
-        "risk": {
-          "weighted_vol_3m_pct": 54.0767,
-          "items": [
-            {
-              "ticker": "043260",
-              "name": "성호전자",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 45.01
-            },
-            {
-              "ticker": "006800",
-              "name": "미래에셋증권",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 41.75
-            },
-            {
-              "ticker": "032820",
-              "name": "우리기술",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 50.81
-            },
-            {
-              "ticker": "187660",
-              "name": "현대ADM",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 130.82
-            },
-            {
-              "ticker": "319400",
-              "name": "현대무벡스",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 31.57
-            },
-            {
-              "ticker": "00680K",
-              "name": "미래에셋증권2우B",
-              "weight_pct": 14.3,
-              "vol_3m_pct": null
-            },
-            {
-              "ticker": "038500",
-              "name": "삼표시멘트",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 24.5
-            }
-          ]
-        }
-      }
-    },
-    {
-      "portfolio_label": "안정 우선형",
-      "portfolio_style": "balanced",
-      "portfolio_summary": "MC 1년 기대수익률: 하락 시나리오(P10) +6.5%, 중앙값(P50) +45.8%, 상승 시나리오(P90) +99.6%. 기대수익률 +0.0%, 연간변동성 0.0%.",
-      "risk_tier": "공격투자형",
-      "portfolio_items": [
-        {
-          "ticker": "005930",
-          "name": "삼성전자",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "삼성전자는 재무적으로 안정성이 높고, 전체 클리프 점수가 '우수'에 해당하여 안정적인 수익성과 성장이 기대됩니다. 최근 3개월 동안의 상승 확률이 약 48%로, 공격적 투자자의 포트폴리오에 적합합니다.",
-          "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
-        {
-          "ticker": "005935",
-          "name": "삼성전자우",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "삼성전자 우선주는 상승 확률이 약 48%로 안정적인 편입니다. 재무 지표에서 우수한 수익성과 안정성을 보여 공격 투자자에게 유망한 선택이 될 수 있습니다.",
-          "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
-        {
-          "ticker": "058470",
-          "name": "리노공업",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "리노공업은 55%의 상승 확률을 보이며, 우수한 수익성과 높은 안정성을 가지고 있어 공격 투자자에게 매우 매력적인 선택입니다.",
-          "ai_fin_grade": "탁월",
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
-        {
-          "ticker": "004170",
-          "name": "신세계",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "신세계는 상승 확률이 56%로 매우 긍정적입니다. 그러나 재무 점수는 '보통'으로 안정성에서 다소 불안한 요소가 있어 주의가 필요합니다.",
-          "ai_fin_grade": "보통",
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
-        {
-          "ticker": "00680K",
-          "name": "미래에셋증권2우B",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "1년 수익률 +410.1% / 변동성 57.1% 으로 모멘텀 상위 편입",
-          "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
-        {
-          "ticker": "005380",
-          "name": "현대차",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "현대차는 최근 상승 확률이 51%로 이를 기반으로 공격 투자자에게 적합한 투자 기회가 될 수 있습니다. 전체 재무 점수는 '양호'로 양호한 성장이 기대됩니다.",
-          "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        },
-        {
-          "ticker": "009150",
-          "name": "삼성전기",
-          "weight": 0.1429,
-          "weight_pct": 14.3,
-          "asset_type": "STOCK",
-          "selection_reason": "삼성정밀화학은 상승 확률이 약 47%로 평균적인 수준이나, 안정성이 떨어져 공격적인 투자자의 포트폴리오에는 위험이 따릅니다.",
-          "ai_fin_grade": null,
-          "ai_strengths": [],
-          "ai_weaknesses": []
-        }
-      ],
-      "monte_carlo_1y": {
-        "n_simulations": 1000000,
-        "horizon_days": 252,
-        "p10_pct": 6.5,
-        "p50_pct": 45.8,
-        "p90_pct": 99.6,
-        "interpretation": "1년 후 기대 수익률(중앙값) 45.8%, 하락 시나리오(10%) 6.5%, 상승 시나리오(90%) 99.6%입니다."
-      },
-      "survey_context": {
-        "INVEST_GOAL": "자산증식",
-        "TARGET_HORIZON": "5년 후",
-        "TARGET_AMOUNT": "100000000",
-        "CONTRIBUTION_TYPE": "LUMP_SUM",
-        "LUMP_SUM_AMOUNT": "10000000",
-        "MAX_HOLDINGS": "10",
-        "DIVIDEND_PREF": "MID",
-        "ACCOUNT_TYPE": "일반"
-      },
-      "quant_signals": {
-        "short_term": {
-          "weighted_p_adj": 0.5093,
-          "items": [
-            {
-              "ticker": "005930",
-              "name": "삼성전자",
-              "weight_pct": 14.3,
-              "p_adj": 0.4795
-            },
-            {
-              "ticker": "005935",
-              "name": "삼성전자우",
-              "weight_pct": 14.3,
-              "p_adj": 0.4779
-            },
-            {
-              "ticker": "058470",
-              "name": "리노공업",
-              "weight_pct": 14.3,
-              "p_adj": 0.5547
-            },
-            {
-              "ticker": "004170",
-              "name": "신세계",
-              "weight_pct": 14.3,
-              "p_adj": 0.56
-            },
-            {
-              "ticker": "00680K",
-              "name": "미래에셋증권2우B",
-              "weight_pct": 14.3,
-              "p_adj": null
-            },
-            {
-              "ticker": "005380",
-              "name": "현대차",
-              "weight_pct": 14.3,
-              "p_adj": 0.5125
-            },
-            {
-              "ticker": "009150",
-              "name": "삼성전기",
-              "weight_pct": 14.3,
-              "p_adj": 0.4713
-            }
-          ]
-        },
-        "medium_term": {
-          "weighted_ret_12m_pct": -15.35,
-          "items": [
-            {
-              "ticker": "005930",
-              "name": "삼성전자",
-              "weight_pct": 14.3,
-              "ret_12m_pct": -27.42
-            },
-            {
-              "ticker": "005935",
-              "name": "삼성전자우",
-              "weight_pct": 14.3,
-              "ret_12m_pct": -25.46
-            },
-            {
-              "ticker": "058470",
-              "name": "리노공업",
-              "weight_pct": 14.3,
-              "ret_12m_pct": -5.62
-            },
-            {
-              "ticker": "004170",
-              "name": "신세계",
-              "weight_pct": 14.3,
-              "ret_12m_pct": -24.26
-            },
-            {
-              "ticker": "00680K",
-              "name": "미래에셋증권2우B",
-              "weight_pct": 14.3,
-              "ret_12m_pct": null
-            },
-            {
-              "ticker": "005380",
-              "name": "현대차",
-              "weight_pct": 14.3,
-              "ret_12m_pct": 9.96
-            },
-            {
-              "ticker": "009150",
-              "name": "삼성전기",
-              "weight_pct": 14.3,
-              "ret_12m_pct": -19.3
-            }
-          ]
-        },
-        "risk": {
-          "weighted_vol_3m_pct": 37.4467,
-          "items": [
-            {
-              "ticker": "005930",
-              "name": "삼성전자",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 36.68
-            },
-            {
-              "ticker": "005935",
-              "name": "삼성전자우",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 35.29
-            },
-            {
-              "ticker": "058470",
-              "name": "리노공업",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 47.35
-            },
-            {
-              "ticker": "004170",
-              "name": "신세계",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 32.81
-            },
-            {
-              "ticker": "00680K",
-              "name": "미래에셋증권2우B",
-              "weight_pct": 14.3,
-              "vol_3m_pct": null
-            },
-            {
-              "ticker": "005380",
-              "name": "현대차",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 34.61
-            },
-            {
-              "ticker": "009150",
-              "name": "삼성전기",
-              "weight_pct": 14.3,
-              "vol_3m_pct": 37.94
-            }
-          ]
-        }
-      }
+  "risk_tier": "공격투자형",
+  "risk_grade": "1등급",
+  "generated_at": "2026-03-14T12:41:54",
+  "user_profile": {
+    "user_id": 8,
+    "risk_tier": "공격투자형",
+    "risk_grade": "1등급",
+    "investment_type": "공격투자형",
+    "horizon_years": 3,
+    "monthly_contribution_krw": 0,
+    "total_assets_krw": 10000000
+  },
+  "allocation_rules": {
+    "grade": "1등급",
+    "stock_max_pct": 100.0,
+    "single_stock_max_pct": 21.0,
+    "etf_min_pct": 0.0,
+    "target_weights": {
+      "STOCK": 1.0,
+      "ETF": 0.0
     }
-  ]
+  },
+  "portfolio_items": [
+    {
+      "ticker": "005930",
+      "name": "삼성전자",
+      "asset_type": "STOCK",
+      "risk_type": "주식_공격형",
+      "weight": 0.1396,
+      "weight_pct": 14.0,
+      "selection_reason": "[코어] 1년 수익률 +256.7% | 샤프 +6.20 | 변동성 40.8%",
+      "explanation": "삼성전자은(는) 대형 우량 코어 종목입니다. 포트폴리오 안정성 뼈대를 담당합니다."
+    },
+    {
+      "ticker": "316140",
+      "name": "우리금융지주",
+      "asset_type": "STOCK",
+      "risk_type": "주식_공격형",
+      "weight": 0.1304,
+      "weight_pct": 13.0,
+      "selection_reason": "[코어] 1년 수익률 +119.9% | 샤프 +3.84 | 변동성 30.3%",
+      "explanation": "우리금융지주은(는) 대형 우량 코어 종목입니다. 포트폴리오 안정성 뼈대를 담당합니다."
+    },
+    {
+      "ticker": "006800",
+      "name": "미래에셋증권",
+      "asset_type": "STOCK",
+      "risk_type": "주식_공격형",
+      "weight": 0.1301,
+      "weight_pct": 13.0,
+      "selection_reason": "[코어] 1년 수익률 +597.4% | 샤프 +8.03 | 변동성 73.9%",
+      "explanation": "미래에셋증권은(는) 대형 우량 코어 종목입니다. 포트폴리오 안정성 뼈대를 담당합니다."
+    },
+    {
+      "ticker": "00680K",
+      "name": "미래에셋증권2우B",
+      "asset_type": "STOCK",
+      "risk_type": "주식_공격형",
+      "weight": 0.1541,
+      "weight_pct": 15.4,
+      "selection_reason": "[새틀라이트] 1년 수익률 +405.9% | 샤프 +7.05 | 변동성 57.1%",
+      "explanation": "미래에셋증권2우B은(는) 초과 수익(알파)을 노리는 성장 모멘텀 종목입니다."
+    },
+    {
+      "ticker": "005935",
+      "name": "삼성전자우",
+      "asset_type": "STOCK",
+      "risk_type": "주식_공격형",
+      "weight": 0.1503,
+      "weight_pct": 15.0,
+      "selection_reason": "[새틀라이트] 1년 수익률 +184.0% | 샤프 +4.75 | 변동성 38.0%",
+      "explanation": "삼성전자우은(는) 초과 수익(알파)을 노리는 성장 모멘텀 종목입니다."
+    },
+    {
+      "ticker": "000720",
+      "name": "현대건설",
+      "asset_type": "STOCK",
+      "risk_type": "주식_공격형",
+      "weight": 0.1489,
+      "weight_pct": 14.9,
+      "selection_reason": "[새틀라이트] 1년 수익률 +361.7% | 샤프 +5.96 | 변동성 60.1%",
+      "explanation": "현대건설은(는) 초과 수익(알파)을 노리는 성장 모멘텀 종목입니다."
+    },
+    {
+      "ticker": "267250",
+      "name": "HD현대",
+      "asset_type": "STOCK",
+      "risk_type": "주식_공격형",
+      "weight": 0.1468,
+      "weight_pct": 14.7,
+      "selection_reason": "[새틀라이트] 1년 수익률 +289.6% | 샤프 +5.59 | 변동성 51.2%",
+      "explanation": "HD현대은(는) 초과 수익(알파)을 노리는 성장 모멘텀 종목입니다."
+    }
+  ],
+  "buy_plan": [
+    {
+      "ticker": "005930",
+      "name": "삼성전자",
+      "price_krw": 195100,
+      "shares": 7,
+      "allocated_budget_krw": 1365700,
+      "expected_return_1y_pct": 256.7,
+      "rationale": "비중 14.0% 매수 (7주 × 195,100원)"
+    },
+    {
+      "ticker": "316140",
+      "name": "우리금융지주",
+      "price_krw": 35300,
+      "shares": 36,
+      "allocated_budget_krw": 1270800,
+      "expected_return_1y_pct": 119.9,
+      "rationale": "비중 13.0% 매수 (36주 × 35,300원)"
+    },
+    {
+      "ticker": "006800",
+      "name": "미래에셋증권",
+      "price_krw": 66600,
+      "shares": 19,
+      "allocated_budget_krw": 1265400,
+      "expected_return_1y_pct": 597.4,
+      "rationale": "비중 13.0% 매수 (19주 × 66,600원)"
+    },
+    {
+      "ticker": "00680K",
+      "name": "미래에셋증권2우B",
+      "price_krw": 21500,
+      "shares": 71,
+      "allocated_budget_krw": 1526500,
+      "expected_return_1y_pct": 405.9,
+      "rationale": "비중 15.4% 매수 (71주 × 21,500원)"
+    },
+    {
+      "ticker": "005935",
+      "name": "삼성전자우",
+      "price_krw": 129200,
+      "shares": 11,
+      "allocated_budget_krw": 1421200,
+      "expected_return_1y_pct": 184.0,
+      "rationale": "비중 15.0% 매수 (11주 × 129,200원)"
+    },
+    {
+      "ticker": "000720",
+      "name": "현대건설",
+      "price_krw": 150500,
+      "shares": 9,
+      "allocated_budget_krw": 1354500,
+      "expected_return_1y_pct": 361.7,
+      "rationale": "비중 14.9% 매수 (9주 × 150,500원)"
+    },
+    {
+      "ticker": "267250",
+      "name": "HD현대",
+      "price_krw": 291000,
+      "shares": 5,
+      "allocated_budget_krw": 1455000,
+      "expected_return_1y_pct": 289.6,
+      "rationale": "비중 14.7% 매수 (5주 × 291,000원)"
+    }
+  ],
+  "investable_amount_krw": 10000000,
+  "total_invested_krw": 9659100,
+  "leftover_krw": 340900,
+  "cap_compliance": {
+    "compliant": true,
+    "violations": [],
+    "summary": "cap 규칙 준수"
+  },
+  "performance_3y": {
+    "ann_return_pct": 60.88,
+    "ann_vol_pct": 26.17,
+    "mdd_pct": -23.92,
+    "sharpe": 2.193,
+    "period": "2023-03-15 ~ 2026-03-14",
+    "interpretation": "최근 3년간 연환산 수익률 60.9%, 변동성 26.2%, 최대 낙폭 -23.9%입니다."
+  },
+  "monte_carlo_1y": {
+    "n_simulations": 1000000,
+    "horizon_days": 252,
+    "p10_pct": 27.0,
+    "p50_pct": 77.6,
+    "p90_pct": 148.4,
+    "interpretation": "1년 후 기대 수익률(중앙값) 77.6%, 하락 시나리오(10%) 27.0%, 상승 시나리오(90%) 148.4%입니다."
+  },
+  "overall_summary": "1등급(공격투자형) 투자자를 위한 포트폴리오. 종목 선별 방식: 모멘텀·수익률·변동성 균형 기준. 총 7개 종목 매수 (주식 7개 · ETF 0개 중). 총 투자금 10,000,000원 중 9,659,100원 투자, 잔여 340,900원.",
+  "portfolio_label": "균형 추천형"
 }

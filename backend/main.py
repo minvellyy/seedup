@@ -11,6 +11,7 @@ import asyncio
 import hashlib
 import json
 import logging
+import sys
 import uvicorn
 from datetime import datetime
 
@@ -37,17 +38,15 @@ except Exception as _e:
     print(f"[WARNING] 분석 라우터 로드 실패: {_e}")
     _ANALYSIS_ROUTER_AVAILABLE = False
 
-# 뉴스 RAG 라우터 (chromadb / news_model 패키지 없이도 서버 기동 가능)
+# 챗봇 라우터 (openai 패키지가 있어야 함)
 try:
-    from routers.news import router as news_router
-    from apscheduler.schedulers.background import BackgroundScheduler
-    from apscheduler.triggers.cron import CronTrigger
-    _NEWS_ROUTER_AVAILABLE = True
+    from routers.chatbot import router as chatbot_router
+    _CHATBOT_ROUTER_AVAILABLE = True
 except Exception as _e:
-    print(f"[WARNING] 뉴스 라우터 로드 실패: {_e}")
-    _NEWS_ROUTER_AVAILABLE = False
+    print(f"[WARNING] 챗봇 라우터 로드 실패: {_e}")
+    _CHATBOT_ROUTER_AVAILABLE = False
 
-# ESG 분석 라우터 (esg_model / rag_worker 없이도 서버 기동 가능)
+# ESG 분석 라우터
 try:
     from routers.esg import router as esg_router
     _ESG_ROUTER_AVAILABLE = True
@@ -55,7 +54,7 @@ except Exception as _e:
     print(f"[WARNING] ESG 라우터 로드 실패: {_e}")
     _ESG_ROUTER_AVAILABLE = False
 
-# 증권사 리포트 RAG 라우터 (reports_model / rag_worker 없이도 서버 기동 가능)
+# 리포트 라우터
 try:
     from routers.reports import router as reports_router
     _REPORTS_ROUTER_AVAILABLE = True
@@ -63,7 +62,13 @@ except Exception as _e:
     print(f"[WARNING] 리포트 라우터 로드 실패: {_e}")
     _REPORTS_ROUTER_AVAILABLE = False
 
-from routers.chatbot import router as chatbot_router
+# 뉴스 라우터
+try:
+    from routers.news import router as news_router
+    _NEWS_ROUTER_AVAILABLE = True
+except Exception as _e:
+    print(f"[WARNING] 뉴스 라우터 로드 실패: {_e}")
+    _NEWS_ROUTER_AVAILABLE = False
 
 # Pydantic 모델 정의
 class SignupRequest(BaseModel):
@@ -221,13 +226,30 @@ async def _db_full_price_sync(skip_ws_codes: set = None) -> int:
     today = datetime.now().strftime("%Y-%m-%d")
     results: dict = {}
 
-    # KIS REST API rate limit 고려: 순차 처리 (kis_client._rate_limit이 간격 보장)
-    for code in target_codes:
-        try:
-            data = get_current_price(code)
-            results[code] = data["current_price"]
-        except Exception as e:
-            logger.debug("REST 가격 조회 실패 [%s]: %s", code, e)
+    # KIS REST API rate limit 대응: 초당 최대 ~10건 (100ms 간격)
+    # 1423종목 기준 약 2~3분 소요 (백그라운드 작업이므로 허용)
+    _RATE_LIMIT_DELAY = float(os.getenv("KIS_REST_RATE_DELAY", "0.1"))  # 초
+    _BATCH_SIZE = int(os.getenv("KIS_REST_BATCH_SIZE", "3"))            # 동시 요청 수
+    _BATCH_PAUSE = float(os.getenv("KIS_REST_BATCH_PAUSE", "0.35"))     # 배치 간 대기(초)
+
+    logger.info("DB 전체 가격 갱신 시작: %d개 종목 (배치=%d, 간격=%.2fs)", len(target_codes), _BATCH_SIZE, _BATCH_PAUSE)
+
+    loop = asyncio.get_event_loop()
+    with ThreadPoolExecutor(max_workers=_BATCH_SIZE) as pool:
+        for batch_start in range(0, len(target_codes), _BATCH_SIZE):
+            if not target_codes:
+                break
+            batch = target_codes[batch_start: batch_start + _BATCH_SIZE]
+            future_map = {pool.submit(get_current_price, code): code for code in batch}
+            for fut in as_completed(future_map):
+                code = future_map[fut]
+                try:
+                    data = fut.result()
+                    results[code] = data["current_price"]
+                except Exception as e:
+                    logger.debug("REST 가격 조회 실패 [%s]: %s", code, e)
+            # 배치 간 대기: KIS 초당 요청 제한(EGW00201) 방지
+            await asyncio.sleep(_BATCH_PAUSE)
 
     if not results:
         return 0
@@ -395,6 +417,11 @@ async def startup_event():
                 print(f"DB 종목 로드 실패 (빈 목록으로 시작): {db_err}")
 
             is_mock = os.getenv("KIS_MOCK", "false").lower() == "true"
+            # KIS 서버가 이전 세션을 정리할 시간 확보 (ALREADY IN USE 방지)
+            _ws_startup_delay = int(os.getenv("KIS_WS_STARTUP_DELAY", "20"))
+            if _ws_startup_delay > 0:
+                print(f"KIS WebSocket 연결 전 {_ws_startup_delay}초 대기 (이전 세션 정리)...")
+                await asyncio.sleep(_ws_startup_delay)
             await init_manager(initial_codes, is_mock=is_mock)
             print(f"KIS WebSocket manager initialized! ({len(initial_codes)}개 종목 구독 등록)")
         except Exception as ws_err:
@@ -404,6 +431,8 @@ async def startup_event():
         if _NEWS_ROUTER_AVAILABLE or _REPORTS_ROUTER_AVAILABLE:
             try:
                 import threading
+                from apscheduler.schedulers.background import BackgroundScheduler
+                from apscheduler.triggers.cron import CronTrigger
                 _rag_scheduler = BackgroundScheduler()
 
                 # 뉴스 daily_batch — 매일 08:00
@@ -1095,7 +1124,8 @@ app.include_router(stream_router)        # /api/stream/prices
 app.include_router(holdings_router, prefix="/api")  # /api/holdings
 app.include_router(inquiry_router)       # /api/inquiries
 
-app.include_router(chatbot_router)  # 챗봇 라우터 등록
+if _CHATBOT_ROUTER_AVAILABLE:
+    app.include_router(chatbot_router)  # 챗봇 라우터 등록
 
 # 종목/포트폴리오 추천 라우터 등록 (/api/v1/stocks, /api/v1/portfolio)
 if _RECOMMEND_ROUTERS_AVAILABLE:
@@ -1115,6 +1145,16 @@ if _NEWS_ROUTER_AVAILABLE:
 
 @app.on_event("shutdown")
 async def shutdown_event():
+    # KIS WebSocket 연결 명시적 종료 (ALREADY IN USE 방지)
+    try:
+        from kis_ws_client import get_manager
+        manager = get_manager()
+        if manager:
+            await manager.stop()
+            print("🛑 KIS WebSocket 연결 종료")
+    except Exception as e:
+        print(f"KIS WebSocket 종료 오류: {e}")
+
     for attr in ("rag_scheduler", "news_scheduler"):
         scheduler = getattr(app.state, attr, None)
         if scheduler and scheduler.running:
@@ -1125,4 +1165,10 @@ async def shutdown_event():
 if __name__ == '__main__':
     # FastAPI 앱 실행
     import uvicorn
-    uvicorn.run(app, host="127.0.0.1", port=8000)
+    import logging
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(name)s] %(levelname)s  %(message)s",
+        datefmt="%H:%M:%S",
+    )
+    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")

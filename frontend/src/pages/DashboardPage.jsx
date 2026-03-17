@@ -115,9 +115,28 @@ const DashboardPage = () => {
     return () => { if (esRef.current) esRef.current.close() }
   }, [])
 
+  const REC_SESSION_TTL = 24 * 60 * 60 * 1000  // 24시간 (ms)
+
   const fetchStockRecs = async (userId, refresh = false) => {
     setRecRequested(true)
     setStockRecsLoading(true)
+
+    // sessionStorage 캐시 확인 (refresh=false 일 때만)
+    if (!refresh) {
+      try {
+        const cached = sessionStorage.getItem(`stock_recs_${userId}`)
+        if (cached) {
+          const { recStocksData, updatedAt, ts } = JSON.parse(cached)
+          if (Date.now() - ts < REC_SESSION_TTL) {
+            setRecStocks(recStocksData || [])
+            setStockRecsUpdatedAt(updatedAt)
+            setStockRecsLoading(false)
+            return
+          }
+        }
+      } catch {}
+    }
+
     try {
       const srRes = await fetch(`${API_BASE_URL}/api/dashboard/stock-recommendations?user_id=${userId}&refresh=${refresh}`)
       if (!srRes.ok) {
@@ -154,8 +173,16 @@ const DashboardPage = () => {
             }))
           }
           setRecStocks(newStocks)
-          if (refresh) setStockRecsUpdatedAt(new Date().toISOString())
-          else setStockRecsUpdatedAt(stockData.generated_at || new Date().toISOString())
+          const updatedAt = refresh ? new Date().toISOString() : (stockData.generated_at || new Date().toISOString())
+          setStockRecsUpdatedAt(updatedAt)
+          // sessionStorage에 저장
+          try {
+            sessionStorage.setItem(`stock_recs_${userId}`, JSON.stringify({
+              recStocksData: newStocks,
+              updatedAt,
+              ts: Date.now(),
+            }))
+          } catch {}
         }
       }
     } catch (e) {
@@ -168,6 +195,23 @@ const DashboardPage = () => {
 
   const fetchPortfolioRecs = async (userId, refresh = false) => {
     setPfRecsLoading(true)
+
+    // sessionStorage 캐시 확인 (refresh=false 일 때만)
+    if (!refresh) {
+      try {
+        const cached = sessionStorage.getItem(`pf_recs_${userId}`)
+        if (cached) {
+          const { portfoliosData, cachedAt, ts } = JSON.parse(cached)
+          if (Date.now() - ts < REC_SESSION_TTL) {
+            setMultiPortfolios(portfoliosData || [])
+            setPfRecsUpdatedAt(cachedAt)
+            setPfRecsLoading(false)
+            return
+          }
+        }
+      } catch {}
+    }
+
     const controller = new AbortController()
     // 190초 후 자동 중단 (백엔드 타임아웃 180초 + 여유 10초)
     const timeoutId = setTimeout(() => controller.abort(), 190000)
@@ -179,8 +223,16 @@ const DashboardPage = () => {
       if (prRes.ok) {
         const newPortfolios = await prRes.json()
         setMultiPortfolios(newPortfolios)
-        const cachedAt = newPortfolios?.[0]?._cached_at
-        setPfRecsUpdatedAt(cachedAt || new Date().toISOString())
+        const cachedAt = newPortfolios?.[0]?._cached_at || new Date().toISOString()
+        setPfRecsUpdatedAt(cachedAt)
+        // sessionStorage에 저장
+        try {
+          sessionStorage.setItem(`pf_recs_${userId}`, JSON.stringify({
+            portfoliosData: newPortfolios,
+            cachedAt,
+            ts: Date.now(),
+          }))
+        } catch {}
       } else {
         const detail = await prRes.json().catch(() => ({}))
         const msg = detail?.detail || `오류 코드: ${prRes.status}`
@@ -203,99 +255,29 @@ const DashboardPage = () => {
     setError(null)
     
     try {
-      // 각 API를 개별적으로 처리하여 일부 실패해도 계속 진행
-      let weather = null
-      let indices = []
-      
-      // Investor Trading (당일)
-      let investorRows = []
-      try {
-        const invRes = await fetch(`${API_BASE_URL}/api/dashboard/investor-trading`)
-        if (invRes.ok) {
-          investorRows = await invRes.json()
-        }
-      } catch (e) {
-        console.warn('Failed to fetch investor trading:', e)
-      }
+      const FALLBACK_WEATHER = { weather: '흐림', score: 50, recommendation: '시장 분석 중', hint: '현재 시장 데이터를 수집하고 있습니다.' }
+      const FALLBACK_INDICES = [
+        { market: 'KOSPI',  index: 2500.00, change: 0, change_rate: 0, date: new Date().toISOString().split('T')[0] },
+        { market: 'KOSDAQ', index: 850.00,  change: 0, change_rate: 0, date: new Date().toISOString().split('T')[0] },
+      ]
 
-      // Market Weather
-      try {
-        const weatherRes = await fetch(`${API_BASE_URL}/api/dashboard/market-weather?market=${selectedMarket}`)
-        if (weatherRes.ok) {
-          weather = await weatherRes.json()
-        } else {
-          // 기본 날씨 정보
-          weather = {
-            weather: '흐림',
-            score: 50,
-            recommendation: '시장 분석 중',
-            hint: '현재 시장 데이터를 수집하고 있습니다.'
-          }
-        }
-      } catch (e) {
-        console.warn('Failed to fetch market weather:', e)
-        weather = {
-          weather: '흐림',
-          score: 50,
-          recommendation: '시장 분석 중',
-          hint: '현재 시장 데이터를 수집하고 있습니다.'
-        }
-      }
+      // 4개 API 동시 병렬 호출 (순차 await → Promise.allSettled)
+      const [invResult, weatherResult, indicesResult, instResult] = await Promise.allSettled([
+        fetch(`${API_BASE_URL}/api/dashboard/investor-trading`).then(r => r.ok ? r.json() : []),
+        fetch(`${API_BASE_URL}/api/dashboard/market-weather?market=${selectedMarket}`).then(r => r.ok ? r.json() : FALLBACK_WEATHER),
+        fetch(`${API_BASE_URL}/api/dashboard/market-indices`).then(r => r.ok ? r.json() : FALLBACK_INDICES),
+        fetch(`${API_BASE_URL}/api/instruments/stocks?limit=20`).then(r => r.ok ? r.json() : []),
+      ])
 
-      // Market Indices
-      try {
-        const indicesRes = await fetch(`${API_BASE_URL}/api/dashboard/market-indices`)
-        if (indicesRes.ok) {
-          indices = await indicesRes.json()
-        } else {
-          // 기본 지수 정보
-          indices = [
-            {
-              market: 'KOSPI',
-              index: 2500.00,
-              change: 0,
-              change_rate: 0,
-              date: new Date().toISOString().split('T')[0]
-            },
-            {
-              market: 'KOSDAQ',
-              index: 850.00,
-              change: 0,
-              change_rate: 0,
-              date: new Date().toISOString().split('T')[0]
-            }
-          ]
-        }
-      } catch (e) {
-        console.warn('Failed to fetch market indices:', e)
-        indices = [
-          {
-            market: 'KOSPI',
-            index: 2500.00,
-            change: 0,
-            change_rate: 0,
-            date: new Date().toISOString().split('T')[0]
-          },
-          {
-            market: 'KOSDAQ',
-            index: 850.00,
-            change: 0,
-            change_rate: 0,
-            date: new Date().toISOString().split('T')[0]
-          }
-        ]
-      }
+      const investorRows = invResult.status === 'fulfilled' ? invResult.value : []
+      const weather      = weatherResult.status === 'fulfilled' ? weatherResult.value : FALLBACK_WEATHER
+      const indices      = indicesResult.status === 'fulfilled' ? indicesResult.value : FALLBACK_INDICES
+      const instStocks   = instResult.status === 'fulfilled' ? instResult.value : []
 
-      // 실제 종목 주가 (instruments DB)
-      let instStocks = []
-      try {
-        const instRes = await fetch(`${API_BASE_URL}/api/instruments/stocks?limit=20`)
-        if (instRes.ok) {
-          instStocks = await instRes.json()
-        }
-      } catch (e) {
-        console.warn('Failed to fetch instruments stocks:', e)
-      }
+      if (invResult.status === 'rejected')     console.warn('Failed to fetch investor trading:', invResult.reason)
+      if (weatherResult.status === 'rejected') console.warn('Failed to fetch market weather:', weatherResult.reason)
+      if (indicesResult.status === 'rejected') console.warn('Failed to fetch market indices:', indicesResult.reason)
+      if (instResult.status === 'rejected')    console.warn('Failed to fetch instruments stocks:', instResult.reason)
 
       // investorRows 배열 → {KOSPI: {...}, KOSDAQ: {...}} 딕셔너리로 변환
       const invMap = {}
@@ -306,9 +288,8 @@ const DashboardPage = () => {
       setMarketWeather(weather)
       setMarketIndices(indices)
       setInstrumentsStocks(instStocks)
-      
-      // 백엔드 서버가 아예 응답이 없는 경우에만 에러 표시
-      if (!weather && indices.length === 0 && stocks.length === 0) {
+
+      if (!weather && indices.length === 0 && instStocks.length === 0) {
         setError('백엔드 서버에 연결할 수 없습니다. 서버가 실행 중인지 확인해주세요.')
       }
     } catch (err) {
@@ -808,20 +789,9 @@ const DashboardPage = () => {
           {(() => {
             const BLUE_PALETTE = ['#1E3A8A','#2D5BB5','#2563EB','#3B82F6','#60A5FA','#93C5FD','#BAD4F5','#DBEAFE']
             const getColor = (idx) => BLUE_PALETTE[Math.min(idx, BLUE_PALETTE.length - 1)]
-            const RISK_COLOR = { '안정형': '#27ae60', '중립형': '#f39c12', '공격형': '#e74c3c' }
-            const TIER_SUMMARY = {
-              '안정형':    '🛡️ 원금 보존을 최우선으로, 안전하게 자산을 지키는 포트폴리오입니다.',
-              '안정추구형': '🛡️ 낮은 변동성으로 꾸준히 자산을 불려가는 안정형 포트폴리오입니다.',
-              '위험중립형': '⚖️ 안정성과 수익 가능성을 균형 있게 담은 포트폴리오입니다.',
-              '적극투자형': '📈 성장 가능성 높은 종목에 집중해 높은 수익을 노리는 포트폴리오입니다.',
-              '공격투자형': '🚀 강한 상승 모멘텀 종목으로 구성해 최대 수익을 추구하는 포트폴리오입니다.',
-            }
-            const INVEST_GOAL_LABEL_D = {
-              '노후 준비': '노후 준비', '은퇴 준비': '노후 준비',
-              '주택 마련': '내 집 마련', '집 구입': '내 집 마련',
-              '자산 증식': '자산 증식', '목돈 마련': '목돈 마련',
-              '여유 자금 운용': '여유 자금 운용', '자녀 교육': '자녀 교육 자금',
-            }
+            // Top 순위별 강조색
+            const TOP_COLORS = ['#2563EB', '#7C3AED', '#0891B2']
+            const getTopColor = (idx) => TOP_COLORS[idx] || '#3498db'
             const buildCardSummary = (pf) => {
               const ctx = pf.survey_context || {}
               const tierIcon = { '안정형':'🛡️','안정추구형':'🛡️','위험중립형':'⚖️','적극투자형':'📈','공격투자형':'🚀' }[pf.risk_tier] || '📊'
@@ -838,8 +808,16 @@ const DashboardPage = () => {
               const contribType = ctx.CONTRIBUTION_TYPE
               const fmtKrw = (n) => n >= 100_000_000 ? `${(n/100_000_000).toFixed(0)}억 원` : `${(n/10_000).toFixed(0)}만 원`
               const mc = pf.monte_carlo_1y
-              const retStr = mc?.p50_pct != null ? ` · 기대수익 ${mc.p50_pct >= 0 ? '+' : ''}${mc.p50_pct.toFixed(0)}%` : ''
               const nItems = (pf.portfolio_items || []).length
+
+              // MC 수익률/리스크 요약
+              const parts = []
+              if (mc?.p50_pct != null) parts.push(`기대수익 ${mc.p50_pct >= 0 ? '+' : ''}${mc.p50_pct.toFixed(0)}%`)
+              if (mc?.vol_ann_pct != null) parts.push(`변동성 ${mc.vol_ann_pct.toFixed(0)}%`)
+              if (mc?.p10_pct != null) parts.push(`하락 시나리오 ${mc.p10_pct >= 0 ? '+' : ''}${mc.p10_pct.toFixed(0)}%`)
+              const mcStr = parts.length > 0 ? parts.join(' · ') : null
+
+              // 개인화 컨텍스트 조합
               const condParts = []
               if (goal && horizon) condParts.push(`${goal}(${horizon})`)
               else if (goal) condParts.push(goal)
@@ -848,9 +826,9 @@ const DashboardPage = () => {
               else if (contribType === 'DCA' && monthlyAmt) condParts.push(`월 ${fmtKrw(monthlyAmt)} 적립식`)
               else if (monthlyAmt) condParts.push(`월 ${fmtKrw(monthlyAmt)}`)
               else if (lumpAmt) condParts.push(fmtKrw(lumpAmt))
-              const pfDesc = `${pf.risk_tier} ${nItems}개 종목${retStr}`
-              if (condParts.length > 0) return `${tierIcon} ${condParts.join(' · ')}에 최적화된 ${pfDesc}`
-              return TIER_SUMMARY[pf.risk_tier] || `${tierIcon} ${pf.risk_tier} 성향에 맞게 구성된 포트폴리오입니다.`
+
+              const ctxStr = condParts.length > 0 ? `${condParts.join(' · ')}에 맞게 선별된 ${nItems}개 종목` : `${pf.risk_tier} 성향에 맞게 선별된 ${nItems}개 종목`
+              return mcStr ? `${tierIcon} ${ctxStr} — ${mcStr}` : `${tierIcon} ${ctxStr}`
             }
             const fmtPct = (v) => v == null ? '-' : `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`
             return (
@@ -864,7 +842,7 @@ const DashboardPage = () => {
                       </span>
                     )}
                     {multiPortfolios.length > 0 && !pfRecsLoading && (
-                      <span style={{ fontSize: 11, color: '#2563EB', fontWeight: 600 }}>✨ AI 분석 포함</span>
+                      <span style={{ fontSize: 11, color: '#2563EB', fontWeight: 600 }}></span>
                     )}
                     <button
                       className="dash-analysis-btn"
@@ -887,7 +865,7 @@ const DashboardPage = () => {
                       const items = [...(pf.portfolio_items || [])].sort((a, b) => b.weight_pct - a.weight_pct)
                       const perf = pf.performance_3y
                       const riskLabel = pf.portfolio_label || pf.risk_tier || ''
-                      const accentColor = RISK_COLOR[riskLabel] || '#3498db'
+                      const accentColor = getTopColor(pfIdx)
                       return (
                         <div
                           key={pfIdx}
@@ -897,7 +875,7 @@ const DashboardPage = () => {
                         >
                           <div className="recommendation-header">
                             <h3 style={{ color: '#1a202c', fontSize: '1.05rem', fontWeight: 600 }}>
-                              <span style={{ color: accentColor, fontSize: '0.9rem' }}>포트폴리오 {pfIdx + 1}</span> : {riskLabel}
+                              <span style={{ color: accentColor, fontSize: '0.9rem' }}>Top {pfIdx + 1}</span> : {riskLabel}
                             </h3>
                             <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
                               {perf && (

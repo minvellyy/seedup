@@ -75,15 +75,40 @@ async def ws_status():
     manager = get_manager()
     store = get_price_store()
     if manager is None:
-        return {"initialized": False}
-    return {
-        "initialized": True,
-        "running": manager._running,
-        "subscribed": sorted(manager._subscribed),
-        "pending": sorted(getattr(manager, "_pending_subscribe", set())),
-        "price_store_count": len(store),
-        "price_store_sample": {k: v for k, v in list(store.items())[:5]},
-    }
+        return {"initialized": False, "price_store_count": len(store)}
+
+    # KisWebSocketPool vs KiwoomWebSocketManager 공통 처리
+    if hasattr(manager, "_workers"):
+        # KisWebSocketPool
+        workers_info = [
+            {
+                "running": w._running,
+                "subscribed_count": len(w._subscribed),
+                "subscribed_sample": sorted(w._subscribed)[:10],
+            }
+            for w in manager._workers
+        ]
+        return {
+            "initialized": True,
+            "type": "pool",
+            "worker_count": manager.worker_count,
+            "total_subscribed": manager.total_subscribed,
+            "workers": workers_info,
+            "price_store_count": len(store),
+            "price_store_sample": {k: v for k, v in list(store.items())[:5]},
+        }
+    else:
+        # KisWebSocketManager (단일)
+        return {
+            "initialized": True,
+            "type": "single",
+            "running": manager._running,
+            "subscribed_count": len(manager._subscribed),
+            "subscribed_sample": sorted(manager._subscribed)[:10],
+            "pending": sorted(getattr(manager, "_pending_subscribe", set()))[:10],
+            "price_store_count": len(store),
+            "price_store_sample": {k: v for k, v in list(store.items())[:5]},
+        }
 
 
 @router.get("/prices")

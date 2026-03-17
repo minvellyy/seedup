@@ -20,6 +20,7 @@ import pymysql
 import logging as _logging
 import base64
 import json
+from concurrent.futures import ThreadPoolExecutor, as_completed
 from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException, File, UploadFile
 from pydantic import BaseModel
@@ -174,37 +175,46 @@ def get_holdings(user_id: int, include_prices: bool = True):
             results = cur.fetchall()
         conn.close()
         
-        holdings = []
+        # 기본 holding_data 목록 먼저 구성
+        holdings_data = []
         for row in results:
-            holding_data = {
+            holdings_data.append({
                 **row,
                 "purchase_date": row["purchase_date"].strftime("%Y-%m-%d") if row["purchase_date"] else None,
                 "created_at": row["created_at"].strftime("%Y-%m-%d %H:%M:%S"),
                 "updated_at": row["updated_at"].strftime("%Y-%m-%d %H:%M:%S")
-            }
-            
-            # 현재가 정보 추가
-            if include_prices:
-                try:
-                    price_info = get_current_price(row["stock_code"])
+            })
+
+        # 현재가 병렬 조회 (N+1 → 1 round)
+        if include_prices and holdings_data:
+            codes = [row["stock_code"] for row in results]
+            price_map: dict = {}
+            max_workers = min(10, len(codes))
+            with ThreadPoolExecutor(max_workers=max_workers) as pool:
+                future_to_code = {pool.submit(get_current_price, code): code for code in codes}
+                for fut in as_completed(future_to_code):
+                    code = future_to_code[fut]
+                    try:
+                        price_map[code] = fut.result()
+                    except Exception as e:
+                        _logger.warning(f"종목 {code} 현재가 조회 실패: {e}")
+
+            for i, row in enumerate(results):
+                price_info = price_map.get(row["stock_code"])
+                if price_info:
                     current_price = price_info["current_price"]
                     current_value = current_price * row["shares"]
                     purchase_value = float(row["purchase_price"]) * row["shares"]
                     return_amount = current_value - purchase_value
                     return_rate = (return_amount / purchase_value * 100) if purchase_value > 0 else 0
-                    
-                    holding_data.update({
+                    holdings_data[i].update({
                         "current_price": current_price,
                         "current_value": current_value,
                         "return_amount": return_amount,
                         "return_rate": return_rate
                     })
-                except Exception as e:
-                    _logger.warning(f"종목 {row['stock_code']} 현재가 조회 실패: {e}")
-                    
-            holdings.append(holding_data)
-            
-        return holdings
+
+        return holdings_data
         
     except Exception as e:
         _logger.error(f"보유 주식 조회 실패: {e}")

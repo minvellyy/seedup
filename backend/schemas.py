@@ -31,6 +31,9 @@ class StockFeatures(BaseModel):
     vol_ann: Optional[float] = None
     beta: Optional[float] = None
     mdd: Optional[float] = None
+    mc_p10: Optional[float] = None   # MC 1년 기대수익률 하락(10%) 시나리오 (%)
+    mc_p50: Optional[float] = None   # MC 1년 기대수익률 중앙값 (%)
+    mc_p90: Optional[float] = None   # MC 1년 기대수익률 상승(90%) 시나리오 (%)
 
 
 class StockItem(BaseModel):
