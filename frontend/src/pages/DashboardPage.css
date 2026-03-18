@@ -63,6 +63,53 @@
   z-index: 2;
 }
 
+/* 콘텐츠 영역 내부 card margin 제거 — gap으로 간격 통제 */
+.dashboard-left {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-width: 0;
+}
+
+.dashboard-left .card {
+  margin-bottom: 0;
+}
+
+/* 우측: 단일 카드가 셀 전체 높이 채우도록 */
+.dashboard-right {
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-right .card {
+  margin-bottom: 0;
+  flex: 1;
+}
+
+.dashboard-bottom {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.5rem;
+  max-width: 1400px;
+  margin: 0 auto 1.5rem;
+  padding: 0 1.5rem 1.5rem;
+  position: relative;
+  z-index: 2;
+}
+
+/* 하단: 각 셀의 카드가 셀 전체 높이 채우도록 */
+.dashboard-bottom > * {
+  margin-bottom: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.dashboard-bottom .card {
+  margin-bottom: 0;
+  flex: 1;
+  box-sizing: border-box;
+}
+
 /* 글래스모피즘 카드 스타일 */
 .card {
   background: rgba(255, 255, 255, 0.92);
@@ -330,6 +377,31 @@
 /* 투자자별 매매동향 카드 */
 .trading-trends-card {
   background: rgba(255, 255, 255, 0.95);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+}
+
+.trading-market-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.625rem;
+}
+
+.trading-market-block.with-divider {
+  border-top: 2px solid rgba(90, 144, 104, 0.35);
+  padding-top: 0.5rem;
+}
+
+.trading-market-chip {
+  display: inline-block;
+  background: #1a1a1a;
+  color: #fff;
+  padding: 3px 10px;
+  border-radius: 8px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
 }
 
 .trading-date {
@@ -357,7 +429,7 @@
   width: 100%;
   border-collapse: separate;
   border-spacing: 0;
-  font-size: 0.8125rem;
+  font-size: 0.82rem;
 }
 
 .investor-table thead {
@@ -365,12 +437,12 @@
 }
 
 .investor-table th {
-  padding: 0.625rem 0.875rem;
+  padding: 0.6rem 0.85rem;
   text-align: right;
   font-weight: 600;
   color: white;
   border-bottom: 1px solid rgba(255, 255, 255, 0.2);
-  font-size: 0.75rem;
+  font-size: 0.76rem;
   text-transform: uppercase;
   letter-spacing: 0.3px;
 }
@@ -385,22 +457,26 @@
 }
 
 .investor-table td {
-  padding: 0.875rem;
+  padding: 0.75rem 0.85rem;
   border-bottom: 1px solid #f0f4f8;
   text-align: right;
   font-weight: 500;
-  font-size: 0.8125rem;
+  font-size: 0.84rem;
 }
 
 .investor-table .investor-label {
   text-align: left;
   font-weight: 600;
   color: #1a202c;
-  font-size: 0.8125rem;
+  font-size: 0.84rem;
 }
 
 .investor-table tbody tr {
   transition: all 0.2s ease;
+}
+
+.investor-table tbody tr:last-child td {
+  border-bottom: none;
 }
 
 .investor-table tbody tr:hover {
@@ -426,6 +502,21 @@
 /* 추천 카드 */
 .recommendations-card {
   background: rgba(255, 255, 255, 0.95);
+}
+
+.stock-recommendations-card {
+  display: flex;
+  flex-direction: column;
+}
+
+.stock-recommendations-card .recommendations-list {
+  flex: 1;
+}
+
+.stock-detail-bottom {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: 0.75rem;
 }
 
 .detail-button {
@@ -457,12 +548,16 @@
 
 .recommendation-item,
 .portfolio-item {
-  padding: 1.125rem;
+  padding: 1.25rem;
   background: linear-gradient(135deg, #fffef9 0%, #ffffff 100%);
   border-radius: 12px;
   border-left: 3px solid #D4A500;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 142px;
 }
 
 .recommendation-item:hover,
@@ -476,45 +571,45 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.625rem;
+  margin-bottom: 0.75rem;
 }
 
 .recommendation-header h3 {
-  font-size: 0.9375rem;
+  font-size: 1.05rem;
   color: #1a202c;
-  font-weight: 500;
+  font-weight: 600;
   margin: 0;
   letter-spacing: -0.2px;
 }
 
 .stock-code {
-  font-size: 0.6875rem;
+  font-size: 0.75rem;
   color: #718096;
   font-family: 'Courier New', monospace;
   background: #e2e8f0;
-  padding: 0.1875rem 0.4375rem;
+  padding: 0.25rem 0.5rem;
   border-radius: 4px;
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .recommendation-details {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.625rem;
+  margin-bottom: 0.75rem;
 }
 
 .stock-price {
-  font-size: 1.125rem;
-  font-weight: 600;
+  font-size: 1.35rem;
+  font-weight: 700;
   color: #2d3748;
   letter-spacing: -0.3px;
 }
 
 .change-badge {
-  padding: 0.25rem 0.625rem;
+  padding: 0.3rem 0.65rem;
   border-radius: 5px;
-  font-size: 0.75rem;
+  font-size: 0.82rem;
   font-weight: 600;
   white-space: nowrap;
 }
@@ -551,10 +646,10 @@
 }
 
 .recommendation-reason {
-  font-size: 0.8125rem;
+  font-size: 0.9rem;
   color: #718096;
   line-height: 1.5;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 /* 포트폴리오 아이템 */
@@ -882,6 +977,10 @@
 /* 반응형 디자인 */
 @media (max-width: 1024px) {
   .dashboard-content {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-bottom {
     grid-template-columns: 1fr;
   }
   

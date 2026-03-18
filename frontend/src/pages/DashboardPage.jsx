@@ -612,115 +612,78 @@ const DashboardPage = () => {
             </div>
           </div>
 
-          {/* 투자자별 매매동향 - KOSPI */}
-          <div className="trading-trends-card card">
-            <div className="card-header">
-              <h2>투자자별 매매동향</h2>
-              <span className="trading-date">
-                {investorTrading['KOSPI']?.date ?? ''}
-              </span>
-            </div>
-            {/* KOSPI 마켓 표시 */}
-            <div className="trading-market-label">KOSPI</div>
-            {/* 테이블 */}
-            {(() => {
-              const d = investorTrading['KOSPI']
-              const fmtSell = (v) => (v == null || Number(v) === 0) ? '-' : Number(v).toLocaleString('ko-KR')
-              const fmtBuy  = fmtSell
-              const fmtNet = (v) => {
-                if (v == null) return '-'
-                const n = Number(v)
-                return (n > 0 ? '+' : '') + n.toLocaleString('ko-KR', { minimumFractionDigits: 0 })
-              }
-              const rows = d ? [
-                { label: '기관(십억원)',   sell: d.institution_sell, buy: d.institution_buy, net: d.institution_net },
-                { label: '외국인(십억원)', sell: d.foreign_sell,     buy: d.foreign_buy,     net: d.foreign_net },
-                { label: '개인(십억원)',   sell: d.individual_sell,  buy: d.individual_buy,  net: d.individual_net },
-              ] : []
-              return (
-                <table className="investor-table">
-                  <thead>
-                    <tr>
-                      <th>구분</th>
-                      <th>매도</th>
-                      <th>매수</th>
-                      <th>순매수</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {rows.length === 0 ? (
-                      <tr><td colSpan={4} style={{textAlign:'center',color:'#888',padding:'16px'}}>데이터 로딩 중...</td></tr>
-                    ) : rows.map((r, i) => (
-                      <tr key={i}>
-                        <td className="investor-label">{r.label}</td>
-                        <td>{fmtSell(r.sell)}</td>
-                        <td>{fmtBuy(r.buy)}</td>
-                        <td className={getChangeColor(r.net)}>{fmtNet(r.net)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )
-            })()}
-          </div>
-
-          {/* 투자자별 매매동향 - KOSDAQ */}
-          <div className="trading-trends-card card">
-            <div className="card-header">
-              <h2>투자자별 매매동향</h2>
-              <span className="trading-date">
-                {investorTrading['KOSDAQ']?.date ?? ''}
-              </span>
-            </div>
-            {/* KOSDAQ 마켓 표시 */}
-            <div className="trading-market-label">KOSDAQ</div>
-            {/* 테이블 */}
-            {(() => {
-              const d = investorTrading['KOSDAQ']
-              const fmtSell = (v) => (v == null || Number(v) === 0) ? '-' : Number(v).toLocaleString('ko-KR')
-              const fmtBuy  = fmtSell
-              const fmtNet = (v) => {
-                if (v == null) return '-'
-                const n = Number(v)
-                return (n > 0 ? '+' : '') + n.toLocaleString('ko-KR', { minimumFractionDigits: 0 })
-              }
-              const rows = d ? [
-                { label: '기관(십억원)',   sell: d.institution_sell, buy: d.institution_buy, net: d.institution_net },
-                { label: '외국인(십억원)', sell: d.foreign_sell,     buy: d.foreign_buy,     net: d.foreign_net },
-                { label: '개인(십억원)',   sell: d.individual_sell,  buy: d.individual_buy,  net: d.individual_net },
-              ] : []
-              return (
-                <table className="investor-table">
-                  <thead>
-                    <tr>
-                      <th>구분</th>
-                      <th>매도</th>
-                      <th>매수</th>
-                      <th>순매수</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {rows.length === 0 ? (
-                      <tr><td colSpan={4} style={{textAlign:'center',color:'#888',padding:'16px'}}>데이터 로딩 중...</td></tr>
-                    ) : rows.map((r, i) => (
-                      <tr key={i}>
-                        <td className="investor-label">{r.label}</td>
-                        <td>{fmtSell(r.sell)}</td>
-                        <td>{fmtBuy(r.buy)}</td>
-                        <td className={getChangeColor(r.net)}>{fmtNet(r.net)}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              )
-            })()}
-          </div>
         </div>
 
         {/* 우측 영역 */}
         <div className="dashboard-right">
-          {/* 종목/포트폴리오 추천 */}
-          <div className="recommendations-card card">
+          {/* 투자자별 매매동향 - KOSPI/KOSDAQ 동시 표시 */}
+          <div className="trading-trends-card card">
+            <div className="card-header">
+              <h2>투자자별 매매동향</h2>
+              <span className="trading-date">
+                {investorTrading['KOSPI']?.date ?? investorTrading['KOSDAQ']?.date ?? ''}
+              </span>
+            </div>
+            {(() => {
+              const fmtNet = (v) => {
+                if (v == null) return '-'
+                const n = Number(v)
+                return (n > 0 ? '+' : '') + n.toLocaleString('ko-KR', { minimumFractionDigits: 0 })
+              }
+
+              const getRows = (market) => {
+                const d = investorTrading[market]
+                return d ? [
+                  { label: '기관(십억원)', net: d.institution_net },
+                  { label: '외국인(십억원)', net: d.foreign_net },
+                  { label: '개인(십억원)', net: d.individual_net },
+                ] : []
+              }
+
+              return (
+                <div className="trading-market-stack">
+                  {['KOSPI', 'KOSDAQ'].map((market, marketIdx) => {
+                    const rows = getRows(market)
+                    return (
+                      <div
+                        key={market}
+                        className={`trading-market-block ${marketIdx > 0 ? 'with-divider' : ''}`}
+                      >
+                        <span className="trading-market-chip">{market}</span>
+                        <table className="investor-table">
+                          {marketIdx === 0 && (
+                            <thead>
+                              <tr>
+                                <th>구분</th>
+                                <th>순매수</th>
+                              </tr>
+                            </thead>
+                          )}
+                          <tbody>
+                            {rows.length === 0 ? (
+                              <tr><td colSpan={2} style={{textAlign:'center',color:'#888',padding:'16px'}}>데이터 로딩 중...</td></tr>
+                            ) : rows.map((r, i) => (
+                              <tr key={`${market}-${i}`}>
+                                <td className="investor-label">{r.label}</td>
+                                <td className={getChangeColor(r.net)}>{fmtNet(r.net)}</td>
+                              </tr>
+                            ))}
+                          </tbody>
+                        </table>
+                      </div>
+                    )
+                  })}
+                </div>
+              )
+            })()}
+          </div>
+
+        </div>
+      </div>
+
+      {/* 하단: 종목 추천 + 포트폴리오 추천 */}
+      <div className="dashboard-bottom">
+          <div className="recommendations-card card stock-recommendations-card">
             <div className="card-header">
               <h2>종목 추천</h2>
               <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
@@ -731,11 +694,6 @@ const DashboardPage = () => {
                 >
                   {stockRecsLoading ? <><span className="dash-analysis-spinner" />분석 중...</> : '종목 분석'}
                 </button>
-                {recStocks.length > 0 && (
-                  <button className="detail-button" onClick={() => navigate('/recommendations')}>
-                    상세보기 →
-                  </button>
-                )}
               </div>
             </div>
             {stockRecsUpdatedAt && (
@@ -783,6 +741,13 @@ const DashboardPage = () => {
                 ))
               )}
             </div>
+            {recStocks.length > 0 && (
+              <div className="stock-detail-bottom">
+                <button className="detail-button" onClick={() => navigate('/recommendations')}>
+                  상세보기 →
+                </button>
+              </div>
+            )}
           </div>
 
           {/* 포트폴리오 추천 — 단일 카드 (종목 추천과 동일한 구조) */}
@@ -935,7 +900,6 @@ const DashboardPage = () => {
           })()}
 
 
-        </div>
       </div>
 
       {/* 플로팅 챗봇 버튼 */}

@@ -2,6 +2,7 @@
 ./parsed_data
 ./backend/news_chroma_db/7d4e01e7-3663-4791-899d-d0a34b5a1262
 ./backend/news_chroma_db/
+./backend/reports_chroma_db
 # 환경변수 / 시크릿
 .env
 .env.*

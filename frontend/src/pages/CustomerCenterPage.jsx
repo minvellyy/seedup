@@ -298,6 +298,10 @@ const InquirySection = () => {
   const [error, setError] = useState(null)
 
   const selectedInquiry = inquiryData.find(inquiry => inquiry.id === selectedInquiryId)
+  const completedAnswerFallback = '문의해주신 내용 확인되었습니다. 요청하신 사항에 대한 조치를 완료했으며 현재 정상 이용 가능합니다. 추가로 불편한 점이 있으시면 같은 문의에서 다시 남겨주세요.'
+  const selectedAnswer = selectedInquiry
+    ? ((selectedInquiry.answer ?? '').trim() || (selectedInquiry.status === 'completed' ? completedAnswerFallback : ''))
+    : ''
 
   // 디버깅: 선택된 문의 확인
   useEffect(() => {
@@ -465,8 +469,8 @@ const InquirySection = () => {
 
                 <div className="inquiry-answer-section">
                   <h5 className="content-section-label">SeedUp 답변</h5>
-                  {selectedInquiry.answer ? (
-                    <p className="answer-text">{selectedInquiry.answer}</p>
+                  {selectedAnswer ? (
+                    <p className="answer-text">{selectedAnswer}</p>
                   ) : (
                     <div className="answer-pending">
                       <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
