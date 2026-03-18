@@ -455,7 +455,10 @@ function PortfolioDetailPage() {
                   style={{ width: `${item.weight_pct}%`, background: COLOR_PALETTE[idx % COLOR_PALETTE.length] }}
                   title={`${item.name} ${item.weight_pct.toFixed(1)}%`}
                 >
-                  <span className="pd-bar-label">
+                  <span
+                    className="pd-bar-label pd-bar-label-link"
+                    onClick={() => navigate(`/stock/${item.ticker}`)}
+                  >
                     {item.name}({item.weight_pct.toFixed(0)}%)
                   </span>
                 </div>
@@ -471,7 +474,7 @@ function PortfolioDetailPage() {
               <div className="pd-section-row pd-two-col">
                 {/* 왼쪽: 단기 + 중장기 */}
                 <div className="pd-col">
-                  <div className="pd-section-label">(단기) 20일 후 예상 수익률</div>
+                  <div className="pd-section-label">5일 후 상승 확률</div>
                   {quant_signals.short_term?.weighted_p_adj != null ? (
                     <>
                       <div className="pd-signal-bar-wrap">
@@ -498,13 +501,12 @@ function PortfolioDetailPage() {
                     </>
                   ) : <p className="pd-no-data">데이터 없음</p>}
 
-                  <div className="pd-section-label pd-section-label-mt">(중장기) 기대수익률 (CAPM 기반)</div>
+                  <div className="pd-section-label pd-section-label-mt">최근 12개월 과거 수익률</div>
                   {quant_signals.medium_term?.weighted_ret_12m_pct != null ? (
                     <>
                       <div className={`pd-big-value ${quant_signals.medium_term.weighted_ret_12m_pct >= 0 ? 'pd-pos' : 'pd-neg'}`}>
                         {quant_signals.medium_term.weighted_ret_12m_pct >= 0 ? '+' : ''}
                         {quant_signals.medium_term.weighted_ret_12m_pct.toFixed(1)}%
-                        <span className="pd-big-value-sub"> (12M 과거 수익률 기반)</span>
                       </div>
                       <div className="pd-signal-items">
                         {quant_signals.medium_term.items
@@ -619,18 +621,18 @@ function PortfolioDetailPage() {
           {monte_carlo_1y && (
             <>
               <div className="pd-section-row">
-                <div className="pd-section-label">(몬테카를로) 향후 1년 수익률 (현재 가격 기준)</div>
+                <div className="pd-section-label">향후 1년 수익률 시뮬레이션 (과거 변동성·수익률 기반)</div>
                 <div className="pd-mc-row">
                   <div className="pd-mc-box pd-mc-bear">
-                    <div className="pd-mc-label">약세 (10%)</div>
+                    <div className="pd-mc-label">비관적 시나리오 (90% 확률로 이보다 높음)</div>
                     <div className="pd-mc-value">{fmtPct(monte_carlo_1y.p10_pct)}</div>
                   </div>
                   <div className="pd-mc-box pd-mc-base">
-                    <div className="pd-mc-label">기준 (50%)</div>
+                    <div className="pd-mc-label">중립 시나리오 (중앙값)</div>
                     <div className="pd-mc-value">{fmtPct(monte_carlo_1y.p50_pct)}</div>
                   </div>
                   <div className="pd-mc-box pd-mc-bull">
-                    <div className="pd-mc-label">강세 (90%)</div>
+                    <div className="pd-mc-label">낙관적 시나리오 (10% 확률로 이보다 높음)</div>
                     <div className="pd-mc-value">{fmtPct(monte_carlo_1y.p90_pct)}</div>
                   </div>
                 </div>

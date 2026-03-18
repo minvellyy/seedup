@@ -135,7 +135,7 @@ def _save_stock_rec_cache(user_id: int, data: dict):
 
 def _save_portfolio_to_db(user_id: int, conn, pf_results: list):
     """포트폴리오 추천을 DB에 저장합니다 (히스토리 유지)."""
-    _MULTI_CACHE_KEYS = ['balanced', 'momentum', 'lowvol']
+    _MULTI_CACHE_KEYS = ['pf_optimal', 'pf_growth', 'pf_stable']
     
     cur = conn.cursor()
     # 기존 ACTIVE 추천을 ARCHIVED로 변경
@@ -144,7 +144,7 @@ def _save_portfolio_to_db(user_id: int, conn, pf_results: list):
         UPDATE portfolio_recommendations
         SET state = 'ARCHIVED'
         WHERE user_id = %s
-          AND strategy_name IN ('balanced', 'momentum', 'lowvol')
+          AND strategy_name IN ('pf_optimal', 'pf_growth', 'pf_stable')
           AND state = 'ACTIVE'
         """,
         (user_id,),

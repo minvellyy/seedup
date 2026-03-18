@@ -216,12 +216,14 @@ def recommend_portfolio_multi_get(
     user_id: int,
     koscom_score: int = 20,
     total_assets_override: int = None,
+    force_refresh: bool = False,
     conn=Depends(_get_db_conn),
 ) -> list[PortfolioRecommendationResponse]:
-    # ── 1. 캐시 확인 ───────────────────────────────────────────────────────
-    cached = _load_multi_cache(user_id, conn)
-    if cached is not None:
-        return cached
+    # ── 1. 캐시 확인 (force_refresh=true면 건너뜀) ─────────────────────────
+    if not force_refresh:
+        cached = _load_multi_cache(user_id, conn)
+        if cached is not None:
+            return cached
 
     # ── 2. 캐시 없음 → CrewAI 경유 포트폴리오 추천 ───────────────────────
     result = None

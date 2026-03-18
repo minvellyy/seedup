@@ -10,12 +10,14 @@ from src.features import add_as_of, build_ttm, compute_features
 from src.scoring import percentile_scores, pillar_and_overall
 from src.ytd import ytd_to_quarter
 
-def load_year(processed: Path, year: int) -> pd.DataFrame:
+def load_year(processed: Path, year: int, strict: bool = True) -> pd.DataFrame:
     parts = []
     for k in ["Q1", "H1", "Q3", "FY"]:
         p = processed / f"fin_core_norm_{year}_{k}_{SETTINGS.fs_div}.parquet"
         if not p.exists():
-            print(f"[WARN] Missing normalized file (skipped): {p}")
+            if strict:
+                raise FileNotFoundError(f"Missing normalized file: {p}")
+            print(f"[WARN] {p.name} 없음, 건너뜀")
             continue
         df = pd.read_parquet(p)
         if df.empty:
@@ -23,7 +25,7 @@ def load_year(processed: Path, year: int) -> pd.DataFrame:
             continue
         parts.append(df)
     if not parts:
-        raise FileNotFoundError(f"No normalized quarterly files found for year={year}")
+        raise FileNotFoundError(f"year={year} 에 해당하는 normalized 파일이 하나도 없습니다.")
     return pd.concat(parts, ignore_index=True)
 
 def main():
@@ -38,8 +40,7 @@ def main():
     base = Path(SETTINGS.data_dir)
     processed = ensure_dir(base / "processed")
 
-    # 1) 캐시된 normalized 재무만 로드
-    # YoY lag4 계산에 (base_year-1) 데이터도 필요 → 3개 연도 로드 시도
+    # 1) 캐시된 normalized 재무만 로드 (YoY lag4 계산에 (base_year-1) 데이터도 필요 → 3개 연도 로드 시도)
     base_year = args.base_year if args.base_year is not None else args.target_year - 1
     years = [base_year - 1, base_year, args.target_year]
     parts = []

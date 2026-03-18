@@ -65,16 +65,36 @@ _RISK_MAP_PF = {
     "안정형":     ("안정형",      "5등급", 0.30, 0.70),
 }
 
-# 포트폴리오 스코어링 스타일별 가중치 (3m수익률, 1y수익률, 1-변동성)
+# 개인화 Top3 포트폴리오 구성 설정
+# factor_w: (모멘텀, 우량성/샤프, 저변동성) 가중치 — 합계 1.0
+# momentum_split: (3개월 비중, 1년 비중) within 모멘텀
+# 가중치를 극단적으로 다르게 설정 → 종목 선정 기준이 달라져 다른 종목 구성이 나온다
+_PORTFOLIO_CONFIGS = [
+    {
+        "key": "pf_optimal",
+        "label": "1순위 종합 최적",
+        "factor_w": (0.40, 0.40, 0.20),    # 모멘텀·우량성·저변동 균형
+        "momentum_split": (0.35, 0.65),    # 1Y 중심
+    },
+    {
+        "key": "pf_growth",
+        "label": "2순위 성장 추구",
+        "factor_w": (0.70, 0.20, 0.10),    # 모멘텀 강조 → 수익률 높은 종목 선정
+        "momentum_split": (0.50, 0.50),    # 3M/1Y 균등
+    },
+    {
+        "key": "pf_stable",
+        "label": "3순위 안정 성장",
+        "factor_w": (0.15, 0.50, 0.35),    # 우량성+저변동 강조 → 안정적 종목 선정
+        "momentum_split": (0.20, 0.80),    # 1Y 강조 (장기 안정 수익)
+    },
+]
+
+# 스타일별 스코어링 가중치 매핑 (예시)
 _SCORING_WEIGHTS = {
-    "balanced": (0.35, 0.40, 0.25),  # 균형 추천형 (기본)
-    "momentum": (0.50, 0.40, 0.10),  # 모멘텀 집중형
-    "lowvol":   (0.20, 0.40, 0.40),  # 안정 우선형
-}
-_SCORING_LABELS = {
-    "balanced": "균형 추천형",
-    "momentum": "모멘텀 집중형",
-    "lowvol":   "안정 우선형",
+    "default": (0.35, 0.40, 0.25),
+    "growth": (0.50, 0.30, 0.20),
+    "stable": (0.20, 0.40, 0.40),
 }
 
 
@@ -91,13 +111,19 @@ def _recommend_portfolio_db(
     conn,
     koscom_score: int = 20,
     total_assets_override: Optional[int] = None,
-    scoring_style: str = "balanced",
     portfolio_label: str = "",
     signal_map: Optional[dict] = None,   # {ticker: {p_adj, rank_overall}} - LightGBM 신호
     fin_map: Optional[dict] = None,      # {ticker: {overall_grade}} - 재무 등급
     scoring_weights: Optional[tuple] = None,  # (w_3m, w_1y, w_stab) — 명시 시 scoring_style 가중치보다 우선
+    factor_w: Optional[tuple] = (0.5, 0.3, 0.2),
+    momentum_split: Optional[tuple] = (0.5, 0.5),
+    excluded_tickers: Optional[set] = None,
 ) -> "PortfolioRecommendationResponse":
-    """core 패키지 없이 DB 데이터만으로 포트폴리오를 구성합니다."""
+    """core 패키지 없이 DB 데이터만으로 포트폴리오를 구성합니다.
+
+    factor_w와 momentum_split을 다르게 지정하면 서로 다른 종목 구성의 포트폴리오가 생성됩니다.
+    excluded_tickers를 지정하면 해당 종목은 후보에서 제외됩니다 (포트폴리오 간 중복 방지).
+    """
     cur = conn.cursor()
 
     # ── 1. 사용자 정보 ─────────────────────────────────────────────────────
@@ -106,9 +132,9 @@ def _recommend_portfolio_db(
     if not row:
         raise ValueError(f"user_id={user_id} 를 찾을 수 없습니다.")
     inv_type = row.get("investment_type") or _koscom_to_inv_type(koscom_score)
-    risk_tier, risk_grade, stock_wt, bond_wt = _RISK_MAP_PF.get(inv_type, ("위험중립형", "3등급", 0.7, 0.3))
+    risk_tier, risk_grade, _, bond_wt = _RISK_MAP_PF.get(inv_type, ("위험중립형", "3등급", 0.7, 0.3))
     if not portfolio_label:
-        portfolio_label = _SCORING_LABELS.get(scoring_style, "맞춤 포트폴리오")
+        portfolio_label = "맞춤 포트폴리오"
 
     # 투자 가능 금액: survey_answers LUMP_SUM_AMOUNT or MONTHLY_AMOUNT
     if total_assets_override:
@@ -180,6 +206,7 @@ def _recommend_portfolio_db(
     # ── 4. 다중팩터 스코어링 + 위험조정수익률(샤프) ──────────────────────
     _RF_RATE_PF = 0.035  # 무위험 수익률 3.5%
     # 스코어링 가중치: 명시된 scoring_weights 우선, 없으면 style 매핑 사용
+    scoring_style = "default"  # fallback 스타일명, 필요시 인자화 가능
     _sw3m, _sw1y, _swstab = (
         scoring_weights if scoring_weights is not None
         else _SCORING_WEIGHTS.get(scoring_style, (0.35, 0.40, 0.25))
@@ -223,8 +250,12 @@ def _recommend_portfolio_db(
 
         r3  = _rn([b["ret_3m"]    for b in buf])
         r1  = _rn([b["ret_1y"]    for b in buf])
-        shn = _rn([b["sharpe_1y"] for b in buf])  # ② 샤프 순위 정규화 → 우량성 대리 지표
+        shn = _rn([b["sharpe_1y"] for b in buf])  # 샤프 순위 정규화 → 우량성 대리 지표
         vl  = _rn([b["vol_ann"]   for b in buf])
+
+        # 팩터 가중치 직접 사용 (_recommend_portfolio_db 파라미터를 closure로 참조)
+        _fw_mom, _fw_qual, _fw_lowvol = factor_w
+        _i3m, _i1y = momentum_split
 
         _FIN_GRADE_BOOST = {"우수": 0.08, "양호": 0.04, "보통": 0.0, "주의": -0.04}
         for i, b in enumerate(buf):
@@ -262,17 +293,23 @@ def _recommend_portfolio_db(
     }
     _core_ratio, _sat_ratio = _CS_SPLIT.get(risk_tier, (0.65, 0.35))
 
-    n_total_stock = max(3, min(7, round(stock_wt * 8)))
+    # ETF는 항상 최소 1개 포함. bond_wt=0인 공격형도 분산 목적으로 ETF 편입
+    n_etfs        = max(1, min(3, round(bond_wt * 5 + 1)))
+    # ETF 실제 배분 비중: bond_wt가 0이어도 최소 10% 확보, 주식 비중에서 차감
+    _etf_alloc    = max(bond_wt, 0.10)
+    _stock_alloc  = 1.0 - _etf_alloc
+
+    n_total_stock = max(3, min(7, round(_stock_alloc * 8)))
     n_core_slot   = max(1, round(n_total_stock * _core_ratio))
     n_sat_slot    = n_total_stock - n_core_slot
-    n_etfs        = max(0, min(3, round(bond_wt * 5)))
 
-    core_pool   = [s for s in stocks if s.get("bucket") == "CORE"]
-    growth_pool = [s for s in stocks if s.get("bucket") != "CORE"]
+    _excl = excluded_tickers or set()
+    core_pool   = [s for s in stocks if s.get("bucket") == "CORE"  and s["stock_code"] not in _excl]
+    growth_pool = [s for s in stocks if s.get("bucket") != "CORE" and s["stock_code"] not in _excl]
 
     top_core  = _score_items(core_pool,   top_n=n_core_slot)
     top_sat   = _score_items(growth_pool, top_n=n_sat_slot)
-    top_etfs  = _score_items(etfs,        top_n=n_etfs)
+    top_etfs  = _score_items([e for e in etfs if e["stock_code"] not in _excl], top_n=n_etfs)
 
     # 슬롯 부족분 보충
     if len(top_core) < n_core_slot:
@@ -290,16 +327,51 @@ def _recommend_portfolio_db(
     total_n = len(portfolio_candidates)
 
     # ── 5. 코어-새틀라이트 비중 배분 ─────────────────────────────────────
-    # 코어: stock_wt × core_ratio 내에서 score 비례 배분
-    # 새틀라이트: stock_wt × sat_ratio 내에서 score 비례 배분
-    # ETF: bond_wt 내에서 균등 배분
-    core_score_sum = sum(s.get("score", 1.0) for s in top_core) or 1.0
-    sat_score_sum  = sum(s.get("score", 1.0) for s in top_sat)  or 1.0
-    etf_score_sum  = sum(s.get("score", 1.0) for s in top_etfs) or 1.0
+    # [핵심 수정] 기존 문제:
+    #   _score_items는 전체 풀(100~200개)에서 rank 정규화하므로
+    #   상위 N개의 score는 0.960~0.975 처럼 거의 동일 → 비중이 사실상 균등해짐.
+    # [해결]
+    #   선정된 그룹 내에서 score를 재순위 정규화(intra-group rank normalization)하여
+    #   의미 있는 비중 차이를 만든다.
+    #   min_ratio=0.5: 최상위 종목이 최하위 종목의 2배 비중
+
+    def _intra_group_weights(items: list, base_wt: float, min_ratio: float = 0.5) -> list:
+        """선정된 종목 그룹 내에서 score를 재순위 정규화하여 비중을 차등 배분한다.
+
+        Args:
+            items: 이미 선정된 종목 리스트 (각 dict에 "score" 키 존재)
+            base_wt: 이 그룹에 할당된 총 비중 (예: stock_wt * core_ratio)
+            min_ratio: 최하위 종목의 비중 ÷ 최상위 종목의 비중 (0 < min_ratio <= 1)
+                       0.5 → top 종목이 bottom 종목의 2배 비중
+        Returns:
+            각 종목의 비중 리스트 (합계 = base_wt)
+        """
+        n = len(items)
+        if n == 0:
+            return []
+        if n == 1:
+            return [base_wt]
+
+        # score 기준 오름차순 정렬 인덱스 (0=최하위, n-1=최상위)
+        sorted_indices = sorted(range(n), key=lambda i: items[i].get("score", 0.0))
+
+        # 선형 가중치: 최하위 = min_ratio, 최상위 = 1.0
+        raw_w = [min_ratio + (1.0 - min_ratio) * (rank / (n - 1)) for rank in range(n)]
+
+        # 원래 순서로 복원
+        result_raw = [0.0] * n
+        for rank, idx in enumerate(sorted_indices):
+            result_raw[idx] = raw_w[rank]
+
+        total = sum(result_raw)
+        return [base_wt * (rw / total) for rw in result_raw]
+
+    core_weights = _intra_group_weights(top_core, _stock_alloc * _core_ratio)
+    sat_weights  = _intra_group_weights(top_sat,  _stock_alloc * _sat_ratio if _sat_ratio > 0 else 0.0)
+    etf_weights  = _intra_group_weights(top_etfs, _etf_alloc)
 
     p_items: List[PortfolioItem] = []
-    for s in top_core:
-        w = stock_wt * _core_ratio * (s.get("score", 1.0) / core_score_sum)
+    for s, w in zip(top_core, core_weights):
         s["weight"] = w
         sharpe_str = f" | 샤프 {s['sharpe_1y']:+.2f}" if s.get("sharpe_1y") is not None else ""
         p_items.append(PortfolioItem(
@@ -312,8 +384,7 @@ def _recommend_portfolio_db(
             ),
             explanation=f"{s['name']}은(는) 대형 우량 코어 종목입니다. 포트폴리오 안정성 뼈대를 담당합니다.",
         ))
-    for s in top_sat:
-        w = stock_wt * _sat_ratio * (s.get("score", 1.0) / sat_score_sum) if _sat_ratio > 0 else 0
+    for s, w in zip(top_sat, sat_weights):
         s["weight"] = w
         sharpe_str = f" | 샤프 {s['sharpe_1y']:+.2f}" if s.get("sharpe_1y") is not None else ""
         p_items.append(PortfolioItem(
@@ -326,8 +397,7 @@ def _recommend_portfolio_db(
             ),
             explanation=f"{s['name']}은(는) 초과 수익(알파)을 노리는 성장 모멘텀 종목입니다.",
         ))
-    for s in top_etfs:
-        w = bond_wt * (s.get("score", 1.0) / etf_score_sum)
+    for s, w in zip(top_etfs, etf_weights):
         s["weight"] = w
         p_items.append(PortfolioItem(
             ticker=s["stock_code"], name=s["name"],
@@ -450,15 +520,9 @@ def _recommend_portfolio_db(
     # ── 9. 응답 조립 ──────────────────────────────────────────────────────
     actual_leftover = max(0, total_budget - total_invested)
     purchased_n = len(buy_plan)
-    style_desc = {
-        "balanced": "모멘텀·수익률·변동성 균형 기준",
-        "momentum": "단기 모멘텀 중심 종목 선별",
-        "lowvol":   "저변동·안정 수익 종목 중심",
-    }.get(scoring_style, "맞춤 기준")
     overall = (
-        f"{risk_grade}({risk_tier}) 투자자를 위한 포트폴리오. "
-        f"종목 선별 방식: {style_desc}. "
-        f"총 {purchased_n}개 종목 매수 (주식 {stock_n}개 · ETF {etf_n}개 중). "
+        f"{risk_grade}({risk_tier}) 투자자를 위한 {portfolio_label}. "
+        f"총 {purchased_n}개 종목 매수 (주식 {stock_n}개 · ETF {etf_n}개). "
         f"총 투자금 {total_budget:,}원 중 {total_invested:,}원 투자, 잔여 {actual_leftover:,}원."
     )
 
@@ -477,12 +541,12 @@ def _recommend_portfolio_db(
         ),
         allocation_rules=AllocationRulesSummary(
             grade=risk_grade,
-            stock_max_pct=round(stock_wt * 100),
-            single_stock_max_pct=round((stock_wt / max(stock_n, 1)) * 100 * 1.5),
-            etf_min_pct=round(bond_wt * 100),
+            stock_max_pct=round(_stock_alloc * 100),
+            single_stock_max_pct=round((_stock_alloc / max(stock_n, 1)) * 100 * 1.5),
+            etf_min_pct=round(_etf_alloc * 100),
             target_weights={
-                "STOCK": stock_wt,
-                "ETF":   bond_wt,
+                "STOCK": _stock_alloc,
+                "ETF":   _etf_alloc,
             },
         ),
         portfolio_items=p_items,
@@ -886,14 +950,6 @@ def get_portfolio_recommendation(
 # 3종 스타일 멀티 포트폴리오 추천
 # ─────────────────────────────────────────────────────────────────────────────
 
-# 스코어링 스타일 순서 (균형 → 모멘텀 → 저변동)
-_MULTI_STYLES = [
-    "balanced",
-    "momentum",
-    "lowvol",
-]
-
-
 def get_multi_portfolio_recommendations(
     user_id: int,
     conn,
@@ -901,18 +957,80 @@ def get_multi_portfolio_recommendations(
     koscom_score: int = 20,
     total_assets_override: Optional[int] = None,
 ) -> List[PortfolioRecommendationResponse]:
-    """동일 투자성향에서 3가지 스코어링 방식(균형/모멘텀/저변동)으로 포트폴리오를 구성해 반환합니다."""
-    results = []
-    for scoring_style in _MULTI_STYLES:
+    """개인화 점수 기반 Top3 포트폴리오를 반환합니다.
+
+    각 포트폴리오는 팩터 가중치가 극단적으로 다르기 때문에
+    서로 다른 종목 구성과 서로 다른 비중을 가집니다:
+      - 1순위 종합 최적: 모멘텀·우량성·저변동 균형
+      - 2순위 성장 추구: 모멘텀(수익률) 극대화
+      - 3순위 안정 성장: 우량성·저변동성 극대화
+    """
+    # 1. 다양한 팩터 가중치 조합 생성 (예시: 36개)
+    factor_grid = []
+    for mom in [0.2, 0.3, 0.4, 0.5, 0.6, 0.7]:
+        for qual in [0.2, 0.3, 0.4, 0.5, 0.6]:
+            if mom + qual < 0.95:
+                lowvol = 1.0 - mom - qual
+                for m3, m1 in [(0.2,0.8),(0.35,0.65),(0.5,0.5),(0.7,0.3)]:
+                    factor_grid.append({
+                        "factor_w": (mom, qual, lowvol),
+                        "momentum_split": (m3, m1),
+                    })
+
+    # 2. 후보 포트폴리오 생성
+    candidates = []
+    for cfg in factor_grid:
         pf = _recommend_portfolio_db(
             user_id=user_id,
             conn=conn,
             koscom_score=koscom_score,
             total_assets_override=total_assets_override,
-            scoring_style=scoring_style,
+            factor_w=cfg["factor_w"],
+            momentum_split=cfg["momentum_split"],
         )
-        results.append(pf)
-    return results
+        candidates.append(pf)
+
+    # 3. 개인화 점수 계산 후 내림차순 정렬
+    def _personal_score(pf):
+        perf = pf.performance_3y
+        if not perf:
+            return -9999
+        return (perf.ann_return_pct or 0) - 0.5 * (perf.ann_vol_pct or 0)
+
+    sorted_candidates = sorted(candidates, key=_personal_score, reverse=True)
+
+    # 4. 다양성 강제 선택: 포트폴리오 간 주식 종목 최대 중복 허용 2개
+    def _stock_tickers(pf) -> set:
+        return {it.ticker for it in pf.portfolio_items if it.asset_type == "STOCK"}
+
+    MAX_OVERLAP = 2
+    top3 = []
+    for pf in sorted_candidates:
+        if len(top3) >= 3:
+            break
+        cur_tickers = _stock_tickers(pf)
+        # 이미 선정된 포트폴리오와 과도하게 겹치는지 확인
+        too_similar = any(
+            len(cur_tickers & _stock_tickers(selected)) > MAX_OVERLAP
+            for selected in top3
+        )
+        if not too_similar:
+            top3.append(pf)
+
+    # 다양성 조건을 만족하는 후보가 3개 미만이면 순서대로 채움
+    if len(top3) < 3:
+        existing = set(id(p) for p in top3)
+        for pf in sorted_candidates:
+            if len(top3) >= 3:
+                break
+            if id(pf) not in existing:
+                top3.append(pf)
+                existing.add(id(pf))
+
+    # 라벨 부여
+    for i, pf in enumerate(top3, 1):
+        pf.portfolio_label = f"TOP{i} 포트폴리오"
+    return top3
 
 
 def get_user_top3_portfolio_recommendations(
@@ -993,18 +1111,29 @@ def get_multi_portfolio_with_signals(
     signal_map: Optional[dict] = None,
     fin_map: Optional[dict] = None,
 ) -> List[PortfolioRecommendationResponse]:
-    """LightGBM 신호 + 재무등급을 보조 근거로 사용하는 MC 포트폴리오 추천 (3가지 스타일)."""
+    """LightGBM 신호 + 재무등급을 보조 근거로 사용하는 Top3 개인화 포트폴리오 추천.
+
+    포트폴리오 간 주식·ETF 종목 중복을 최소화하기 위해 이전 포트폴리오에서 선정된 종목은
+    다음 포트폴리오 후보에서 제외합니다.
+    """
     results = []
-    for scoring_style in _MULTI_STYLES:
+    used_tickers: set = set()
+    for cfg in _PORTFOLIO_CONFIGS:
         pf = _recommend_portfolio_db(
             user_id=user_id,
             conn=conn,
             koscom_score=koscom_score,
             total_assets_override=total_assets_override,
-            scoring_style=scoring_style,
+            portfolio_label=cfg["label"],
+            factor_w=cfg["factor_w"],
+            momentum_split=cfg["momentum_split"],
             signal_map=signal_map,
             fin_map=fin_map,
+            excluded_tickers=used_tickers.copy(),
         )
+        # 이번 포트폴리오에서 선정된 모든 종목(주식+ETF)을 다음 포트폴리오에서 제외
+        for item in pf.portfolio_items:
+            used_tickers.add(item.ticker)
         results.append(pf)
     return results
 

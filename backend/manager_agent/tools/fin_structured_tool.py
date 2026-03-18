@@ -230,9 +230,18 @@ def read_fin_structured_report(ticker: str) -> str:
     ticker_name = _load_no_fin_set().get(t, {}).get("name") or None
     if not ticker_name:
         try:
+            import logging as _logging
             from pykrx import stock as _pykrx
-            import pandas as pd
-            _raw_name = _pykrx.get_market_ticker_name(t)
+            # pykrx가 존재하지 않는 ticker 조회 시 내부에서 logging.info(args, kwargs)를
+            # 잘못 호출하여 stderr에 "Logging error" 노이즈가 출력됨.
+            # root 로거 레벨을 일시 상향해 해당 로그 레코드가 핸들러에 도달하기 전에 차단.
+            _root = _logging.getLogger()
+            _prev_level = _root.level
+            _root.setLevel(_logging.CRITICAL)
+            try:
+                _raw_name = _pykrx.get_market_ticker_name(t)
+            finally:
+                _root.setLevel(_prev_level)
             # pykrx가 종목 없으면 빈 DataFrame 반환 → 안전하게 처리
             if isinstance(_raw_name, str) and _raw_name:
                 ticker_name = _raw_name

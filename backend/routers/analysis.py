@@ -12,6 +12,7 @@ main.py에서 include_router() 로 등록:
 """
 from __future__ import annotations
 
+import asyncio
 import json
 import os
 import sys
