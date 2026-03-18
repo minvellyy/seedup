@@ -31,31 +31,44 @@ function RecommendationsPage() {
   }, [user])
 
   const fetchRecommendations = async (userId) => {
-    try {
-      setLoading(true)
-      const [stockRes, portfolioRes] = await Promise.all([
-        fetch(`/api/v1/stocks/recommend/${userId}`),
-        fetch(`/api/v1/portfolio/recommend/${userId}`),
-      ])
-      if (!stockRes.ok) throw new Error(`종목 추천 오류 (${stockRes.status})`)
-      if (!portfolioRes.ok) throw new Error(`포트폴리오 추천 오류 (${portfolioRes.status})`)
-      const [stocks, portfolio] = await Promise.all([stockRes.json(), portfolioRes.json()])
-      setStockData(stocks)
-      setPortfolioData(portfolio)
-      setError(null)
-    } catch (err) {
-      console.error(err)
-      setError(err.message)
-    } finally {
-      setLoading(false)
-    }
+    setLoading(true)
+    setError(null)
+
+    // 종목 추천: 대시보드와 동일한 엔드포인트 사용
+    fetch(`/api/dashboard/stock-recommendations?user_id=${userId}&refresh=false`)
+      .then(res => {
+        if (!res.ok) throw new Error(`종목 추천 오류 (${res.status})`)
+        return res.json()
+      })
+      .then(stocks => {
+        setStockData(stocks)
+        setLoading(false)
+      })
+      .catch(err => {
+        console.error(err)
+        setError(err.message)
+        setLoading(false)
+      })
+
+    // 포트폴리오 추천: 대시보드와 동일한 엔드포인트 사용
+    setPortfolioLoading(true)
+    fetch(`/api/dashboard/portfolio-recommendations-ai?user_id=${userId}&refresh=false`)
+      .then(res => {
+        if (!res.ok) throw new Error(`포트폴리오 추천 오류 (${res.status})`)
+        return res.json()
+      })
+      .then(data => {
+        setPortfolioData(Array.isArray(data) ? data[0] : data)
+      })
+      .catch(err => console.error(err))
+      .finally(() => setPortfolioLoading(false))
   }
 
   const refreshStocks = async () => {
     if (!user?.userId || stockLoading) return
     try {
       setStockLoading(true)
-      const res = await fetch(`/api/v1/stocks/recommend/${user.userId}`)
+      const res = await fetch(`/api/dashboard/stock-recommendations?user_id=${user.userId}&refresh=true`)
       if (!res.ok) throw new Error(`종목 분석 오류 (${res.status})`)
       setStockData(await res.json())
     } catch (err) {
@@ -69,9 +82,11 @@ function RecommendationsPage() {
     if (!user?.userId || portfolioLoading) return
     try {
       setPortfolioLoading(true)
-      const res = await fetch(`/api/v1/portfolio/recommend/${user.userId}`)
+      const res = await fetch(`/api/dashboard/portfolio-recommendations-ai?user_id=${user.userId}&refresh=true`)
       if (!res.ok) throw new Error(`포트폴리오 분석 오류 (${res.status})`)
-      setPortfolioData(await res.json())
+      const data = await res.json()
+      const portfolios = data?.portfolios || data
+      setPortfolioData(Array.isArray(portfolios) ? portfolios[0] : portfolios)
     } catch (err) {
       console.error(err)
     } finally {
@@ -211,6 +226,13 @@ function RecommendationsPage() {
             </button>
           </div>
           <p className="section-subtitle">투자성향·설문 기반 최적 구성</p>
+
+          {portfolioLoading && !portfolioData && (
+            <div className="loading-container" style={{ padding: '40px 0' }}>
+              <div className="loading-spinner"></div>
+              <p>포트폴리오를 구성하는 중입니다...</p>
+            </div>
+          )}
 
           {portfolioData && (
             <div

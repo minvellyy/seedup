@@ -14,6 +14,9 @@ backend/.kis_approval_cache
 # =============================================================================
 *.db
 
+# ChromaDB vector store (re-generated at runtime)
+backend/news_chroma_db/
+
 # =============================================================================
 # Portfolio user-specific cache (runtime only)
 # =============================================================================

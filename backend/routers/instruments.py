@@ -332,11 +332,11 @@ def get_stock_scores(stock_code: str):
         if _backend_dir not in sys.path:
             sys.path.insert(0, _backend_dir)
         from config import FIN_MODEL_DIR
-        parquet_path = (
-            FIN_MODEL_DIR / "data" / "processed"
-            / "fin_scores_v2_2024_CONSOL_with_mc_with_price.parquet"
-        )
-        if not parquet_path.exists():
+        _processed = FIN_MODEL_DIR / "data" / "processed"
+        # 가장 최신 연도의 fin_scores 파일을 자동 선택
+        _candidates = sorted(_processed.glob("fin_scores_v2_*_CONSOL_with_mc_with_price.parquet"))
+        parquet_path = _candidates[-1] if _candidates else None
+        if parquet_path is None or not parquet_path.exists():
             return {"stock_code": stock_code, "available": False}
 
         import pandas as pd

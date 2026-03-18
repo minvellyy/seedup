@@ -38,7 +38,7 @@ from portfolio_model import get_portfolio_recommendation, get_multi_portfolio_re
 router = APIRouter(prefix="/portfolio", tags=["portfolio"])
 
 # ─── 캐시 전략 키 (portfolio_recommendations.strategy_name) ───────────────────
-_MULTI_CACHE_KEYS = ['pf_balanced', 'pf_momentum', 'pf_lowvol']
+_MULTI_CACHE_KEYS = ['pf_optimal', 'pf_growth', 'pf_stable']
 _CACHE_TTL_MINUTES = 60
 _CACHE_DIR = _Path(__file__).resolve().parent.parent / "portfolio_cache"
 _logger = _logging.getLogger(__name__)
@@ -89,9 +89,9 @@ def _load_multi_cache(user_id: int, conn) -> list | None:
         SELECT strategy_name, strategy_content
         FROM portfolio_recommendations
         WHERE user_id = %s
-          AND strategy_name IN ('pf_balanced', 'pf_momentum', 'pf_lowvol')
+          AND strategy_name IN ('pf_optimal', 'pf_growth', 'pf_stable')
           AND created_at >= DATE_SUB(NOW(), INTERVAL %s MINUTE)
-        ORDER BY FIELD(strategy_name, 'pf_balanced', 'pf_momentum', 'pf_lowvol')
+        ORDER BY FIELD(strategy_name, 'pf_optimal', 'pf_growth', 'pf_stable')
         """,
         (user_id, _CACHE_TTL_MINUTES),
     )
@@ -117,7 +117,7 @@ def _save_multi_cache(user_id: int, conn, rec_list: list) -> None:
         """
         DELETE FROM portfolio_recommendations
         WHERE user_id = %s
-          AND strategy_name IN ('pf_balanced', 'pf_momentum', 'pf_lowvol')
+          AND strategy_name IN ('pf_optimal', 'pf_growth', 'pf_stable')
         """,
         (user_id,),
     )
@@ -204,12 +204,14 @@ def recommend_portfolio_multi_get(
     user_id: int,
     koscom_score: int = 20,
     total_assets_override: int = None,
+    force_refresh: bool = False,
     conn=Depends(_get_db_conn),
 ) -> list[PortfolioRecommendationResponse]:
-    # ── 1. 캐시 확인 ───────────────────────────────────────────────────────
-    cached = _load_multi_cache(user_id, conn)
-    if cached is not None:
-        return cached
+    # ── 1. 캐시 확인 (force_refresh=true면 건너뜀) ─────────────────────────
+    if not force_refresh:
+        cached = _load_multi_cache(user_id, conn)
+        if cached is not None:
+            return cached
 
     # ── 2. 캐시 없음 → 새로 계산 ──────────────────────────────────────────
     try:

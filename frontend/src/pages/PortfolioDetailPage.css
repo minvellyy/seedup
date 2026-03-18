@@ -141,6 +141,15 @@
   padding: 0 4px;
   text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
+.pd-bar-label-link {
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-color: rgba(255,255,255,0.5);
+  text-underline-offset: 2px;
+}
+.pd-bar-label-link:hover {
+  text-decoration-color: rgba(255,255,255,0.95);
+}
 
 .pd-two-col {
   display: grid;
