@@ -90,6 +90,13 @@ _PORTFOLIO_CONFIGS = [
     },
 ]
 
+# 스타일별 스코어링 가중치 매핑 (예시)
+_SCORING_WEIGHTS = {
+    "default": (0.35, 0.40, 0.25),
+    "growth": (0.50, 0.30, 0.20),
+    "stable": (0.20, 0.40, 0.40),
+}
+
 
 def _koscom_to_inv_type(score: int) -> str:
     for t, lv in [(30, "공격투자형"), (25, "적극투자형"), (20, "위험중립형"),
@@ -108,6 +115,9 @@ def _recommend_portfolio_db(
     signal_map: Optional[dict] = None,   # {ticker: {p_adj, rank_overall}} - LightGBM 신호
     fin_map: Optional[dict] = None,      # {ticker: {overall_grade}} - 재무 등급
     scoring_weights: Optional[tuple] = None,  # (w_3m, w_1y, w_stab) — 명시 시 scoring_style 가중치보다 우선
+    factor_w: Optional[tuple] = (0.5, 0.3, 0.2),
+    momentum_split: Optional[tuple] = (0.5, 0.5),
+    excluded_tickers: Optional[set] = None,
 ) -> "PortfolioRecommendationResponse":
     """core 패키지 없이 DB 데이터만으로 포트폴리오를 구성합니다.
 
@@ -196,6 +206,7 @@ def _recommend_portfolio_db(
     # ── 4. 다중팩터 스코어링 + 위험조정수익률(샤프) ──────────────────────
     _RF_RATE_PF = 0.035  # 무위험 수익률 3.5%
     # 스코어링 가중치: 명시된 scoring_weights 우선, 없으면 style 매핑 사용
+    scoring_style = "default"  # fallback 스타일명, 필요시 인자화 가능
     _sw3m, _sw1y, _swstab = (
         scoring_weights if scoring_weights is not None
         else _SCORING_WEIGHTS.get(scoring_style, (0.35, 0.40, 0.25))
