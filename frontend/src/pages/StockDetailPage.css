@@ -344,6 +344,57 @@
   font-size: 1.2em;
 }
 
+/* ESG · 뉴스 · 리포트 인사이트 섹션 */
+.unstructured-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.unstructured-card {
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 20px;
+  border: 1px solid #f0f0f0;
+}
+
+.unstructured-card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #374151;
+  margin: 0 0 12px 0;
+}
+
+.unstructured-item {
+  margin-bottom: 10px;
+}
+
+.unstr-label {
+  display: inline-block;
+  font-size: 0.72rem;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin-bottom: 4px;
+}
+
+.unstr-risk {
+  background: #fee2e2;
+  color: #b91c1c;
+}
+
+.unstr-opp {
+  background: #dcfce7;
+  color: #15803d;
+}
+
+.unstructured-card p {
+  margin: 0;
+  font-size: 0.875rem;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
 /* 종합 분석 섹션 */
 .comprehensive-analysis-section {
   background: white;
@@ -1206,6 +1257,25 @@
   font-size: 13px;
   font-style: italic;
   margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.sd-retry-btn {
+  font-size: 12px;
+  font-style: normal;
+  padding: 4px 10px;
+  border: 1px solid #d1d5db;
+  border-radius: 6px;
+  background: #f9fafb;
+  color: #374151;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.sd-retry-btn:hover {
+  background: #e5e7eb;
 }
 
 /* ── 일중 차트 (Intraday Chart) ─────────────────────────────────────────── */
@@ -1300,5 +1370,165 @@
   .sd-intraday-change {
     font-size: 0.95em;
     padding: 5px 12px;
+  }
+}
+
+/* ── 투자자별 매매동향 ──────────────────────────────────────────────────── */
+.investor-flow-wrap {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.investor-flow-tables {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+.investor-flow-table {
+  background: #fafafa;
+  border: 1px solid #ebebeb;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.investor-flow-market-label {
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #f0f0f0;
+  letter-spacing: 0.5px;
+}
+
+.investor-flow-tbl {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.investor-flow-tbl th {
+  text-align: center;
+  padding: 6px 8px;
+  color: #888;
+  font-weight: 600;
+  font-size: 12px;
+  border-bottom: 1px solid #ebebeb;
+}
+
+.investor-flow-tbl th:first-child { text-align: left; }
+
+.investor-flow-tbl td {
+  padding: 7px 8px;
+  text-align: center;
+  border-bottom: 1px solid #f5f5f5;
+  font-size: 13px;
+  font-variant-numeric: tabular-nums;
+}
+
+.investor-flow-tbl tr:last-child td { border-bottom: none; }
+
+.investor-flow-name {
+  text-align: left !important;
+  font-weight: 600;
+  color: #444;
+}
+
+.investor-flow-sell { color: #3B82F6; }
+.investor-flow-buy  { color: #EA580C; }
+
+.investor-flow-date {
+  margin-top: 10px;
+  font-size: 11px;
+  color: #bbb;
+  text-align: right;
+}
+
+.investor-flow-err {
+  font-size: 12px;
+  color: #aaa;
+  padding: 12px 0;
+  text-align: center;
+}
+
+/* 시장 체온계 */
+.investor-flow-thermometer {
+  background: #fff;
+  border: 1px solid #ebebeb;
+  border-radius: 12px;
+  padding: 18px 20px;
+}
+
+.investor-flow-thermo-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 14px;
+}
+
+.investor-flow-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.investor-flow-bar-label {
+  width: 44px;
+  font-size: 13px;
+  font-weight: 600;
+  color: #555;
+  flex-shrink: 0;
+}
+
+.investor-flow-bar-track {
+  flex: 1;
+  height: 14px;
+  background: #f3f4f6;
+  border-radius: 7px;
+  position: relative;
+  overflow: hidden;
+}
+
+.investor-flow-bar-fill {
+  position: absolute;
+  top: 0;
+  height: 100%;
+  border-radius: 7px;
+  transition: width 0.4s ease;
+  min-width: 3px;
+}
+
+.investor-flow-bar-center {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: 2px;
+  height: 100%;
+  background: #d1d5db;
+  transform: translateX(-50%);
+}
+
+.investor-flow-bar-value {
+  width: 72px;
+  font-size: 13px;
+  font-weight: 700;
+  text-align: right;
+  flex-shrink: 0;
+  font-variant-numeric: tabular-nums;
+}
+
+.investor-flow-thermo-hint {
+  font-size: 11px;
+  color: #ccc;
+  margin-top: 6px;
+  text-align: right;
+}
+
+@media (max-width: 640px) {
+  .investor-flow-tables {
+    grid-template-columns: 1fr;
   }
 }

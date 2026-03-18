@@ -1511,18 +1511,25 @@ async def get_portfolio_history(
     """
     cur = conn.cursor()
     
+    portfolio_strategy_names = ("balanced", "momentum", "lowvol")
+
     # 동적 쿼리 생성
     query = """
         SELECT id, user_id, strategy_name, strategy_content, state, 
                created_at, updated_at
         FROM portfolio_recommendations
         WHERE user_id = %s
+          AND strategy_content IS NOT NULL
     """
     params = [user_id]
     
     if strategy_name:
         query += " AND strategy_name = %s"
         params.append(strategy_name)
+    else:
+        placeholders = ",".join(["%s"] * len(portfolio_strategy_names))
+        query += f" AND strategy_name IN ({placeholders})"
+        params.extend(portfolio_strategy_names)
     
     if state:
         query += " AND state = %s"

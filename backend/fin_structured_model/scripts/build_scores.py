@@ -19,7 +19,11 @@ def load_year(processed: Path, year: int, strict: bool = True) -> pd.DataFrame:
                 raise FileNotFoundError(f"Missing normalized file: {p}")
             print(f"[WARN] {p.name} 없음, 건너뜀")
             continue
-        parts.append(pd.read_parquet(p))
+        df = pd.read_parquet(p)
+        if df.empty:
+            print(f"[WARN] Empty normalized file (skipped): {p}")
+            continue
+        parts.append(df)
     if not parts:
         raise FileNotFoundError(f"year={year} 에 해당하는 normalized 파일이 하나도 없습니다.")
     return pd.concat(parts, ignore_index=True)
@@ -27,9 +31,7 @@ def load_year(processed: Path, year: int, strict: bool = True) -> pd.DataFrame:
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--target_year", type=int, default=2024)
-    ap.add_argument("--base_year", type=int, default=2023, help="TTM 계산을 위해 함께 로드할 이전 연도")
-    ap.add_argument("--allow_partial_target", action="store_true",
-                    help="target_year의 분기 파일 일부가 없어도 진행 (예: FY 미제출 시기)")
+    ap.add_argument("--base_year", type=int, default=None, help="TTM 계산을 위해 함께 로드할 이전 연도 (기본: target_year - 1)")
     ap.add_argument("--with_market_cap", action="store_true", help="merge market cap (data/processed/market_cap.parquet)")
     ap.add_argument("--with_price", action="store_true", help="merge price features (data/processed/price_features_asof.parquet)")
     ap.add_argument("--out_tag", default="", help="output tag suffix, e.g. with_mc_with_price")
@@ -38,14 +40,16 @@ def main():
     base = Path(SETTINGS.data_dir)
     processed = ensure_dir(base / "processed")
 
-    # 1) 캐시된 normalized 재무만 로드
-    core = pd.concat(
-        [
-            load_year(processed, args.base_year, strict=True),
-            load_year(processed, args.target_year, strict=not args.allow_partial_target),
-        ],
-        ignore_index=True
-    )
+    # 1) 캐시된 normalized 재무만 로드 (YoY lag4 계산에 (base_year-1) 데이터도 필요 → 3개 연도 로드 시도)
+    base_year = args.base_year if args.base_year is not None else args.target_year - 1
+    years = [base_year - 1, base_year, args.target_year]
+    parts = []
+    for yr in years:
+        try:
+            parts.append(load_year(processed, yr))
+        except FileNotFoundError:
+            print(f"[INFO] {yr} 데이터 없음 (건너뜀)")
+    core = pd.concat(parts, ignore_index=True)
 
     # 2) as_of 생성 + YTD->분기 변환 + TTM
     core = add_as_of(core)

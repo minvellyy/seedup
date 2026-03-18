@@ -2,64 +2,52 @@ from __future__ import annotations
 import argparse
 from pathlib import Path
 import pandas as pd
-from datetime import datetime, timedelta
+import FinanceDataReader as fdr
 
-from pykrx import stock as pkstock
 
-def _yyyymmdd_today_fallback() -> str:
-    # 주말/휴장 대응: 오늘부터 최대 10일 전까지 뒤로 가며 시도
-    d = datetime.now()
-    for _ in range(10):
-        ymd = d.strftime("%Y%m%d")
-        try:
-            # 이 호출이 깨지면 해당 날짜는 안되는 것
-            _ = pkstock.get_index_ticker_list(date=ymd)
-            return ymd
-        except Exception:
-            d = d - timedelta(days=1)
-    # 최후 fallback(최근 연말)
-    return "20241231"
-
-def get_index_constituents_by_name(index_name: str, date: str) -> list[str]:
+def get_index_constituents(index_key: str) -> list[str]:
     """
-    market 파라미터를 쓰지 않고 전체 지수 목록(date 기준)에서 이름 매칭 후 구성종목 반환
+    KOSPI200 / KOSDAQ150 구성종목 티커 리스트 반환.
+    FinanceDataReader StockListing + 시가총액 상위 N 종목으로 근사.
     """
-    tickers = pkstock.get_index_ticker_list(date=date)
-    target_code = None
-    for code in tickers:
-        name = pkstock.get_index_ticker_name(code)
-        if name == index_name:
-            target_code = code
-            break
+    if index_key == "KOSPI200":
+        df = fdr.StockListing("KOSPI")
+        market_col = "Code" if "Code" in df.columns else "Symbol"
+        cap_col    = "Marcap" if "Marcap" in df.columns else None
+        if cap_col:
+            df = df.sort_values(cap_col, ascending=False).head(200)
+        else:
+            df = df.head(200)
+        return df[market_col].astype(str).str.zfill(6).tolist()
 
-    if target_code is None:
-        # 완전 일치 실패 시, contains로 한 번 더(환경에 따라 공백/표기 차이 대비)
-        for code in tickers:
-            name = pkstock.get_index_ticker_name(code)
-            if index_name.replace(" ", "") in str(name).replace(" ", ""):
-                target_code = code
-                break
+    elif index_key == "KOSDAQ150":
+        df = fdr.StockListing("KOSDAQ")
+        market_col = "Code" if "Code" in df.columns else "Symbol"
+        cap_col    = "Marcap" if "Marcap" in df.columns else None
+        if cap_col:
+            df = df.sort_values(cap_col, ascending=False).head(150)
+        else:
+            df = df.head(150)
+        return df[market_col].astype(str).str.zfill(6).tolist()
 
-    if target_code is None:
-        raise RuntimeError(f"Index not found by name='{index_name}' at date={date}")
-
-    # 구성종목
-    cons = pkstock.get_index_portfolio_deposit_file(target_code)
-    return [str(x).zfill(6) for x in cons]
+    else:
+        raise ValueError(f"지원하지 않는 index_key: {index_key}")
 
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--out_path", default="data/processed/universe_k200_k150.parquet")
     ap.add_argument("--base_universe", default="data/processed/universe.parquet",
                     help="ticker->corp_code 매핑용(있으면 merge)")
-    ap.add_argument("--date", default="", help="YYYYMMDD (비우면 자동 fallback)")
     args = ap.parse_args()
 
-    date = args.date.strip() or _yyyymmdd_today_fallback()
-    print(f"[INFO] using date={date} for index constituents")
+    k200 = get_index_constituents("KOSPI200")
+    k150 = get_index_constituents("KOSDAQ150")
 
-    k200 = get_index_constituents_by_name("코스피 200", date=date)
-    k150 = get_index_constituents_by_name("코스닥 150", date=date)
+    print(f"[INFO] KOSPI200: {len(k200)}개, KOSDAQ150: {len(k150)}개")
+
+    tickers = sorted(set(k200 + k150))
+
+    print(f"[INFO] KOSPI200: {len(k200)}개, KOSDAQ150: {len(k150)}개")
 
     tickers = sorted(set(k200 + k150))
     df = pd.DataFrame({"ticker": tickers})

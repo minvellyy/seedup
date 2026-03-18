@@ -32,7 +32,7 @@ load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
 
 # ── CrewAI 관련 import (패키지 없으면 graceful degradation) ─────────────────
 try:
-    from manager_agent.crew import run_manager_analysis
+    from manager_agent.crew import run_manager_analysis, run_manager_analysis_async
     _CREW_AVAILABLE = True
 except Exception as _e:
     _CREW_AVAILABLE = False
@@ -97,6 +97,40 @@ def _check_crew():
         )
 
 
+def _validate_ticker_in_universe(ticker: str) -> None:
+    """DB instruments 테이블에 없는 ticker면 404를 raise합니다."""
+    try:
+        import pymysql
+        conn = pymysql.connect(
+            host=os.getenv("DB_HOST", "localhost"),
+            port=int(os.getenv("DB_PORT", 3306)),
+            user=os.getenv("DB_USER"),
+            password=os.getenv("DB_PASSWORD"),
+            db=os.getenv("DB_NAME"),
+            charset="utf8mb4",
+        )
+        try:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "SELECT instrument_id FROM instruments WHERE stock_code = %s LIMIT 1",
+                    (ticker,),
+                )
+                row = cur.fetchone()
+        finally:
+            conn.close()
+        if not row:
+            raise HTTPException(
+                status_code=404,
+                detail=f"종목코드 '{ticker}'는 유니버스에 등록되지 않은 종목입니다.",
+            )
+    except HTTPException:
+        raise
+    except Exception as e:
+        # DB 연결 실패 시에는 검증을 건너뜀 (서비스 중단 방지)
+        import logging as _logging
+        _logging.getLogger("analysis").warning("유니버스 검증 DB 연결 실패: %s", e)
+
+
 def _strip_markdown_json(text: str) -> str:
     """CrewAI 출력에 붙는 ```json ... ``` 마크다운 코드블록을 제거하여 순수 JSON 문자열을 반환한다."""
     import re
@@ -118,8 +152,9 @@ def _strip_markdown_json(text: str) -> str:
     summary="종목 통합 투자 리포트 생성",
     description="CrewAI 매니저 에이전트가 재무·방향성·비정형 데이터를 종합하여 투자 리포트를 생성합니다.",
 )
-def create_analysis_report(req: AnalysisRequest) -> AnalysisResponse:
+async def create_analysis_report(req: AnalysisRequest) -> AnalysisResponse:
     _check_crew()
+    _validate_ticker_in_universe(str(req.ticker).zfill(6))
     from datetime import datetime
     import logging as _logging
     _log = _logging.getLogger("analysis")
@@ -156,22 +191,35 @@ def create_analysis_report(req: AnalysisRequest) -> AnalysisResponse:
             "account_type": "일반",
         }, ensure_ascii=False)
 
+    # stock_detail: 병렬 에이전트 4개 + 매니저 → 최대 7분
+    # full/fin/signal: 더 빠르므로 동일 상한 적용
+    _crew_timeout = float(os.getenv("CREW_TIMEOUT", "420"))
+
     try:
         _log.info("[종목분석] LLM 모델: %s", _get_llm_model_name())
-        _log.info("[종목분석] CrewAI 에이전트 실행 시작 ...")
+        _log.info("[종목분석] CrewAI 에이전트 실행 시작 (최대 %.0fs) ...", _crew_timeout)
         llm = _get_llm()
-        result = run_manager_analysis(
-            llm=llm,
-            ticker=req.ticker,
-            as_of=req.as_of,
-            explain_lang=req.lang,
-            explain_style=req.style,
-            mode=req.mode,
-            context_description=req.context_description,
-            user_profile_json=user_profile_json,
-            stock_item_json=req.stock_item_json,
+        result = await asyncio.wait_for(
+            run_manager_analysis_async(
+                llm=llm,
+                ticker=req.ticker,
+                as_of=req.as_of,
+                explain_lang=req.lang,
+                explain_style=req.style,
+                mode=req.mode,
+                context_description=req.context_description,
+                user_profile_json=user_profile_json,
+                stock_item_json=req.stock_item_json,
+            ),
+            timeout=_crew_timeout,
         )
         _log.info("[종목분석] CrewAI 완료 — 결과 길이: %d chars", len(result))
+    except asyncio.TimeoutError:
+        _log.error("[종목분석] 시간 초과 (%.0fs 경과)", _crew_timeout)
+        raise HTTPException(
+            status_code=504,
+            detail=f"분석 요청이 {int(_crew_timeout)}초를 초과했습니다. 잠시 후 다시 시도해 주세요.",
+        )
     except Exception as e:
         _log.error("[종목분석] 오류 발생: %s", e)
         raise HTTPException(status_code=500, detail=f"분석 실행 오류: {e}")
@@ -200,7 +248,7 @@ def create_analysis_report(req: AnalysisRequest) -> AnalysisResponse:
     summary="빠른 방향성 시그널 조회",
     description="signal 모드로 특정 종목의 방향성 예측 신호를 빠르게 반환합니다.",
 )
-def get_signal_report(
+async def get_signal_report(
     ticker: str,
     lang: str = Query("ko"),
     style: str = Query("formal"),
@@ -210,7 +258,7 @@ def get_signal_report(
 
     try:
         llm = _get_llm()
-        result = run_manager_analysis(
+        result = await run_manager_analysis_async(
             llm=llm,
             ticker=ticker,
             mode="signal",

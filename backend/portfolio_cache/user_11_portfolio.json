@@ -1,0 +1,123 @@
+{
+  "risk_tier": "적극투자형",
+  "risk_grade": "2등급",
+  "generated_at": "2026-03-18T11:42:03",
+  "user_profile": {
+    "user_id": 11,
+    "risk_tier": "적극투자형",
+    "risk_grade": "2등급",
+    "investment_type": "적극투자형",
+    "horizon_years": 3,
+    "monthly_contribution_krw": 0,
+    "total_assets_krw": 100000
+  },
+  "allocation_rules": {
+    "grade": "2등급",
+    "stock_max_pct": 90.0,
+    "single_stock_max_pct": 19.0,
+    "etf_min_pct": 10.0,
+    "target_weights": {
+      "STOCK": 0.9,
+      "ETF": 0.1
+    }
+  },
+  "portfolio_items": [
+    {
+      "ticker": "005930",
+      "name": "삼성전자",
+      "asset_type": "STOCK",
+      "risk_type": "주식_공격형",
+      "weight": 0.1146,
+      "weight_pct": 11.5,
+      "selection_reason": "[코어] 1년 수익률 +238.7% | 샤프 +5.76 | 변동성 40.8%",
+      "explanation": "삼성전자은(는) 대형 우량 코어 종목입니다. 포트폴리오 안정성 뼈대를 담당합니다."
+    },
+    {
+      "ticker": "006800",
+      "name": "미래에셋증권",
+      "asset_type": "STOCK",
+      "risk_type": "주식_공격형",
+      "weight": 0.1136,
+      "weight_pct": 11.4,
+      "selection_reason": "[코어] 1년 수익률 +574.8% | 샤프 +7.73 | 변동성 73.9%",
+      "explanation": "미래에셋증권은(는) 대형 우량 코어 종목입니다. 포트폴리오 안정성 뼈대를 담당합니다."
+    },
+    {
+      "ticker": "402340",
+      "name": "SK스퀘어",
+      "asset_type": "STOCK",
+      "risk_type": "주식_공격형",
+      "weight": 0.1119,
+      "weight_pct": 11.2,
+      "selection_reason": "[코어] 1년 수익률 +519.4% | 샤프 +7.72 | 변동성 66.8%",
+      "explanation": "SK스퀘어은(는) 대형 우량 코어 종목입니다. 포트폴리오 안정성 뼈대를 담당합니다."
+    },
+    {
+      "ticker": "005380",
+      "name": "현대차",
+      "asset_type": "STOCK",
+      "risk_type": "주식_공격형",
+      "weight": 0.11,
+      "weight_pct": 11.0,
+      "selection_reason": "[코어] 1년 수익률 +196.8% | 샤프 +3.80 | 변동성 50.8%",
+      "explanation": "현대차은(는) 대형 우량 코어 종목입니다. 포트폴리오 안정성 뼈대를 담당합니다."
+    },
+    {
+      "ticker": "00680K",
+      "name": "미래에셋증권2우B",
+      "asset_type": "STOCK",
+      "risk_type": "주식_공격형",
+      "weight": 0.151,
+      "weight_pct": 15.1,
+      "selection_reason": "[새틀라이트] 1년 수익률 +402.3% | 샤프 +6.99 | 변동성 57.1%",
+      "explanation": "미래에셋증권2우B은(는) 초과 수익(알파)을 노리는 성장 모멘텀 종목입니다."
+    },
+    {
+      "ticker": "043260",
+      "name": "성호전자",
+      "asset_type": "STOCK",
+      "risk_type": "주식_공격형",
+      "weight": 0.1497,
+      "weight_pct": 15.0,
+      "selection_reason": "[새틀라이트] 1년 수익률 +2415.5% | 샤프 +26.01 | 변동성 92.7%",
+      "explanation": "성호전자은(는) 초과 수익(알파)을 노리는 성장 모멘텀 종목입니다."
+    },
+    {
+      "ticker": "032820",
+      "name": "우리기술",
+      "asset_type": "STOCK",
+      "risk_type": "주식_공격형",
+      "weight": 0.1494,
+      "weight_pct": 14.9,
+      "selection_reason": "[새틀라이트] 1년 수익률 +774.9% | 샤프 +8.42 | 변동성 91.6%",
+      "explanation": "우리기술은(는) 초과 수익(알파)을 노리는 성장 모멘텀 종목입니다."
+    }
+  ],
+  "buy_plan": [],
+  "investable_amount_krw": 100000,
+  "total_invested_krw": 0,
+  "leftover_krw": 100000,
+  "cap_compliance": {
+    "compliant": true,
+    "violations": [],
+    "summary": "cap 규칙 준수"
+  },
+  "performance_3y": {
+    "ann_return_pct": 79.96,
+    "ann_vol_pct": 32.65,
+    "mdd_pct": -35.15,
+    "sharpe": 2.342,
+    "period": "2023-03-19 ~ 2026-03-18",
+    "interpretation": "최근 3년간 연환산 수익률 80.0%, 변동성 32.6%, 최대 낙폭 -35.2%입니다."
+  },
+  "monte_carlo_1y": {
+    "n_simulations": 1000000,
+    "horizon_days": 252,
+    "p10_pct": 38.8,
+    "p50_pct": 110.9,
+    "p90_pct": 220.5,
+    "interpretation": "1년 후 기대 수익률(중앙값) 110.9%, 하락 시나리오(10%) 38.8%, 상승 시나리오(90%) 220.5%입니다."
+  },
+  "overall_summary": "2등급(적극투자형) 투자자를 위한 포트폴리오. 종목 선별 방식: 모멘텀·수익률·변동성 균형 기준. 총 0개 종목 매수 (주식 7개 · ETF 0개 중). 총 투자금 100,000원 중 0원 투자, 잔여 100,000원.",
+  "portfolio_label": "균형 추천형"
+}

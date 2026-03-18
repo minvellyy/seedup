@@ -33,12 +33,20 @@ from schemas import (  # noqa: E402
     UserSurveyRequest,
     PortfolioRecommendationResponse,
 )
-from portfolio_model import get_portfolio_recommendation, get_multi_portfolio_recommendations  # noqa: E402
+from portfolio_model import get_portfolio_recommendation, get_multi_portfolio_recommendations, get_user_top3_portfolio_recommendations  # noqa: E402
+
+# CrewAI 기반 포트폴리오 추천 (패키지 없으면 graceful fallback)
+try:
+    from manager_agent.crew import run_db_portfolio_recommendation as _run_db_portfolio
+    _CREW_AVAILABLE = True
+except Exception as _crew_err:
+    _CREW_AVAILABLE = False
+    _CREW_ERR = str(_crew_err)
 
 router = APIRouter(prefix="/portfolio", tags=["portfolio"])
 
 # ─── 캐시 전략 키 (portfolio_recommendations.strategy_name) ───────────────────
-_MULTI_CACHE_KEYS = ['pf_optimal', 'pf_growth', 'pf_stable']
+_MULTI_CACHE_KEYS = ['pf_top1', 'pf_top2', 'pf_top3']
 _CACHE_TTL_MINUTES = 60
 _CACHE_DIR = _Path(__file__).resolve().parent.parent / "portfolio_cache"
 _logger = _logging.getLogger(__name__)
@@ -89,9 +97,9 @@ def _load_multi_cache(user_id: int, conn) -> list | None:
         SELECT strategy_name, strategy_content
         FROM portfolio_recommendations
         WHERE user_id = %s
-          AND strategy_name IN ('pf_optimal', 'pf_growth', 'pf_stable')
+          AND strategy_name IN ('pf_top1', 'pf_top2', 'pf_top3')
           AND created_at >= DATE_SUB(NOW(), INTERVAL %s MINUTE)
-        ORDER BY FIELD(strategy_name, 'pf_optimal', 'pf_growth', 'pf_stable')
+        ORDER BY FIELD(strategy_name, 'pf_top1', 'pf_top2', 'pf_top3')
         """,
         (user_id, _CACHE_TTL_MINUTES),
     )
@@ -117,7 +125,7 @@ def _save_multi_cache(user_id: int, conn, rec_list: list) -> None:
         """
         DELETE FROM portfolio_recommendations
         WHERE user_id = %s
-          AND strategy_name IN ('pf_optimal', 'pf_growth', 'pf_stable')
+          AND strategy_name IN ('pf_top1', 'pf_top2', 'pf_top3')
         """,
         (user_id,),
     )
@@ -197,8 +205,12 @@ def recommend_portfolio_get(
 @router.get(
     "/recommend-multi/{user_id}",
     response_model=list[PortfolioRecommendationResponse],
-    summary="3종 스타일 포트폴리오 추천 (GET)",
-    description="안정 중시형 / 균형 성장형 / 수익 추구형 3가지 포트폴리오를 배열로 반환합니다. 1시간 동안 DB에 캐싱됩니다.",
+    summary="유저 맞춤 Top-3 포트폴리오 추천 (GET)",
+    description=(
+        "사용자의 투자성향(risk_appetite)에서 최적 팩터 가중치를 산출하고, "
+        "다양한 가중치 조합의 후보 포트폴리오 중 Fit Score 상위 3개를 1·2·3순위로 반환합니다. "
+        "1시간 동안 DB에 캐싱됩니다."
+    ),
 )
 def recommend_portfolio_multi_get(
     user_id: int,
@@ -213,26 +225,42 @@ def recommend_portfolio_multi_get(
         if cached is not None:
             return cached
 
-    # ── 2. 캐시 없음 → 새로 계산 ──────────────────────────────────────────
-    try:
-        result = get_multi_portfolio_recommendations(
-            user_id=user_id,
-            conn=conn,
-            koscom_score=koscom_score,
-            total_assets_override=total_assets_override,
-        )
-    except ValueError as e:
-        raise HTTPException(status_code=404, detail=str(e))
-    except Exception as e:
-        raise HTTPException(status_code=500, detail=f"포트폴리오 모델 오류: {e}")
+    # ── 2. 캐시 없음 → CrewAI 경유 포트폴리오 추천 ───────────────────────
+    result = None
+    if _CREW_AVAILABLE:
+        try:
+            import os
+            model = os.getenv("MANAGER_LLM_MODEL", "openai/gpt-4o-mini")
+            from crewai import LLM
+            llm = LLM(model=model)
+            raw = _run_db_portfolio(llm=llm, user_id=user_id, mode="top3")
+            _s = raw.strip()
+            if _s.startswith("```"):
+                _s = _s.split("```")[1].lstrip("json").strip()
+            import json as _j
+            data = _j.loads(_s)
+            result = [PortfolioRecommendationResponse.model_validate(item) for item in data]
+        except Exception:
+            result = None  # CrewAI 실패 시 직접 모델 호출로 fallback
+
+    if result is None:
+        try:
+            result = get_user_top3_portfolio_recommendations(
+                user_id=user_id,
+                conn=conn,
+                koscom_score=koscom_score,
+                total_assets_override=total_assets_override,
+            )
+        except ValueError as e:
+            raise HTTPException(status_code=404, detail=str(e))
+        except Exception as e:
+            raise HTTPException(status_code=500, detail=f"포트폴리오 모델 오류: {e}")
 
     # ── 3. 결과를 DB에 저장 (캐시) ─────────────────────────────────────────
     try:
         _save_multi_cache(user_id, conn, result)
     except Exception as e:
-        # 캐시 저장 실패는 응답을 막지 않음
-        import logging
-        logging.getLogger(__name__).warning("포트폴리오 캐시 저장 실패: %s", e)
+        _logger.warning("포트폴리오 캐시 저장 실패: %s", e)
 
     # ── 4. JSON 파일 저장 ─────────────────────────────────────────────────
     _save_portfolio_json(user_id, result)

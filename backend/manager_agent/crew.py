@@ -188,6 +188,7 @@ def run_manager_analysis(
             '  "data_quality_note": str|null\n'
             '}'
         ),
+        async_execution=True,
         agent=fin_analyst,
     )
 
@@ -219,6 +220,7 @@ def run_manager_analysis(
             '  "interpretation": str    // 1~2문장 해석\n'
             '}'
         ),
+        async_execution=True,
         agent=direction_analyst,
     )
 
@@ -232,7 +234,9 @@ def run_manager_analysis(
             "   - 검색 질의 예시: 종목명, 주요 사업 키워드, 관련 산업 테마\n"
             "   - 검색 결과에서 센티멘트, 핵심 리스크, 핵심 기회를 요약하라.\n"
             "   - 이 경우 status는 'NEWS_RAG'로 기록하라.\n"
-            "4) 어떤 방법으로 수집했든 최종 결과를 아래 JSON 형식으로 정리하라."
+            f"4) 뉴스 doc 내 companies/industries 필드를 반드시 확인하여, {ticker} 종목 또는 동일 산업과 직접 관련 없는 뉴스는 key_issues/news_themes에서 제외하라.\n"
+            "   관련 뉴스가 전혀 없으면 key_issues와 news_themes를 빈 리스트로 설정하라.\n"
+            "5) 어떤 방법으로 수집했든 최종 결과를 아래 JSON 형식으로 정리하라."
         ),
         expected_output=(
             "비정형 분석 결과 JSON:\n"
@@ -247,6 +251,7 @@ def run_manager_analysis(
             '  "last_updated": str|null\n'
             '}'
         ),
+        async_execution=True,
         agent=unstructured_analyst,
     )
 
@@ -443,6 +448,7 @@ def run_manager_analysis(
                 '  "caution": str|null          // 주의사항 1가지 (없으면 null)\n'
                 '}'
             ),
+            async_execution=True,
             agent=fit_analyst,
         )
 
@@ -485,6 +491,7 @@ def run_manager_analysis(
                 '  "overall_company_view": str   // 기업 전반 평가 2~3문장\n'
                 '}'
             ),
+            async_execution=True,
             agent=company_analyst,
         )
 
@@ -493,6 +500,9 @@ def run_manager_analysis(
                 f"종목 {ticker}가 속한 산업/섹터에 대한 분석을 수행하라.\n\n"
                 "절차:\n"
                 "1) read_fin_structured_report 툴로 종목의 sector, industry 정보를 확인하라.\n"
+                "   - 툴이 반환한 'sector' 값을 결과 JSON의 sector 필드에 그대로 사용하라.\n"
+                "   - 절대로 LLM 자신의 지식으로 sector/industry 값을 수정하거나 대체하지 말 것.\n"
+                "   - sector가 null이면 null 그대로 두고 industry_overview에 '섹터 정보 없음'으로 명시하라.\n"
                 "2) news_rag_search 툴로 해당 산업·섹터 관련 최신 뉴스를 검색하라.\n"
                 "   - 검색 질의 예시: '[산업명] 트렌드', '[산업명] 성장', '[종목명] 경쟁사', '[산업명] 규제'\n"
                 "   - 뉴스가 없거나 검색 실패 시에도 멈추지 말고 다음 단계로 진행하라.\n"
@@ -505,8 +515,11 @@ def run_manager_analysis(
                 "   - 규제·정책: 산업에 영향을 주는 주요 규제나 정부 정책\n"
                 "4) 산업 관점에서 이 종목의 기회와 위협을 정리하라.\n\n"
                 "[작성 원칙] 산업에 익숙하지 않은 투자 입문자도 이해할 수 있도록 쉽게 작성하라.\n"
-                "뉴스 검색 결과가 없더라도 재무 섹터 정보와 일반 지식으로 작성하고, "
-                "데이터 부재를 오류처럼 표시하지 말 것."
+                "뉴스 검색 결과가 없으면 다른 키워드로 news_rag_search를 재시도하라.\n"
+                "[중요] read_fin_structured_report 결과가 NOT_FOUND이면 "
+                "sector/industry 필드를 null로 두고 industry_overview에 "
+                "'재무 데이터 없음'이라고 명시하라. "
+                "실제 툴 조회 결과 없이 기업명·종목코드·산업 내용을 임의로 지어내지 말 것."
             ),
             expected_output=(
                 "산업분석 JSON:\n"
@@ -524,7 +537,36 @@ def run_manager_analysis(
                 '  "opportunity_threat_summary": str // 기회·위협 종합 2문장\n'
                 '}'
             ),
+            async_execution=True,
             agent=industry_analyst,
+        )
+
+        t_unstr_sd = Task(
+            description=(
+                f"종목 {ticker}의 ESG 보고서, 최신 뉴스, 증권사 리포트를 조회하라.\n\n"
+                "절차:\n"
+                "1) read_unstructured_analysis 툴로 ESG 분석·뉴스·증권사 리포트를 한 번에 조회하라.\n"
+                "2) 조회 결과에서 다음을 추출하라:\n"
+                "   - esg.risks : ESG 리스크 요인 (있으면 1문장 요약)\n"
+                "   - esg.opportunities : ESG 기대 요인 (있으면 1문장 요약)\n"
+                "   - news : 반드시 해당 종목({ticker}) 또는 동일 산업·섹터와 직접 관련된 뉴스만 2~3개 요약하라.\n"
+                "     뉴스 doc 내 companies/industries 필드를 확인하여 이 종목과 무관한 타 산업 뉴스(예: 유가, 환율, 전혀 다른 업종)는 절대 포함하지 말라.\n"
+                "     관련 뉴스가 없으면 news_summary를 null로 설정하라.\n"
+                "   - reports : 증권사 리포트 목표주가·투자의견·핵심 인사이트\n"
+                "3) 각 항목이 없거나 NO_REPORT/ERROR이면 null로 표시하고 에러처럼 보이지 않도록 하라."
+            ),
+            expected_output=(
+                "비정형 분석 JSON:\n"
+                '{\n'
+                '  "ticker": str,\n'
+                '  "esg_risks": str|null,         // ESG 리스크 요인 요약\n'
+                '  "esg_opportunities": str|null, // ESG 기대 요인 요약\n'
+                '  "news_summary": str|null,      // 최신 뉴스 핵심 2~3문장\n'
+                '  "reports_insight": str|null    // 증권사 리포트 핵심 인사이트\n'
+                '}'
+            ),
+            async_execution=True,
+            agent=unstructured_analyst,
         )
 
         t_detail_mgr = Task(
@@ -533,13 +575,15 @@ def run_manager_analysis(
                 f"{context_label}\n\n"
                 f"작성 언어: {lang_label}\n"
                 f"작성 톤: {style_label} 문체\n\n"
-                "앞서 세 분석가(투자원칙 적합도 / 기업분석 / 산업분석)의 결과를 종합하여 "
+                "앞서 네 분석가(투자원칙 적합도 / 기업분석 / 산업분석 / 비정형 데이터)의 결과를 종합하여 "
                 "단일 종목 상세 페이지에 바로 사용할 수 있는 통합 리포트를 생성하라.\n\n"
                 "[핵심 원칙]\n"
                 "- 투자 입문자도 이해할 수 있도록 전문 용어에 괄호 설명을 붙여라.\n"
-                "- 세 섹션의 내용이 서로 연결되도록 통합적 관점으로 서술하라.\n"
+                "- 네 섹션의 내용이 서로 연결되도록 통합적 관점으로 서술하라.\n"
                 "- 전체 요약 summary는 사용자가 이 종목을 '내가 살 종목인지'를 "
-                "  직관적으로 판단할 수 있도록 핵심만 담아라."
+                "  직관적으로 판단할 수 있도록 핵심만 담아라.\n"
+                "- 비정형 데이터(ESG·뉴스·리포트)가 있으면 unstructured_analysis 섹션에 그대로 채워라.\n"
+                "  없는 항목은 null로 두되 전체 리포트 품질이 낮아 보이지 않도록 하라."
             ),
             expected_output=(
                 "단일 종목 상세 페이지 통합 리포트 JSON:\n"
@@ -581,19 +625,25 @@ def run_manager_analysis(
                 '    "competitive_position": str,\n'
                 '    "policy_regulatory": str|null,\n'
                 '    "opportunity_threat_summary": str\n'
+                '  },\n'
+                '  "unstructured_analysis": {     // 비정형 데이터 섹션\n'
+                '    "esg_risks": str|null,\n'
+                '    "esg_opportunities": str|null,\n'
+                '    "news_summary": str|null,\n'
+                '    "reports_insight": str|null\n'
                 '  }\n'
                 '}'
             ),
-            context=[t_fit, t_company, t_industry],
+            context=[t_fit, t_company, t_industry, t_unstr_sd],
             agent=manager,
         )
 
         crew = Crew(
-            agents=[fit_analyst, company_analyst, industry_analyst, manager],
-            tasks=[t_fit, t_company, t_industry, t_detail_mgr],
+            agents=[fit_analyst, company_analyst, industry_analyst, unstructured_analyst, manager],
+            tasks=[t_fit, t_company, t_industry, t_unstr_sd, t_detail_mgr],
             process=Process.sequential,
             verbose=True,
-            max_execution_time=180,
+            max_execution_time=480,  # 병렬 에이전트 4개 + 매니저 → 여유 있게 8분
         )
 
     else:
@@ -1081,3 +1131,295 @@ def run_mc_final_selection_agent(
 
     result = crew.kickoff()
     return str(result)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DB 기반 종목 추천 — stock_model.get_stock_recommendations() 를 CrewAI 경유
+# ─────────────────────────────────────────────────────────────────────────────
+
+def run_db_stock_recommendation(
+    llm: Any,
+    user_id: int,
+    explain_lang: str = "ko",
+    explain_style: str = "formal",
+) -> str:
+    """DB 설문·투자성향 기반 종목 Top5를 CrewAI 에이전트를 통해 추천합니다.
+
+    stock_model.get_stock_recommendations() 를 CrewAI 툴로 호출하여
+    기존 개인화 추천 로직(설문 → 프로파일 → 스코어링 → Top5)이
+    CrewAI 파이프라인 안에서 실행됩니다.
+
+    Parameters
+    ----------
+    llm       : CrewAI LLM 객체
+    user_id   : 사용자 DB ID
+    explain_lang  : 'ko' | 'en'
+    explain_style : 'formal' | 'friendly'
+
+    Returns
+    -------
+    str
+        StockRecommendationResponse JSON 문자열.
+        에이전트 출력에서 JSON 파싱이 가능한 형식으로 반환됩니다.
+    """
+    from manager_agent.tools.stock_recommend_tool import (
+        get_db_stock_recommendations,
+        get_db_stock_recommendations_top3_reasons,
+    )
+
+    lang_label = "한국어" if explain_lang == "ko" else "English"
+    style_label = "공식적이고 전문적인" if explain_style == "formal" else "친근하고 쉬운"
+
+    recommender = Agent(
+        role="DB 기반 개인화 종목 추천 에이전트",
+        goal=(
+            f"user_id {user_id}의 투자성향과 설문 데이터를 기반으로 "
+            "DB 종목 추천 모델을 호출하여 맞춤 종목 Top5를 반환한다."
+        ),
+        backstory=(
+            "설문 기반 투자성향 분석 시스템과 연동된 추천 에이전트. "
+            "DB에 저장된 사용자 설문 답변과 투자성향을 읽어 "
+            "다중팩터 스코어링(모멘텀·우량성·저변동성)으로 최적 종목을 선정한다."
+        ),
+        tools=[get_db_stock_recommendations, get_db_stock_recommendations_top3_reasons],
+        llm=llm,
+        verbose=True,
+        allow_delegation=False,
+    )
+
+    task = Task(
+        description=(
+            f"user_id '{user_id}'에 맞는 종목 Top5를 추천하라.\n\n"
+            "절차:\n"
+            f"1) get_db_stock_recommendations 툴을 user_id='{user_id}'로 호출하라.\n"
+            "2) 툴이 반환한 JSON 결과를 그대로 최종 출력으로 사용하라.\n"
+            "   JSON 구조를 변경하거나 항목을 추가·삭제하지 마라.\n"
+            "3) 오류(error 필드)가 반환된 경우에만 오류 메시지를 그대로 출력하라.\n\n"
+            f"작성 언어: {lang_label}\n"
+            f"작성 톤: {style_label} 문체"
+        ),
+        expected_output=(
+            "get_db_stock_recommendations 툴이 반환한 JSON을 그대로 출력하라.\n"
+            "마크다운 코드블록 없이 JSON만. 구조 변경 금지.\n\n"
+            "예시 구조:\n"
+            '{\n'
+            '  "user_id": int,\n'
+            '  "risk_tier": str,\n'
+            '  "risk_grade": str,\n'
+            '  "items": [\n'
+            '    {\n'
+            '      "rank": 1,\n'
+            '      "ticker": str,\n'
+            '      "name": str,\n'
+            '      "market": str,\n'
+            '      "total_score": float,\n'
+            '      "reasons": [str],\n'
+            '      "explanation": str|null\n'
+            '    }\n'
+            '  ]\n'
+            '}'
+        ),
+        agent=recommender,
+    )
+
+    crew = Crew(
+        agents=[recommender],
+        tasks=[task],
+        process=Process.sequential,
+        verbose=True,
+        max_execution_time=120,
+    )
+
+    result = crew.kickoff()
+    return str(result)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# DB 기반 포트폴리오 추천 — portfolio_model 함수들을 CrewAI 경유
+# ─────────────────────────────────────────────────────────────────────────────
+
+def run_db_portfolio_recommendation(
+    llm: Any,
+    user_id: int,
+    mode: str = "multi",  # "multi" | "top3"
+    explain_lang: str = "ko",
+    explain_style: str = "formal",
+) -> str:
+    """DB 설문·투자성향 기반 포트폴리오를 CrewAI 에이전트를 통해 추천합니다.
+
+    portfolio_model의 추천 함수들을 CrewAI 툴로 호출하여
+    기존 개인화 포트폴리오 로직(설문 → 프로파일 → 스코어링 → 구성)이
+    CrewAI 파이프라인 안에서 실행됩니다.
+
+    Parameters
+    ----------
+    llm        : CrewAI LLM 객체
+    user_id    : 사용자 DB ID
+    mode       : 'multi' — 3가지 스타일(균형/모멘텀/안정) 포트폴리오
+                 'top3'  — Fit Score 기준 최적 Top-3 포트폴리오
+    explain_lang  : 'ko' | 'en'
+    explain_style : 'formal' | 'friendly'
+
+    Returns
+    -------
+    str
+        PortfolioRecommendationResponse 배열 JSON 문자열.
+    """
+    from manager_agent.tools.portfolio_recommend_tool import (
+        get_db_multi_portfolio_recommendations,
+        get_db_user_top3_portfolio,
+        get_db_portfolio_summary,
+    )
+
+    lang_label = "한국어" if explain_lang == "ko" else "English"
+    style_label = "공식적이고 전문적인" if explain_style == "formal" else "친근하고 쉬운"
+
+    if mode == "top3":
+        primary_tool = get_db_user_top3_portfolio
+        tool_call_desc = (
+            f"1) get_db_user_top3_portfolio 툴을 user_id='{user_id}'로 호출하라.\n"
+        )
+        mode_label = "Fit Score 기준 최적 Top-3"
+    else:
+        primary_tool = get_db_multi_portfolio_recommendations
+        tool_call_desc = (
+            f"1) get_db_multi_portfolio_recommendations 툴을 user_id='{user_id}'로 호출하라.\n"
+        )
+        mode_label = "3가지 스타일(균형/모멘텀/안정)"
+
+    portfolio_agent = Agent(
+        role="DB 기반 개인화 포트폴리오 추천 에이전트",
+        goal=(
+            f"user_id {user_id}의 투자성향과 설문 데이터를 기반으로 "
+            f"DB 포트폴리오 추천 모델을 호출하여 {mode_label} 포트폴리오를 반환한다."
+        ),
+        backstory=(
+            "설문 기반 투자성향 분석 시스템과 연동된 포트폴리오 구성 에이전트. "
+            "DB에 저장된 사용자 설문 답변과 투자성향을 읽어 "
+            "코어-새틀라이트 전략과 다중팩터 스코어링으로 최적 포트폴리오를 구성한다."
+        ),
+        tools=[primary_tool, get_db_portfolio_summary],
+        llm=llm,
+        verbose=True,
+        allow_delegation=False,
+    )
+
+    task = Task(
+        description=(
+            f"user_id '{user_id}'에 맞는 {mode_label} 포트폴리오를 추천하라.\n\n"
+            "절차:\n"
+            f"{tool_call_desc}"
+            "2) 툴이 반환한 JSON 배열 결과를 그대로 최종 출력으로 사용하라.\n"
+            "   JSON 구조를 변경하거나 항목을 추가·삭제하지 마라.\n"
+            "3) 오류(error 필드)가 반환된 경우에만 오류 메시지를 그대로 출력하라.\n\n"
+            f"작성 언어: {lang_label}\n"
+            f"작성 톤: {style_label} 문체"
+        ),
+        expected_output=(
+            "포트폴리오 추천 툴이 반환한 JSON 배열을 그대로 출력하라.\n"
+            "마크다운 코드블록 없이 JSON만. 구조 변경 금지.\n\n"
+            "예시 구조 (배열 형식):\n"
+            "[\n"
+            "  {\n"
+            '    "portfolio_label": str,\n'
+            '    "portfolio_style": str,\n'
+            '    "risk_tier": str,\n'
+            '    "portfolio_items": [...],\n'
+            '    "buy_plan": [...],\n'
+            '    "performance_3y": {...}|null\n'
+            "  }\n"
+            "]\n"
+        ),
+        agent=portfolio_agent,
+    )
+
+    crew = Crew(
+        agents=[portfolio_agent],
+        tasks=[task],
+        process=Process.sequential,
+        verbose=True,
+        max_execution_time=180,
+    )
+
+    result = crew.kickoff()
+    return str(result)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 비동기 래퍼 — FastAPI async 엔드포인트에서 crew.kickoff()를 블로킹 없이 실행
+# crew.kickoff()는 sync이므로 ThreadPoolExecutor에서 실행해 이벤트 루프를 보호합니다.
+# ─────────────────────────────────────────────────────────────────────────────
+
+async def _run_crew_in_executor(func, **kwargs) -> str:
+    """sync CrewAI 함수를 ThreadPoolExecutor에서 비동기 실행합니다."""
+    import asyncio
+    import functools
+    loop = asyncio.get_running_loop()
+    return await loop.run_in_executor(None, functools.partial(func, **kwargs))
+
+
+async def run_manager_analysis_async(
+    llm: Any,
+    ticker: str,
+    as_of: str | None = None,
+    explain_lang: str = "ko",
+    explain_style: str = "formal",
+    mode: str = "full",
+    summary_input: str | None = None,
+    context_description: str | None = None,
+    user_profile_json: str | None = None,
+    stock_item_json: str | None = None,
+) -> str:
+    """run_manager_analysis의 비동기 버전.
+
+    async FastAPI 엔드포인트에서 사용합니다.
+    내부적으로 ThreadPoolExecutor에서 실행되므로 이벤트 루프를 블로킹하지 않습니다.
+    async_execution=True 태스크들은 CrewAI 내에서 병렬로 실행됩니다.
+    """
+    return await _run_crew_in_executor(
+        run_manager_analysis,
+        llm=llm,
+        ticker=ticker,
+        as_of=as_of,
+        explain_lang=explain_lang,
+        explain_style=explain_style,
+        mode=mode,
+        summary_input=summary_input,
+        context_description=context_description,
+        user_profile_json=user_profile_json,
+        stock_item_json=stock_item_json,
+    )
+
+
+async def run_db_stock_recommendation_async(
+    llm: Any,
+    user_id: int,
+    explain_lang: str = "ko",
+    explain_style: str = "formal",
+) -> str:
+    """run_db_stock_recommendation의 비동기 버전."""
+    return await _run_crew_in_executor(
+        run_db_stock_recommendation,
+        llm=llm,
+        user_id=user_id,
+        explain_lang=explain_lang,
+        explain_style=explain_style,
+    )
+
+
+async def run_db_portfolio_recommendation_async(
+    llm: Any,
+    user_id: int,
+    mode: str = "multi",
+    explain_lang: str = "ko",
+    explain_style: str = "formal",
+) -> str:
+    """run_db_portfolio_recommendation의 비동기 버전."""
+    return await _run_crew_in_executor(
+        run_db_portfolio_recommendation,
+        llm=llm,
+        user_id=user_id,
+        mode=mode,
+        explain_lang=explain_lang,
+        explain_style=explain_style,
+    )

@@ -105,11 +105,9 @@ def _recommend_portfolio_db(
     koscom_score: int = 20,
     total_assets_override: Optional[int] = None,
     portfolio_label: str = "",
-    factor_w: tuple = (0.40, 0.40, 0.20),      # (모멘텀, 우량성/샤프, 저변동성) 합계 1.0
-    momentum_split: tuple = (0.35, 0.65),      # 모멘텀 내 (3M 비중, 1Y 비중)
-    signal_map: Optional[dict] = None,
-    fin_map: Optional[dict] = None,
-    excluded_tickers: Optional[set] = None,    # 이전 포트폴리오에서 이미 선정된 종목 (중복 방지)
+    signal_map: Optional[dict] = None,   # {ticker: {p_adj, rank_overall}} - LightGBM 신호
+    fin_map: Optional[dict] = None,      # {ticker: {overall_grade}} - 재무 등급
+    scoring_weights: Optional[tuple] = None,  # (w_3m, w_1y, w_stab) — 명시 시 scoring_style 가중치보다 우선
 ) -> "PortfolioRecommendationResponse":
     """core 패키지 없이 DB 데이터만으로 포트폴리오를 구성합니다.
 
@@ -197,6 +195,11 @@ def _recommend_portfolio_db(
 
     # ── 4. 다중팩터 스코어링 + 위험조정수익률(샤프) ──────────────────────
     _RF_RATE_PF = 0.035  # 무위험 수익률 3.5%
+    # 스코어링 가중치: 명시된 scoring_weights 우선, 없으면 style 매핑 사용
+    _sw3m, _sw1y, _swstab = (
+        scoring_weights if scoring_weights is not None
+        else _SCORING_WEIGHTS.get(scoring_style, (0.35, 0.40, 0.25))
+    )
 
     def _score_items(candidates, top_n=10):
         buf = []
@@ -245,10 +248,15 @@ def _recommend_portfolio_db(
 
         _FIN_GRADE_BOOST = {"우수": 0.08, "양호": 0.04, "보통": 0.0, "주의": -0.04}
         for i, b in enumerate(buf):
-            mom_score    = _i3m * r3[i] + _i1y * r1[i]
+            # 스타일 가중치로 3m수익·1y수익·안정성(샤프+저변동) 혼합 스코어 산출
+            r3_frac = _sw3m / (_sw3m + _sw1y) if (_sw3m + _sw1y) > 0 else 0.40
+            r1_frac = _sw1y / (_sw3m + _sw1y) if (_sw3m + _sw1y) > 0 else 0.60
+            mom_score    = r3_frac * r3[i] + r1_frac * r1[i]
             qual_score   = shn[i]
             lowvol_score = 1.0 - vl[i]
-            base = _fw_mom * mom_score + _fw_qual * qual_score + _fw_lowvol * lowvol_score
+            stability_score = 0.5 * qual_score + 0.5 * lowvol_score
+            mom_weight  = _sw3m + _sw1y
+            base = mom_weight * mom_score + _swstab * stability_score
             t = b["stock_code"]
             sig_boost = 0.0
             if signal_map and t in signal_map:
@@ -1012,6 +1020,75 @@ def get_multi_portfolio_recommendations(
     for i, pf in enumerate(top3, 1):
         pf.portfolio_label = f"TOP{i} 포트폴리오"
     return top3
+
+
+def get_user_top3_portfolio_recommendations(
+    user_id: int,
+    conn,
+    *,
+    koscom_score: int = 20,
+    total_assets_override: Optional[int] = None,
+) -> List[PortfolioRecommendationResponse]:
+    """해당 사용자에게 Fit Score 기준 최적의 포트폴리오 Top-3를 반환합니다.
+
+    사용자의 투자성향(risk_appetite)에서 연속 보간한 5가지 팩터 가중치 조합으로
+    후보 포트폴리오를 각각 생성하고, Fit Score 상위 3개를 1·2·3순위로 반환합니다.
+
+    Fit Score = risk_appetite × 기대수익률 − (1 − risk_appetite) × 연변동성
+    """
+    # ── 1. 사용자 risk_appetite 결정 ─────────────────────────────────────
+    cur = conn.cursor()
+    cur.execute("SELECT investment_type FROM users WHERE id = %s", (user_id,))
+    row = cur.fetchone()
+    if not row:
+        raise ValueError(f"user_id={user_id} 를 찾을 수 없습니다.")
+    inv_type = row.get("investment_type") or _koscom_to_inv_type(koscom_score)
+    _, _, user_stock_wt, _ = _RISK_MAP_PF.get(inv_type, ("위험중립형", "3등급", 0.70, 0.30))
+    r = user_stock_wt  # 0.30(안정형) ~ 1.00(공격투자형)
+
+    # ── 2. risk_appetite 기반 팩터 가중치 후보 5종 생성 ──────────────────
+    # 모멘텀(단기+장기) 총량을 r에서 보간: 안정형(0.60) ~ 공격형(0.90)
+    w_mom  = 0.60 + 0.30 * r
+    w_stab = 1.0 - w_mom
+
+    def _norm(a, b, c):
+        s = a + b + c
+        return (round(a / s, 4), round(b / s, 4), round(c / s, 4))
+
+    candidate_weights = [
+        _norm(w_mom * 0.47, w_mom * 0.53, w_stab),            # ① 사용자 맞춤 (3m·1y 균등)
+        _norm(w_mom * 0.30, w_mom * 0.70, w_stab),            # ② 장기 수익 중시
+        _norm(w_mom * 0.65, w_mom * 0.35, w_stab),            # ③ 단기 모멘텀 집중
+        _norm(w_mom * 0.47, w_mom * 0.53, w_stab * 1.5),      # ④ 안정성 강화
+        _norm(w_mom * 0.47, w_mom * 0.53, max(w_stab * 0.5, 0.05)),  # ⑤ 수익 극대화
+    ]
+
+    # ── 3. 후보 포트폴리오 생성 ──────────────────────────────────────────
+    candidates = []
+    for weights in candidate_weights:
+        pf = _recommend_portfolio_db(
+            user_id=user_id,
+            conn=conn,
+            koscom_score=koscom_score,
+            total_assets_override=total_assets_override,
+            scoring_weights=weights,
+        )
+        candidates.append(pf)
+
+    # ── 4. Fit Score 산출 → Top-3 선별 ───────────────────────────────────
+    def _fit_score(pf: PortfolioRecommendationResponse) -> float:
+        ann_ret = (pf.performance_3y.ann_return_pct / 100.0 if pf.performance_3y else 0.0) or 0.0
+        ann_vol = (pf.performance_3y.ann_vol_pct / 100.0 if pf.performance_3y else 0.15) or 0.15
+        mc_ret  = (pf.monte_carlo_1y.p50_pct / 100.0 if pf.monte_carlo_1y else ann_ret) or ann_ret
+        exp_ret = 0.6 * mc_ret + 0.4 * ann_ret
+        return r * exp_ret - (1.0 - r) * ann_vol
+
+    scored = sorted(candidates, key=_fit_score, reverse=True)
+
+    # ── 5. 순위 레이블 부여 후 Top-3 반환 ────────────────────────────────
+    for rank, pf in enumerate(scored[:3]):
+        pf.portfolio_label = f"{rank + 1}순위 추천"
+    return scored[:3]
 
 
 def get_multi_portfolio_with_signals(
