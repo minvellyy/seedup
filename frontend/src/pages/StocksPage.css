@@ -156,6 +156,13 @@
   background: #9CA3AF;
 }
 
+.scroll-load-hint {
+  text-align: center;
+  font-size: 12px;
+  color: #9CA3AF;
+  padding: 12px 0 8px;
+}
+
 .stock-item {
   display: grid;
   grid-template-columns: 40px 44px 1fr auto;

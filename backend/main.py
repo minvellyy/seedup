@@ -1,4 +1,11 @@
 import os
+import sys
+
+# Windows cp949 인코딩 → UTF-8 강제 (CrewAI 이모지 출력 시 UnicodeEncodeError 방지)
+if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf_8"):
+    import io
+    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
+    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 
 from fastapi import FastAPI, HTTPException, Query, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -151,11 +158,19 @@ app = FastAPI(title="SeedUp API Server")
 _DB_SYNC_INTERVAL = int(os.getenv("DB_PRICE_SYNC_INTERVAL", "60"))
 # REST API 전체 종목 갱신 간격 (초, 기본 3시간)
 _DB_FULL_SYNC_INTERVAL = int(os.getenv("DB_FULL_PRICE_SYNC_INTERVAL", str(3 * 3600)))
+# WS 동기화 INFO 로그 주기 (기본 10회마다 1회)
+_DB_SYNC_LOG_EVERY = int(os.getenv("DB_PRICE_SYNC_LOG_EVERY", "10"))
+# WS 동기화 INFO 로그 출력 여부 (기본 비활성)
+_DB_SYNC_INFO_LOG = os.getenv("DB_PRICE_SYNC_INFO_LOG", "false").lower() == "true"
+
+_last_ws_sync_count: int | None = None
+_ws_sync_cycle_count = 0
 
 
 async def _db_price_sync_loop() -> None:
     """WebSocket _price_store → instruments.last_price 주기적 벌크 업데이트 (60초 주기)."""
     from kis_ws_client import get_price_store
+    global _last_ws_sync_count, _ws_sync_cycle_count
 
     while True:
         await asyncio.sleep(_DB_SYNC_INTERVAL)
@@ -186,7 +201,16 @@ async def _db_price_sync_loop() -> None:
                     )
                     updated += 1
                 db.commit()
-                logger.info("DB 가격 동기화 완료 (WS): %d개 종목", updated)
+                _ws_sync_cycle_count += 1
+                should_log_info = (
+                    updated != _last_ws_sync_count
+                    or _ws_sync_cycle_count % max(_DB_SYNC_LOG_EVERY, 1) == 0
+                )
+                if _DB_SYNC_INFO_LOG and should_log_info:
+                    logger.info("DB 가격 동기화 완료 (WS): %d개 종목", updated)
+                    _last_ws_sync_count = updated
+                else:
+                    logger.debug("DB 가격 동기화 완료 (WS): %d개 종목", updated)
             except Exception as e:
                 db.rollback()
                 logger.error("DB 가격 동기화 오류: %s", e)

@@ -1,123 +1,917 @@
 {
-  "risk_tier": "적극투자형",
-  "risk_grade": "2등급",
-  "generated_at": "2026-03-18T11:42:03",
-  "user_profile": {
-    "user_id": 11,
-    "risk_tier": "적극투자형",
-    "risk_grade": "2등급",
-    "investment_type": "적극투자형",
-    "horizon_years": 3,
-    "monthly_contribution_krw": 0,
-    "total_assets_krw": 100000
-  },
-  "allocation_rules": {
-    "grade": "2등급",
-    "stock_max_pct": 90.0,
-    "single_stock_max_pct": 19.0,
-    "etf_min_pct": 10.0,
-    "target_weights": {
-      "STOCK": 0.9,
-      "ETF": 0.1
+  "saved_at": "2026-03-19T05:10:08.772273",
+  "portfolios": [
+    {
+      "portfolio_style": "balanced",
+      "portfolio_summary": "MC 1년 기대수익률: 하락 시나리오(P10) +42.3%, 중앙값(P50) +114.3%, 상승 시나리오(P90) +222.8%. 기대수익률 +0.0%, 연간변동성 0.0%.",
+      "risk_tier": "적극투자형",
+      "portfolio_items": [
+        {
+          "ticker": "005930",
+          "name": "삼성전자",
+          "weight": 0.15,
+          "weight_pct": 15.0,
+          "asset_type": "STOCK",
+          "selection_reason": "[코어] 1년 수익률 +233.5% | 샤프 +5.64 | 변동성 40.8%",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "006800",
+          "name": "미래에셋증권",
+          "weight": 0.125,
+          "weight_pct": 12.5,
+          "asset_type": "STOCK",
+          "selection_reason": "[코어] 1년 수익률 +586.6% | 샤프 +7.89 | 변동성 73.9%",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "402340",
+          "name": "SK스퀘어",
+          "weight": 0.1,
+          "weight_pct": 10.0,
+          "asset_type": "STOCK",
+          "selection_reason": "[코어] 1년 수익률 +513.5% | 샤프 +7.64 | 변동성 66.8%",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "005380",
+          "name": "현대차",
+          "weight": 0.075,
+          "weight_pct": 7.5,
+          "asset_type": "STOCK",
+          "selection_reason": "[코어] 1년 수익률 +191.7% | 샤프 +3.70 | 변동성 50.8%",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "043260",
+          "name": "성호전자",
+          "weight": 0.2,
+          "weight_pct": 20.0,
+          "asset_type": "STOCK",
+          "selection_reason": "[새틀라이트] 1년 수익률 +2442.6% | 샤프 +26.30 | 변동성 92.7%",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "00680K",
+          "name": "미래에셋증권2우B",
+          "weight": 0.15,
+          "weight_pct": 15.0,
+          "asset_type": "STOCK",
+          "selection_reason": "[새틀라이트] 1년 수익률 +402.9% | 샤프 +7.00 | 변동성 57.1%",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "032820",
+          "name": "우리기술",
+          "weight": 0.1,
+          "weight_pct": 10.0,
+          "asset_type": "STOCK",
+          "selection_reason": "[새틀라이트] 1년 수익률 +772.6% | 샤프 +8.40 | 변동성 91.6%",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "315960",
+          "name": "RISE 대형고배당10TR",
+          "weight": 0.0667,
+          "weight_pct": 6.7,
+          "asset_type": "ETF",
+          "selection_reason": "분산투자 및 리스크 헤지 목적 ETF 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "252400",
+          "name": "RISE 200선물레버리지",
+          "weight": 0.0333,
+          "weight_pct": 3.3,
+          "asset_type": "ETF",
+          "selection_reason": "분산투자 및 리스크 헤지 목적 ETF 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        }
+      ],
+      "monte_carlo_1y": {
+        "n_simulations": 1000000,
+        "horizon_days": 252,
+        "p10_pct": 42.3,
+        "p50_pct": 114.3,
+        "p90_pct": 222.8,
+        "interpretation": "1년 후 기대 수익률(중앙값) 114.3%, 하락 시나리오(10%) 42.3%, 상승 시나리오(90%) 222.8%입니다."
+      },
+      "survey_context": {
+        "INVEST_GOAL": "자산증식",
+        "TARGET_HORIZON": "1년후",
+        "TARGET_AMOUNT": "10000000",
+        "CONTRIBUTION_TYPE": "DCA",
+        "MONTHLY_AMOUNT": "100000",
+        "MAX_HOLDINGS": "2",
+        "DIVIDEND_PREF": "MID",
+        "ACCOUNT_TYPE": "일반"
+      },
+      "portfolio_label": "자산증식 균형 성장 포트폴리오",
+      "quant_signals": {
+        "short_term": {
+          "weighted_p_adj": null,
+          "items": [
+            {
+              "ticker": "005930",
+              "name": "삼성전자",
+              "weight_pct": 15.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "006800",
+              "name": "미래에셋증권",
+              "weight_pct": 12.5,
+              "p_adj": null
+            },
+            {
+              "ticker": "402340",
+              "name": "SK스퀘어",
+              "weight_pct": 10.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "005380",
+              "name": "현대차",
+              "weight_pct": 7.5,
+              "p_adj": null
+            },
+            {
+              "ticker": "043260",
+              "name": "성호전자",
+              "weight_pct": 20.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "00680K",
+              "name": "미래에셋증권2우B",
+              "weight_pct": 15.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "032820",
+              "name": "우리기술",
+              "weight_pct": 10.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "315960",
+              "name": "RISE 대형고배당10TR",
+              "weight_pct": 6.7,
+              "p_adj": null
+            },
+            {
+              "ticker": "252400",
+              "name": "RISE 200선물레버리지",
+              "weight_pct": 3.3,
+              "p_adj": null
+            }
+          ]
+        },
+        "medium_term": {
+          "weighted_ret_12m_pct": null,
+          "items": [
+            {
+              "ticker": "005930",
+              "name": "삼성전자",
+              "weight_pct": 15.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "006800",
+              "name": "미래에셋증권",
+              "weight_pct": 12.5,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "402340",
+              "name": "SK스퀘어",
+              "weight_pct": 10.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "005380",
+              "name": "현대차",
+              "weight_pct": 7.5,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "043260",
+              "name": "성호전자",
+              "weight_pct": 20.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "00680K",
+              "name": "미래에셋증권2우B",
+              "weight_pct": 15.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "032820",
+              "name": "우리기술",
+              "weight_pct": 10.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "315960",
+              "name": "RISE 대형고배당10TR",
+              "weight_pct": 6.7,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "252400",
+              "name": "RISE 200선물레버리지",
+              "weight_pct": 3.3,
+              "ret_12m_pct": null
+            }
+          ]
+        },
+        "risk": {
+          "weighted_vol_3m_pct": null,
+          "items": [
+            {
+              "ticker": "005930",
+              "name": "삼성전자",
+              "weight_pct": 15.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "006800",
+              "name": "미래에셋증권",
+              "weight_pct": 12.5,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "402340",
+              "name": "SK스퀘어",
+              "weight_pct": 10.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "005380",
+              "name": "현대차",
+              "weight_pct": 7.5,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "043260",
+              "name": "성호전자",
+              "weight_pct": 20.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "00680K",
+              "name": "미래에셋증권2우B",
+              "weight_pct": 15.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "032820",
+              "name": "우리기술",
+              "weight_pct": 10.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "315960",
+              "name": "RISE 대형고배당10TR",
+              "weight_pct": 6.7,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "252400",
+              "name": "RISE 200선물레버리지",
+              "weight_pct": 3.3,
+              "vol_3m_pct": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "portfolio_style": "momentum",
+      "portfolio_summary": "MC 1년 기대수익률: 하락 시나리오(P10) +39.7%, 중앙값(P50) +119.7%, 상승 시나리오(P90) +245.5%. 기대수익률 +0.0%, 연간변동성 0.0%.",
+      "risk_tier": "적극투자형",
+      "portfolio_items": [
+        {
+          "ticker": "000660",
+          "name": "SK하이닉스",
+          "weight": 0.15,
+          "weight_pct": 15.0,
+          "asset_type": "STOCK",
+          "selection_reason": "[코어] 1년 수익률 +356.9% | 샤프 +6.25 | 변동성 56.6%",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "009150",
+          "name": "삼성전기",
+          "weight": 0.125,
+          "weight_pct": 12.5,
+          "asset_type": "STOCK",
+          "selection_reason": "[코어] 1년 수익률 +196.4% | 샤프 +4.02 | 변동성 48.0%",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "010120",
+          "name": "LS ELECTRIC",
+          "weight": 0.1,
+          "weight_pct": 10.0,
+          "asset_type": "STOCK",
+          "selection_reason": "[코어] 1년 수익률 +240.8% | 샤프 +3.59 | 변동성 66.2%",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "034730",
+          "name": "SK",
+          "weight": 0.075,
+          "weight_pct": 7.5,
+          "asset_type": "STOCK",
+          "selection_reason": "[코어] 1년 수익률 +174.2% | 샤프 +3.49 | 변동성 48.9%",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "187660",
+          "name": "현대ADM",
+          "weight": 0.2,
+          "weight_pct": 20.0,
+          "asset_type": "STOCK",
+          "selection_reason": "[새틀라이트] 1년 수익률 +746.0% | 샤프 +6.47 | 변동성 114.8%",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "000720",
+          "name": "현대건설",
+          "weight": 0.15,
+          "weight_pct": 15.0,
+          "asset_type": "STOCK",
+          "selection_reason": "[새틀라이트] 1년 수익률 +345.3% | 샤프 +5.69 | 변동성 60.1%",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "319400",
+          "name": "현대무벡스",
+          "weight": 0.1,
+          "weight_pct": 10.0,
+          "asset_type": "STOCK",
+          "selection_reason": "[새틀라이트] 1년 수익률 +802.5% | 샤프 +8.76 | 변동성 91.2%",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "290130",
+          "name": "RISE ESG사회책임투자",
+          "weight": 0.0667,
+          "weight_pct": 6.7,
+          "asset_type": "ETF",
+          "selection_reason": "분산투자 및 리스크 헤지 목적 ETF 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "367760",
+          "name": "RISE 네트워크인프라",
+          "weight": 0.0333,
+          "weight_pct": 3.3,
+          "asset_type": "ETF",
+          "selection_reason": "분산투자 및 리스크 헤지 목적 ETF 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        }
+      ],
+      "monte_carlo_1y": {
+        "n_simulations": 1000000,
+        "horizon_days": 252,
+        "p10_pct": 39.7,
+        "p50_pct": 119.7,
+        "p90_pct": 245.5,
+        "interpretation": "1년 후 기대 수익률(중앙값) 119.7%, 하락 시나리오(10%) 39.7%, 상승 시나리오(90%) 245.5%입니다."
+      },
+      "survey_context": {
+        "INVEST_GOAL": "자산증식",
+        "TARGET_HORIZON": "1년후",
+        "TARGET_AMOUNT": "10000000",
+        "CONTRIBUTION_TYPE": "DCA",
+        "MONTHLY_AMOUNT": "100000",
+        "MAX_HOLDINGS": "2",
+        "DIVIDEND_PREF": "MID",
+        "ACCOUNT_TYPE": "일반"
+      },
+      "portfolio_label": "자산증식 균형 성장 포트폴리오",
+      "quant_signals": {
+        "short_term": {
+          "weighted_p_adj": null,
+          "items": [
+            {
+              "ticker": "000660",
+              "name": "SK하이닉스",
+              "weight_pct": 15.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "009150",
+              "name": "삼성전기",
+              "weight_pct": 12.5,
+              "p_adj": null
+            },
+            {
+              "ticker": "010120",
+              "name": "LS ELECTRIC",
+              "weight_pct": 10.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "034730",
+              "name": "SK",
+              "weight_pct": 7.5,
+              "p_adj": null
+            },
+            {
+              "ticker": "187660",
+              "name": "현대ADM",
+              "weight_pct": 20.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "000720",
+              "name": "현대건설",
+              "weight_pct": 15.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "319400",
+              "name": "현대무벡스",
+              "weight_pct": 10.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "290130",
+              "name": "RISE ESG사회책임투자",
+              "weight_pct": 6.7,
+              "p_adj": null
+            },
+            {
+              "ticker": "367760",
+              "name": "RISE 네트워크인프라",
+              "weight_pct": 3.3,
+              "p_adj": null
+            }
+          ]
+        },
+        "medium_term": {
+          "weighted_ret_12m_pct": 3.65,
+          "items": [
+            {
+              "ticker": "000660",
+              "name": "SK하이닉스",
+              "weight_pct": 15.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "009150",
+              "name": "삼성전기",
+              "weight_pct": 12.5,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "010120",
+              "name": "LS ELECTRIC",
+              "weight_pct": 10.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "034730",
+              "name": "SK",
+              "weight_pct": 7.5,
+              "ret_12m_pct": 3.65
+            },
+            {
+              "ticker": "187660",
+              "name": "현대ADM",
+              "weight_pct": 20.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "000720",
+              "name": "현대건설",
+              "weight_pct": 15.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "319400",
+              "name": "현대무벡스",
+              "weight_pct": 10.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "290130",
+              "name": "RISE ESG사회책임투자",
+              "weight_pct": 6.7,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "367760",
+              "name": "RISE 네트워크인프라",
+              "weight_pct": 3.3,
+              "ret_12m_pct": null
+            }
+          ]
+        },
+        "risk": {
+          "weighted_vol_3m_pct": 35.37,
+          "items": [
+            {
+              "ticker": "000660",
+              "name": "SK하이닉스",
+              "weight_pct": 15.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "009150",
+              "name": "삼성전기",
+              "weight_pct": 12.5,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "010120",
+              "name": "LS ELECTRIC",
+              "weight_pct": 10.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "034730",
+              "name": "SK",
+              "weight_pct": 7.5,
+              "vol_3m_pct": 35.37
+            },
+            {
+              "ticker": "187660",
+              "name": "현대ADM",
+              "weight_pct": 20.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "000720",
+              "name": "현대건설",
+              "weight_pct": 15.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "319400",
+              "name": "현대무벡스",
+              "weight_pct": 10.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "290130",
+              "name": "RISE ESG사회책임투자",
+              "weight_pct": 6.7,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "367760",
+              "name": "RISE 네트워크인프라",
+              "weight_pct": 3.3,
+              "vol_3m_pct": null
+            }
+          ]
+        }
+      }
+    },
+    {
+      "portfolio_style": "lowvol",
+      "portfolio_summary": "MC 1년 기대수익률: 하락 시나리오(P10) +38.5%, 중앙값(P50) +132.7%, 상승 시나리오(P90) +291.0%. 기대수익률 +0.0%, 연간변동성 0.0%.",
+      "risk_tier": "적극투자형",
+      "portfolio_items": [
+        {
+          "ticker": "032830",
+          "name": "삼성생명",
+          "weight": 0.15,
+          "weight_pct": 15.0,
+          "asset_type": "STOCK",
+          "selection_reason": "[코어] 1년 수익률 +159.7% | 샤프 +3.72 | 변동성 41.9%",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "000150",
+          "name": "두산",
+          "weight": 0.125,
+          "weight_pct": 12.5,
+          "asset_type": "STOCK",
+          "selection_reason": "[코어] 1년 수익률 +258.9% | 샤프 +3.63 | 변동성 70.3%",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "005940",
+          "name": "NH투자증권",
+          "weight": 0.1,
+          "weight_pct": 10.0,
+          "asset_type": "STOCK",
+          "selection_reason": "[코어] 1년 수익률 +121.9% | 샤프 +2.74 | 변동성 43.1%",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "028260",
+          "name": "삼성물산",
+          "weight": 0.075,
+          "weight_pct": 7.5,
+          "asset_type": "STOCK",
+          "selection_reason": "[코어] 1년 수익률 +157.3% | 샤프 +3.57 | 변동성 43.1%",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "124500",
+          "name": "아이티센글로벌",
+          "weight": 0.2,
+          "weight_pct": 20.0,
+          "asset_type": "STOCK",
+          "selection_reason": "[새틀라이트] 1년 수익률 +733.6% | 샤프 +7.74 | 변동성 94.3%",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "038500",
+          "name": "삼표시멘트",
+          "weight": 0.15,
+          "weight_pct": 15.0,
+          "asset_type": "STOCK",
+          "selection_reason": "[새틀라이트] 1년 수익률 +446.6% | 샤프 +5.03 | 변동성 88.1%",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "127120",
+          "name": "제이에스링크",
+          "weight": 0.1,
+          "weight_pct": 10.0,
+          "asset_type": "STOCK",
+          "selection_reason": "[새틀라이트] 1년 수익률 +450.1% | 샤프 +5.82 | 변동성 76.8%",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "159800",
+          "name": "마이티 코스피100",
+          "weight": 0.0667,
+          "weight_pct": 6.7,
+          "asset_type": "ETF",
+          "selection_reason": "분산투자 및 리스크 헤지 목적 ETF 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        },
+        {
+          "ticker": "148020",
+          "name": "RISE 200",
+          "weight": 0.0333,
+          "weight_pct": 3.3,
+          "asset_type": "ETF",
+          "selection_reason": "분산투자 및 리스크 헤지 목적 ETF 편입",
+          "ai_fin_grade": null,
+          "ai_strengths": [],
+          "ai_weaknesses": []
+        }
+      ],
+      "monte_carlo_1y": {
+        "n_simulations": 1000000,
+        "horizon_days": 252,
+        "p10_pct": 38.5,
+        "p50_pct": 132.7,
+        "p90_pct": 291.0,
+        "interpretation": "1년 후 기대 수익률(중앙값) 132.7%, 하락 시나리오(10%) 38.5%, 상승 시나리오(90%) 291.0%입니다."
+      },
+      "survey_context": {
+        "INVEST_GOAL": "자산증식",
+        "TARGET_HORIZON": "1년후",
+        "TARGET_AMOUNT": "10000000",
+        "CONTRIBUTION_TYPE": "DCA",
+        "MONTHLY_AMOUNT": "100000",
+        "MAX_HOLDINGS": "2",
+        "DIVIDEND_PREF": "MID",
+        "ACCOUNT_TYPE": "일반"
+      },
+      "portfolio_label": "자산증식 균형 성장 포트폴리오",
+      "quant_signals": {
+        "short_term": {
+          "weighted_p_adj": null,
+          "items": [
+            {
+              "ticker": "032830",
+              "name": "삼성생명",
+              "weight_pct": 15.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "000150",
+              "name": "두산",
+              "weight_pct": 12.5,
+              "p_adj": null
+            },
+            {
+              "ticker": "005940",
+              "name": "NH투자증권",
+              "weight_pct": 10.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "028260",
+              "name": "삼성물산",
+              "weight_pct": 7.5,
+              "p_adj": null
+            },
+            {
+              "ticker": "124500",
+              "name": "아이티센글로벌",
+              "weight_pct": 20.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "038500",
+              "name": "삼표시멘트",
+              "weight_pct": 15.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "127120",
+              "name": "제이에스링크",
+              "weight_pct": 10.0,
+              "p_adj": null
+            },
+            {
+              "ticker": "159800",
+              "name": "마이티 코스피100",
+              "weight_pct": 6.7,
+              "p_adj": null
+            },
+            {
+              "ticker": "148020",
+              "name": "RISE 200",
+              "weight_pct": 3.3,
+              "p_adj": null
+            }
+          ]
+        },
+        "medium_term": {
+          "weighted_ret_12m_pct": -11.21,
+          "items": [
+            {
+              "ticker": "032830",
+              "name": "삼성생명",
+              "weight_pct": 15.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "000150",
+              "name": "두산",
+              "weight_pct": 12.5,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "005940",
+              "name": "NH투자증권",
+              "weight_pct": 10.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "028260",
+              "name": "삼성물산",
+              "weight_pct": 7.5,
+              "ret_12m_pct": -11.21
+            },
+            {
+              "ticker": "124500",
+              "name": "아이티센글로벌",
+              "weight_pct": 20.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "038500",
+              "name": "삼표시멘트",
+              "weight_pct": 15.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "127120",
+              "name": "제이에스링크",
+              "weight_pct": 10.0,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "159800",
+              "name": "마이티 코스피100",
+              "weight_pct": 6.7,
+              "ret_12m_pct": null
+            },
+            {
+              "ticker": "148020",
+              "name": "RISE 200",
+              "weight_pct": 3.3,
+              "ret_12m_pct": null
+            }
+          ]
+        },
+        "risk": {
+          "weighted_vol_3m_pct": 34.05,
+          "items": [
+            {
+              "ticker": "032830",
+              "name": "삼성생명",
+              "weight_pct": 15.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "000150",
+              "name": "두산",
+              "weight_pct": 12.5,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "005940",
+              "name": "NH투자증권",
+              "weight_pct": 10.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "028260",
+              "name": "삼성물산",
+              "weight_pct": 7.5,
+              "vol_3m_pct": 34.05
+            },
+            {
+              "ticker": "124500",
+              "name": "아이티센글로벌",
+              "weight_pct": 20.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "038500",
+              "name": "삼표시멘트",
+              "weight_pct": 15.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "127120",
+              "name": "제이에스링크",
+              "weight_pct": 10.0,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "159800",
+              "name": "마이티 코스피100",
+              "weight_pct": 6.7,
+              "vol_3m_pct": null
+            },
+            {
+              "ticker": "148020",
+              "name": "RISE 200",
+              "weight_pct": 3.3,
+              "vol_3m_pct": null
+            }
+          ]
+        }
+      }
     }
-  },
-  "portfolio_items": [
-    {
-      "ticker": "005930",
-      "name": "삼성전자",
-      "asset_type": "STOCK",
-      "risk_type": "주식_공격형",
-      "weight": 0.1146,
-      "weight_pct": 11.5,
-      "selection_reason": "[코어] 1년 수익률 +238.7% | 샤프 +5.76 | 변동성 40.8%",
-      "explanation": "삼성전자은(는) 대형 우량 코어 종목입니다. 포트폴리오 안정성 뼈대를 담당합니다."
-    },
-    {
-      "ticker": "006800",
-      "name": "미래에셋증권",
-      "asset_type": "STOCK",
-      "risk_type": "주식_공격형",
-      "weight": 0.1136,
-      "weight_pct": 11.4,
-      "selection_reason": "[코어] 1년 수익률 +574.8% | 샤프 +7.73 | 변동성 73.9%",
-      "explanation": "미래에셋증권은(는) 대형 우량 코어 종목입니다. 포트폴리오 안정성 뼈대를 담당합니다."
-    },
-    {
-      "ticker": "402340",
-      "name": "SK스퀘어",
-      "asset_type": "STOCK",
-      "risk_type": "주식_공격형",
-      "weight": 0.1119,
-      "weight_pct": 11.2,
-      "selection_reason": "[코어] 1년 수익률 +519.4% | 샤프 +7.72 | 변동성 66.8%",
-      "explanation": "SK스퀘어은(는) 대형 우량 코어 종목입니다. 포트폴리오 안정성 뼈대를 담당합니다."
-    },
-    {
-      "ticker": "005380",
-      "name": "현대차",
-      "asset_type": "STOCK",
-      "risk_type": "주식_공격형",
-      "weight": 0.11,
-      "weight_pct": 11.0,
-      "selection_reason": "[코어] 1년 수익률 +196.8% | 샤프 +3.80 | 변동성 50.8%",
-      "explanation": "현대차은(는) 대형 우량 코어 종목입니다. 포트폴리오 안정성 뼈대를 담당합니다."
-    },
-    {
-      "ticker": "00680K",
-      "name": "미래에셋증권2우B",
-      "asset_type": "STOCK",
-      "risk_type": "주식_공격형",
-      "weight": 0.151,
-      "weight_pct": 15.1,
-      "selection_reason": "[새틀라이트] 1년 수익률 +402.3% | 샤프 +6.99 | 변동성 57.1%",
-      "explanation": "미래에셋증권2우B은(는) 초과 수익(알파)을 노리는 성장 모멘텀 종목입니다."
-    },
-    {
-      "ticker": "043260",
-      "name": "성호전자",
-      "asset_type": "STOCK",
-      "risk_type": "주식_공격형",
-      "weight": 0.1497,
-      "weight_pct": 15.0,
-      "selection_reason": "[새틀라이트] 1년 수익률 +2415.5% | 샤프 +26.01 | 변동성 92.7%",
-      "explanation": "성호전자은(는) 초과 수익(알파)을 노리는 성장 모멘텀 종목입니다."
-    },
-    {
-      "ticker": "032820",
-      "name": "우리기술",
-      "asset_type": "STOCK",
-      "risk_type": "주식_공격형",
-      "weight": 0.1494,
-      "weight_pct": 14.9,
-      "selection_reason": "[새틀라이트] 1년 수익률 +774.9% | 샤프 +8.42 | 변동성 91.6%",
-      "explanation": "우리기술은(는) 초과 수익(알파)을 노리는 성장 모멘텀 종목입니다."
-    }
-  ],
-  "buy_plan": [],
-  "investable_amount_krw": 100000,
-  "total_invested_krw": 0,
-  "leftover_krw": 100000,
-  "cap_compliance": {
-    "compliant": true,
-    "violations": [],
-    "summary": "cap 규칙 준수"
-  },
-  "performance_3y": {
-    "ann_return_pct": 79.96,
-    "ann_vol_pct": 32.65,
-    "mdd_pct": -35.15,
-    "sharpe": 2.342,
-    "period": "2023-03-19 ~ 2026-03-18",
-    "interpretation": "최근 3년간 연환산 수익률 80.0%, 변동성 32.6%, 최대 낙폭 -35.2%입니다."
-  },
-  "monte_carlo_1y": {
-    "n_simulations": 1000000,
-    "horizon_days": 252,
-    "p10_pct": 38.8,
-    "p50_pct": 110.9,
-    "p90_pct": 220.5,
-    "interpretation": "1년 후 기대 수익률(중앙값) 110.9%, 하락 시나리오(10%) 38.8%, 상승 시나리오(90%) 220.5%입니다."
-  },
-  "overall_summary": "2등급(적극투자형) 투자자를 위한 포트폴리오. 종목 선별 방식: 모멘텀·수익률·변동성 균형 기준. 총 0개 종목 매수 (주식 7개 · ETF 0개 중). 총 투자금 100,000원 중 0원 투자, 잔여 100,000원.",
-  "portfolio_label": "균형 추천형"
+  ]
 }

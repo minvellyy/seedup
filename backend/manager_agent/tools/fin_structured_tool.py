@@ -4,8 +4,12 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+import threading
 from functools import lru_cache
 from pathlib import Path
+
+# 동시에 1개의 subprocess만 허용 — 여러 에이전트/요청이 동시에 호출 시 프로세스 폭증 방지
+_generate_lock = threading.Semaphore(1)
 
 from crewai.tools import tool
 
@@ -309,7 +313,12 @@ def generate_fin_structured_report(ticker: str, as_of: str) -> str:
         "--base_year", str(_base_year),
         "--fs_div", "CONSOL",
     ]
-    proc = subprocess.run(cmd, capture_output=True, text=True, cwd=str(_FIN_MODEL_DIR))
+    if not _generate_lock.acquire(blocking=True, timeout=300):
+        return json.dumps({"error": "TIMEOUT", "message": "다른 재무 리포트 생성이 진행 중입니다. 잠시 후 다시 시도하세요."}, ensure_ascii=False)
+    try:
+        proc = subprocess.run(cmd, capture_output=True, text=True, cwd=str(_FIN_MODEL_DIR))
+    finally:
+        _generate_lock.release()
     if proc.returncode != 0:
         return json.dumps({
             "error": "PIPELINE_FAILED",

@@ -76,6 +76,39 @@ _ws_available: bool = True           # False = WS 포기, REST 폴링 사용 중
 _ws_connect_lock: Optional[asyncio.Lock] = None  # 워커 간 동시 로그인 방지
 
 
+def _fanout_price_update(stock_code: str, data: Dict) -> None:
+    """해당 종목을 구독 중인 SSE 큐들로 최신 가격을 push."""
+    queues = _price_queues.get(stock_code)
+    if not queues:
+        return
+    for queue in list(queues):
+        try:
+            queue.put_nowait({"code": stock_code, "data": data})
+        except asyncio.QueueFull:
+            pass
+
+
+def _normalize_code_list(codes: list) -> list[str]:
+    """코드 목록을 6자리 숫자 문자열로 정규화/중복제거한다."""
+    if not codes:
+        return []
+    seen = set()
+    normalized: list[str] = []
+    for raw in codes:
+        code = str(raw).strip()
+        if not code:
+            continue
+        if code.isdigit():
+            code = code.zfill(6)
+        if len(code) != 6 or not code.isdigit():
+            continue
+        if code in seen:
+            continue
+        seen.add(code)
+        normalized.append(code)
+    return normalized
+
+
 def _get_connect_lock() -> asyncio.Lock:
     """모든 워커가 공유하는 연결 직렬화 Lock."""
     global _ws_connect_lock
@@ -479,14 +512,7 @@ class KisWebSocketManager:
                 if parsed:
                     _price_store[parsed["stock_code"]] = parsed
                     logger.debug("수신 %s: %s", parsed["stock_code"], parsed["current_price"])
-                    # fan-out: 해당 종목을 구독 중인 SSE 클라이언트 큐에 푸시
-                    _sc = parsed["stock_code"]
-                    if _sc in _price_queues:
-                        for _q in list(_price_queues[_sc]):
-                            try:
-                                _q.put_nowait({"code": _sc, "data": parsed})
-                            except asyncio.QueueFull:
-                                pass  # 느린 클라이언트: 이번 업데이트 건너뜀
+                    _fanout_price_update(parsed["stock_code"], parsed)
 
     async def _sender_loop(self, ws) -> None:
         while self._running:
@@ -562,13 +588,15 @@ async def _rest_poll_once(codes: list[str]) -> None:
     for code in codes:
         try:
             data = await asyncio.to_thread(get_current_price, code)
-            _price_store[code] = {
+            parsed = {
                 "stock_code":    code,
                 "current_price": data.get("current_price", 0),
                 "change":        data.get("change", 0),
                 "change_rate":   data.get("change_rate", 0),
                 "volume":        data.get("volume", 0),
             }
+            _price_store[code] = parsed
+            _fanout_price_update(code, parsed)
         except Exception as e:
             logger.debug("REST 폴링 오류 [%s]: %s", code, e)
         await asyncio.sleep(0.08)   # KIS rate limit 대응
@@ -597,7 +625,7 @@ async def _start_rest_polling(initial_codes: list[str]) -> None:
 
 def register_queue(codes: list, queue) -> None:
     """SSE 연결 시 호출 — 해당 종목 가격 업데이트를 queue로 수신 등록."""
-    for code in codes:
+    for code in _normalize_code_list(codes):
         if code not in _price_queues:
             _price_queues[code] = set()
         _price_queues[code].add(queue)
@@ -606,7 +634,7 @@ def register_queue(codes: list, queue) -> None:
 def unregister_queue(codes: list, queue) -> list:
     """SSE 연결 해제 시 호출 — queue 제거. 구독자 수가 0이 된 코드 목록 반환."""
     empty_codes: list = []
-    for code in codes:
+    for code in _normalize_code_list(codes):
         if code in _price_queues:
             _price_queues[code].discard(queue)
             if not _price_queues[code]:
@@ -617,7 +645,7 @@ def unregister_queue(codes: list, queue) -> list:
 
 async def subscribe_codes(codes: list) -> None:
     """SSE 연결 시 호출 — 가용 WS managers에 codes를 분산 구독."""
-    remaining = list(codes)
+    remaining = _normalize_code_list(codes)
     for mgr in _managers:
         if not remaining:
             break
@@ -633,6 +661,7 @@ async def subscribe_codes(codes: list) -> None:
 
 async def unsubscribe_codes(codes: list) -> None:
     """SSE 연결 해제 시 호출 — 구독자 없어진 codes를 WS managers에서 해제."""
+    codes = _normalize_code_list(codes)
     for mgr in get_all_managers():
         targets = [c for c in codes if c in mgr._subscribed]
         if targets:
