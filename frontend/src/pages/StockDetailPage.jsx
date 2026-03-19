@@ -266,13 +266,12 @@ function MetricCard({ label, value, type, tip }) {
   )
 }
 
-// ── 스켈레톤 로딩 ──────────────────────────────────────────────────────────
-function Skeleton({ rows = 3 }) {
+// ── AI 분석 로딩 스피너 ────────────────────────────────────────────────────
+function AnalysisSpinner() {
   return (
-    <div className="sd-skeleton">
-      {Array.from({ length: rows }).map((_, i) => (
-        <div key={i} className="sd-skeleton-row" style={{ width: `${85 - i * 10}%` }} />
-      ))}
+    <div className="sd-spinner-wrap">
+      <div className="sd-spinner" />
+      <p className="sd-spinner-text">분석 데이터를 준비중입니다. 잠시 기다려 주세요.</p>
     </div>
   )
 }
@@ -292,8 +291,9 @@ function StockDetailPage() {
   const [error,            setError]            = useState(null)
   const [scores,           setScores]           = useState(null)
   const [analysis,         setAnalysis]         = useState(null)
-  const [analysisLoading,  setAnalysisLoading]  = useState(false)
+  const [analysisLoading,  setAnalysisLoading]  = useState(true)
   const [analysisError,    setAnalysisError]    = useState(false)
+  const [analysisErrorMsg, setAnalysisErrorMsg] = useState(null)  // 디버그용 오류 상세
   const [analysisRetry,    setAnalysisRetry]    = useState(0)
   const [realtimePrice,    setRealtimePrice]    = useState(null) // 실시간 가격 데이터
   const [intradayData,     setIntradayData]     = useState(null) // 일중 차트 데이터
@@ -447,7 +447,7 @@ function StockDetailPage() {
         const raw = sessionStorage.getItem(cacheKey)
         if (raw) {
           const { data, ts } = JSON.parse(raw)
-          if (Date.now() - ts < 3_600_000) { setAnalysis(data); return }
+          if (Date.now() - ts < 3_600_000) { setAnalysis(data); setAnalysisLoading(false); return }
         }
       } catch {}
     }
@@ -462,9 +462,12 @@ function StockDetailPage() {
 
     setAnalysisLoading(true)
     setAnalysisError(false)
+    setAnalysisErrorMsg(null)
     setAnalysis(null)
 
     const controller = new AbortController()
+    // cleanup에 의한 abort와 timeout에 의한 abort를 구분하는 flag
+    let cleanedUp = false
     // 서버 타임아웃(420s)보다 30초 여유를 두고 클라이언트에서도 abort
     const timerId = setTimeout(() => controller.abort(), 450_000)
 
@@ -478,16 +481,28 @@ function StockDetailPage() {
         stock_item_json: stockItem ? JSON.stringify(stockItem) : '{}',
       }),
     })
-      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() })
+      .then(async r => {
+        if (cleanedUp) return   // cleanup 이후 응답은 무시
+        if (!r.ok) {
+          let detail = `HTTP ${r.status}`
+          try { const body = await r.json(); detail = body.detail || detail } catch {}
+          console.error('[AI 분석] 오류 응답:', r.status, detail)
+          throw new Error(detail)
+        }
+        return r.json()
+      })
       .then(data => {
+        if (cleanedUp || !data) return   // cleanup 이후 응답은 무시
         let parsed = null
         try { parsed = JSON.parse(data.report) } catch { /* parsed stays null */ }
         // JSON 파싱 실패 또는 필수 섹션 없으면 에러로 처리
         const hasContent = parsed &&
           (parsed.investment_fit || parsed.company_analysis || parsed.industry_analysis)
         if (!hasContent) {
+          console.error('[AI 분석] 응답 파싱 실패 또는 필수 섹션 없음:', data.report?.slice(0, 200))
           setAnalysisLoading(false)
           setAnalysisError(true)
+          setAnalysisErrorMsg('분석 결과 형식 오류')
           return
         }
         setAnalysis(parsed)
@@ -495,12 +510,22 @@ function StockDetailPage() {
         try { sessionStorage.setItem(cacheKey, JSON.stringify({ data: parsed, ts: Date.now() })) } catch {}
       })
       .catch(err => {
-        if (err.name === 'AbortError') return  // unmount 또는 timeout으로 인한 취소
+        if (cleanedUp) return   // cleanup abort는 에러로 처리하지 않음
+        if (err.name === 'AbortError') {
+          console.error('[AI 분석] 타임아웃 (450s 초과)')
+          setAnalysisLoading(false)
+          setAnalysisError(true)
+          setAnalysisErrorMsg('분석 시간 초과')
+          return
+        }
+        console.error('[AI 분석] fetch 오류:', err.message)
         setAnalysisLoading(false)
         setAnalysisError(true)
+        setAnalysisErrorMsg(err.message)
       })
 
     return () => {
+      cleanedUp = true   // cleanup 플래그 설정 → catch/then 핸들러가 상태 업데이트 안 함
       clearTimeout(timerId)
       controller.abort()
     }
@@ -540,7 +565,8 @@ function StockDetailPage() {
 
   // ── 기업/산업 분석 불릿 ──────────────────────────────────────────────────
   const industryBullets = [
-    ...(analysis?.industry_analysis?.current_trends ?? []),
+    ...(analysis?.industry_analysis?.current_trends ?? 
+      []),
     ...(analysis?.company_analysis?.strengths ?? []).slice(0, 2),
   ]
 
@@ -705,7 +731,7 @@ function StockDetailPage() {
         <section className="industry-analysis-section">
           <h2 className="section-heading">기업/산업 분석</h2>
           {analysisLoading && industryBullets.length === 0
-            ? <Skeleton rows={4} />
+            ? <AnalysisSpinner />
             : industryBullets.length > 0
               ? (
                 <ul className="analysis-list">
@@ -715,13 +741,15 @@ function StockDetailPage() {
               : analysisError
                 ? (
                   <p className="sd-analysis-pending">
-                    AI 분석을 불러오지 못했습니다.
-                    <button className="sd-retry-btn" onClick={() => setAnalysisRetry(r => r + 1)}>🔄 다시 시도</button>
+                    AI 분석을 불러오지 못했습니다.{analysisErrorMsg && <span style={{fontSize:'0.8em',color:'#999',marginLeft:6}}>[{analysisErrorMsg}]</span>}
+                    <button className="sd-retry-btn" onClick={() => {
+                      setAnalysisError(false)
+                      setAnalysisLoading(true)
+                      setAnalysisRetry(r => r + 1)
+                    }}>🔄 다시 시도</button>
                   </p>
                 )
-                : !analysisLoading && (
-                  <p className="sd-analysis-pending">분석 데이터를 준비 중입니다. 잠시 후 페이지를 새로고침해 주세요.</p>
-                )
+                : null
           }
         </section>
 
@@ -776,7 +804,7 @@ function StockDetailPage() {
         <section className="recommendation-section">
           <h2 className="section-heading">{stockItem ? '추천 이유' : 'AI 분석 요약'}</h2>
           {analysisLoading && !recText
-            ? <Skeleton rows={2} />
+            ? <AnalysisSpinner />
             : recText
               ? (
                 <div className="recommendation-box">
@@ -786,13 +814,15 @@ function StockDetailPage() {
               : analysisError
                 ? (
                   <p className="sd-analysis-pending">
-                    AI 분석을 불러오지 못했습니다.
-                    <button className="sd-retry-btn" onClick={() => setAnalysisRetry(r => r + 1)}>🔄 다시 시도</button>
+                    AI 분석을 불러오지 못했습니다.{analysisErrorMsg && <span style={{fontSize:'0.8em',color:'#999',marginLeft:6}}>[{analysisErrorMsg}]</span>}
+                    <button className="sd-retry-btn" onClick={() => {
+                      setAnalysisError(false)
+                      setAnalysisLoading(true)
+                      setAnalysisRetry(r => r + 1)
+                    }}>🔄 다시 시도</button>
                   </p>
                 )
-                : !analysisLoading && (
-                  <p className="sd-analysis-pending">분석 데이터를 준비 중입니다. 잠시 후 페이지를 새로고침해 주세요.</p>
-                )
+                : null
           }
         </section>
 

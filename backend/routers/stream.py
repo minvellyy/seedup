@@ -21,6 +21,27 @@ logger = logging.getLogger("stream")
 router = APIRouter(prefix="/api/stream", tags=["stream"])
 
 
+def _normalize_codes(codes_raw: str) -> list[str]:
+    """codes 쿼리 문자열을 6자리 종목코드 리스트로 정규화한다."""
+    if not codes_raw:
+        return []
+    seen = set()
+    normalized: list[str] = []
+    for token in str(codes_raw).split(","):
+        code = token.strip()
+        if not code:
+            continue
+        if code.isdigit():
+            code = code.zfill(6)
+        if len(code) != 6 or not code.isdigit():
+            continue
+        if code in seen:
+            continue
+        seen.add(code)
+        normalized.append(code)
+    return normalized
+
+
 async def _price_event_generator(codes: list[str]) -> AsyncGenerator[str, None]:
     """push 방식 SSE — KIS WS 수신 즉시 해당 클라이언트에만 전달.
 
@@ -112,12 +133,14 @@ async def stream_prices(codes: str = ""):
     Query params:
         codes: 콤마 구분 종목코드 (예: 005930,000660,035720)
     """
-    code_list = [c.strip() for c in codes.split(",") if c.strip()]
+    code_list = _normalize_codes(codes)
     if not code_list:
         # 코드 없으면 빈 메시지 후 즉시 종료
         async def empty():
             yield ": no codes\n\n"
         return StreamingResponse(empty(), media_type="text/event-stream")
+
+    logger.info("SSE /prices 연결: %d개 종목 구독 요청", len(code_list))
 
     headers = {
         "Cache-Control": "no-cache",
@@ -142,7 +165,7 @@ async def test_inject_prices(codes: str = ""):
     from kis_ws_client import get_price_store, get_manager
     from kis_client import get_current_price
 
-    code_list = [c.strip() for c in codes.split(",") if c.strip()]
+    code_list = _normalize_codes(codes)
     if not code_list:
         return {"error": "codes 파라미터 필요 (예: ?codes=005930,000660)"}
 

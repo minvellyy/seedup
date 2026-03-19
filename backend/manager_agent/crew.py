@@ -393,7 +393,7 @@ def run_manager_analysis(
                 "재무 데이터와 시장 모멘텀을 통합 분석하여 기업 가치를 평가하며, "
                 "입문자도 이해할 수 있는 명확한 언어로 기업 분석 리포트를 작성하는 데 특화."
             ),
-            tools=[read_fin_structured_report, generate_fin_structured_report, read_stock_direction_signal],
+            tools=[read_fin_structured_report, read_stock_direction_signal],
             llm=llm,
             verbose=True,
             allow_delegation=False,
@@ -457,7 +457,7 @@ def run_manager_analysis(
                 f"종목 {ticker}에 대한 기업 심층 분석을 수행하라. 기준일: {as_of_label}.\n\n"
                 "절차:\n"
                 "1) read_fin_structured_report 툴로 재무 데이터를 조회하라.\n"
-                "2) NOT_FOUND이면 generate_fin_structured_report를 사용하라.\n"
+                "2) NOT_FOUND이면 가용한 데이터만으로 분석을 진행하라 (별도 생성 툴 호출 금지).\n"
                 "3) read_stock_direction_signal 툴로 모멘텀 정보를 보완하라.\n"
                 "4) 다음 항목을 분석하라:\n"
                 "   - 사업 개요: 주력 사업, 위치한 산업/섹터\n"
@@ -643,7 +643,7 @@ def run_manager_analysis(
             tasks=[t_fit, t_company, t_industry, t_unstr_sd, t_detail_mgr],
             process=Process.sequential,
             verbose=True,
-            max_execution_time=480,  # 병렬 에이전트 4개 + 매니저 → 여유 있게 8분
+            # max_execution_time=480,  # [제거] CrewAI 0.203.2에 해당 파라미터 없음 → 조용히 무시되어 효과 없음
         )
 
     else:
