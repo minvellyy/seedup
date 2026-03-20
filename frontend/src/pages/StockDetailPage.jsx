@@ -297,39 +297,6 @@ function StockDetailPage() {
   const [analysisRetry,    setAnalysisRetry]    = useState(0)
   const [realtimePrice,    setRealtimePrice]    = useState(null) // 실시간 가격 데이터
   const [intradayData,     setIntradayData]     = useState(null) // 일중 차트 데이터
-  const [wsStatus,         setWsStatus]         = useState(null) // WebSocket 상태 (디버그용)
-
-  // ── WebSocket 상태 확인 (디버그용) ──────────────────────────────────────
-  const checkWebSocketStatus = async () => {
-    try {
-      const res = await fetch('/api/stream/ws-status')
-      const data = await res.json()
-      setWsStatus(data)
-      console.log('[WebSocket 상태]', data)
-      // 백엔드 응답: single → subscribed_count / subscribed_sample, pool → total_subscribed / workers
-      const subscribedCount = data.subscribed_count ?? data.total_subscribed ?? 0
-      const subscribedSample = data.subscribed_sample ?? []
-      const isInSample = subscribedSample.includes(stockCode)
-      const sampleNote = subscribedCount > subscribedSample.length ? ` (상위 ${subscribedSample.length}개만 표시)` : ''
-      alert(`WebSocket 초기화: ${data.initialized ? '성공' : '실패'}\n유형: ${data.type ?? '-'}\n구독 종목: ${subscribedCount}개\n현재 종목(${stockCode}): ${isInSample ? '구독됨' : subscribedCount > 0 ? `샘플 미포함${sampleNote}` : '미구독'}`)
-    } catch (err) {
-      console.error('WebSocket 상태 확인 실패:', err)
-      alert('WebSocket 상태 확인 실패')
-    }
-  }
-
-  // ── 테스트 가격 주입 (장 마감 시 테스트용) ────────────────────────────────
-  const injectTestPrices = async () => {
-    try {
-      const res = await fetch(`/api/stream/test-inject?codes=${stockCode}`)
-      const data = await res.json()
-      console.log('[테스트 주입]', data)
-      alert('10초간 테스트 가격 변동 시작 (콘솔 확인)')
-    } catch (err) {
-      console.error('테스트 주입 실패:', err)
-      alert('테스트 주입 실패')
-    }
-  }
 
   // ── 기본 데이터 & 점수 로드 ─────────────────────────────────────────────
   useEffect(() => {
@@ -627,18 +594,6 @@ function StockDetailPage() {
       <div className="stock-detail-container">
 
         <button onClick={() => navigate(-1)} className="sd-back-btn">← 추천 목록으로</button>
-
-        {/* 디버그 버튼 (개발용 - 나중에 제거 가능) */}
-        {process.env.NODE_ENV === 'development' && (
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-            <button onClick={checkWebSocketStatus} className="sd-debug-btn">
-              🔍 WebSocket 상태 확인
-            </button>
-            <button onClick={injectTestPrices} className="sd-debug-btn">
-              🧪 테스트 가격 주입 (10초)
-            </button>
-          </div>
-        )}
 
         {/* ── 1. 헤더 ────────────────────────────────────────────── */}
         <div className="stock-detail-header">

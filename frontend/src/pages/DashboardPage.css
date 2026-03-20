@@ -1,11 +1,11 @@
-/* ============================================
+﻿/* ============================================
    투자 대시보드 - 노란색/녹색 브랜드 테마
    ============================================ */
 
 /* 전체 페이지 배경 */
 .dashboard-page {
   min-height: calc(100vh - 60px);
-  background: linear-gradient(135deg, #FFF9E6 0%, #FFFBEA 50%, #FFF6DC 100%);
+  background: linear-gradient(160deg, #F5FAF7 0%, #EFF7F2 100%);
   padding: 0;
   position: relative;
   overflow-x: hidden;
@@ -13,12 +13,12 @@
 
 /* 상단 히어로 섹션 */
 .dashboard-header {
-  background: linear-gradient(135deg, #4a7c59 0%, #5a9068 50%, #6ba777 100%);
+  background: linear-gradient(135deg, #4a7c59 0%, #5a9068 100%);
   padding: 2.5rem 1.5rem;
   text-align: left;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 6px 24px rgba(74, 124, 89, 0.2);
+  box-shadow: 0 6px 24px rgba(111, 191, 143, 0.2);
 }
 
 .dashboard-header::before {
@@ -36,7 +36,7 @@
   font-size: 1.5rem;
   color: white;
   margin-bottom: 0.375rem;
-  font-weight: 400;
+  font-weight: 600;
   letter-spacing: -0.3px;
   position: relative;
   z-index: 1;
@@ -110,17 +110,14 @@
   box-sizing: border-box;
 }
 
-/* 글래스모피즘 카드 스타일 */
+/* 카드 스타일 */
 .card {
-  background: rgba(255, 255, 255, 0.92);
-  backdrop-filter: blur(20px);
-  border-radius: 14px;
+  background: #FFFFFF;
+  border-radius: 12px;
   padding: 1.25rem;
-  box-shadow: 
-    0 6px 20px rgba(0, 0, 0, 0.05),
-    0 2px 8px rgba(0, 0, 0, 0.03);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.04);
   margin-bottom: 1.5rem;
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  border: 1px solid #EEF3EE;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
@@ -133,16 +130,14 @@
   left: 0;
   width: 100%;
   height: 2px;
-  background: linear-gradient(90deg, #6ba777 0%, #5a9068 100%);
+  background: linear-gradient(90deg, #8FD9A8 0%, #6FBF8F 100%);
   opacity: 0;
   transition: opacity 0.3s;
 }
 
 .card:hover {
   transform: translateY(-2px);
-  box-shadow: 
-    0 8px 28px rgba(0, 0, 0, 0.06),
-    0 3px 10px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.07);
 }
 
 .card:hover::before {
@@ -160,7 +155,7 @@
 
 .card h2 {
   font-size: 1rem;
-  color: #1a202c;
+  color: #1F2937;
   margin: 0;
   font-weight: 600;
   letter-spacing: -0.3px;
@@ -214,12 +209,12 @@
 
 /* 시장 날씨 카드 */
 .weather-card {
-  background: linear-gradient(135deg, #5a9068 0%, #6ba777 100%);
+  background: linear-gradient(135deg, #4a7c59 0%, #5a9068 100%);
   color: white;
   border: none;
   box-shadow: 
-    0 12px 40px rgba(90, 144, 104, 0.25),
-    0 6px 20px rgba(90, 144, 104, 0.15);
+    0 12px 40px rgba(111, 191, 143, 0.25),
+    0 6px 20px rgba(111, 191, 143, 0.15);
 }
 
 .weather-card h2 {
@@ -245,7 +240,7 @@
 }
 
 .market-selector option {
-  background: #5a9068;
+  background: #4a7c59;
   color: white;
 }
 
@@ -323,16 +318,16 @@
 
 .index-item {
   padding: 1rem;
-  background: linear-gradient(135deg, #FFE066 0%, #FFCE3D 100%);
+  background: #FFF9C4;
+  border: 1px solid #FDE68A;
   border-radius: 10px;
   color: #1a202c;
   transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 3px 12px rgba(255, 224, 102, 0.2);
 }
 
 .index-item:hover {
   transform: translateY(-1px) scale(1.01);
-  box-shadow: 0 5px 16px rgba(255, 224, 102, 0.25);
+  box-shadow: 0 4px 12px rgba(253, 230, 138, 0.4);
 }
 
 .index-header {
@@ -376,7 +371,7 @@
 
 /* 투자자별 매매동향 카드 */
 .trading-trends-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: #FFFFFF;
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
@@ -389,7 +384,7 @@
 }
 
 .trading-market-block.with-divider {
-  border-top: 2px solid rgba(90, 144, 104, 0.35);
+  border-top: 2px solid rgba(111, 191, 143, 0.35);
   padding-top: 0.5rem;
 }
 
@@ -433,7 +428,7 @@
 }
 
 .investor-table thead {
-  background: linear-gradient(135deg, #6ba777 0%, #5a9068 100%);
+  background: linear-gradient(135deg, #4a7c59 0%, #5a9068 100%);
 }
 
 .investor-table th {
@@ -501,7 +496,7 @@
 
 /* 추천 카드 */
 .recommendations-card {
-  background: rgba(255, 255, 255, 0.95);
+  background: #FFFFFF;
 }
 
 .stock-recommendations-card {
@@ -647,7 +642,7 @@
 
 .recommendation-reason {
   font-size: 0.9rem;
-  color: #718096;
+  color: #6B7280;
   line-height: 1.5;
   font-weight: 500;
 }
@@ -717,13 +712,13 @@
   width: 56px;
   height: 56px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #6ba777 0%, #5a9068 100%);
+  background: linear-gradient(135deg, #8FD9A8 0%, #6FBF8F 100%);
   color: white;
   border: none;
   cursor: pointer;
   box-shadow: 
-    0 6px 20px rgba(90, 144, 104, 0.25),
-    0 3px 10px rgba(90, 144, 104, 0.15);
+    0 6px 20px rgba(111, 191, 143, 0.25),
+    0 3px 10px rgba(111, 191, 143, 0.15);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   z-index: 1000;
   display: flex;
@@ -734,9 +729,9 @@
 .chatbot-float-button:hover {
   transform: scale(1.08) rotate(5deg);
   box-shadow: 
-    0 10px 28px rgba(90, 144, 104, 0.35),
-    0 5px 14px rgba(90, 144, 104, 0.25);
-  background: linear-gradient(135deg, #5a9068 0%, #4a7c59 100%);
+    0 10px 28px rgba(111, 191, 143, 0.35),
+    0 5px 14px rgba(111, 191, 143, 0.25);
+  background: linear-gradient(135deg, #6FBF8F 0%, #4F8F6F 100%);
 }
 
 .chatbot-float-button:active {
@@ -769,7 +764,7 @@
 }
 
 .chatbot-header {
-  background: linear-gradient(135deg, #6ba777 0%, #5a9068 100%);
+  background: linear-gradient(135deg, #8FD9A8 0%, #6FBF8F 100%);
   color: white;
   padding: 1rem 1.25rem;
   display: flex;
@@ -822,12 +817,12 @@
 }
 
 .chatbot-messages::-webkit-scrollbar-thumb {
-  background: #5a9068;
+  background: #6FBF8F;
   border-radius: 3px;
 }
 
 .chatbot-messages::-webkit-scrollbar-thumb:hover {
-  background: #4a7c59;
+  background: #4F8F6F;
 }
 
 .chatbot-welcome {
@@ -851,7 +846,7 @@
 
 .chat-message.user {
   align-self: flex-end;
-  background: linear-gradient(135deg, #6ba777 0%, #5a9068 100%);
+  background: linear-gradient(135deg, #8FD9A8 0%, #6FBF8F 100%);
   color: white;
   border-bottom-right-radius: 4px;
 }
@@ -900,12 +895,12 @@
 }
 
 .chatbot-input input:focus {
-  border-color: #5a9068;
+  border-color: #6FBF8F;
 }
 
 .chatbot-input button {
   padding: 0.75rem 1.5rem;
-  background: linear-gradient(135deg, #6ba777 0%, #5a9068 100%);
+  background: linear-gradient(135deg, #8FD9A8 0%, #6FBF8F 100%);
   color: white;
   border: none;
   border-radius: 24px;
@@ -916,7 +911,7 @@
 
 .chatbot-input button:hover {
   transform: translateY(-1px);
-  box-shadow: 0 4px 12px rgba(90, 144, 104, 0.3);
+  box-shadow: 0 4px 12px rgba(111, 191, 143, 0.3);
 }
 
 .chatbot-input button:active {
@@ -1069,7 +1064,7 @@
   width: 48px;
   height: 48px;
   border: 4px solid #e8f5e9;
-  border-top-color: #5a9068;
+  border-top-color: #6FBF8F;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
   margin-bottom: 1.25rem;
@@ -1083,7 +1078,8 @@
 .loading-container p {
   margin: 0;
   font-size: 0.875rem;
-  color: #5a9068;
+  color: #6FBF8F;
   font-weight: 500;
   letter-spacing: 0.3px;
 }
+

@@ -1,4 +1,4 @@
-/* 챗봇 페이지 스타일 */
+﻿/* 챗봇 페이지 스타일 */
 .chatbot-page {
   display: flex;
   height: calc(100vh - 80px); /* 헤더 높이 제외 */
@@ -30,7 +30,7 @@
 .bot-icon {
   width: 40px;
   height: 40px;
-  background: #2E7D5B;
+  background: #6FBF8F;
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -41,7 +41,7 @@
 
 /* 새 채팅 버튼 */
 .new-chat-btn {
-  background: #2E7D5B;
+  background: #6FBF8F;
   color: white;
   border: none;
   border-radius: 8px;
@@ -81,6 +81,9 @@
   cursor: pointer;
   transition: all 0.2s ease;
   border-left: 3px solid transparent;
+  display: flex;
+  align-items: center;
+  gap: 4px;
 }
 
 .session-item:hover {
@@ -89,8 +92,13 @@
 }
 
 .session-item.active {
-  background: #E8F5EE;
-  border-left-color: #2E7D5B;
+  background: #E8F5EC;
+  border-left-color: #6FBF8F;
+}
+
+.session-item-content {
+  flex: 1;
+  min-width: 0;
 }
 
 .session-title {
@@ -105,6 +113,29 @@
 .session-time {
   font-size: 12px;
   color: #999;
+}
+
+.session-delete-btn {
+  flex-shrink: 0;
+  opacity: 0;
+  background: none;
+  border: none;
+  color: #aaa;
+  cursor: pointer;
+  font-size: 13px;
+  padding: 3px 6px;
+  border-radius: 4px;
+  transition: opacity 0.15s ease, background 0.15s ease, color 0.15s ease;
+  line-height: 1;
+}
+
+.session-item:hover .session-delete-btn {
+  opacity: 1;
+}
+
+.session-delete-btn:hover {
+  background: #ffebee;
+  color: #e53935;
 }
 
 /* 메인 채팅 영역 */
@@ -202,7 +233,7 @@
 }
 
 .message.assistant .message-avatar {
-  background: #2E7D5B;
+  background: #6FBF8F;
   color: white;
 }
 
@@ -223,7 +254,7 @@
 }
 
 .message.assistant .message-content {
-  background: #E8F5EE;
+  background: #E8F5EC;
   color: #1F2937;
   border-bottom-left-radius: 6px;
   border: 1px solid #E5E7EB;
@@ -236,7 +267,7 @@
 }
 
 .message.assistant .message-time {
-  color: #2E7D5B;
+  color: #6FBF8F;
 }
 
 /* 빈 상태 */
@@ -317,11 +348,11 @@
 }
 
 .quick-question-btn:hover {
-  background: #2E7D5B;
+  background: #6FBF8F;
   color: white;
   transform: translateY(-3px);
   box-shadow: 0 6px 20px rgba(46, 125, 91, 0.3);
-  border-color: #2E7D5B;
+  border-color: #6FBF8F;
 }
 
 .quick-question-btn:active {
@@ -356,7 +387,7 @@
 }
 
 .input-container:focus-within {
-  border-color: #2E7D5B;
+  border-color: #6FBF8F;
   background: white;
 }
 
@@ -370,7 +401,7 @@
 }
 
 .send-btn {
-  background: #2E7D5B;
+  background: #6FBF8F;
   color: white;
   border: none;
   border-radius: 50%;
