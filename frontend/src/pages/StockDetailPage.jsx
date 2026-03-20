@@ -295,35 +295,6 @@ function StockDetailPage() {
   const [analysisLoading,  setAnalysisLoading]  = useState(false)
   const [realtimePrice,    setRealtimePrice]    = useState(null) // 실시간 가격 데이터
   const [intradayData,     setIntradayData]     = useState(null) // 일중 차트 데이터
-  const [wsStatus,         setWsStatus]         = useState(null) // WebSocket 상태 (디버그용)
-  const [dynamicTerms,     setDynamicTerms]     = useState({})   // LLM이 추출한 동적 용어 사전
-
-  // ── WebSocket 상태 확인 (디버그용) ──────────────────────────────────────
-  const checkWebSocketStatus = async () => {
-    try {
-      const res = await fetch('/api/stream/ws-status')
-      const data = await res.json()
-      setWsStatus(data)
-      console.log('[WebSocket 상태]', data)
-      alert(`WebSocket 초기화: ${data.initialized ? '성공' : '실패'}\n구독 종목: ${data.subscribed?.length || 0}개\n현재 종목(${stockCode}): ${data.subscribed?.includes(stockCode) ? '구독됨' : '미구독'}`)
-    } catch (err) {
-      console.error('WebSocket 상태 확인 실패:', err)
-      alert('WebSocket 상태 확인 실패')
-    }
-  }
-
-  // ── 테스트 가격 주입 (장 마감 시 테스트용) ────────────────────────────────
-  const injectTestPrices = async () => {
-    try {
-      const res = await fetch(`/api/stream/test-inject?codes=${stockCode}`)
-      const data = await res.json()
-      console.log('[테스트 주입]', data)
-      alert('10초간 테스트 가격 변동 시작 (콘솔 확인)')
-    } catch (err) {
-      console.error('테스트 주입 실패:', err)
-      alert('테스트 주입 실패')
-    }
-  }
 
   // ── 기본 데이터 & 점수 로드 ─────────────────────────────────────────────
   useEffect(() => {

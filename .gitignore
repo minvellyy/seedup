@@ -1,7 +1,7 @@
 # Chroma / vector DB
-backend/reports_chroma_db/
-backend/reports/
-backend/parsed_data/
+./backend/reports_chroma_db/
+./backend/reports/
+./backend/parsed_data/
 
 **/*.sqlite3
 **/*.bin

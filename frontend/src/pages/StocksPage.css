@@ -1,4 +1,4 @@
-/* 개별종목 페이지 스타일 */
+﻿/* 개별종목 페이지 스타일 */
 .stocks-page {
   min-height: calc(100vh - 80px);
   background: #F7F9F8;
@@ -66,7 +66,7 @@
 
 .update-time {
   font-size: 13px;
-  color: #2E7D5B;
+  color: #6FBF8F;
   display: flex;
   align-items: center;
   gap: 6px;
@@ -121,13 +121,13 @@
 }
 
 .period-tab:hover {
-  border-color: #2E7D5B;
-  color: #2E7D5B;
+  border-color: #6FBF8F;
+  color: #6FBF8F;
 }
 
 .period-tab.active {
-  background: #2E7D5B;
-  border-color: #2E7D5B;
+  background: #6FBF8F;
+  border-color: #6FBF8F;
   color: white;
 }
 
@@ -182,7 +182,7 @@
   top: 0;
   bottom: 0;
   width: 3px;
-  background: #2E7D5B;
+  background: #6FBF8F;
   opacity: 0;
   transition: opacity 0.2s ease;
 }
@@ -192,7 +192,7 @@
 }
 
 .stock-item.selected {
-  background: #E8F5EE;
+  background: #E8F5EC;
 }
 
 .stock-item.selected::before {
@@ -354,7 +354,7 @@
 
 .retry-btn {
   padding: 10px 20px;
-  background: #2E7D5B;
+  background: #6FBF8F;
   color: white;
   border: none;
   border-radius: 8px;
@@ -365,9 +365,9 @@
 }
 
 .retry-btn:hover {
-  background: #247055;
+  background: #4F8F6F;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(46, 125, 91, 0.3);
+  box-shadow: 0 4px 8px rgba(111, 191, 143, 0.3);
 }
 
 /* 종목 검색 섹션 */
@@ -410,8 +410,8 @@
 
 .search-input:focus {
   outline: none;
-  border-color: #2E7D5B;
-  box-shadow: 0 0 0 3px rgba(46, 125, 91, 0.1);
+  border-color: #6FBF8F;
+  box-shadow: 0 0 0 3px rgba(111, 191, 143, 0.1);
 }
 
 .clear-btn {
@@ -610,22 +610,22 @@
 
 .popular-tag {
   padding: 8px 16px;
-  background: #E8F5EE;
+  background: #E8F5EC;
   border: 1px solid #E5E7EB;
   border-radius: 20px;
   font-size: 14px;
   font-weight: 500;
-  color: #2E7D5B;
+  color: #6FBF8F;
   cursor: pointer;
   transition: all 0.2s ease;
 }
 
 .popular-tag:hover {
-  background: #2E7D5B;
-  border-color: #2E7D5B;
+  background: #6FBF8F;
+  border-color: #6FBF8F;
   color: white;
   transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(46, 125, 91, 0.2);
+  box-shadow: 0 4px 8px rgba(111, 191, 143, 0.2);
 }
 
 /* 반응형 디자인 */
@@ -798,3 +798,4 @@
     padding: 0 16px;
   }
 }
+
