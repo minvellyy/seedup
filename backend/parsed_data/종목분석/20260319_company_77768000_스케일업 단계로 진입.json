@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-19",
+        "brokerage": "한국IR협의회",
+        "analyst_name": "박선영, 정수현",
+        "report_title": "스케일업 단계로 진입"
+    },
+    "specific_data": {
+        "company_name": "노을",
+        "ticker": "376930",
+        "investment_rating": null,
+        "investment_points": [
+            "제품 경쟁력 및 수익성 강화를 통한 비즈니스 성과 창출",
+            "글로벌 기업으로의 도약을 위한 성장 모멘텀 확보",
+            "혈액분석 솔루션 및 자궁경부암 진단 솔루션 본격 판매 시작",
+            "디바이스 판매량 급증 및 매출총이익률 개선"
+        ],
+        "risk_factors": [
+            "신제품 매출 확대 지연 리스크",
+            "글로벌 파트너십의 매출 전환 불확실성",
+            "지속적인 영업적자 및 자금 리스크"
+        ],
+        "shareholder_structure": "MSEED, INC. 15.59%, 임찬양 3.21%, 김경환 3.21%, 안정권 0.54%, 기타주주 81.21%"
+    }
+}

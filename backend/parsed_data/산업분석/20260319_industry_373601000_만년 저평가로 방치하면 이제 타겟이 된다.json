@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-19",
+        "brokerage": "DS투자증권",
+        "analyst_name": "김수현",
+        "report_title": "만년 저평가로 방치하면 이제 타겟이 된다"
+    },
+    "specific_data": {
+        "sector_name": "지주회사/거버넌스",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "M&A를 통한 저성과 기업 퇴출 유도",
+            "저PBR 기업 Naming & Shaming 도입",
+            "원가로 숨겨진 자산가치 공시 의무화",
+            "불공정한 계열사간 합병 금지",
+            "만년 저 PBR 우량 기업들의 중장기적 Re-rating 전망"
+        ],
+        "risk_factors": [
+            "저PBR 기업의 M&A 타겟화",
+            "주주충실의무 위반에 따른 법적 리스크",
+            "자산가치 왜곡에 따른 투자자 신뢰도 저하"
+        ]
+    }
+}

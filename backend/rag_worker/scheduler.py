@@ -13,19 +13,66 @@ from pathlib import Path
 
 _BACKEND_DIR = Path(__file__).resolve().parent.parent  # backend/
 _REPORTS_MODEL_DIR = str(_BACKEND_DIR / "reports_model")
+_RUN_MARKER_DIR = _BACKEND_DIR / "portfolio_cache"  # 실행 마커 파일 저장 디렉터리
 
 if str(_BACKEND_DIR) not in sys.path:
     sys.path.insert(0, str(_BACKEND_DIR))
 
 
+# ── 당일 실행 여부 체크 ────────────────────────────────────────────────────────
+
+def _already_ran_today(job_name: str) -> bool:
+    """오늘 날짜 마커 파일이 있으면 True (이미 실행됨)."""
+    _RUN_MARKER_DIR.mkdir(parents=True, exist_ok=True)
+    marker = _RUN_MARKER_DIR / f".{job_name}_{datetime.now():%Y%m%d}.done"
+    return marker.exists()
+
+
+def _mark_ran_today(job_name: str) -> None:
+    """오늘 날짜 마커 파일 생성 + 전날 마커 파일 삭제."""
+    _RUN_MARKER_DIR.mkdir(parents=True, exist_ok=True)
+    today_marker = _RUN_MARKER_DIR / f".{job_name}_{datetime.now():%Y%m%d}.done"
+    today_marker.touch()
+    # 7일 이상 된 마커 파일 정리
+    for old in _RUN_MARKER_DIR.glob(f".{job_name}_*.done"):
+        if old != today_marker:
+            try:
+                old.unlink()
+            except Exception:
+                pass
+
+
 # ── 뉴스 ─────────────────────────────────────────────────────────────────────
 
-def run_news_daily_batch() -> None:
-    """신규 뉴스 1일치 수집 → LLM 분석 → 90일 초과 항목 삭제."""
-    from news_model.pipeline_news_analysis_mvp import smart_daily_batch
+def _get_news_days_back() -> int:
+    """news_raw 테이블의 마지막 published_at 기준으로 오늘까지 몇 일치를 가져올지 계산."""
+    try:
+        from news_model.pipeline_news_analysis_mvp import get_mysql
+        conn = get_mysql()
+        cur = conn.cursor()
+        cur.execute("SELECT MAX(published_at) FROM news_raw")
+        row = cur.fetchone()
+        conn.close()
+        if row and row[0]:
+            last_date = row[0] if isinstance(row[0], datetime) else datetime.strptime(str(row[0]), "%Y-%m-%d %H:%M:%S")
+            days_back = (datetime.now() - last_date).days + 1  # 마지막 날 포함
+            return max(days_back, 1)
+    except Exception as e:
+        print(f"[WARN] DB 마지막 날짜 조회 실패, 기본값 1일 사용: {e}")
+    return 1
 
-    print(f"[{datetime.now():%Y-%m-%d %H:%M:%S}] 뉴스 daily_batch 시작")
-    smart_daily_batch()
+
+def run_news_daily_batch() -> None:
+    """마지막 DB 날짜 이후 ~ 오늘까지 뉴스 수집 → LLM 분석 → 90일 초과 항목 삭제."""
+    if _already_ran_today("news"):
+        print(f"[{datetime.now():%Y-%m-%d %H:%M:%S}] 뉴스 daily_batch — 오늘 이미 실행됨, 건너뜀")
+        return
+    from news_model.pipeline_news_analysis_mvp import daily_batch
+
+    days_back = _get_news_days_back()
+    print(f"[{datetime.now():%Y-%m-%d %H:%M:%S}] 뉴스 daily_batch 시작 (최근 {days_back}일치)")
+    daily_batch(days_back=days_back, retention_days=90)
+    _mark_ran_today("news")
     print(f"[{datetime.now():%Y-%m-%d %H:%M:%S}] 뉴스 daily_batch 완료")
 
 
@@ -52,6 +99,9 @@ def _load_reports_modules():
 
 def run_reports_etl(days: int = 1) -> None:
     """증권사 리포트 ETL: 크롤링 → PDF 파싱 → Chroma 임베딩."""
+    if _already_ran_today("reports"):
+        print(f"[{datetime.now():%Y-%m-%d %H:%M:%S}] 리포트 ETL — 오늘 이미 실행됨, 건너뜀")
+        return
     print(f"[{datetime.now():%Y-%m-%d %H:%M:%S}] 리포트 ETL 시작 (최근 {days}일)")
     try:
         crawler, parser, embedder = _load_reports_modules()
@@ -60,6 +110,7 @@ def run_reports_etl(days: int = 1) -> None:
         )
         parser.run_parser()
         embedder.run_embedding()
+        _mark_ran_today("reports")
         print(f"[{datetime.now():%Y-%m-%d %H:%M:%S}] 리포트 ETL 완료")
     except Exception as exc:
         print(f"[{datetime.now():%Y-%m-%d %H:%M:%S}] 리포트 ETL 실패: {exc}")

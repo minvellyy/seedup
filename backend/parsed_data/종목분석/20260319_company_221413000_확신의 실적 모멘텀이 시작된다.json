@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-19",
+        "brokerage": "유안타증권",
+        "analyst_name": "이환욱",
+        "report_title": "확신의 실적 모멘텀이 시작된다"
+    },
+    "specific_data": {
+        "company_name": "하이브",
+        "ticker": "352820",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "2026 연간 예상 매출액 +47.9% yoy, 영업이익 +899.0% yoy",
+            "BTS의 목표주가 450,000원",
+            "글로벌 팬덤 확장세가 견조한 아티스트들의 앨범 판매량 증가"
+        ],
+        "risk_factors": [
+            "환율 변동에 따른 수익성 영향",
+            "소비 둔화세"
+        ],
+        "shareholder_structure": "주요주주 방시혁 외 10 인"
+    }
+}

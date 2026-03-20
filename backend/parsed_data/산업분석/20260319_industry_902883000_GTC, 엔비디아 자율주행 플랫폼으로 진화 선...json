@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-19",
+        "brokerage": "IBK투자증권",
+        "analyst_name": "이현욱",
+        "report_title": "GTC, 엔비디아 자율주행 플랫폼으로 진화 선.."
+    },
+    "specific_data": {
+        "sector_name": "자동차/2차전지",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "NVIDIA가 자율주행 시장에서 플랫폼 서비스 중심으로 확장",
+            "Uber와의 로보택시 협력 확대",
+            "현대차그룹과의 자율주행 체계 구축"
+        ],
+        "risk_factors": [
+            "자율주행 기술 개발의 불확실성",
+            "경쟁사와의 기술 격차",
+            "데이터 수집 및 활용의 법적 이슈"
+        ]
+    }
+}

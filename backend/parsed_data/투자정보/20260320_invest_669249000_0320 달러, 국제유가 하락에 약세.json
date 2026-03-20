@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-20",
+        "brokerage": "키움증권",
+        "analyst_name": "김유미, 안예하, 심수빈",
+        "report_title": "0320 달러, 국제유가 하락에 약세"
+    },
+    "specific_data": {
+        "strategy_theme": "달러 약세 및 국제유가 하락",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "달러화는 연준의 기준금리 인하 기대 약화에도 불구하고 약세",
+            "미국 정부의 유가 안정 의지로 국제유가 하락",
+            "3월 FOMC에서 기준금리 인하 전망 약화",
+            "이란산 석유에 대한 제재 완화 가능성 시사"
+        ],
+        "quant_factors": [
+            "NDF 달러/원 환율 1개월물 1,487.99원",
+            "국제유가 하락",
+            "금리 상승"
+        ]
+    }
+}

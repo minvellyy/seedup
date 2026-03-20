@@ -40,15 +40,15 @@
   letter-spacing: -0.3px;
   position: relative;
   z-index: 1;
-  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
+  text-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
 }
 
 .dashboard-subtitle {
   font-size: 0.875rem;
-  color: rgba(255, 255, 255, 0.85);
+  color: rgba(255, 255, 255, 0.92);
   position: relative;
   z-index: 1;
-  font-weight: 400;
+  font-weight: 500;
 }
 
 /* 컨텐츠 영역 */
@@ -150,15 +150,15 @@
   align-items: center;
   margin-bottom: 1.125rem;
   padding-bottom: 0.75rem;
-  border-bottom: 1px solid #f0f4f8;
+  border-bottom: 1px solid #E8F5EC;
 }
 
 .card h2 {
   font-size: 1rem;
   color: #1F2937;
   margin: 0;
-  font-weight: 600;
-  letter-spacing: -0.3px;
+  font-weight: 700;
+  letter-spacing: -0.2px;
 }
 
 /* 분석 버튼 */
@@ -307,7 +307,7 @@
 
 /* 시장 지수 카드 */
 .indices-card {
-  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.98) 100%);
+  background: #FFFFFF;
 }
 
 .indices-grid {
@@ -338,35 +338,35 @@
 }
 
 .index-header h3 {
-  font-size: 0.9375rem;
-  font-weight: 500;
+  font-size: 0.8125rem;
+  font-weight: 600;
   margin: 0;
-  color: #1a202c;
+  color: #6B7280;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
 }
 
 .index-date {
   font-size: 0.6875rem;
-  color: #1a202c;
-  opacity: 0.75;
-  background: rgba(255, 255, 255, 0.6);
+  color: #9CA3AF;
+  background: rgba(255, 255, 255, 0.8);
   padding: 2px 7px;
   border-radius: 6px;
   font-weight: 500;
 }
 
 .index-value {
-  font-size: 1.5rem;
-  font-weight: 600;
+  font-size: 1.6rem;
+  font-weight: 700;
   margin-bottom: 0.5rem;
-  letter-spacing: -0.3px;
-  color: #1a202c;
+  letter-spacing: -0.5px;
+  color: #1F2937;
 }
 
 .index-change {
   font-size: 0.8125rem;
-  font-weight: 500;
-  color: #1a202c;
-  opacity: 0.85;
+  font-weight: 600;
+  color: #6B7280;
 }
 
 /* 투자자별 매매동향 카드 */
@@ -462,7 +462,7 @@
 .investor-table .investor-label {
   text-align: left;
   font-weight: 600;
-  color: #1a202c;
+  color: #1F2937;
   font-size: 0.84rem;
 }
 
@@ -475,7 +475,7 @@
 }
 
 .investor-table tbody tr:hover {
-  background: linear-gradient(90deg, rgba(107, 167, 119, 0.08) 0%, transparent 100%);
+  background: linear-gradient(90deg, #E8F5EC 0%, transparent 100%);
 }
 
 /* 색상 클래스 */
@@ -544,11 +544,12 @@
 .recommendation-item,
 .portfolio-item {
   padding: 1.25rem;
-  background: linear-gradient(135deg, #fffef9 0%, #ffffff 100%);
+  background: #FFFFFF;
   border-radius: 12px;
-  border-left: 3px solid #D4A500;
-  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+  border: 1px solid #E8F0EC;
+  border-left: 3px solid #F0C040;
+  transition: box-shadow 0.2s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -557,9 +558,7 @@
 
 .recommendation-item:hover,
 .portfolio-item:hover {
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-  transform: translateX(4px) translateY(-1px);
-  background: white;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.07);
 }
 
 .recommendation-header {
@@ -570,11 +569,11 @@
 }
 
 .recommendation-header h3 {
-  font-size: 1.05rem;
-  color: #1a202c;
-  font-weight: 600;
+  font-size: 1.1rem;
+  color: #1F2937;
+  font-weight: 700;
   margin: 0;
-  letter-spacing: -0.2px;
+  letter-spacing: -0.3px;
 }
 
 .stock-code {
@@ -595,10 +594,10 @@
 }
 
 .stock-price {
-  font-size: 1.35rem;
-  font-weight: 700;
-  color: #2d3748;
-  letter-spacing: -0.3px;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: #111827;
+  letter-spacing: -0.5px;
 }
 
 .change-badge {
@@ -641,10 +640,14 @@
 }
 
 .recommendation-reason {
+<<<<<<< HEAD
   font-size: 0.9rem;
+=======
+  font-size: 0.875rem;
+>>>>>>> origin/develop
   color: #6B7280;
   line-height: 1.5;
-  font-weight: 500;
+  font-weight: 400;
 }
 
 /* 포트폴리오 아이템 */
@@ -664,7 +667,7 @@
 .expected-return {
   font-weight: 700;
   font-size: 1rem;
-  color: #38a169;
+  color: #4F8F6F;
 }
 
 .risk-level {
@@ -846,7 +849,11 @@
 
 .chat-message.user {
   align-self: flex-end;
+<<<<<<< HEAD
   background: linear-gradient(135deg, #8FD9A8 0%, #6FBF8F 100%);
+=======
+  background: linear-gradient(135deg, #6FBF8F 0%, #4F8F6F 100%);
+>>>>>>> origin/develop
   color: white;
   border-bottom-right-radius: 4px;
 }
@@ -1036,12 +1043,12 @@
 }
 
 .dashboard-page::-webkit-scrollbar-thumb {
-  background: #D4A500;
+  background: #CBD5E1;
   border-radius: 4px;
 }
 
 .dashboard-page::-webkit-scrollbar-thumb:hover {
-  background: #B38F00;
+  background: #94A3B8;
 }
 
 /* 로딩 컨테이너 */

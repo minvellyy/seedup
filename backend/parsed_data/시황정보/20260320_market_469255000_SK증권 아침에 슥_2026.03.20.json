@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-20",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "SK증권 아침에 슥_2026.03.20"
+    },
+    "specific_data": {
+        "market_summary": "미국 중동 에너지 시설 타격 관련 소식에 변동성 보이며 하락 마감 코스피, 코스닥. 중동 에너지 시설 타격에 하락 후 확전 자제 발언들이 나오면서 낙폭 회복. 유럽 중동 전쟁 격화 및 중앙은행 동결에 하락 마감. 중국 중동 전쟁 고조에 위험 회피 심리 확대되어 하락 마감.",
+        "macro_indicators": null,
+        "fund_flows": {
+            "foreign_investors": {
+                "net_buy": -24000,
+                "details": {
+                    "foreign": null,
+                    "institution": null,
+                    "pension_fund": null,
+                    "individual": null
+                }
+            }
+        },
+        "key_news": [
+            "중동 에너지 시설 타격에 의한 고유가·고환율에 매파적 FOMC 결과 겹쳐 약세"
+        ]
+    }
+}

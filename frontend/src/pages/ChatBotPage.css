@@ -110,6 +110,12 @@
   text-overflow: ellipsis;
 }
 
+.session-item-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .session-time {
   font-size: 12px;
   color: #999;

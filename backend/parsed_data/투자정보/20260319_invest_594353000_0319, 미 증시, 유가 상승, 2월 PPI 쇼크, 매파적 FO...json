@@ -1,0 +1,35 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-19",
+        "brokerage": "키움증권",
+        "analyst_name": "이성훈",
+        "report_title": "0319, 미 증시, 유가 상승, 2월 PPI 쇼크, 매파적 FO.."
+    },
+    "specific_data": {
+        "strategy_theme": null,
+        "recommended_portfolio": [
+            "애플",
+            "마이크로소프트",
+            "알파벳",
+            "메타",
+            "아마존",
+            "테슬라",
+            "엔비디아",
+            "브로드컴",
+            "AMD",
+            "마이크론"
+        ],
+        "strategy_logic": [
+            "미 증시 하락 원인: 유가 상승, PPI 쇼크, 매파적 FOMC",
+            "국내 증시 상승 원인: 마이크론 실적 발표 기대감, 삼성전자 주주환원 소식",
+            "반도체 업종 강세"
+        ],
+        "quant_factors": [
+            "유가",
+            "PPI",
+            "금리",
+            "환율"
+        ]
+    }
+}

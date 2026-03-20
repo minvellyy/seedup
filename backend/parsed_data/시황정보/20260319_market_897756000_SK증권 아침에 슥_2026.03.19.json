@@ -1,0 +1,18 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-19",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "SK증권 아침에 슥_2026.03.19"
+    },
+    "specific_data": {
+        "market_summary": "미국 금리 상승과 중동 리스크에 하락. 금리 상승과 지정학적 긴장, 인플레이션 재확산 우려가 동시에 작용하며 위험회피 심리 강화.",
+        "macro_indicators": null,
+        "fund_flows": null,
+        "key_news": [
+            "중국 반도체주 강세에 상승",
+            "국내 반도체 훈풍과 국제 유가 하락에 상승"
+        ]
+    }
+}

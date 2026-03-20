@@ -1,0 +1,31 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-19",
+        "brokerage": "대신증권",
+        "analyst_name": "이경민, 정해창",
+        "report_title": "3월 FOMC 물가 경계 확대. 중동 지정학적 리스크로 .."
+    },
+    "specific_data": {
+        "strategy_theme": "물가 경계 확대 및 중동 지정학적 리스크",
+        "recommended_portfolio": [
+            "반도체",
+            "자동차",
+            "조선",
+            "2차전지",
+            "소프트웨어",
+            "건강관리",
+            "화장품/의류"
+        ],
+        "strategy_logic": [
+            "지정학적 리스크와 정책/실적 모멘텀 강화",
+            "단기 변동성은 비중 확대 기회",
+            "KOSPI 상승추세 재개 예상"
+        ],
+        "quant_factors": [
+            "물가 상승",
+            "고용 시장 안정",
+            "GDP 성장률 상향 조정"
+        ]
+    }
+}

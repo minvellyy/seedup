@@ -1,0 +1,45 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-20",
+        "brokerage": "IBK투자증권",
+        "analyst_name": null,
+        "report_title": "[IBKS Daily] 인터넷게임"
+    },
+    "specific_data": {
+        "sector_name": "인터넷/SW/게임",
+        "industry_rating": null,
+        "top_picks": [
+            "NAVER",
+            "카카오",
+            "삼성에스디에스",
+            "현대오토에버",
+            "더존비즈온",
+            "한글과컴퓨터",
+            "롯데이노베이트",
+            "크래프톤",
+            "엔씨소프트",
+            "넷마블",
+            "시프트업",
+            "펄어비스",
+            "카카오게임즈",
+            "더블유게임즈",
+            "웹젠",
+            "NHN",
+            "컴투스",
+            "네오위즈",
+            "데브시스터즈"
+        ],
+        "industry_trends": [
+            "K콘텐츠의 힘",
+            "韓 게임산업 수지 '역대급'",
+            "음악산업도 3년새 2배 ↑",
+            "AI가 안부 묻자 달라졌다"
+        ],
+        "risk_factors": [
+            "글로벌 경제 불확실성",
+            "경쟁 심화",
+            "기술 변화에 대한 적응 필요"
+        ]
+    }
+}

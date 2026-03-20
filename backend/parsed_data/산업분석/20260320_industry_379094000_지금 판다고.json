@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-19",
+        "brokerage": "DAISHIN SECURITIES",
+        "analyst_name": "류형근, 서지원RA",
+        "report_title": "지금 판다고"
+    },
+    "specific_data": {
+        "sector_name": "반도체업",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "삼성전자",
+            "SK하이닉스"
+        ],
+        "industry_trends": [
+            "판매 구조의 변화",
+            "AI가 이끄는 수요 변화",
+            "장기 계약 체결 증가"
+        ],
+        "risk_factors": [
+            "공급 제약",
+            "가격 상승 제한 가능성"
+        ]
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-19",
+        "brokerage": "키움증권",
+        "analyst_name": "한지영",
+        "report_title": "3월 FOMC 이후 남겨진 여러 과제 속 대응 방안"
+    },
+    "specific_data": {
+        "strategy_theme": "전쟁 불확실성 속에서의 주식시장 회복",
+        "recommended_portfolio": [
+            "반도체"
+        ],
+        "strategy_logic": [
+            "전쟁 초기 증시 하락 -> 이후 회복 경로 진입",
+            "외국인 순매도 작업은 종반부에 들어선 것으로 판단",
+            "국내 증시는 하방 경직성을 보유하며 회복 궤도를 유지할 것"
+        ],
+        "quant_factors": [
+            "코스피 이익 컨센서스 추가 상향 가능성",
+            "반도체 중심의 기존 포트폴리오 비중 유지"
+        ]
+    }
+}

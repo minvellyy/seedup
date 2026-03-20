@@ -89,6 +89,23 @@ const ChatBotPage = () => {
     }
   }, [user])
 
+  // 세션 삭제
+  const deleteSession = async (e, sessionId) => {
+    e.stopPropagation()
+    if (!window.confirm('이 대화를 삭제하시겠습니까?')) return
+    try {
+      await axios.delete(`/api/chat/session/${sessionId}?user_id=${user.userId}`)
+      if (currentSessionId === sessionId) {
+        setCurrentSessionId(null)
+        setMessages([])
+      }
+      setSessions(prev => prev.filter(s => s.id !== sessionId))
+    } catch (err) {
+      console.error('세션 삭제 오류:', err)
+      alert('삭제에 실패했습니다.')
+    }
+  }
+
   // 세션 목록 로드
   const loadSessions = async (autoLoadLatest = false) => {
     try {
@@ -361,6 +378,16 @@ const ChatBotPage = () => {
                       <div className="session-time">
                         {session.updated_at ? new Date(session.updated_at).toLocaleDateString(LOCALE_KR) : "N/A"}
                       </div>
+                    <div className="session-title">{session.title || NEW_CHAT_TITLE}</div>
+                    <div className="session-item-footer">
+                      <div className="session-time">
+                        {session.updated_at ? new Date(session.updated_at).toLocaleDateString(LOCALE_KR) : "N/A"}
+                      </div>
+                      <button
+                        className="session-delete-btn"
+                        onClick={(e) => deleteSession(e, session.id)}
+                        title="대화 삭제"
+                      >✕</button>
                     </div>
                     <button
                       className="session-delete-btn"

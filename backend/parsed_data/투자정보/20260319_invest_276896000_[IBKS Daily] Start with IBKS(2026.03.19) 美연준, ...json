@@ -1,0 +1,31 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-19",
+        "brokerage": "투자분석부",
+        "analyst_name": null,
+        "report_title": "[IBKS Daily] Start with IBKS(2026.03.19) 美연준, .."
+    },
+    "specific_data": {
+        "strategy_theme": null,
+        "recommended_portfolio": [
+            "SK하이닉스",
+            "삼성전자",
+            "두산에너빌리티",
+            "NAVER",
+            "효성중공업"
+        ],
+        "strategy_logic": [
+            "반도체주 중심 강세",
+            "주주환원 기대 확산",
+            "외국인 순매수세",
+            "유가 급등과 금리 동결"
+        ],
+        "quant_factors": [
+            "KOSPI 상승",
+            "KOSDAQ 상승",
+            "미국 금리 동결",
+            "유럽 CPI 부합"
+        ]
+    }
+}

@@ -1,0 +1,17 @@
+{
+    "common_metadata": {
+        "report_type": null,
+        "report_date": null,
+        "brokerage": null,
+        "analyst_name": null,
+        "report_title": "실적, 밸류에이션 정상화 초입 구간"
+    },
+    "specific_data": {
+        "company_name": "더블유씨피",
+        "ticker": "160",
+        "investment_rating": null,
+        "investment_points": [],
+        "risk_factors": [],
+        "shareholder_structure": null
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-20",
+        "brokerage": "SK증권",
+        "analyst_name": "나승두",
+        "report_title": "독점적 지위 갖춰가는 사업 한두 개가 아니다"
+    },
+    "specific_data": {
+        "company_name": "유비벨록스",
+        "ticker": "089850",
+        "investment_rating": "Not Rated",
+        "investment_points": [
+            "역대 최고 수준 매출액 달성",
+            "BMW 넘어 MBK까지 진출한 블랙박스",
+            "KLSC 개화, 특허 침해 관련 지적 재산권 소송도 긍정적 결과 기대",
+            "연간 200억 이상 이익 달성 가능",
+            "현재 주가 수준 지나친 저평가"
+        ],
+        "risk_factors": [
+            "원가율 상승",
+            "판관비 증가"
+        ],
+        "shareholder_structure": "이흥복(외6) 29.66%, 엔에이치엔 8.50%, 외국인 지분율 3.34%"
+    }
+}
