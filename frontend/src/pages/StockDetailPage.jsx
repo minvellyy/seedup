@@ -295,6 +295,7 @@ function StockDetailPage() {
   const [analysisLoading,  setAnalysisLoading]  = useState(false)
   const [realtimePrice,    setRealtimePrice]    = useState(null) // 실시간 가격 데이터
   const [intradayData,     setIntradayData]     = useState(null) // 일중 차트 데이터
+  const [dynamicTerms,     setDynamicTerms]     = useState({})   // LLM 동적 용어 사전
 
   // ── 기본 데이터 & 점수 로드 ─────────────────────────────────────────────
   useEffect(() => {
