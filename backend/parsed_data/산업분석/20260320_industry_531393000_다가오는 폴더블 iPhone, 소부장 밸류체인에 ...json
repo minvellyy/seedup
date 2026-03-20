@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-20",
+        "brokerage": "IBK투자증권",
+        "analyst_name": "강민구",
+        "report_title": "다가오는 폴더블 iPhone, 소부장 밸류체인에 .."
+    },
+    "specific_data": {
+        "sector_name": "IT/디스플레이",
+        "industry_rating": null,
+        "top_picks": [
+            "덕산네오룩스",
+            "파인엠텍",
+            "비에이치"
+        ],
+        "industry_trends": [
+            "폴더블 iPhone 출시 가시화",
+            "소부장 기업에 집중 필요",
+            "애플의 공급망 다변화 정책"
+        ],
+        "risk_factors": [
+            "출하량이 시장 기대치를 하회할 우려",
+            "국내 기업들의 밸류체인 편입 어려움"
+        ]
+    }
+}

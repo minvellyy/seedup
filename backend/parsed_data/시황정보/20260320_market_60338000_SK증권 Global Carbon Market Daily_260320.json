@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-20",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "SK증권 Global Carbon Market Daily_260320"
+    },
+    "specific_data": {
+        "market_summary": "국내외 배출권 가격 추이 및 원자재 가격 동향",
+        "macro_indicators": null,
+        "fund_flows": null,
+        "key_news": [
+            "[뉴욕유가] 유가 진정에 '올인'한 트럼프…WTI 3일만에 하락",
+            "기후부, 산업계와 탈탄소 녹색전환 의견 공유",
+            "EU-CBAM 협의회 출범···초대 회장에 김태선 나무이엔알 대표 선임"
+        ]
+    }
+}

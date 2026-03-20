@@ -1,0 +1,30 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-20",
+        "brokerage": "투자분석부",
+        "analyst_name": null,
+        "report_title": "[IBKS Daily] Start with IBKS(2026.03.20) ECB 금리 .."
+    },
+    "specific_data": {
+        "strategy_theme": null,
+        "recommended_portfolio": [
+            "삼성전자",
+            "SK하이닉스",
+            "두산에너빌리티",
+            "현대차",
+            "삼성전기"
+        ],
+        "strategy_logic": [
+            "고유가 및 금리 변수에 따른 하락",
+            "지정학적 리스크와 인플레이션 우려",
+            "미국 금리 동결 기대"
+        ],
+        "quant_factors": [
+            "KOSPI",
+            "KOSDAQ",
+            "국제유가",
+            "환율"
+        ]
+    }
+}

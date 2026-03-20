@@ -1,0 +1,20 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-19",
+        "brokerage": "DS증권",
+        "analyst_name": "강태호",
+        "report_title": "[DS Defense Daily] 2026-03-19"
+    },
+    "specific_data": {
+        "market_summary": "미국은 중국이 2027년에 대만을 침공할 계획이 없다고 평가하고 있으며, 방산 5사의 시가총액 총합 추이가 지속적으로 변화하고 있다.",
+        "macro_indicators": null,
+        "fund_flows": null,
+        "key_news": [
+            "미국 정보당국은 중국이 대만을 침공할 계획이 없다고 평가",
+            "트럼프 대통령의 대만 지지 우려",
+            "터키, 이란 미사일 격퇴를 위해 나토 패트리어트 시스템 배치",
+            "핀칸티에리, 미 해군을 위한 함선 건조 계획"
+        ]
+    }
+}

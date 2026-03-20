@@ -1,0 +1,22 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-20",
+        "brokerage": "한화투자증권",
+        "analyst_name": "투자전략팀",
+        "report_title": "[주간 파생시황] 2026년 3월 16일~19일"
+    },
+    "specific_data": {
+        "strategy_theme": null,
+        "recommended_portfolio": [],
+        "strategy_logic": [
+            "KOSPI200 선물은 주 초반부터 가파른 상승세를 나타냈으나 주 후반 차익실현 매물이 출회되며 변동성이 확대.",
+            "외국인의 선물 포지션이 매수 우위로 전환되는지가 추가 상승의 핵심 변수.",
+            "기술적으로는 890pt선 저항을 확인하며 보수적으로 접근할 필요."
+        ],
+        "quant_factors": [
+            "VKOSPI는 55.47pt를 기록하며 시장 내 잠재적 불안 요인과 변동성 확대 우려 지속.",
+            "KOSPI200 현·선물 시장에서 기관과 개인 수급이 엇갈린 행보를 보임."
+        ]
+    }
+}

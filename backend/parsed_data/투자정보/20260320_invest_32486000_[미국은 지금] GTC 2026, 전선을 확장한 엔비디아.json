@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-19",
+        "brokerage": "키움증권",
+        "analyst_name": "김승혁",
+        "report_title": "[미국은 지금] GTC 2026, 전선을 확장한 엔비디아"
+    },
+    "specific_data": {
+        "strategy_theme": "AI 인프라 시장의 성장과 엔비디아의 플랫폼 지배력",
+        "recommended_portfolio": [
+            "엔비디아"
+        ],
+        "strategy_logic": [
+            "AI CapEx 사이클의 정점 우려에 대한 반박",
+            "소프트웨어 확장을 통한 수익 구조 변화",
+            "자율주행 및 로보틱스의 빠른 수익화 가능성"
+        ],
+        "quant_factors": [
+            "1조 달러의 수주 가시성",
+            "Vera Rubin의 10배 향상된 와트당 추론 처리량",
+            "Groq LPU의 초저지연 토큰 생성"
+        ]
+    }
+}

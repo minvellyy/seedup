@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-19",
+        "brokerage": "유안타증권",
+        "analyst_name": "백길현",
+        "report_title": "Micron FY2Q26 실적 코멘트"
+    },
+    "specific_data": {
+        "sector_name": "반도체/장비",
+        "industry_rating": "BUY",
+        "top_picks": [
+            "삼성전자",
+            "SK하이닉스"
+        ],
+        "industry_trends": [
+            "AI 서버 수요 강세",
+            "메모리 가격 상승세",
+            "온디바이스 AI 확산"
+        ],
+        "risk_factors": [
+            "지정학적 리스크",
+            "불안정한 매크로 환경",
+            "CapEx 상향 조정"
+        ]
+    }
+}

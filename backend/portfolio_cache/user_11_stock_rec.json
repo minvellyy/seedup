@@ -1,144 +1,136 @@
 {
-  "saved_at": "2026-03-19T05:08:48.694321",
+  "saved_at": "2026-03-20T02:32:20.874122",
   "data": {
-    "user_id": 11,
-    "risk_tier": "적극투자형",
-    "risk_grade": "2등급",
-    "generated_at": "2026-03-19T14:08:48",
     "items": [
       {
         "rank": 1,
-        "ticker": "000660",
-        "name": "SK하이닉스",
+        "ticker": "082920",
+        "name": "비츠로셀",
         "market": "KOSPI",
-        "total_score": 0.9416,
-        "reasons": [
-          "코어(대형)",
-          "위험조정수익률(샤프) +6.25",
-          "3개월 수익률 +70.1%",
-          "1년 수익률 +356.9%",
-          "연 변동성 56.6%",
-          "재무건강성 100점 (탁월)"
-        ],
+        "p_adj": null,
+        "rank_overall": null,
+        "ai_fin_grade": null,
+        "total_score": 7.4314,
         "features": {
-          "ret_3m": 0.7011,
-          "ret_6m": 1.6601,
-          "ret_1y": 3.5693,
-          "vol_ann": 0.5656,
+          "ret_3m": null,
+          "ret_6m": null,
+          "ret_1y": 0.2084,
+          "vol_ann": 0.4684,
           "beta": null,
-          "mdd": -0.2458,
-          "mc_p10": null,
-          "mc_p50": null,
-          "mc_p90": null
+          "mdd": null,
+          "mc_p10": -33.65,
+          "mc_p50": 20.84,
+          "mc_p90": 120.43
         },
-        "explanation": "SK하이닉스은(는) 코어(대형) 종목으로, 적극투자형 투자자에게 적합합니다. 샤프지수(위험 대비 수익) 기준 상위권이며, 모멘텀·우량성·변동성 3개 팩터 종합 평가에서 우수한 점수를 받았습니다."
+        "reasons": [
+          "Overall grade is '양호'",
+          "Excellent stability metrics."
+        ],
+        "explanation": "이 종목은 높은 유동성을 보이며, 안정적인 재무 구조를 가지고 있어 적극투자형 투자자에게 안전한 투자처로 적합합니다."
       },
       {
         "rank": 2,
-        "ticker": "009150",
-        "name": "삼성전기",
+        "ticker": "005440",
+        "name": "현대지에프홀딩스",
         "market": "KOSPI",
-        "total_score": 0.9222,
-        "reasons": [
-          "코어(대형)",
-          "위험조정수익률(샤프) +4.02",
-          "3개월 수익률 +61.0%",
-          "1년 수익률 +196.4%",
-          "연 변동성 48.0%",
-          "재무건강성 100점 (탁월)"
-        ],
+        "p_adj": null,
+        "rank_overall": null,
+        "ai_fin_grade": null,
+        "total_score": 7.3767,
         "features": {
-          "ret_3m": 0.6102,
-          "ret_6m": 1.1028,
-          "ret_1y": 1.9638,
-          "vol_ann": 0.48,
+          "ret_3m": null,
+          "ret_6m": null,
+          "ret_1y": 0.3411,
+          "vol_ann": 0.4632,
           "beta": null,
-          "mdd": -0.2464,
-          "mc_p10": null,
-          "mc_p50": null,
-          "mc_p90": null
+          "mdd": null,
+          "mc_p10": -26.0,
+          "mc_p50": 34.11,
+          "mc_p90": 142.78
         },
-        "explanation": "삼성전기은(는) 코어(대형) 종목으로, 적극투자형 투자자에게 적합합니다. 샤프지수(위험 대비 수익) 기준 상위권이며, 모멘텀·우량성·변동성 3개 팩터 종합 평가에서 우수한 점수를 받았습니다."
+        "reasons": [
+          "Overall score is '양호'",
+          "Remarkable growth in operational income."
+        ],
+        "explanation": "이 종목은 빠른 성장성이 돋보이며, 금융 분야에서의 전략적 위치로 인해 적극투자형 투자자에게 좋은 선택이 될 수 있습니다."
       },
       {
         "rank": 3,
-        "ticker": "319660",
-        "name": "피에스케이",
-        "market": "KOSDAQ",
-        "total_score": 0.8664,
-        "reasons": [
-          "새틀라이트(성장)",
-          "위험조정수익률(샤프) +2.91",
-          "3개월 수익률 +93.1%",
-          "1년 수익률 +189.2%",
-          "연 변동성 63.7%",
-          "재무건강성 100점 (탁월)"
-        ],
+        "ticker": "003570",
+        "name": "SNT다이내믹스",
+        "market": "KOSPI",
+        "p_adj": null,
+        "rank_overall": null,
+        "ai_fin_grade": null,
+        "total_score": 7.0858,
         "features": {
-          "ret_3m": 0.9307,
-          "ret_6m": 1.0993,
-          "ret_1y": 1.8915,
-          "vol_ann": 0.6374,
+          "ret_3m": null,
+          "ret_6m": null,
+          "ret_1y": 0.268,
+          "vol_ann": 0.5704,
           "beta": null,
-          "mdd": -0.2675,
-          "mc_p10": null,
-          "mc_p50": null,
-          "mc_p90": null
+          "mdd": null,
+          "mc_p10": -38.96,
+          "mc_p50": 26.8,
+          "mc_p90": 163.35
         },
-        "explanation": "피에스케이은(는) 새틀라이트(성장) 종목으로, 적극투자형 투자자에게 적합합니다. 샤프지수(위험 대비 수익) 기준 상위권이며, 모멘텀·우량성·변동성 3개 팩터 종합 평가에서 우수한 점수를 받았습니다."
+        "reasons": [
+          "Overall score is '탁월'",
+          "Strong profitability and growth metrics."
+        ],
+        "explanation": "이 종목은 높은 수익성과 성장성을 가지고 있어 적극투자형 투자자에게 적합합니다. 자동차 산업에서의 위치 또한 안정성이 높아 장기적인 성장 가능성이 큽니다."
       },
       {
         "rank": 4,
-        "ticker": "00680K",
-        "name": "미래에셋증권2우B",
+        "ticker": "058470",
+        "name": "리노공업",
         "market": "KOSPI",
-        "total_score": 0.8553,
-        "reasons": [
-          "새틀라이트(성장)",
-          "위험조정수익률(샤프) +7.00",
-          "3개월 수익률 +109.6%",
-          "1년 수익률 +402.9%",
-          "연 변동성 57.1%"
-        ],
+        "p_adj": null,
+        "rank_overall": null,
+        "ai_fin_grade": null,
+        "total_score": 6.8939,
         "features": {
-          "ret_3m": 1.0955,
-          "ret_6m": 1.1739,
-          "ret_1y": 4.0292,
-          "vol_ann": 0.5706,
+          "ret_3m": null,
+          "ret_6m": null,
+          "ret_1y": 0.205,
+          "vol_ann": 0.5045,
           "beta": null,
-          "mdd": -0.2182,
-          "mc_p10": null,
-          "mc_p50": null,
-          "mc_p90": null
+          "mdd": null,
+          "mc_p10": -36.74,
+          "mc_p50": 20.5,
+          "mc_p90": 130.56
         },
-        "explanation": "미래에셋증권2우B은(는) 새틀라이트(성장) 종목으로, 적극투자형 투자자에게 적합합니다. 샤프지수(위험 대비 수익) 기준 상위권이며, 모멘텀·우량성·변동성 3개 팩터 종합 평가에서 우수한 점수를 받았습니다."
+        "reasons": [
+          "Strong profitability metrics",
+          "High stability score."
+        ],
+        "explanation": "이 종목은 높은 ROA와 OPM을 기록하고 있어 투자자에게 안정적인 수익을 제공할 수 있으며 전자부품 분야의 확장성 또한 매력적입니다."
       },
       {
         "rank": 5,
-        "ticker": "240810",
-        "name": "원익IPS",
-        "market": "KOSDAQ",
-        "total_score": 0.8503,
-        "reasons": [
-          "새틀라이트(성장)",
-          "위험조정수익률(샤프) +5.02",
-          "3개월 수익률 +116.3%",
-          "1년 수익률 +374.1%",
-          "연 변동성 73.8%",
-          "재무건강성 67점 (우수)"
-        ],
+        "ticker": "140860",
+        "name": "파크시스템스",
+        "market": "KOSPI",
+        "p_adj": null,
+        "rank_overall": null,
+        "ai_fin_grade": null,
+        "total_score": 6.8486,
         "features": {
-          "ret_3m": 1.1629,
-          "ret_6m": 1.7323,
-          "ret_1y": 3.7409,
-          "vol_ann": 0.7377,
+          "ret_3m": null,
+          "ret_6m": null,
+          "ret_1y": 0.1383,
+          "vol_ann": 0.4796,
           "beta": null,
-          "mdd": -0.2464,
-          "mc_p10": null,
-          "mc_p50": null,
-          "mc_p90": null
+          "mdd": null,
+          "mc_p10": -38.42,
+          "mc_p50": 13.83,
+          "mc_p90": 110.83
         },
-        "explanation": "원익IPS은(는) 새틀라이트(성장) 종목으로, 적극투자형 투자자에게 적합합니다. 샤프지수(위험 대비 수익) 기준 상위권이며, 모멘텀·우량성·변동성 3개 팩터 종합 평가에서 우수한 점수를 받았습니다."
+        "reasons": [
+          "Overall grade is '양호'",
+          "Good growth potential."
+        ],
+        "explanation": "이 종목은 기계 및 장비 분야에서의 경쟁력을 가지고 있으며, 긍정적인 성장세와 안정적인 재무 구조 덕분에 적극투자형 투자자에게 적합합니다."
       }
     ]
   }

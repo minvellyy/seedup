@@ -1,0 +1,22 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-20",
+        "brokerage": "SK증권",
+        "analyst_name": "조준기",
+        "report_title": "[Market Odds] 예측 불가능 상태"
+    },
+    "specific_data": {
+        "market_summary": "예측시장 전체 규모 하락 추세 이어지는 중. 거래소별로는 Opinion이 차지하고 있던 비중 크게 축소되는 가운데 Kalshi와 Polymarket 2강 체제로의 집중도 심화 확인. 지정학적 리스크 지속되며 트럼프 민심 추가 하락에 이제 11월 중간선거는 민주당 스윕이 정배로 굳어지는 상황. 트럼프의 방중 시점도 뒤로 밀리며 예측 불가능한 국면 지속. 3월 FOMC 결과 매파적으로 해석되며 시장 변동성 확대.",
+        "macro_indicators": null,
+        "fund_flows": null,
+        "key_news": [
+            "예측시장 전체 규모 하락 추세",
+            "Kalshi와 Polymarket 2강 체제로의 집중도 심화",
+            "지정학적 리스크 지속",
+            "트럼프 민심 추가 하락",
+            "11월 중간선거 민주당 스윕 가능성",
+            "3월 FOMC 결과 매파적 해석"
+        ]
+    }
+}

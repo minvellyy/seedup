@@ -496,7 +496,10 @@ function StockDetailPage() {
 
   if (loading) return (
     <div className="stock-detail-page">
-      <div className="sd-loading">주가 데이터를 불러오는 중...</div>
+      <div className="sd-loading">
+        <div className="sd-spinner" />
+        <p>주가 데이터를 불러오는 중...</p>
+      </div>
     </div>
   )
   if (error || !detail) return (
@@ -570,18 +573,6 @@ function StockDetailPage() {
       <div className="stock-detail-container">
 
         <button onClick={() => navigate(-1)} className="sd-back-btn">← 추천 목록으로</button>
-
-        {/* 디버그 버튼 (개발용 - 나중에 제거 가능) */}
-        {process.env.NODE_ENV === 'development' && (
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-            <button onClick={checkWebSocketStatus} className="sd-debug-btn">
-              🔍 WebSocket 상태 확인
-            </button>
-            <button onClick={injectTestPrices} className="sd-debug-btn">
-              🧪 테스트 가격 주입 (10초)
-            </button>
-          </div>
-        )}
 
         {/* ── 1. 헤더 ────────────────────────────────────────────── */}
         <div className="stock-detail-header">

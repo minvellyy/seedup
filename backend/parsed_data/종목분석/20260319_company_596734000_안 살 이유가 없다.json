@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-19",
+        "brokerage": "DS투자증권",
+        "analyst_name": "조대형",
+        "report_title": "안 살 이유가 없다"
+    },
+    "specific_data": {
+        "company_name": "LG이노텍",
+        "ticker": "011070",
+        "investment_rating": "매수",
+        "investment_points": [
+            "휴머노이드 로봇으로의 적용처 확대",
+            "양산 물량 증가로 인한 믹스 개선 효과",
+            "상대적으로 단가가 높은 모듈 중심의 매출 비중 확대"
+        ],
+        "risk_factors": [
+            "고객사의 연간 출하량 계획 하향 조정 가능성",
+            "단가 인하 압력"
+        ],
+        "shareholder_structure": "LG전자(외 2인) 40.8%, 국민연금공단(외 1인) 9.9%"
+    }
+}

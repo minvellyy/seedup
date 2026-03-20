@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-19",
+        "brokerage": "한화투자증권",
+        "analyst_name": "이진협",
+        "report_title": "4Q25 Review  턴어라운드 본격화 전망되나, .."
+    },
+    "specific_data": {
+        "company_name": "미스토홀딩스",
+        "ticker": "081660",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "4Q25 매출액 9,152억원(+6.3% YoY) 기록",
+            "미스토 부문 영업이익 296억원(흑전 YoY) 기록",
+            "브랜드력 회복 및 내수 매출 성장"
+        ],
+        "risk_factors": [
+            "K패션 중화권 유통 사업에 대한 기대감 저하",
+            "아쿠쉬네트의 영업적자 확대"
+        ],
+        "shareholder_structure": "피에몬테 (외 4인) 40.7%, 국민연금공단 (외 1인) 7.7%, MorganStanley&Co.Internation 5.5%"
+    }
+}

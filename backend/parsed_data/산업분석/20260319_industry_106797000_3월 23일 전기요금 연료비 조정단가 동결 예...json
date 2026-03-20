@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-19",
+        "brokerage": "하나증권",
+        "analyst_name": "유재선, 성무규",
+        "report_title": "3월 23일 전기요금 연료비 조정단가 동결 예.."
+    },
+    "specific_data": {
+        "sector_name": "유틸리티",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "한국전력(051600)"
+        ],
+        "industry_trends": [
+            "전기요금 연료비 조정단가 동결 예상",
+            "상반기 공공요금 동결 기조 확인",
+            "중동 이슈 장기화 여부가 관건"
+        ],
+        "risk_factors": [
+            "원자재 가격 상승",
+            "수요 이탈",
+            "중동 에너지 수급 불균형"
+        ]
+    }
+}

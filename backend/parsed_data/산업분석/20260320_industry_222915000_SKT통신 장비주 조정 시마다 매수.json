@@ -1,0 +1,34 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-20",
+        "brokerage": "하나증권",
+        "analyst_name": "김홍식, 이상훈",
+        "report_title": "SKT통신 장비주 조정 시마다 매수"
+    },
+    "specific_data": {
+        "sector_name": "통신",
+        "industry_rating": "긍정적",
+        "top_picks": [
+            "SKT",
+            "LGU+",
+            "KT",
+            "RFHIC",
+            "KMW",
+            "쏠리드",
+            "이노와이어리스",
+            "RF머트리얼즈",
+            "오이솔루션"
+        ],
+        "industry_trends": [
+            "AI-RAN에 대한 투자자 관심 증가",
+            "광통신 장비 수요 증가 예상",
+            "5G SA 및 6G 도입 필요성 증가"
+        ],
+        "risk_factors": [
+            "주가 급등에 따른 밸류에이션 부담",
+            "AI-RAN에 대한 통신사들의 부정적 스탠스",
+            "부품 공급 부족 문제"
+        ]
+    }
+}

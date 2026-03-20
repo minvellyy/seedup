@@ -1,0 +1,29 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-19",
+        "brokerage": "유안타증권",
+        "analyst_name": "이환욱",
+        "report_title": "K-POP 위기 속 기회가 찾아온다"
+    },
+    "specific_data": {
+        "sector_name": "미디어/엔터",
+        "industry_rating": "BUY",
+        "top_picks": [
+            "하이브",
+            "JYP Ent.",
+            "에스엠",
+            "와이지엔터테인먼트"
+        ],
+        "industry_trends": [
+            "K-POP의 글로벌 팬덤 확장",
+            "OTT 플랫폼을 통한 콘텐츠 수익화",
+            "중국 시장의 한한령 해제 기대감"
+        ],
+        "risk_factors": [
+            "전쟁 및 정치적 불안정성",
+            "소비 둔화",
+            "환율 변동"
+        ]
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-19",
+        "brokerage": "한국IR협의회",
+        "analyst_name": "김선호, 이희경",
+        "report_title": "네트워크 통합(NI)의 수익 방정식"
+    },
+    "specific_data": {
+        "company_name": "링네트",
+        "ticker": "042500",
+        "investment_rating": null,
+        "investment_points": [
+            "수익성 중심의 차별화된 포지셔닝",
+            "파트너십 재편이 만드는 구조적 우위"
+        ],
+        "risk_factors": [
+            "시스코 의존 및 인증 유지 부담",
+            "시스코의 시장 지위 약화"
+        ],
+        "shareholder_structure": "이정민 사장 14.4%, 이주석 회장 5.7%, 민병숙 5.7%, 기타 특수관계인 3.8%, 링네트우리사주 6.44%"
+    }
+}

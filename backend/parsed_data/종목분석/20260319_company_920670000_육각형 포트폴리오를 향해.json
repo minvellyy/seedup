@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-19",
+        "brokerage": "유안타증권",
+        "analyst_name": "이환욱",
+        "report_title": "육각형 포트폴리오를 향해"
+    },
+    "specific_data": {
+        "company_name": "JYP Ent.",
+        "ticker": "035900",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "2026 연간 예상 매출액 +6.2% yoy",
+            "영업이익 +15.1% yoy",
+            "주력 IP의 고른 활동에 기반한 YoY 외형 성장 예상",
+            "간접 참여형 매출 비중 확대에 따른 이익 개선세 전망"
+        ],
+        "risk_factors": [
+            "아티스트 IP 활동 전략에 따른 판매량 변동",
+            "주력 보이그룹 IP ‘스트레이키즈’의 기저 부담"
+        ],
+        "shareholder_structure": "주요주주 박진영 외 3 인"
+    }
+}

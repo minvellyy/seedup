@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-19",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "SK증권 Global Carbon Market Daily_260319"
+    },
+    "specific_data": {
+        "market_summary": "국내외 배출권 가격 추이 및 원자재 가격 동향",
+        "macro_indicators": null,
+        "fund_flows": null,
+        "key_news": [
+            "[뉴욕유가] 美, 결국 이란 에너지 생산 시설 때렸다…WTI 강보합 마감",
+            "‘산업 그린전환 촉진법’ 전면 개편 추진… 자율·인센티브 중심 탄소중립 전환",
+            "유럽연합 에너지 위기에 배출권 공급량 확대 검토, 산업계 부담 줄일 목적"
+        ]
+    }
+}

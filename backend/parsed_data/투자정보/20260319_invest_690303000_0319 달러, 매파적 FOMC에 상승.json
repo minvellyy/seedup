@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-19",
+        "brokerage": "키움증권",
+        "analyst_name": "김유미, 안예하, 심수빈",
+        "report_title": "0319 달러, 매파적 FOMC에 상승"
+    },
+    "specific_data": {
+        "strategy_theme": "달러 강세 및 국제유가 상승",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "3월 FOMC에서 기준금리 동결에도 불구하고 매파적 해석으로 달러 강세",
+            "중동 전쟁에 따른 유가 상승 가능성과 인플레이션 리스크 경계감 확대",
+            "국채금리 상승과 통화정책 불확실성 증가"
+        ],
+        "quant_factors": [
+            "NDF 달러/원 환율 상승",
+            "국제유가 상승",
+            "국고채 금리 하락"
+        ]
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2023-03-16",
+        "brokerage": "Daishin Securities",
+        "analyst_name": "최진영",
+        "report_title": "호르무즈발 에너지 대란, 원자재 2 차 상승 유발 요인"
+    },
+    "specific_data": {
+        "strategy_theme": "호르무즈 해협 에너지 대란에 따른 원자재 시장 영향",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "에너지 가격 상승이 원자재 전반에 2차 상승 유발",
+            "천연가스 가격 상승이 금속 및 농축산물 가격에 전가",
+            "지정학적 리스크 모니터링 필요"
+        ],
+        "quant_factors": [
+            "원유 수출 차질",
+            "천연가스 생산 중단",
+            "비료 가격 상승"
+        ]
+    }
+}
