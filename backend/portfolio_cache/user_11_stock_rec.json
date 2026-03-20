@@ -1,48 +1,15 @@
 {
-<<<<<<< HEAD
-  "saved_at": "2026-03-20T06:21:10.127273",
-=======
-  "saved_at": "2026-03-20T02:32:20.874122",
->>>>>>> origin/develop
+  "saved_at": "2026-03-20T07:28:04.807640",
   "data": {
     "items": [
       {
         "rank": 1,
-<<<<<<< HEAD
-        "ticker": "003570",
-        "name": "SNT다이내믹스",
-=======
         "ticker": "082920",
         "name": "비츠로셀",
->>>>>>> origin/develop
         "market": "KOSPI",
         "p_adj": null,
         "rank_overall": null,
         "ai_fin_grade": null,
-<<<<<<< HEAD
-        "total_score": 7.0858,
-        "features": {
-          "ret_3m": null,
-          "ret_6m": null,
-          "ret_1y": 0.268,
-          "vol_ann": 0.5704,
-          "beta": null,
-          "mdd": null,
-          "mc_p10": -38.96,
-          "mc_p50": 26.8,
-          "mc_p90": 163.35
-        },
-        "reasons": [
-          "탁월한 경쟁력 있는 재무 성과",
-          "성장성 지표가 우수하며 안정적입니다."
-        ],
-        "explanation": "이 종목은 우수한 성장성과 안정성 지표를 보유하여 적극투자형 투자자에게 적합합니다."
-      },
-      {
-        "rank": 2,
-        "ticker": "082920",
-        "name": "비츠로셀",
-=======
         "total_score": 7.4314,
         "features": {
           "ret_3m": null,
@@ -56,44 +23,19 @@
           "mc_p90": 120.43
         },
         "reasons": [
-          "Overall grade is '양호'",
-          "Excellent stability metrics."
+          "재무 등급 '양호'",
+          "안정적인 수익성과 차별화된 시장 점유율"
         ],
-        "explanation": "이 종목은 높은 유동성을 보이며, 안정적인 재무 구조를 가지고 있어 적극투자형 투자자에게 안전한 투자처로 적합합니다."
+        "explanation": "비츠로셀은 2차전지 분야에서 신뢰할 수 있는 수익성과 성장 가능성을 가지고 있어 적극투자형 투자자에게 매력적입니다."
       },
       {
         "rank": 2,
         "ticker": "005440",
         "name": "현대지에프홀딩스",
->>>>>>> origin/develop
         "market": "KOSPI",
         "p_adj": null,
         "rank_overall": null,
         "ai_fin_grade": null,
-<<<<<<< HEAD
-        "total_score": 7.4314,
-        "features": {
-          "ret_3m": null,
-          "ret_6m": null,
-          "ret_1y": 0.2084,
-          "vol_ann": 0.4684,
-          "beta": null,
-          "mdd": null,
-          "mc_p10": -33.65,
-          "mc_p50": 20.84,
-          "mc_p90": 120.43
-        },
-        "reasons": [
-          "양호한 수익성과 높은 안정성",
-          "재무 건전성이 우수합니다."
-        ],
-        "explanation": "이 종목은 높은 수익성과 안정성을 가지고 있어, 적극투자형 투자자의 요구를 충족할 수 있는 구조입니다."
-      },
-      {
-        "rank": 3,
-        "ticker": "005440",
-        "name": "현대지에프홀딩스",
-=======
         "total_score": 7.3767,
         "features": {
           "ret_3m": null,
@@ -107,39 +49,19 @@
           "mc_p90": 142.78
         },
         "reasons": [
-          "Overall score is '양호'",
-          "Remarkable growth in operational income."
+          "재무 등급 '양호'",
+          "높은 성장성을 갖춘 금융 서비스 업체"
         ],
-        "explanation": "이 종목은 빠른 성장성이 돋보이며, 금융 분야에서의 전략적 위치로 인해 적극투자형 투자자에게 좋은 선택이 될 수 있습니다."
+        "explanation": "현대지에프홀딩스는 빠른 성장과 안정적인 수익을 유지하고 있어 적극투자형 투자자에게 좋습니다."
       },
       {
         "rank": 3,
         "ticker": "003570",
         "name": "SNT다이내믹스",
->>>>>>> origin/develop
         "market": "KOSPI",
         "p_adj": null,
         "rank_overall": null,
         "ai_fin_grade": null,
-<<<<<<< HEAD
-        "total_score": 7.3767,
-        "features": {
-          "ret_3m": null,
-          "ret_6m": null,
-          "ret_1y": 0.3411,
-          "vol_ann": 0.4632,
-          "beta": null,
-          "mdd": null,
-          "mc_p10": -26.0,
-          "mc_p50": 34.11,
-          "mc_p90": 142.78
-        },
-        "reasons": [
-          "높은 성장성과 양호한 재무 지표",
-          "안정적인 재무 상태를 유지하고 있습니다."
-        ],
-        "explanation": "이 종목은 안정적인 재무 상태와 높은 성장성을 제공하여 적극투자형 투자자에게 적합합니다."
-=======
         "total_score": 7.0858,
         "features": {
           "ret_3m": null,
@@ -153,14 +75,39 @@
           "mc_p90": 163.35
         },
         "reasons": [
-          "Overall score is '탁월'",
-          "Strong profitability and growth metrics."
+          "재무 등급 '탁월'",
+          "성장성과 안정성을 갖춘 자동차 부품 업체"
         ],
-        "explanation": "이 종목은 높은 수익성과 성장성을 가지고 있어 적극투자형 투자자에게 적합합니다. 자동차 산업에서의 위치 또한 안정성이 높아 장기적인 성장 가능성이 큽니다."
->>>>>>> origin/develop
+        "explanation": "SNT다이내믹스는 자동차 부품 분야에서 안정적인 수익과 성장을 기록하고 있어 적극투자형 투자자에게 적합한 구조입니다."
       },
       {
         "rank": 4,
+        "ticker": "348210",
+        "name": "넥스틴",
+        "market": "KOSPI",
+        "p_adj": null,
+        "rank_overall": null,
+        "ai_fin_grade": null,
+        "total_score": 6.94,
+        "features": {
+          "ret_3m": null,
+          "ret_6m": null,
+          "ret_1y": 0.021,
+          "vol_ann": 0.4924,
+          "beta": null,
+          "mdd": null,
+          "mc_p10": -45.68,
+          "mc_p50": 2.1,
+          "mc_p90": 91.58
+        },
+        "reasons": [
+          "재무 등급 '보통'",
+          "기계/장비 분야에서 안정적인 매출 성장"
+        ],
+        "explanation": "넥스틴은 기계/장비 부문에서 탄탄한 수익 구조를 가지고 있어 적극투자형 투자자에게 적합한 선택입니다."
+      },
+      {
+        "rank": 5,
         "ticker": "058470",
         "name": "리노공업",
         "market": "KOSPI",
@@ -180,50 +127,10 @@
           "mc_p90": 130.56
         },
         "reasons": [
-<<<<<<< HEAD
-          "극대화된 수익성과 고 안정성",
-          "견고한 재무 구조를 갖추고 있습니다."
+          "재무 등급 '보통'",
+          "높은 안정성을 갖춘 전자부품 제조업체"
         ],
-        "explanation": "이 종목은 높은 수익성을 바탕으로 안정적인 투자의 기회를 제공하며, 적극투자형 투자자에게 적합한 종목입니다."
-=======
-          "Strong profitability metrics",
-          "High stability score."
-        ],
-        "explanation": "이 종목은 높은 ROA와 OPM을 기록하고 있어 투자자에게 안정적인 수익을 제공할 수 있으며 전자부품 분야의 확장성 또한 매력적입니다."
->>>>>>> origin/develop
-      },
-      {
-        "rank": 5,
-        "ticker": "140860",
-        "name": "파크시스템스",
-        "market": "KOSPI",
-        "p_adj": null,
-        "rank_overall": null,
-        "ai_fin_grade": null,
-        "total_score": 6.8486,
-        "features": {
-          "ret_3m": null,
-          "ret_6m": null,
-          "ret_1y": 0.1383,
-          "vol_ann": 0.4796,
-          "beta": null,
-          "mdd": null,
-          "mc_p10": -38.42,
-          "mc_p50": 13.83,
-          "mc_p90": 110.83
-        },
-        "reasons": [
-<<<<<<< HEAD
-          "탁월한 수익성과 성장 지표",
-          "양호한 재무 상태를 유지합니다."
-        ],
-        "explanation": "이 종목은 탁월한 성과와 안정성을 바탕으로 적극투자형 투자자에게 적합한 종목입니다."
-=======
-          "Overall grade is '양호'",
-          "Good growth potential."
-        ],
-        "explanation": "이 종목은 기계 및 장비 분야에서의 경쟁력을 가지고 있으며, 긍정적인 성장세와 안정적인 재무 구조 덕분에 적극투자형 투자자에게 적합합니다."
->>>>>>> origin/develop
+        "explanation": "리노공업은 안정적이고 지속적인 수익성을 가지고 있어 적극투자형 투자자에게 적합합니다."
       }
     ]
   }

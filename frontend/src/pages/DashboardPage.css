@@ -1,4 +1,4 @@
-﻿/* ============================================
+﻿﻿/* ============================================
    투자 대시보드 - 노란색/녹색 브랜드 테마
    ============================================ */
 
@@ -640,11 +640,7 @@
 }
 
 .recommendation-reason {
-<<<<<<< HEAD
   font-size: 0.9rem;
-=======
-  font-size: 0.875rem;
->>>>>>> origin/develop
   color: #6B7280;
   line-height: 1.5;
   font-weight: 400;
@@ -849,11 +845,7 @@
 
 .chat-message.user {
   align-self: flex-end;
-<<<<<<< HEAD
   background: linear-gradient(135deg, #8FD9A8 0%, #6FBF8F 100%);
-=======
-  background: linear-gradient(135deg, #6FBF8F 0%, #4F8F6F 100%);
->>>>>>> origin/develop
   color: white;
   border-bottom-right-radius: 4px;
 }
