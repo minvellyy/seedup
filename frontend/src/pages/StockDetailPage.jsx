@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import './StockDetailPage.css'
+import { TermText, DynamicTermProvider } from '../components/TermTooltip'
 
 // ── 포매터 ──────────────────────────────────────────────────────────────────
 const fmtPrice = (v) => v == null ? '-' : Number(v).toLocaleString('ko-KR') + '원'
@@ -266,16 +267,16 @@ function MetricCard({ label, value, type, tip }) {
   )
 }
 
-// ── AI 분석 로딩 스피너 ────────────────────────────────────────────────────
-function AnalysisSpinner() {
+// ── 스켈레톤 로딩 ──────────────────────────────────────────────────────────
+function Skeleton({ rows = 3 }) {
   return (
-    <div className="sd-spinner-wrap">
-      <div className="sd-spinner" />
-      <p className="sd-spinner-text">분석 데이터를 준비중입니다. 잠시 기다려 주세요.</p>
+    <div className="sd-skeleton">
+      {Array.from({ length: rows }).map((_, i) => (
+        <div key={i} className="sd-skeleton-row" style={{ width: `${85 - i * 10}%` }} />
+      ))}
     </div>
   )
 }
-
 
 // ── 메인 컴포넌트 ──────────────────────────────────────────────────────────
 function StockDetailPage() {
@@ -291,13 +292,11 @@ function StockDetailPage() {
   const [error,            setError]            = useState(null)
   const [scores,           setScores]           = useState(null)
   const [analysis,         setAnalysis]         = useState(null)
-  const [analysisLoading,  setAnalysisLoading]  = useState(true)
-  const [analysisError,    setAnalysisError]    = useState(false)
-  const [analysisErrorMsg, setAnalysisErrorMsg] = useState(null)  // 디버그용 오류 상세
-  const [analysisRetry,    setAnalysisRetry]    = useState(0)
+  const [analysisLoading,  setAnalysisLoading]  = useState(false)
   const [realtimePrice,    setRealtimePrice]    = useState(null) // 실시간 가격 데이터
   const [intradayData,     setIntradayData]     = useState(null) // 일중 차트 데이터
   const [wsStatus,         setWsStatus]         = useState(null) // WebSocket 상태 (디버그용)
+  const [dynamicTerms,     setDynamicTerms]     = useState({})   // LLM이 추출한 동적 용어 사전
 
   // ── WebSocket 상태 확인 (디버그용) ──────────────────────────────────────
   const checkWebSocketStatus = async () => {
@@ -306,12 +305,7 @@ function StockDetailPage() {
       const data = await res.json()
       setWsStatus(data)
       console.log('[WebSocket 상태]', data)
-      // 백엔드 응답: single → subscribed_count / subscribed_sample, pool → total_subscribed / workers
-      const subscribedCount = data.subscribed_count ?? data.total_subscribed ?? 0
-      const subscribedSample = data.subscribed_sample ?? []
-      const isInSample = subscribedSample.includes(stockCode)
-      const sampleNote = subscribedCount > subscribedSample.length ? ` (상위 ${subscribedSample.length}개만 표시)` : ''
-      alert(`WebSocket 초기화: ${data.initialized ? '성공' : '실패'}\n유형: ${data.type ?? '-'}\n구독 종목: ${subscribedCount}개\n현재 종목(${stockCode}): ${isInSample ? '구독됨' : subscribedCount > 0 ? `샘플 미포함${sampleNote}` : '미구독'}`)
+      alert(`WebSocket 초기화: ${data.initialized ? '성공' : '실패'}\n구독 종목: ${data.subscribed?.length || 0}개\n현재 종목(${stockCode}): ${data.subscribed?.includes(stockCode) ? '구독됨' : '미구독'}`)
     } catch (err) {
       console.error('WebSocket 상태 확인 실패:', err)
       alert('WebSocket 상태 확인 실패')
@@ -435,22 +429,17 @@ function StockDetailPage() {
     fetchIntradayData()
   }, [stockCode])
 
-
   // ── AI 분석 로드 (sessionStorage 캐시, 비동기) ─────────────────────────
   useEffect(() => {
     if (!stockCode) return
     const cacheKey = `stock_analysis_${stockCode}`
-
-    // 재시도가 아닐 때만 캐시 사용
-    if (analysisRetry === 0) {
-      try {
-        const raw = sessionStorage.getItem(cacheKey)
-        if (raw) {
-          const { data, ts } = JSON.parse(raw)
-          if (Date.now() - ts < 3_600_000) { setAnalysis(data); setAnalysisLoading(false); return }
-        }
-      } catch {}
-    }
+    try {
+      const raw = sessionStorage.getItem(cacheKey)
+      if (raw) {
+        const { data, ts } = JSON.parse(raw)
+        if (Date.now() - ts < 3_600_000) { setAnalysis(data); return }
+      }
+    } catch {}
 
     const investmentType = localStorage.getItem('investment_type') || '위험중립형'
     const userProfile = JSON.stringify({
@@ -461,75 +450,49 @@ function StockDetailPage() {
     })
 
     setAnalysisLoading(true)
-    setAnalysisError(false)
-    setAnalysisErrorMsg(null)
-    setAnalysis(null)
-
-    const controller = new AbortController()
-    // cleanup에 의한 abort와 timeout에 의한 abort를 구분하는 flag
-    let cleanedUp = false
-    // 서버 타임아웃(420s)보다 30초 여유를 두고 클라이언트에서도 abort
-    const timerId = setTimeout(() => controller.abort(), 450_000)
-
     fetch('/api/v1/analysis/report', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      signal: controller.signal,
       body: JSON.stringify({
         ticker: stockCode, mode: 'stock_detail',
         user_profile_json: userProfile,
         stock_item_json: stockItem ? JSON.stringify(stockItem) : '{}',
       }),
     })
-      .then(async r => {
-        if (cleanedUp) return   // cleanup 이후 응답은 무시
-        if (!r.ok) {
-          let detail = `HTTP ${r.status}`
-          try { const body = await r.json(); detail = body.detail || detail } catch {}
-          console.error('[AI 분석] 오류 응답:', r.status, detail)
-          throw new Error(detail)
-        }
-        return r.json()
-      })
+      .then(r => r.json())
       .then(data => {
-        if (cleanedUp || !data) return   // cleanup 이후 응답은 무시
         let parsed = null
-        try { parsed = JSON.parse(data.report) } catch { /* parsed stays null */ }
-        // JSON 파싱 실패 또는 필수 섹션 없으면 에러로 처리
-        const hasContent = parsed &&
-          (parsed.investment_fit || parsed.company_analysis || parsed.industry_analysis)
-        if (!hasContent) {
-          console.error('[AI 분석] 응답 파싱 실패 또는 필수 섹션 없음:', data.report?.slice(0, 200))
-          setAnalysisLoading(false)
-          setAnalysisError(true)
-          setAnalysisErrorMsg('분석 결과 형식 오류')
-          return
-        }
+        try { parsed = JSON.parse(data.report) } catch { parsed = { raw: data.report } }
         setAnalysis(parsed)
         setAnalysisLoading(false)
         try { sessionStorage.setItem(cacheKey, JSON.stringify({ data: parsed, ts: Date.now() })) } catch {}
-      })
-      .catch(err => {
-        if (cleanedUp) return   // cleanup abort는 에러로 처리하지 않음
-        if (err.name === 'AbortError') {
-          console.error('[AI 분석] 타임아웃 (450s 초과)')
-          setAnalysisLoading(false)
-          setAnalysisError(true)
-          setAnalysisErrorMsg('분석 시간 초과')
-          return
-        }
-        console.error('[AI 분석] fetch 오류:', err.message)
-        setAnalysisLoading(false)
-        setAnalysisError(true)
-        setAnalysisErrorMsg(err.message)
-      })
 
-    return () => {
-      cleanedUp = true   // cleanup 플래그 설정 → catch/then 핸들러가 상태 업데이트 안 함
-      clearTimeout(timerId)
-      controller.abort()
-    }
-  }, [stockCode, analysisRetry])
+        // ── LLM 동적 용어 추출 ──────────────────────────────────────────
+        const texts = [
+          ...(parsed?.industry_analysis?.current_trends ?? []),
+          ...(parsed?.company_analysis?.strengths ?? []),
+          parsed?.page_summary,
+          parsed?.company_analysis?.overall_company_view,
+          parsed?.investment_fit?.fit_summary,
+          ...(parsed?.investment_fit?.reason_explanations ?? []),
+          parsed?.investment_fit?.caution,
+          parsed?.industry_analysis?.industry,
+          parsed?.company_analysis?.sector,
+        ].filter(Boolean)
+        const combinedText = texts.join('\n')
+        if (combinedText.length > 30) {
+          fetch('/api/v1/terms/extract', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: combinedText }),
+          })
+            .then(r => r.json())
+            .then(d => setDynamicTerms(d.terms || {}))
+            .catch(() => {})
+        }
+      })
+      .catch(() => setAnalysisLoading(false))
+  }, [stockCode])
 
   if (loading) return (
     <div className="stock-detail-page">
@@ -565,24 +528,24 @@ function StockDetailPage() {
 
   // ── 기업/산업 분석 불릿 ──────────────────────────────────────────────────
   const industryBullets = [
-    ...(analysis?.industry_analysis?.current_trends ?? 
-      []),
+    ...(analysis?.industry_analysis?.current_trends ?? []),
     ...(analysis?.company_analysis?.strengths ?? []).slice(0, 2),
   ]
 
   // ── 기업 요약 그리드 ─────────────────────────────────────────────────────
   const mcap = scores?.market_cap ? fmtMcap(scores.market_cap) : '-'
-  // 산업분류: DB 섹터(확정값) 우선 → AI 분석 폴백
+  // 산업분류: AI 분석의 섹터 → DB 섹터(비의미 값 제외) 순으로 폴백
   const sectorLabel =
-    (detail.sector && detail.sector !== '시장' ? detail.sector : null) ||
     analysis?.company_analysis?.sector ||
     analysis?.industry_analysis?.sector ||
+    (detail.sector && detail.sector !== '시장' ? detail.sector : null) ||
     '-'
-  // 사업영역: AI 분석의 세부 업종(industry) 우선 → DB 섹터 순으로 폴백
+  // 사업영역: AI 분석의 세부 업종 → 섹터 순으로 폴백 (줄글 제외)
   const industryLabel =
     analysis?.industry_analysis?.industry ||
-    (detail.sector && detail.sector !== '시장' ? detail.sector : null) ||
     analysis?.company_analysis?.sector ||
+    analysis?.industry_analysis?.sector ||
+    (detail.sector && detail.sector !== '시장' ? detail.sector : null) ||
     '-'
   const companyFields = [
     { label: '기업명',   value: detail.name },
@@ -594,35 +557,15 @@ function StockDetailPage() {
   ]
 
   // ── 레이더 점수 ───────────────────────────────────────────────────────────
-  const fallbackRadarPoints = fitScore != null
-    ? [
-      { key: 'profitability', label: '수익성', score: fitScore },
-      { key: 'growth', label: '성장성', score: fitScore },
-      { key: 'stability', label: '안정성', score: fitScore },
-      { key: 'cashflow', label: '현금흐름', score: fitScore },
-      { key: 'valuation', label: '밸류에이션', score: fitScore },
-    ]
-    : null
-
-  const radarPoints =
-    scores?.available && Array.isArray(scores?.radar) && scores.radar.length >= 3
-      ? scores.radar
-      : fallbackRadarPoints
+  const radarPoints = scores?.available ? scores.radar : null
 
   // ── 추천 이유 (분석 API 또는 stockItem) ─────────────────────────────────
   const recText = analysis?.page_summary
     ?? analysis?.company_analysis?.overall_company_view
     ?? (fitReasons.length > 0 ? fitReasons.join(' ') : null)
 
-  // ── 비정형 분석 (ESG · 뉴스 · 증권사 리포트) ─────────────────────────────
-  const ua = analysis?.unstructured_analysis
-  const esgRisks        = ua?.esg_risks ?? null
-  const esgOpportunities = ua?.esg_opportunities ?? null
-  const newsSummary     = ua?.news_summary ?? null
-  const reportsInsight  = ua?.reports_insight ?? null
-  const hasUnstructured = esgRisks || esgOpportunities || newsSummary || reportsInsight
-
   return (
+    <DynamicTermProvider extraDict={dynamicTerms}>
     <div className="stock-detail-page">
       <div className="stock-detail-container">
 
@@ -687,7 +630,6 @@ function StockDetailPage() {
           </section>
         )}
 
-
         {/* ── 3. 내 투자 원칙 적합도 분석 ───────────────────────── */}
         {(fitScore != null || fitSummary) && (
           <section className="investment-fit-section">
@@ -700,13 +642,13 @@ function StockDetailPage() {
                 </div>
               )}
               <div className="fit-details">
-                {fitSummary && <p className="fit-summary">{fitSummary}</p>}
-                {fitReasons.length > 0 && (
+                {fitSummary && <p className="fit-summary"><TermText text={fitSummary} /></p>}
+                {(fitReasons.length > 0 || fitCaution) && (
                   <ul className="fit-list">
                     {fitReasons.slice(0, 3).map((r, i) => (
-                      <li key={i}>✓ {r}</li>
+                      <li key={i}>✓ <TermText text={r} /></li>
                     ))}
-                    {fitCaution && <li>△ {fitCaution}</li>}
+                    {fitCaution && <li>△ <TermText text={fitCaution} /></li>}
                   </ul>
                 )}
               </div>
@@ -721,7 +663,7 @@ function StockDetailPage() {
             {companyFields.map(({ label, value }) => (
               <div key={label} className="info-item">
                 <span className="info-label">{label}</span>
-                <span className="info-value">{value}</span>
+                <span className="info-value"><TermText text={String(value)} /></span>
               </div>
             ))}
           </div>
@@ -731,65 +673,20 @@ function StockDetailPage() {
         <section className="industry-analysis-section">
           <h2 className="section-heading">기업/산업 분석</h2>
           {analysisLoading && industryBullets.length === 0
-            ? <AnalysisSpinner />
+            ? <Skeleton rows={4} />
             : industryBullets.length > 0
               ? (
                 <ul className="analysis-list">
-                  {industryBullets.map((b, i) => <li key={i}>{b}</li>)}
+                  {industryBullets.map((b, i) => (
+                    <li key={i}><TermText text={b} /></li>
+                  ))}
                 </ul>
               )
-              : analysisError
-                ? (
-                  <p className="sd-analysis-pending">
-                    AI 분석을 불러오지 못했습니다.{analysisErrorMsg && <span style={{fontSize:'0.8em',color:'#999',marginLeft:6}}>[{analysisErrorMsg}]</span>}
-                    <button className="sd-retry-btn" onClick={() => {
-                      setAnalysisError(false)
-                      setAnalysisLoading(true)
-                      setAnalysisRetry(r => r + 1)
-                    }}>🔄 다시 시도</button>
-                  </p>
-                )
-                : null
+              : !analysisLoading && (
+                <p className="sd-analysis-pending">AI 분석 데이터를 불러오는 중입니다. 잠시 후 페이지를 새로고침해 주세요.</p>
+              )
           }
         </section>
-
-        {/* ── 5.5. ESG · 뉴스 · 증권사 리포트 인사이트 ─────────── */}
-        {!analysisLoading && hasUnstructured && (
-          <section className="sd-section">
-            <h2 className="sd-section-heading">ESG · 뉴스 · 리포트 인사이트</h2>
-            <div className="unstructured-grid">
-              {(esgRisks || esgOpportunities) && (
-                <div className="unstructured-card">
-                  <h3 className="unstructured-card-title">🌱 ESG 분석</h3>
-                  {esgRisks && (
-                    <div className="unstructured-item">
-                      <span className="unstr-label unstr-risk">리스크</span>
-                      <p>{esgRisks}</p>
-                    </div>
-                  )}
-                  {esgOpportunities && (
-                    <div className="unstructured-item">
-                      <span className="unstr-label unstr-opp">기대요인</span>
-                      <p>{esgOpportunities}</p>
-                    </div>
-                  )}
-                </div>
-              )}
-              {newsSummary && (
-                <div className="unstructured-card">
-                  <h3 className="unstructured-card-title">📰 최신 뉴스</h3>
-                  <p>{newsSummary}</p>
-                </div>
-              )}
-              {reportsInsight && (
-                <div className="unstructured-card">
-                  <h3 className="unstructured-card-title">📑 증권사 리포트</h3>
-                  <p>{reportsInsight}</p>
-                </div>
-              )}
-            </div>
-          </section>
-        )}
 
         {/* ── 6. 종합 분석 (레이더 차트) ────────────────────────── */}
         <section className="comprehensive-analysis-section">
@@ -800,31 +697,20 @@ function StockDetailPage() {
           }
         </section>
 
-        {/* ── 7. 추천 이유 / AI 분석 요약 ─────────────────────── */}
-        <section className="recommendation-section">
-          <h2 className="section-heading">{stockItem ? '추천 이유' : 'AI 분석 요약'}</h2>
-          {analysisLoading && !recText
-            ? <AnalysisSpinner />
-            : recText
-              ? (
+        {/* ── 7. 추천 이유 ──────────────────────────────────────── */}
+        {(recText || analysisLoading) && (
+          <section className="recommendation-section">
+            <h2 className="section-heading">추천 이유</h2>
+            {analysisLoading && !recText
+              ? <Skeleton rows={2} />
+              : recText && (
                 <div className="recommendation-box">
-                  <p className="recommendation-detail">{recText}</p>
+                  <p className="recommendation-detail"><TermText text={recText} /></p>
                 </div>
               )
-              : analysisError
-                ? (
-                  <p className="sd-analysis-pending">
-                    AI 분석을 불러오지 못했습니다.{analysisErrorMsg && <span style={{fontSize:'0.8em',color:'#999',marginLeft:6}}>[{analysisErrorMsg}]</span>}
-                    <button className="sd-retry-btn" onClick={() => {
-                      setAnalysisError(false)
-                      setAnalysisLoading(true)
-                      setAnalysisRetry(r => r + 1)
-                    }}>🔄 다시 시도</button>
-                  </p>
-                )
-                : null
-          }
-        </section>
+            }
+          </section>
+        )}
 
         {/* ── 주요 지표 ──────────────────────────────────────────── */}
         <section className="sd-section">
@@ -847,6 +733,7 @@ function StockDetailPage() {
 
       </div>
     </div>
+    </DynamicTermProvider>
   )
 }
 
