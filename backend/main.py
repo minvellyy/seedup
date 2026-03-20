@@ -455,12 +455,12 @@ async def startup_event():
                     )
                     print("✅ 뉴스 스케줄러 등록 (매일 08:00)")
 
-                    # 서버가 08:00 이후에 켜진 경우 당일치 즉시 실행
-                    from datetime import datetime as _dt
-                    _now = _dt.now()
-                    if _now.hour >= 8:
-                        print(f"⚡ 서버 시작 시각 {_now:%H:%M} — 당일 뉴스 배치 즉시 실행")
-                        threading.Thread(target=run_news_daily_batch, daemon=True).start()
+                    # 서버가 08:00 이후에 켜진 경우 당일치 즉시 실행 (임시 비활성화)
+                    # from datetime import datetime as _dt
+                    # _now = _dt.now()
+                    # if _now.hour >= 8:
+                    #     print(f"⚡ 서버 시작 시각 {_now:%H:%M} — 당일 뉴스 배치 즉시 실행")
+                    #     threading.Thread(target=run_news_daily_batch, daemon=True).start()
 
                 # 리포트 ETL — 매일 08:05
                 if _REPORTS_ROUTER_AVAILABLE:
@@ -473,12 +473,12 @@ async def startup_event():
                     )
                     print("✅ 리포트 ETL 스케줄러 등록 (매일 08:05)")
 
-                    # 서버가 08:05 이후에 켜진 경우 당일치 즉시 실행
-                    from datetime import datetime as _dt
-                    _now = _dt.now()
-                    if _now.hour > 8 or (_now.hour == 8 and _now.minute >= 5):
-                        print(f"⚡ 서버 시작 시각 {_now:%H:%M} — 당일 리포트 ETL 즉시 실행")
-                        threading.Thread(target=run_reports_etl, daemon=True).start()
+                    # 서버가 08:05 이후에 켜진 경우 당일치 즉시 실행 (임시 비활성화)
+                    # from datetime import datetime as _dt
+                    # _now = _dt.now()
+                    # if _now.hour > 8 or (_now.hour == 8 and _now.minute >= 5):
+                    #     print(f"⚡ 서버 시작 시각 {_now:%H:%M} — 당일 리포트 ETL 즉시 실행")
+                    #     threading.Thread(target=run_reports_etl, daemon=True).start()
 
                 _rag_scheduler.start()
                 app.state.rag_scheduler = _rag_scheduler

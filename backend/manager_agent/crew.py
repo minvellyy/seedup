@@ -1112,3 +1112,100 @@ def run_mc_final_selection_agent(
 
     result = crew.kickoff()
     return str(result)
+
+
+# ─────────────────────────────────────────────────────────────────────────────
+# 비동기 래퍼 / DB 기반 진입점
+# ─────────────────────────────────────────────────────────────────────────────
+
+import asyncio as _asyncio
+import functools as _functools
+import os as _os
+
+
+def _get_user_risk_tier(user_id: int) -> str:
+    """DB에서 user_id의 investment_type을 조회해 risk_tier 문자열을 반환합니다."""
+    import pymysql
+    _RISK_MAP = {
+        "공격투자형": "공격투자형",
+        "적극투자형": "적극투자형",
+        "위험중립형": "위험중립형",
+        "안전추구형": "안전추구형",
+        "안정추구형": "안전추구형",
+        "안정형":     "안정형",
+    }
+    conn = pymysql.connect(
+        host=_os.getenv("DB_HOST", "localhost"),
+        port=int(_os.getenv("DB_PORT", 3306)),
+        user=_os.getenv("DB_USER"),
+        password=_os.getenv("DB_PASSWORD"),
+        db=_os.getenv("DB_NAME"),
+        charset="utf8mb4",
+        cursorclass=pymysql.cursors.DictCursor,
+        autocommit=True,
+    )
+    try:
+        with conn.cursor() as cur:
+            cur.execute("SELECT investment_type FROM users WHERE id = %s", (user_id,))
+            row = cur.fetchone()
+        if not row:
+            return "위험중립형"
+        return _RISK_MAP.get(row["investment_type"], "위험중립형")
+    finally:
+        conn.close()
+
+
+async def run_manager_analysis_async(
+    llm: Any,
+    ticker: str,
+    as_of: str | None = None,
+    explain_lang: str = "ko",
+    explain_style: str = "formal",
+    mode: AnalysisMode = "full",
+    summary_input: str | None = None,
+    context_description: str | None = None,
+    user_profile_json: str | None = None,
+    stock_item_json: str | None = None,
+) -> str:
+    """run_manager_analysis의 비동기 래퍼 (ThreadPoolExecutor 실행)."""
+    loop = _asyncio.get_event_loop()
+    fn = _functools.partial(
+        run_manager_analysis,
+        llm=llm,
+        ticker=ticker,
+        as_of=as_of,
+        explain_lang=explain_lang,
+        explain_style=explain_style,
+        mode=mode,
+        summary_input=summary_input,
+        context_description=context_description,
+        user_profile_json=user_profile_json,
+        stock_item_json=stock_item_json,
+    )
+    return await loop.run_in_executor(None, fn)
+
+
+def run_db_stock_recommendation(llm: Any, user_id: int) -> str:
+    """DB에서 user_id의 투자성향을 조회한 뒤 run_stock_recommendation을 호출합니다."""
+    risk_tier = _get_user_risk_tier(user_id)
+    return run_stock_recommendation(llm=llm, user_risk_tier=risk_tier)
+
+
+async def run_db_stock_recommendation_async(llm: Any, user_id: int) -> str:
+    """run_db_stock_recommendation의 비동기 래퍼."""
+    loop = _asyncio.get_event_loop()
+    fn = _functools.partial(run_db_stock_recommendation, llm=llm, user_id=user_id)
+    return await loop.run_in_executor(None, fn)
+
+
+def run_db_portfolio_recommendation(llm: Any, user_id: int, mode: str = "multi") -> str:
+    """DB에서 user_id의 투자성향을 조회한 뒤 run_portfolio_recommendation을 호출합니다."""
+    risk_tier = _get_user_risk_tier(user_id)
+    return run_portfolio_recommendation(llm=llm, user_risk_tier=risk_tier)
+
+
+async def run_db_portfolio_recommendation_async(llm: Any, user_id: int, mode: str = "multi") -> str:
+    """run_db_portfolio_recommendation의 비동기 래퍼."""
+    loop = _asyncio.get_event_loop()
+    fn = _functools.partial(run_db_portfolio_recommendation, llm=llm, user_id=user_id, mode=mode)
+    return await loop.run_in_executor(None, fn)
