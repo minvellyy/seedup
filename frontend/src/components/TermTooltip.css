@@ -1,0 +1,97 @@
+/* ── 용어 하이라이트 ─────────────────────────────────────────────────────── */
+.term-tooltip-wrap {
+  position: relative;
+  display: inline;
+}
+
+.term-highlight {
+  color: #EA580C;
+  font-weight: 600;
+  border-bottom: 1.5px dashed #F97316;
+  cursor: help;
+  transition: color 0.15s ease;
+}
+
+.term-highlight:hover {
+  color: #C2410C;
+}
+
+/* ── 말풍선 공통 ─────────────────────────────────────────────────────────── */
+.term-bubble {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+
+  min-width: 220px;
+  max-width: 300px;
+  padding: 10px 14px;
+  border-radius: 12px;
+
+  background: #1e1e2e;
+  color: #f0f0f5;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.22);
+
+  font-size: 0.78rem;
+  line-height: 1.5;
+  pointer-events: none;
+  white-space: normal;
+  word-break: keep-all;
+}
+
+/* ── 말풍선 꼬리 — 위 표시 (기본) ──────────────────────────────────────── */
+.bubble-top {
+  bottom: calc(100% + 10px);
+}
+
+.bubble-top::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 7px solid transparent;
+  border-top-color: #1e1e2e;
+}
+
+/* ── 말풍선 꼬리 — 아래 표시 ────────────────────────────────────────────── */
+.bubble-bottom {
+  top: calc(100% + 10px);
+}
+
+.bubble-bottom::after {
+  content: '';
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  transform: translateX(-50%);
+  border: 7px solid transparent;
+  border-bottom-color: #1e1e2e;
+}
+
+/* ── 말풍선 내부 ─────────────────────────────────────────────────────────── */
+.term-bubble-term {
+  font-size: 0.82rem;
+  font-weight: 700;
+  color: #F97316;
+  letter-spacing: 0.02em;
+}
+
+.term-bubble-def {
+  color: #d1d5db;
+  font-size: 0.76rem;
+  line-height: 1.55;
+}
+
+/* ── 모바일: 말풍선 너비 제한 완화 ─────────────────────────────────────── */
+@media (max-width: 480px) {
+  .term-bubble {
+    min-width: 180px;
+    max-width: 240px;
+    font-size: 0.73rem;
+  }
+}

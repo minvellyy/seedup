@@ -1,11 +1,4 @@
 import os
-import sys
-
-# Windows cp949 인코딩 → UTF-8 강제 (CrewAI 이모지 출력 시 UnicodeEncodeError 방지)
-if sys.stdout.encoding and sys.stdout.encoding.lower() not in ("utf-8", "utf_8"):
-    import io
-    sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding="utf-8", errors="replace")
-    sys.stderr = io.TextIOWrapper(sys.stderr.buffer, encoding="utf-8", errors="replace")
 
 from fastapi import FastAPI, HTTPException, Query, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -21,6 +14,20 @@ import logging
 import sys
 import uvicorn
 from datetime import datetime
+
+# ── Windows ProactorEventLoop ConnectionResetError 노이즈 억제 ────────────────
+if sys.platform == "win32":
+    import asyncio
+    _orig_call_exception_handler = asyncio.BaseEventLoop.call_exception_handler
+
+    def _silent_exception_handler(self, context):
+        exc = context.get("exception")
+        if isinstance(exc, ConnectionResetError):
+            return  # WinError 10054 노이즈 무시
+        _orig_call_exception_handler(self, context)
+
+    asyncio.BaseEventLoop.call_exception_handler = _silent_exception_handler
+# ─────────────────────────────────────────────────────────────────────────────
 
 logger = logging.getLogger("main")
 from routers import survey, dashboard, recommendations
@@ -45,15 +52,17 @@ except Exception as _e:
     print(f"[WARNING] 분석 라우터 로드 실패: {_e}")
     _ANALYSIS_ROUTER_AVAILABLE = False
 
-# 챗봇 라우터 (openai 패키지가 있어야 함)
+# 뉴스 RAG 라우터 (chromadb / news_model 패키지 없이도 서버 기동 가능)
 try:
-    from routers.chatbot import router as chatbot_router
-    _CHATBOT_ROUTER_AVAILABLE = True
+    from routers.news import router as news_router
+    from apscheduler.schedulers.background import BackgroundScheduler
+    from apscheduler.triggers.cron import CronTrigger
+    _NEWS_ROUTER_AVAILABLE = True
 except Exception as _e:
-    print(f"[WARNING] 챗봇 라우터 로드 실패: {_e}")
-    _CHATBOT_ROUTER_AVAILABLE = False
+    print(f"[WARNING] 뉴스 라우터 로드 실패: {_e}")
+    _NEWS_ROUTER_AVAILABLE = False
 
-# ESG 분석 라우터
+# ESG 분석 라우터 (esg_model / rag_worker 없이도 서버 기동 가능)
 try:
     from routers.esg import router as esg_router
     _ESG_ROUTER_AVAILABLE = True
@@ -61,7 +70,7 @@ except Exception as _e:
     print(f"[WARNING] ESG 라우터 로드 실패: {_e}")
     _ESG_ROUTER_AVAILABLE = False
 
-# 리포트 라우터
+# 증권사 리포트 RAG 라우터 (reports_model / rag_worker 없이도 서버 기동 가능)
 try:
     from routers.reports import router as reports_router
     _REPORTS_ROUTER_AVAILABLE = True
@@ -69,13 +78,8 @@ except Exception as _e:
     print(f"[WARNING] 리포트 라우터 로드 실패: {_e}")
     _REPORTS_ROUTER_AVAILABLE = False
 
-# 뉴스 라우터
-try:
-    from routers.news import router as news_router
-    _NEWS_ROUTER_AVAILABLE = True
-except Exception as _e:
-    print(f"[WARNING] 뉴스 라우터 로드 실패: {_e}")
-    _NEWS_ROUTER_AVAILABLE = False
+from routers.chatbot import router as chatbot_router
+from routers.terms import router as terms_router
 
 # Pydantic 모델 정의
 class SignupRequest(BaseModel):
@@ -158,19 +162,11 @@ app = FastAPI(title="SeedUp API Server")
 _DB_SYNC_INTERVAL = int(os.getenv("DB_PRICE_SYNC_INTERVAL", "60"))
 # REST API 전체 종목 갱신 간격 (초, 기본 3시간)
 _DB_FULL_SYNC_INTERVAL = int(os.getenv("DB_FULL_PRICE_SYNC_INTERVAL", str(3 * 3600)))
-# WS 동기화 INFO 로그 주기 (기본 10회마다 1회)
-_DB_SYNC_LOG_EVERY = int(os.getenv("DB_PRICE_SYNC_LOG_EVERY", "10"))
-# WS 동기화 INFO 로그 출력 여부 (기본 비활성)
-_DB_SYNC_INFO_LOG = os.getenv("DB_PRICE_SYNC_INFO_LOG", "false").lower() == "true"
-
-_last_ws_sync_count: int | None = None
-_ws_sync_cycle_count = 0
 
 
 async def _db_price_sync_loop() -> None:
     """WebSocket _price_store → instruments.last_price 주기적 벌크 업데이트 (60초 주기)."""
     from kis_ws_client import get_price_store
-    global _last_ws_sync_count, _ws_sync_cycle_count
 
     while True:
         await asyncio.sleep(_DB_SYNC_INTERVAL)
@@ -201,16 +197,7 @@ async def _db_price_sync_loop() -> None:
                     )
                     updated += 1
                 db.commit()
-                _ws_sync_cycle_count += 1
-                should_log_info = (
-                    updated != _last_ws_sync_count
-                    or _ws_sync_cycle_count % max(_DB_SYNC_LOG_EVERY, 1) == 0
-                )
-                if _DB_SYNC_INFO_LOG and should_log_info:
-                    logger.info("DB 가격 동기화 완료 (WS): %d개 종목", updated)
-                    _last_ws_sync_count = updated
-                else:
-                    logger.debug("DB 가격 동기화 완료 (WS): %d개 종목", updated)
+                logger.info("DB 가격 동기화 완료 (WS): %d개 종목", updated)
             except Exception as e:
                 db.rollback()
                 logger.error("DB 가격 동기화 오류: %s", e)
@@ -226,7 +213,7 @@ async def _db_full_price_sync(skip_ws_codes: set = None) -> int:
     skip_ws_codes: WebSocket으로 이미 수신 중인 종목코드 집합 (선택)
     Returns: 업데이트된 종목 수
     """
-    from concurrent.futures import ThreadPoolExecutor
+    from concurrent.futures import ThreadPoolExecutor, as_completed
     from kis_client import get_current_price
 
     db = SessionLocal()
@@ -250,21 +237,29 @@ async def _db_full_price_sync(skip_ws_codes: set = None) -> int:
     today = datetime.now().strftime("%Y-%m-%d")
     results: dict = {}
 
-    # KIS REST API rate limit 대응: 순차 요청 (동시 요청 시 EGW00201 집중 발생)
-    # 1113종목 × 0.12s ≈ 2.2분 소요 (백그라운드 작업이므로 허용)
-    _BATCH_PAUSE = float(os.getenv("KIS_REST_BATCH_PAUSE", "0.12"))  # 요청 간 대기(초)
+    # KIS REST API rate limit 대응: 초당 최대 ~10건 (100ms 간격)
+    # 1423종목 기준 약 2~3분 소요 (백그라운드 작업이므로 허용)
+    _RATE_LIMIT_DELAY = float(os.getenv("KIS_REST_RATE_DELAY", "0.1"))  # 초
+    _BATCH_SIZE = int(os.getenv("KIS_REST_BATCH_SIZE", "3"))            # 동시 요청 수
+    _BATCH_PAUSE = float(os.getenv("KIS_REST_BATCH_PAUSE", "0.35"))     # 배치 간 대기(초)
 
-    logger.info("DB 전체 가격 갱신 시작: %d개 종목 (간격=%.2fs)", len(target_codes), _BATCH_PAUSE)
+    logger.info("DB 전체 가격 갱신 시작: %d개 종목 (배치=%d, 간격=%.2fs)", len(target_codes), _BATCH_SIZE, _BATCH_PAUSE)
 
-    with ThreadPoolExecutor(max_workers=1) as pool:
-        for code in target_codes:
-            fut = pool.submit(get_current_price, code)
-            try:
-                data = fut.result()
-                results[code] = data["current_price"]
-            except Exception as e:
-                logger.debug("REST 가격 조회 실패 [%s]: %s", code, e)
-            # 요청 간 대기: KIS 초당 요청 제한(EGW00201) 방지
+    loop = asyncio.get_event_loop()
+    with ThreadPoolExecutor(max_workers=_BATCH_SIZE) as pool:
+        for batch_start in range(0, len(target_codes), _BATCH_SIZE):
+            if not target_codes:
+                break
+            batch = target_codes[batch_start: batch_start + _BATCH_SIZE]
+            future_map = {pool.submit(get_current_price, code): code for code in batch}
+            for fut in as_completed(future_map):
+                code = future_map[fut]
+                try:
+                    data = fut.result()
+                    results[code] = data["current_price"]
+                except Exception as e:
+                    logger.debug("REST 가격 조회 실패 [%s]: %s", code, e)
+            # 배치 간 대기: KIS 초당 요청 제한(EGW00201) 방지
             await asyncio.sleep(_BATCH_PAUSE)
 
     if not results:
@@ -409,15 +404,37 @@ async def startup_event():
             from kis_ws_client import init_manager
             import os
 
+            # DB instruments 테이블에서 ACTIVE 종목코드 전체 로드
+            initial_codes: list = []
+            try:
+                db_session = SessionLocal()
+                rows = db_session.execute(
+                    text("""
+                        SELECT i.stock_code
+                        FROM instruments i
+                        LEFT JOIN (
+                            SELECT stock_code, COUNT(*) AS hold_count
+                            FROM user_holdings
+                            GROUP BY stock_code
+                        ) uh ON uh.stock_code = i.stock_code
+                        WHERE i.asset_type = 'STOCK' AND i.price_status = 'ACTIVE'
+                        ORDER BY COALESCE(uh.hold_count, 0) DESC
+                    """)
+                ).fetchall()
+                db_session.close()
+                initial_codes = [r[0] for r in rows if r[0]]
+                print(f"DB에서 {len(initial_codes)}개 ACTIVE 종목 로드 완료")
+            except Exception as db_err:
+                print(f"DB 종목 로드 실패 (빈 목록으로 시작): {db_err}")
+
             is_mock = os.getenv("KIS_MOCK", "false").lower() == "true"
-            # fan-out 방식: 초기 구독 없이 WS manager만 준비
-            # → SSE 연결 시 해당 종목코드를 동적으로 구독/해제
-            _ws_startup_delay = int(os.getenv("KIS_WS_STARTUP_DELAY", "0"))
+            # KIS 서버가 이전 세션을 정리할 시간 확보 (ALREADY IN USE 방지)
+            _ws_startup_delay = int(os.getenv("KIS_WS_STARTUP_DELAY", "20"))
             if _ws_startup_delay > 0:
                 print(f"KIS WebSocket 연결 전 {_ws_startup_delay}초 대기 (이전 세션 정리)...")
                 await asyncio.sleep(_ws_startup_delay)
-            await init_manager([], is_mock=is_mock)
-            print("KIS WebSocket manager initialized! (fan-out 모드 — SSE 연결 시 구독)")
+            await init_manager(initial_codes, is_mock=is_mock)
+            print(f"KIS WebSocket manager initialized! ({len(initial_codes)}개 종목 구독 등록)")
         except Exception as ws_err:
             print(f"KIS WebSocket init skipped: {ws_err}")
 
@@ -425,8 +442,6 @@ async def startup_event():
         if _NEWS_ROUTER_AVAILABLE or _REPORTS_ROUTER_AVAILABLE:
             try:
                 import threading
-                from apscheduler.schedulers.background import BackgroundScheduler
-                from apscheduler.triggers.cron import CronTrigger
                 _rag_scheduler = BackgroundScheduler()
 
                 # 뉴스 daily_batch — 매일 08:00
@@ -440,6 +455,13 @@ async def startup_event():
                     )
                     print("✅ 뉴스 스케줄러 등록 (매일 08:00)")
 
+                    # 서버가 08:00 이후에 켜진 경우 당일치 즉시 실행
+                    from datetime import datetime as _dt
+                    _now = _dt.now()
+                    if _now.hour >= 8:
+                        print(f"⚡ 서버 시작 시각 {_now:%H:%M} — 당일 뉴스 배치 즉시 실행")
+                        threading.Thread(target=run_news_daily_batch, daemon=True).start()
+
                 # 리포트 ETL — 매일 08:05
                 if _REPORTS_ROUTER_AVAILABLE:
                     from rag_worker.scheduler import run_reports_etl
@@ -450,6 +472,13 @@ async def startup_event():
                         replace_existing=True,
                     )
                     print("✅ 리포트 ETL 스케줄러 등록 (매일 08:05)")
+
+                    # 서버가 08:05 이후에 켜진 경우 당일치 즉시 실행
+                    from datetime import datetime as _dt
+                    _now = _dt.now()
+                    if _now.hour > 8 or (_now.hour == 8 and _now.minute >= 5):
+                        print(f"⚡ 서버 시작 시각 {_now:%H:%M} — 당일 리포트 ETL 즉시 실행")
+                        threading.Thread(target=run_reports_etl, daemon=True).start()
 
                 _rag_scheduler.start()
                 app.state.rag_scheduler = _rag_scheduler
@@ -1118,8 +1147,8 @@ app.include_router(stream_router)        # /api/stream/prices
 app.include_router(holdings_router, prefix="/api")  # /api/holdings
 app.include_router(inquiry_router)       # /api/inquiries
 
-if _CHATBOT_ROUTER_AVAILABLE:
-    app.include_router(chatbot_router)  # 챗봇 라우터 등록
+app.include_router(chatbot_router)  # 챗봇 라우터 등록
+app.include_router(terms_router, prefix="/api/v1")  # 전문용어 추출 라우터
 
 # 종목/포트폴리오 추천 라우터 등록 (/api/v1/stocks, /api/v1/portfolio)
 if _RECOMMEND_ROUTERS_AVAILABLE:
@@ -1139,24 +1168,11 @@ if _NEWS_ROUTER_AVAILABLE:
 
 @app.on_event("shutdown")
 async def shutdown_event():
-    # KIS WebSocket 연결 명시적 종료 — KIS 서버가 appkey 세션을 즉시 해제하도록 함
-    # (close 없이 프로세스가 종료되면 KIS 세션이 60~90초 동안 남아 ALREADY IN USE 발생)
-    try:
-        from kis_ws_client import get_all_managers
-        for mgr in get_all_managers():
-            try:
-                await mgr.stop()
-            except Exception:
-                pass
-        print("KIS WebSocket 정상 종료 완료")
-    except Exception as e:
-        print(f"KIS WebSocket 종료 중 오류 (무시): {e}")
-
     for attr in ("rag_scheduler", "news_scheduler"):
         scheduler = getattr(app.state, attr, None)
         if scheduler and scheduler.running:
             scheduler.shutdown(wait=False)
-    print("RAG Worker 스케줄러 종료")
+    print("🛑 RAG Worker 스케줄러 종료")
 
 
 if __name__ == '__main__':
