@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import html2pdf from 'html2pdf.js'
+import { useAuth } from '../contexts/AuthContext'
 import './PortfolioDetailPage.css'
 
 const COLOR_PALETTE = [
@@ -208,8 +209,7 @@ function buildStockNarrative(item, ai) {
   return parts.join(' ')
 }
 
-function buildPersonalizedOneLiner({ risk_tier, monte_carlo_1y, portfolio_items = [], survey_context = {}, portfolio_style }) {
-  const icon = TIER_INFO[risk_tier]?.icon || '📊'
+function buildPersonalizedOneLiner({ risk_tier, monte_carlo_1y, portfolio_items = [], survey_context = {} }) {
   const nItems = portfolio_items.length
   const mc = monte_carlo_1y
   const retStr = mc?.p50_pct != null ? ` · 기대수익 ${mc.p50_pct >= 0 ? '+' : ''}${mc.p50_pct.toFixed(0)}%` : ''
@@ -238,9 +238,9 @@ function buildPersonalizedOneLiner({ risk_tier, monte_carlo_1y, portfolio_items 
 
   const pfDesc = `${risk_tier} ${nItems}개 종목${retStr}`
   if (condParts.length > 0) {
-    return `${icon} ${condParts.join(' · ')}에 최적화된 ${pfDesc}`
+    return `${condParts.join(' · ')}에 최적화된 ${pfDesc}`
   }
-  return `${icon} ${TIER_INFO[risk_tier]?.summary || `${risk_tier} 성향에 맞게 ${nItems}개 종목으로 구성했습니다.`}`
+  return TIER_INFO[risk_tier]?.summary || `${risk_tier} 성향에 맞게 ${nItems}개 종목으로 구성했습니다.`
 }
 
 function ReasonParts({ parts }) {
@@ -256,7 +256,9 @@ function ReasonParts({ parts }) {
 function PortfolioDetailPage() {
   const navigate = useNavigate()
   const { state } = useLocation()
+  const { user } = useAuth()
   const portfolioData = state?.portfolioData
+  const portfolioRank = state?.portfolioRank
   const [isLoading, setIsLoading] = useState(!portfolioData)
 
   const passedAiData = state?.aiEnrichData || (() => {
@@ -291,13 +293,18 @@ function PortfolioDetailPage() {
   const handlePdf = () => {
     const el = cardRef.current
     if (!el) return
+    const footer = el.querySelector('.pd-footer')
+    if (footer) footer.style.display = 'none'
     html2pdf().set({
       margin: [10, 10, 10, 10],
-      filename: `portfolio_${risk_tier || 'result'}.pdf`,
+      filename: `${new Date().toISOString().slice(0,10)}_${portfolioRank ? `TOP${portfolioRank}_` : ''}${risk_tier || '포트폴리오'}_${user?.name || user?.userId || 'user'}.pdf`,
       image: { type: 'jpeg', quality: 0.98 },
       html2canvas: { scale: 2, useCORS: true, logging: false },
       jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-    }).from(el).save()
+      pagebreak: { mode: ['css', 'legacy'] },
+    }).from(el).save().then(() => {
+      if (footer) footer.style.display = ''
+    })
   }
 
   if (isLoading) {
@@ -415,7 +422,7 @@ function PortfolioDetailPage() {
                 survey_context,
                 portfolio_style: portfolioData.portfolio_style,
               })
-              return oneLiner ? <div className="pd-tier-summary">{oneLiner}</div> : null
+              return oneLiner ? <ul className="pd-tier-summary-list"><li>{oneLiner}</li></ul> : null
             })()}
           </div>
 
@@ -423,8 +430,8 @@ function PortfolioDetailPage() {
 
           {/* 추천 이유 */}
           <div className="pd-section-row pd-reason-section">
-            <div className="pd-section-label">이 포트폴리오를 추천한 이유</div>
-            <div className="pd-reason-cards">
+            <div className="pd-section-label">포트폴리오 추천 이유</div>
+            <ul className="pd-reason-list">
               {buildRecommendationReason({
                 risk_tier,
                 monte_carlo_1y,
@@ -432,20 +439,44 @@ function PortfolioDetailPage() {
                 quant_signals,
                 survey_context,
               }).map((r, i) => (
-                <div key={i} className="pd-reason-card">
-                  <span className="pd-reason-icon">{r.icon}</span>
-                  <p className="pd-reason-para">
-                    <ReasonParts parts={r.parts} />
-                  </p>
-                </div>
+                <li key={i} className="pd-reason-item">
+                  <ReasonParts parts={r.parts} />
+                </li>
               ))}
-            </div>
+            </ul>
           </div>
 
           <div className="pd-divider" />
 
+          {/* 몬테카를로 시뮬레이션 */}
+          {monte_carlo_1y && (
+            <>
+              <div className="pd-section-row">
+                <div className="pd-section-label">향후 1년 수익률 시뮬레이션 (과거 변동성·수익률 기반)</div>
+                <div className="pd-mc-row">
+                  <div className="pd-mc-box pd-mc-bear">
+                    <div className="pd-mc-label">비관적 시나리오 (90% 확률로 이보다 높음)</div>
+                    <div className="pd-mc-value">{fmtPct(monte_carlo_1y.p10_pct)}</div>
+                  </div>
+                  <div className="pd-mc-box pd-mc-base">
+                    <div className="pd-mc-label">중립 시나리오 (중앙값)</div>
+                    <div className="pd-mc-value">{fmtPct(monte_carlo_1y.p50_pct)}</div>
+                  </div>
+                  <div className="pd-mc-box pd-mc-bull">
+                    <div className="pd-mc-label">낙관적 시나리오 (10% 확률로 이보다 높음)</div>
+                    <div className="pd-mc-value">{fmtPct(monte_carlo_1y.p90_pct)}</div>
+                  </div>
+                </div>
+                {monte_carlo_1y.interpretation && (
+                  <div className="pd-interpretation">{monte_carlo_1y.interpretation}</div>
+                )}
+              </div>
+              <div className="pd-divider" />
+            </>
+          )}
+
           {/* 구성비율 */}
-          <div className="pd-section-row">
+          <div className="pd-section-row pdf-page-break">
             <div className="pd-section-label">구성비율 / 구성종목</div>
             <div className="pd-labeled-bar">
               {sortedItems.map((item, idx) => (
@@ -617,35 +648,8 @@ function PortfolioDetailPage() {
             </>
           )}
 
-          {/* 몬테카를로 시뮬레이션 */}
-          {monte_carlo_1y && (
-            <>
-              <div className="pd-section-row">
-                <div className="pd-section-label">향후 1년 수익률 시뮬레이션 (과거 변동성·수익률 기반)</div>
-                <div className="pd-mc-row">
-                  <div className="pd-mc-box pd-mc-bear">
-                    <div className="pd-mc-label">비관적 시나리오 (90% 확률로 이보다 높음)</div>
-                    <div className="pd-mc-value">{fmtPct(monte_carlo_1y.p10_pct)}</div>
-                  </div>
-                  <div className="pd-mc-box pd-mc-base">
-                    <div className="pd-mc-label">중립 시나리오 (중앙값)</div>
-                    <div className="pd-mc-value">{fmtPct(monte_carlo_1y.p50_pct)}</div>
-                  </div>
-                  <div className="pd-mc-box pd-mc-bull">
-                    <div className="pd-mc-label">낙관적 시나리오 (10% 확률로 이보다 높음)</div>
-                    <div className="pd-mc-value">{fmtPct(monte_carlo_1y.p90_pct)}</div>
-                  </div>
-                </div>
-                {monte_carlo_1y.interpretation && (
-                  <div className="pd-interpretation">{monte_carlo_1y.interpretation}</div>
-                )}
-              </div>
-              <div className="pd-divider" />
-            </>
-          )}
-
           {/* 종목별 분석 */}
-          <div className="pd-section-row">
+          <div className="pd-section-row pdf-page-break">
             <div className="pd-section-label">종목별 분석</div>
 
             {aiStatus !== 'done' && (

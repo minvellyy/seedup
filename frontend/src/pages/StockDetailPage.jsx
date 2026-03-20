@@ -2,6 +2,18 @@
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import './StockDetailPage.css'
 
+// ── AI 텍스트 내 1인칭 → 이름으로 치환 ─────────────────────────────────────
+const personalizeText = (text, name) => {
+  if (!text || !name) return text
+  return text
+    .replace(/나에게/g, `${name}님에게`)
+    .replace(/나의\s/g, `${name}님의 `)
+    .replace(/내\s/g, `${name}님의 `)
+    .replace(/내가/g, `${name}님이`)
+    .replace(/귀하의/g, `${name}님의`)
+    .replace(/귀하에게/g, `${name}님에게`)
+}
+
 // ── 포매터 ──────────────────────────────────────────────────────────────────
 const fmtPrice = (v) => v == null ? '-' : Number(v).toLocaleString('ko-KR') + '원'
 const fmtVol   = (v) => v == null ? '-' : Number(v).toLocaleString('ko-KR')
@@ -24,7 +36,7 @@ function IntradayChart({ data }) {
   }
 
   const chartData = data.data
-  const W = 800, H = 180, padT = 12, padB = 28, padL = 4, padR = 4
+  const W = 800, H = 180, padT = 12, padB = 28, padL = 10, padR = 10
   const plotW = W - padL - padR
   const plotH = H - padT - padB
 
@@ -62,8 +74,7 @@ function IntradayChart({ data }) {
   return (
     <div className="sd-intraday-wrap">
       <div className="sd-intraday-header">
-        <span className="sd-intraday-title">최근 {data.period} 가격 추이</span>
-        <span className={`sd-intraday-change ${isUp ? 'up' : 'down'}`}>
+        <span className={`sd-intraday-change ${isUp ? 'up' : 'down'}`} style={{ marginLeft: 'auto' }}>
           {isUp ? '▲' : '▼'} {Math.abs(priceChange).toLocaleString()}원 ({isUp ? '+' : ''}{changeRate}%)
         </span>
       </div>
@@ -131,6 +142,8 @@ function IntradayChart({ data }) {
 
 // ── 캔들스틱 차트 (SVG) ────────────────────────────────────────────────────
 function CandlestickChart({ data, days = 30 }) {
+  const [tooltip, setTooltip] = useState(null)
+
   if (!data || data.length < 2) return null
   const items = data.slice(-days)
   const hasOHLC = items.some(d => d.open != null && d.high != null && d.low != null)
@@ -156,7 +169,22 @@ function CandlestickChart({ data, days = 30 }) {
   const dlabels = [0, Math.floor(n / 2), n - 1]
 
   return (
-    <div className="sd-candle-wrap">
+    <div className="sd-candle-wrap" style={{ position: 'relative' }}>
+      {tooltip && (
+        <div
+          className="sd-candle-tooltip"
+          style={{
+            left: tooltip.pct > 70 ? 'auto' : `${tooltip.pct}%`,
+            right: tooltip.pct > 70 ? `${100 - tooltip.pct}%` : 'auto',
+          }}
+        >
+          <div className="sd-candle-tooltip-date">{tooltip.d.date}</div>
+          <div className="sd-candle-tooltip-row"><span>시가</span><span>{(tooltip.d.open ?? '-').toLocaleString?.('ko-KR')}원</span></div>
+          <div className="sd-candle-tooltip-row"><span>고가</span><span className="up">{(tooltip.d.high ?? '-').toLocaleString?.('ko-KR')}원</span></div>
+          <div className="sd-candle-tooltip-row"><span>저가</span><span className="down">{(tooltip.d.low ?? '-').toLocaleString?.('ko-KR')}원</span></div>
+          <div className="sd-candle-tooltip-row"><span>종가</span><span>{(tooltip.d.close ?? '-').toLocaleString?.('ko-KR')}원</span></div>
+        </div>
+      )}
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block' }}>
         {items.map((d, i) => {
           const x  = padL + i * step + step / 2
@@ -168,8 +196,14 @@ function CandlestickChart({ data, days = 30 }) {
           const lowY   = sy(hasOHLC ? (d.low  ?? d.close) : d.close)
           const bodyTop = Math.min(openY, closeY)
           const bodyH   = Math.max(Math.abs(openY - closeY), 1)
+          const pct = ((x - padL) / plotW) * 100
           return (
-            <g key={i}>
+            <g key={i}
+              onMouseEnter={() => setTooltip({ d, pct })}
+              onMouseLeave={() => setTooltip(null)}
+              style={{ cursor: 'crosshair' }}
+            >
+              <rect x={x - step / 2} y={padT} width={step} height={plotH} fill="transparent" />
               <line x1={x} y1={highY} x2={x} y2={lowY} stroke={color} strokeWidth={1.5} />
               <rect x={x - barW / 2} y={bodyTop} width={barW} height={bodyH} fill={color} />
             </g>
@@ -202,7 +236,7 @@ function RadarChart({ points }) {
     const pts = Array.from({ length: n }, (_, i) => coord(i, ratio))
     return pts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ') + 'Z'
   }
-  const dataPts  = points.map((p, i) => coord(i, Math.min(p.score ?? 0, 100) / 100))
+  const dataPts  = points.map((p, i) => coord(i, p.score != null ? Math.min(p.score, 100) / 100 : 0.08))
   const dataPath = dataPts.map((p, i) => `${i === 0 ? 'M' : 'L'}${p.x.toFixed(1)},${p.y.toFixed(1)}`).join(' ') + 'Z'
   const labelPos = points.map((_, i) => coord(i, 1.42))
 
@@ -218,7 +252,9 @@ function RadarChart({ points }) {
         })}
         <path d={dataPath} fill="rgba(249,115,22,0.18)" stroke="#F97316" strokeWidth={2} />
         {dataPts.map((p, i) => (
-          <circle key={i} cx={p.x.toFixed(1)} cy={p.y.toFixed(1)} r={4} fill="#F97316" stroke="white" strokeWidth={1.5} />
+          <circle key={i} cx={p.x.toFixed(1)} cy={p.y.toFixed(1)} r={4}
+            fill={points[i].score != null ? "#F97316" : "#d1d5db"}
+            stroke="white" strokeWidth={1.5} />
         ))}
       </svg>
       {points.map((p, i) => {
@@ -227,7 +263,9 @@ function RadarChart({ points }) {
           <div key={i} className="sd-radar-label"
             style={{ left: `${(pos.x / SIZE * 100).toFixed(1)}%`, top: `${(pos.y / SIZE * 100).toFixed(1)}%` }}>
             <span className="sd-radar-label-name">{p.label}</span>
-            <span className="sd-radar-label-score">{p.score != null ? Math.round(p.score) : '-'}</span>
+            <span className="sd-radar-label-score" style={p.score == null ? { color: '#9ca3af' } : undefined}>
+              {p.score != null ? Math.round(p.score) : '-'}
+            </span>
           </div>
         )
       })}
@@ -285,6 +323,7 @@ function StockDetailPage() {
   const { state }     = useLocation()
 
   const stockItem = state?.stockItem
+  const userName  = localStorage.getItem('name') || '회원'
   const riskTier  = state?.riskTier
 
   const [detail,           setDetail]           = useState(null)
@@ -298,6 +337,8 @@ function StockDetailPage() {
   const [realtimePrice,    setRealtimePrice]    = useState(null) // 실시간 가격 데이터
   const [intradayData,     setIntradayData]     = useState(null) // 일중 차트 데이터
   const [wsStatus,         setWsStatus]         = useState(null) // WebSocket 상태 (디버그용)
+  const [reportItems,      setReportItems]      = useState(null) // 증권사 리포트 직접 조회 결과
+  const [reportLoading,    setReportLoading]    = useState(false)
 
   // ── WebSocket 상태 확인 (디버그용) ──────────────────────────────────────
   const checkWebSocketStatus = async () => {
@@ -436,9 +477,27 @@ function StockDetailPage() {
   }, [stockCode])
 
 
+  // ── 증권사 리포트 직접 조회 (ChromaDB, 빠른 로드) ────────────────────────
+  useEffect(() => {
+    if (!stockCode) return
+    setReportLoading(true)
+    fetch(`/api/v1/reports/insights/${stockCode}`)
+      .then(r => r.ok ? r.json() : null)
+      .then(data => {
+        if (data && data.items && data.items.length > 0) setReportItems(data.items)
+        setReportLoading(false)
+      })
+      .catch(() => setReportLoading(false))
+  }, [stockCode])
+
   // ── AI 분석 로드 (sessionStorage 캐시, 비동기) ─────────────────────────
   useEffect(() => {
     if (!stockCode) return
+
+    // 종목 전환 시 이전 분석 즉시 초기화 (잘못된 내용이 잠깐 보이는 것 방지)
+    setAnalysis(null)
+    setAnalysisError(false)
+
     const cacheKey = `stock_analysis_${stockCode}`
 
     // 재시도가 아닐 때만 캐시 사용
@@ -461,8 +520,6 @@ function StockDetailPage() {
     })
 
     setAnalysisLoading(true)
-    setAnalysisError(false)
-    setAnalysis(null)
 
     const controller = new AbortController()
     // 서버 타임아웃(420s)보다 30초 여유를 두고 클라이언트에서도 abort
@@ -495,8 +552,8 @@ function StockDetailPage() {
         try { sessionStorage.setItem(cacheKey, JSON.stringify({ data: parsed, ts: Date.now() })) } catch {}
       })
       .catch(err => {
-        if (err.name === 'AbortError') return  // unmount 또는 timeout으로 인한 취소
         setAnalysisLoading(false)
+        if (err.name === 'AbortError') return  // unmount로 인한 취소 — 에러 표시 안 함
         setAnalysisError(true)
       })
 
@@ -594,7 +651,7 @@ function StockDetailPage() {
   const esgOpportunities = ua?.esg_opportunities ?? null
   const newsSummary     = ua?.news_summary ?? null
   const reportsInsight  = ua?.reports_insight ?? null
-  const hasUnstructured = esgRisks || esgOpportunities || newsSummary || reportsInsight
+  const hasUnstructured = esgRisks || esgOpportunities || newsSummary || reportsInsight || (reportItems && reportItems.length > 0)
 
   return (
     <div className="stock-detail-page">
@@ -648,7 +705,7 @@ function StockDetailPage() {
         {/* ── 2. 일중 차트 (FinanceDataReader) ──────────────────── */}
         {intradayData && intradayData.data && intradayData.data.length > 0 && (
           <section className="sd-section">
-            <h2 className="sd-section-heading">📈 최근 가격 추이 (FinanceDataReader)</h2>
+            <h2 className="sd-section-heading">최근 가격 추이 (5D)</h2>
             <IntradayChart data={intradayData} />
           </section>
         )}
@@ -656,7 +713,7 @@ function StockDetailPage() {
         {/* ── 3. 주가 차트 (최근 30일) ──────────────────────────── */}
         {detail.price_history.length > 1 && (
           <section className="sd-section">
-            <h2 className="sd-section-heading">주가 차트 (최근 30일)</h2>
+            <h2 className="sd-section-heading">주가 차트</h2>
             <CandlestickChart data={detail.price_history} days={30} />
           </section>
         )}
@@ -667,22 +724,53 @@ function StockDetailPage() {
           <section className="investment-fit-section">
             <h2 className="section-heading">내 투자 원칙 적합도 분석</h2>
             <div className="fit-container">
-              {fitScore != null && (
-                <div className="fit-score-box">
-                  <div className="fit-score">{fitScore}</div>
-                  <div className="fit-score-label">적합도 점수</div>
-                </div>
-              )}
               <div className="fit-details">
-                {fitSummary && <p className="fit-summary">{fitSummary}</p>}
-                {fitReasons.length > 0 && (
-                  <ul className="fit-list">
-                    {fitReasons.slice(0, 3).map((r, i) => (
-                      <li key={i}>✓ {r}</li>
-                    ))}
-                    {fitCaution && <li>△ {fitCaution}</li>}
-                  </ul>
-                )}
+                <div className="fit-metrics">
+                  {detail.ret_1m != null && (
+                    <span className={`fit-metric-chip ${detail.ret_1m >= 0 ? 'up' : 'down'}`}>
+                      1개월 {detail.ret_1m >= 0 ? '+' : ''}{Number(detail.ret_1m).toFixed(1)}%
+                    </span>
+                  )}
+                  {detail.ret_3m != null && (
+                    <span className={`fit-metric-chip ${detail.ret_3m >= 0 ? 'up' : 'down'}`}>
+                      3개월 {detail.ret_3m >= 0 ? '+' : ''}{Number(detail.ret_3m).toFixed(1)}%
+                    </span>
+                  )}
+                  {detail.ret_1y != null && (
+                    <span className={`fit-metric-chip ${detail.ret_1y >= 0 ? 'up' : 'down'}`}>
+                      1년 {detail.ret_1y >= 0 ? '+' : ''}{Number(detail.ret_1y).toFixed(1)}%
+                    </span>
+                  )}
+                  {detail.vol_ann != null && (
+                    <span className="fit-metric-chip neutral">
+                      변동성 {Number(detail.vol_ann).toFixed(1)}%
+                    </span>
+                  )}
+                  {detail.high_52w != null && (
+                    <span className="fit-metric-chip neutral">
+                      52주 최고 {Number(detail.high_52w).toLocaleString('ko-KR')}원
+                    </span>
+                  )}
+                </div>
+                <p className="fit-summary">
+                  {detail.name}은(는) {userName}님의 {riskTier ?? '투자'} 성향에 맞는 주식으로 보입니다.
+                  {fitSummary ? ` ${fitSummary.replace(/^[^.]+\.\s*/, '')}` : ''}
+                </p>
+                <ul className="fit-list">
+                  {fitReasons.slice(0, 3).map((r, i) => (
+                    <li key={i}>✓ {personalizeText(r, userName)}</li>
+                  ))}
+                  {newsSummary && (
+                    <li>✓ {personalizeText(newsSummary.split('.')[0], userName)}.</li>
+                  )}
+                  {reportsInsight && (
+                    <li>✓ {personalizeText(reportsInsight.split('.')[0], userName)}.</li>
+                  )}
+                  {!reportsInsight && reportItems?.[0] && (
+                    <li>✓ {reportItems[0].brokerage} 리포트에 따르면 {personalizeText(reportItems[0].title, userName)}</li>
+                  )}
+                  {fitCaution && <li className="fit-caution">△ {personalizeText(fitCaution, userName)}</li>}
+                </ul>
               </div>
             </div>
           </section>
@@ -726,7 +814,7 @@ function StockDetailPage() {
         </section>
 
         {/* ── 5.5. ESG · 뉴스 · 증권사 리포트 인사이트 ─────────── */}
-        {!analysisLoading && hasUnstructured && (
+        {hasUnstructured && (
           <section className="sd-section">
             <h2 className="sd-section-heading">ESG · 뉴스 · 리포트 인사이트</h2>
             <div className="unstructured-grid">
@@ -753,12 +841,40 @@ function StockDetailPage() {
                   <p>{newsSummary}</p>
                 </div>
               )}
-              {reportsInsight && (
+              {/* 증권사 리포트: 직접 조회(reportItems) 우선, AI 요약(reportsInsight) 보조 */}
+              {(reportItems && reportItems.length > 0) ? (
+                <div className="unstructured-card">
+                  <h3 className="unstructured-card-title">📑 증권사 리포트</h3>
+                  {reportsInsight && <p className="reports-ai-summary">{reportsInsight}</p>}
+                  <div className="reports-list">
+                    {reportItems.map((item, idx) => (
+                      <div key={idx} className="report-item">
+                        <div className="report-item-meta">
+                          <span className="report-brokerage">{item.brokerage}</span>
+                          <span className="report-date">{item.date}</span>
+                          {item.pdf_url && (
+                            <a
+                              href={item.pdf_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="report-pdf-btn"
+                            >
+                              📄 원문 보기
+                            </a>
+                          )}
+                        </div>
+                        <p className="report-title">{item.title}</p>
+                        <p className="report-content">{item.content}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              ) : reportsInsight ? (
                 <div className="unstructured-card">
                   <h3 className="unstructured-card-title">📑 증권사 리포트</h3>
                   <p>{reportsInsight}</p>
                 </div>
-              )}
+              ) : null}
             </div>
           </section>
         )}

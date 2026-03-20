@@ -1,4 +1,53 @@
 import os
+import sys
+
+# ── Windows curl_cffi KeyboardInterrupt 팝업 억제 ────────────────────────────
+# curl_cffi 0.7.0 미만에서 Ctrl+C 종료 시 CFFI 콜백 안으로 KeyboardInterrupt가
+# 전달되어 Windows 에러 다이얼로그가 뜨는 버그. unraisablehook으로 억제한다.
+if sys.platform == "win32":
+    _orig_unraisablehook = sys.unraisablehook
+
+    def _suppress_curl_cffi_interrupt(unraisable):
+        if unraisable.exc_type is KeyboardInterrupt:
+            obj_str = str(getattr(unraisable, "object", "") or "")
+            if "curl" in obj_str.lower() or "buffer_callback" in obj_str.lower():
+                return
+        _orig_unraisablehook(unraisable)
+
+    sys.unraisablehook = _suppress_curl_cffi_interrupt
+
+# ── CrewAI 종료 노이즈 근본 억제 ─────────────────────────────────────────────
+# 1) CrewAI EventBus mismatch 경고를 SILENT로 설정 (Rich console 직접 출력 방지)
+try:
+    from crewai.events.event_context import EventContextConfig, MismatchBehavior
+    import crewai.events.event_context as _ec_module
+    _ec_module._default_config = EventContextConfig(
+        mismatch_behavior=MismatchBehavior.SILENT,
+        empty_pop_behavior=MismatchBehavior.SILENT,
+    )
+except Exception:
+    pass
+
+# 2) CrewAI handle_unknown_error 패치 — 서버 종료 관련 에러는 출력하지 않음
+_SHUTDOWN_ERROR_MARKERS = (
+    "cannot schedule new futures after shutdown",
+    "shutdown",
+    "Event loop is closed",
+    "cancelled",
+)
+try:
+    import crewai.utilities.agent_utils as _agent_utils
+    _orig_handle_unknown_error = _agent_utils.handle_unknown_error
+
+    def _patched_handle_unknown_error(printer, exception, verbose=True):
+        err_msg = str(exception).lower()
+        if any(m in err_msg for m in _SHUTDOWN_ERROR_MARKERS):
+            return  # 서버 종료 관련 에러는 무시
+        _orig_handle_unknown_error(printer, exception, verbose)
+
+    _agent_utils.handle_unknown_error = _patched_handle_unknown_error
+except Exception:
+    pass
 
 from fastapi import FastAPI, HTTPException, Query, Depends
 from fastapi.middleware.cors import CORSMiddleware
@@ -16,6 +65,23 @@ import uvicorn
 from datetime import datetime
 
 logger = logging.getLogger("main")
+
+# ── 서버 종료 시 CrewAI 관련 노이즈 로그 필터 ────────────────────────────────
+_SHUTDOWN_NOISE = (
+    "cannot schedule new futures after shutdown",
+    "Event pairing mismatch",
+)
+
+class _ShutdownNoiseFilter(logging.Filter):
+    """서버 종료(Ctrl+C) 중 CrewAI/asyncio에서 발생하는 예상된 에러 로그를 억제한다."""
+    def filter(self, record: logging.LogRecord) -> bool:
+        msg = record.getMessage()
+        return not any(noise in msg for noise in _SHUTDOWN_NOISE)
+
+# root 로거와 CrewAI 관련 로거에 필터 적용
+for _logger_name in ("root", "", "crewai", "CrewAIEventsBus"):
+    logging.getLogger(_logger_name).addFilter(_ShutdownNoiseFilter())
+
 from routers import survey, dashboard, recommendations
 from routers.instruments import router as instruments_router
 from models import Base, SurveyQuestion
@@ -149,8 +215,8 @@ app = FastAPI(title="SeedUp API Server")
 
 # WebSocket price_store → DB 동기화 간격 (초, 기본 60초)
 _DB_SYNC_INTERVAL = int(os.getenv("DB_PRICE_SYNC_INTERVAL", "60"))
-# REST API 전체 종목 갱신 간격 (초, 기본 3시간)
-_DB_FULL_SYNC_INTERVAL = int(os.getenv("DB_FULL_PRICE_SYNC_INTERVAL", str(3 * 3600)))
+# REST API 전체 종목 갱신 간격 (초, 기본 5분)
+_DB_FULL_SYNC_INTERVAL = int(os.getenv("DB_FULL_PRICE_SYNC_INTERVAL", str(5 * 60)))
 
 
 async def _db_price_sync_loop() -> None:
@@ -202,7 +268,6 @@ async def _db_full_price_sync(skip_ws_codes: set = None) -> int:
     skip_ws_codes: WebSocket으로 이미 수신 중인 종목코드 집합 (선택)
     Returns: 업데이트된 종목 수
     """
-    from concurrent.futures import ThreadPoolExecutor
     from kis_client import get_current_price
 
     db = SessionLocal()
@@ -232,16 +297,16 @@ async def _db_full_price_sync(skip_ws_codes: set = None) -> int:
 
     logger.info("DB 전체 가격 갱신 시작: %d개 종목 (간격=%.2fs)", len(target_codes), _BATCH_PAUSE)
 
-    with ThreadPoolExecutor(max_workers=1) as pool:
-        for code in target_codes:
-            fut = pool.submit(get_current_price, code)
-            try:
-                data = fut.result()
-                results[code] = data["current_price"]
-            except Exception as e:
-                logger.debug("REST 가격 조회 실패 [%s]: %s", code, e)
-            # 요청 간 대기: KIS 초당 요청 제한(EGW00201) 방지
-            await asyncio.sleep(_BATCH_PAUSE)
+    loop = asyncio.get_event_loop()
+    for code in target_codes:
+        try:
+            # run_in_executor: 블로킹 I/O를 스레드에서 실행하고 이벤트 루프는 해제
+            data = await loop.run_in_executor(None, get_current_price, code)
+            results[code] = data["current_price"]
+        except Exception as e:
+            logger.debug("REST 가격 조회 실패 [%s]: %s", code, e)
+        # 요청 간 대기: KIS 초당 요청 제한(EGW00201) 방지
+        await asyncio.sleep(_BATCH_PAUSE)
 
     if not results:
         return 0
@@ -444,6 +509,31 @@ async def startup_event():
         import traceback
         traceback.print_exc()
     print("="*60)
+
+
+@app.on_event("shutdown")
+async def shutdown_event():
+    print("="*60)
+    print("Shutting down application...")
+    # RAG 스케줄러 정리
+    if hasattr(app.state, "rag_scheduler"):
+        try:
+            app.state.rag_scheduler.shutdown(wait=False)
+            print("RAG 스케줄러 종료 완료")
+        except Exception as e:
+            print(f"RAG 스케줄러 종료 오류: {e}")
+    # KIS WebSocket 정리
+    try:
+        from kis_ws_client import get_manager
+        mgr = get_manager()
+        if mgr:
+            await mgr.close()
+            print("KIS WebSocket 종료 완료")
+    except Exception:
+        pass
+    print("Shutdown complete.")
+    print("="*60)
+
 
 # CORS 설정
 app.add_middleware(
@@ -1144,4 +1234,4 @@ if __name__ == '__main__':
         format="%(asctime)s [%(name)s] %(levelname)s  %(message)s",
         datefmt="%H:%M:%S",
     )
-    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info")
+    uvicorn.run(app, host="127.0.0.1", port=8000, log_level="info", timeout_graceful_shutdown=3)

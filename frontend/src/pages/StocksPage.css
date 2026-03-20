@@ -276,6 +276,11 @@
   color: #F59E0B;
 }
 
+.market-badge.etf-badge {
+  background: rgba(21, 128, 61, 0.1);
+  color: #15803d;
+}
+
 .stock-price-info {
   display: flex;
   flex-direction: column;

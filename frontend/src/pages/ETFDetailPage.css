@@ -1,0 +1,536 @@
+.etf-detail-page {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
+  padding: 40px 20px;
+}
+
+.etf-detail-container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* ── 뒤로 가기 버튼 ─────────────────────────────────────────── */
+.etf-back-btn {
+  background: white;
+  color: #F97316;
+  border: 2px solid #F97316;
+  padding: 10px 22px;
+  border-radius: 30px;
+  font-size: 0.95em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-bottom: 28px;
+  display: inline-block;
+}
+.etf-back-btn:hover {
+  background: #F97316;
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.3);
+}
+
+/* ── 로딩 / 에러 ─────────────────────────────────────────────── */
+.etf-loading,
+.etf-error-box {
+  text-align: center;
+  padding: 60px 20px;
+  color: #666;
+  font-size: 1.1em;
+}
+
+/* ── 헤더 ─────────────────────────────────────────────────────── */
+.etf-detail-header {
+  background: white;
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 24px;
+  flex-wrap: wrap;
+}
+
+.etf-header-left { flex: 1; min-width: 200px; }
+
+.etf-rank-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #F97316, #EA580C);
+  color: white;
+  font-size: 0.8em;
+  font-weight: 700;
+  padding: 2px 10px;
+  border-radius: 20px;
+  margin-bottom: 8px;
+}
+
+.etf-detail-name {
+  font-size: 1.8em;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 10px;
+}
+
+.etf-badges {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+.etf-ticker {
+  background: #f3f4f6;
+  color: #374151;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.85em;
+  font-weight: 600;
+  font-family: monospace;
+}
+
+.etf-market-badge,
+.etf-type-badge {
+  background: #eff6ff;
+  color: #1d4ed8;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.82em;
+  font-weight: 600;
+}
+
+.etf-type-badge {
+  background: #f0fdf4;
+  color: #15803d;
+}
+
+.etf-sector-badge {
+  background: #fdf4ff;
+  color: #7e22ce;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.82em;
+  font-weight: 600;
+}
+
+.etf-risk-tier {
+  background: #fff7ed;
+  color: #EA580C;
+  padding: 3px 10px;
+  border-radius: 6px;
+  font-size: 0.82em;
+  font-weight: 600;
+  border: 1px solid #fed7aa;
+}
+
+/* ── 가격 박스 ─────────────────────────────────────────────────── */
+.etf-price-box {
+  text-align: right;
+  min-width: 180px;
+}
+
+.etf-current-price {
+  font-size: 2em;
+  font-weight: 700;
+  color: #1a1a1a;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  justify-content: flex-end;
+}
+
+.etf-realtime-badge {
+  font-size: 0.45em;
+  background: #fee2e2;
+  color: #dc2626;
+  padding: 2px 6px;
+  border-radius: 4px;
+  font-weight: 600;
+}
+
+.etf-change-badge {
+  font-size: 1em;
+  font-weight: 600;
+  margin-top: 4px;
+}
+
+.etf-price-date {
+  font-size: 0.8em;
+  color: #9ca3af;
+  margin-top: 6px;
+}
+
+/* ── 섹션 공통 ─────────────────────────────────────────────────── */
+.etf-section {
+  background: white;
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.etf-section-heading {
+  font-size: 1.15em;
+  font-weight: 700;
+  color: #1a1a1a;
+  margin: 0 0 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+/* ── 투자 원칙 적합도 ──────────────────────────────────────────── */
+.etf-fit-section {
+  background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+  border: 1px solid #fed7aa;
+}
+
+.etf-fit-container {
+  display: flex;
+  gap: 28px;
+  align-items: flex-start;
+  flex-wrap: wrap;
+}
+
+.etf-fit-score-box {
+  text-align: center;
+  min-width: 100px;
+}
+
+.etf-fit-score {
+  font-size: 3em;
+  font-weight: 800;
+  color: #EA580C;
+  line-height: 1;
+}
+
+.etf-fit-score-label {
+  font-size: 0.8em;
+  color: #9a3412;
+  margin-top: 4px;
+}
+
+.etf-fit-details { flex: 1; min-width: 200px; }
+
+.etf-fit-summary {
+  color: #7c2d12;
+  font-size: 0.95em;
+  margin: 0 0 12px;
+  line-height: 1.6;
+}
+
+.etf-fit-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.etf-fit-list li {
+  padding: 4px 0;
+  color: #7c2d12;
+  font-size: 0.9em;
+}
+
+/* ── ETF 상품 설명 ─────────────────────────────────────────────── */
+.etf-info-section {
+  background: white;
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.etf-info-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+}
+
+.etf-info-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 14px 16px;
+  background: #f9fafb;
+  border-radius: 10px;
+  border-left: 3px solid #F97316;
+}
+
+.etf-info-label {
+  font-size: 0.78em;
+  color: #9ca3af;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.etf-info-value {
+  font-size: 0.95em;
+  color: #1a1a1a;
+  font-weight: 600;
+}
+
+/* ── ETF 종합 분석 ─────────────────────────────────────────────── */
+.etf-analysis-section {
+  background: white;
+  border-radius: 16px;
+  padding: 28px 32px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+}
+
+.etf-analysis-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.etf-analysis-list li {
+  padding: 12px 16px;
+  background: #f9fafb;
+  border-radius: 10px;
+  border-left: 3px solid #F97316;
+  font-size: 0.92em;
+  color: #374151;
+  line-height: 1.6;
+}
+
+.etf-analysis-list li::before {
+  content: '•';
+  color: #F97316;
+  font-weight: bold;
+  margin-right: 8px;
+}
+
+.etf-analysis-pending {
+  color: #9ca3af;
+  font-size: 0.9em;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.etf-retry-btn {
+  background: none;
+  border: 1px solid #F97316;
+  color: #F97316;
+  padding: 4px 12px;
+  border-radius: 6px;
+  font-size: 0.85em;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.etf-retry-btn:hover {
+  background: #F97316;
+  color: white;
+}
+
+/* ── 포트폴리오 TOP 25 ────────────────────────────────────────── */
+.etf-holdings-table-wrap {
+  overflow-x: auto;
+}
+
+.etf-holdings-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+}
+
+.etf-holdings-table thead th {
+  background: #f9fafb;
+  padding: 10px 14px;
+  text-align: left;
+  font-size: 0.82em;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  border-bottom: 2px solid #f3f4f6;
+}
+
+.etf-holdings-table tbody tr {
+  border-bottom: 1px solid #f3f4f6;
+  transition: background 0.15s;
+}
+
+.etf-holdings-table tbody tr:hover {
+  background: #fff7ed;
+}
+
+.etf-holdings-table td {
+  padding: 10px 14px;
+  color: #374151;
+  vertical-align: middle;
+}
+
+.etf-holdings-rank {
+  font-weight: 700;
+  color: #9ca3af;
+  font-size: 0.85em;
+  width: 48px;
+}
+
+.etf-holdings-type {
+  color: #6b7280;
+  font-size: 0.85em;
+  width: 60px;
+}
+
+.etf-holdings-name {
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.etf-holdings-weight {
+  width: 160px;
+}
+
+.etf-weight-bar-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.etf-weight-bar {
+  height: 6px;
+  background: linear-gradient(90deg, #F97316, #EA580C);
+  border-radius: 3px;
+  min-width: 2px;
+  flex-shrink: 0;
+}
+
+.etf-weight-bar-wrap span {
+  font-weight: 600;
+  color: #EA580C;
+  font-size: 0.88em;
+  white-space: nowrap;
+}
+
+/* ── 주요 지표 그리드 ──────────────────────────────────────────── */
+.etf-features-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  gap: 14px;
+}
+
+.etf-feature-card {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 16px;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+  cursor: default;
+}
+.etf-feature-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+}
+
+.etf-feature-label {
+  font-size: 0.78em;
+  color: #9ca3af;
+  font-weight: 600;
+  margin-bottom: 6px;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.etf-feature-value {
+  font-size: 1.1em;
+  font-weight: 700;
+  color: #1a1a1a;
+}
+
+/* ── AI 분석 요약 ─────────────────────────────────────────────── */
+.etf-rec-box {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 20px 24px;
+  border-left: 4px solid #F97316;
+}
+
+.etf-rec-detail {
+  color: #374151;
+  font-size: 0.95em;
+  line-height: 1.8;
+  margin: 0;
+}
+
+/* ── 투자 유의사항 ─────────────────────────────────────────────── */
+.etf-notice-section { background: #fffbf5; border: 1px solid #fed7aa; }
+
+.etf-notice-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.etf-notice-list li {
+  font-size: 0.88em;
+  color: #92400e;
+  padding-left: 16px;
+  position: relative;
+  line-height: 1.6;
+}
+
+.etf-notice-list li::before {
+  content: '※';
+  position: absolute;
+  left: 0;
+  color: #EA580C;
+}
+
+/* ── 스켈레톤 ──────────────────────────────────────────────────── */
+.etf-skeleton { display: flex; flex-direction: column; gap: 10px; }
+
+.etf-skeleton-row {
+  height: 18px;
+  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
+  background-size: 200% 100%;
+  border-radius: 6px;
+  animation: etf-shimmer 1.4s infinite;
+}
+
+@keyframes etf-shimmer {
+  0%   { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
+
+/* ── 캔들 차트 ──────────────────────────────────────────────────── */
+.etf-candle-wrap {
+  background: #f9fafb;
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.etf-candle-minmax {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.82em;
+  margin-top: 6px;
+  padding: 0 4px;
+}
+
+.etf-candle-high { color: #EA580C; font-weight: 600; }
+.etf-candle-low  { color: #3B82F6; font-weight: 600; }
+
+/* ── 반응형 ────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  .etf-detail-header { flex-direction: column; }
+  .etf-price-box { text-align: left; }
+  .etf-current-price { justify-content: flex-start; font-size: 1.6em; }
+  .etf-detail-name { font-size: 1.4em; }
+  .etf-info-grid { grid-template-columns: repeat(2, 1fr); }
+  .etf-features-grid { grid-template-columns: repeat(2, 1fr); }
+  .etf-section { padding: 20px 16px; }
+  .etf-fit-section { padding: 20px 16px; }
+}

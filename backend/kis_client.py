@@ -245,6 +245,10 @@ def get_current_price(stock_code: str) -> Dict:
     else:
         fmt_date = datetime.today().strftime("%Y-%m-%d")  # fallback: 오늘
 
+    def _safe_float(v):
+        try: return float(v) if v and v not in ("", "0", "0.00") else None
+        except: return None
+
     return {
         "current_price": float(o.get("stck_prpr", 0) or 0),
         "prev_close":    float(o.get("stck_sdpr", 0) or 0),
@@ -252,6 +256,13 @@ def get_current_price(stock_code: str) -> Dict:
         "change_rate":   float(o.get("prdy_ctrt", 0) or 0),
         "volume":        int(o.get("acml_vol", 0) or 0),
         "price_date":    fmt_date,
+        # 추가 지표
+        "market_cap":    _safe_float(o.get("hts_avls")),   # 시가총액 (억원)
+        "per":           _safe_float(o.get("per")),
+        "pbr":           _safe_float(o.get("pbr")),
+        "eps":           _safe_float(o.get("eps")),
+        "week52_high":   _safe_float(o.get("w52_hgpr")),
+        "week52_low":    _safe_float(o.get("w52_lwpr")),
     }
 
 
@@ -634,3 +645,154 @@ def get_etf_list_from_krx(date_str: str = None) -> List[Dict]:
         _logger.warning("네이버 ETF 목록 조회 실패: %s", e)
         return []
 
+
+# ── ETF 기본정보 + 구성종목 조회 (네이버 금융 스크래핑) ─────────────────────
+
+_NAVER_ETF_HEADERS = {
+    "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36",
+    "Accept-Language": "ko-KR,ko;q=0.9",
+    "Referer": "https://finance.naver.com/",
+}
+
+
+def _naver_etf_soup(etf_code: str):
+    """네이버 금융 ETF 개별 페이지 BeautifulSoup 반환."""
+    import logging as _log
+    from bs4 import BeautifulSoup
+
+    r = requests.get(
+        f"https://finance.naver.com/item/main.naver?code={etf_code}",
+        headers=_NAVER_ETF_HEADERS,
+        timeout=10,
+    )
+    r.raise_for_status()
+    # 네이버는 EUC-KR 이지만 bytes 그대로 BeautifulSoup에 넘기면 자동 감지됨
+    return BeautifulSoup(r.content, "html.parser")
+
+
+def get_etf_info(etf_code: str) -> Dict:
+    """네이버 금융 ETF 페이지에서 기본정보 스크래핑.
+
+    Returns:
+        {
+            "tracking_index": str | None,   # 기초지수
+            "fund_manager":   str | None,   # 자산운용사
+            "aum":            float | None, # 순자산 (억원) - 네이버 ETF 목록 API
+            "expense_ratio":  float | None, # 총보수율 (현재 None - 미제공)
+            "distribution":   str | None,   # 분류 (유형 대용)
+        }
+    """
+    import logging as _log
+    _logger = _log.getLogger("kis_client")
+
+    result: Dict = {
+        "tracking_index": None,
+        "fund_manager":   None,
+        "aum":            None,
+        "expense_ratio":  None,
+        "distribution":   None,
+    }
+
+    try:
+        soup = _naver_etf_soup(etf_code)
+        tables = soup.find_all("table")
+
+        # 테이블[6]: 기초지수·분류·설정일
+        # row[0]: 기초지수 / row[1]: 분류 / row[2]: 설정일
+        if len(tables) > 6:
+            for row in tables[6].find_all("tr"):
+                cells = [c.get_text(strip=True) for c in row.find_all(["th", "td"])]
+                if len(cells) < 2 or not cells[1]:
+                    continue
+                label, value = cells[0], cells[1]
+                if "기초지수" in label and not result["tracking_index"]:
+                    result["tracking_index"] = value
+                elif "분류" in label and not result["distribution"]:
+                    result["distribution"] = value
+
+        # 테이블[7]: 자산운용사
+        if len(tables) > 7:
+            for row in tables[7].find_all("tr"):
+                cells = [c.get_text(strip=True) for c in row.find_all(["th", "td"])]
+                if len(cells) >= 2 and cells[1]:
+                    result["fund_manager"] = cells[1]
+                    break
+
+    except Exception as e:
+        _logger.warning("ETF 기본정보 스크래핑 실패 [%s]: %s", etf_code, e)
+
+    # AUM: 네이버 ETF 목록 API (marketSum 단위=억원)
+    try:
+        resp = requests.get(
+            "https://finance.naver.com/api/sise/etfItemList.nhn",
+            headers={"User-Agent": "Mozilla/5.0"},
+            timeout=8,
+        )
+        items = resp.json().get("result", {}).get("etfItemList", [])
+        item = next((i for i in items if i.get("itemcode") == etf_code), None)
+        if item and item.get("marketSum"):
+            result["aum"] = float(item["marketSum"])  # 단위: 억원
+    except Exception as e:
+        _logger.warning("ETF AUM 조회 실패 [%s]: %s", etf_code, e)
+
+    return result
+
+
+def get_etf_holdings_pykrx(etf_code: str, top_n: int = 25) -> List[Dict]:
+    """네이버 금융 ETF 페이지에서 구성 종목 스크래핑 (상위 10개).
+
+    Returns:
+        [{"rank": int, "asset_type": str, "name": str, "weight": float, "stock_code": str | None}, ...]
+    """
+    import logging as _log
+    import re as _re
+    _logger = _log.getLogger("kis_client")
+
+    try:
+        soup = _naver_etf_soup(etf_code)
+        tables = soup.find_all("table")
+
+        # 테이블[3]: 구성종목(구성자산) | 주식수(천주) | 구성비율 | 시세 | 등락 | 등락률
+        if len(tables) <= 3:
+            return []
+
+        holdings_table = tables[3]
+        result = []
+        rank = 0
+
+        for row in holdings_table.find_all("tr"):
+            # 종목 링크에서 코드 추출
+            a_tag = row.find("a", href=_re.compile(r"code=\d+"))
+            if not a_tag:
+                continue
+
+            name = a_tag.get_text(strip=True)
+            code_match = _re.search(r"code=(\d+)", a_tag["href"])
+            stock_code = code_match.group(1) if code_match else None
+
+            cells = [c.get_text(strip=True) for c in row.find_all("td")]
+            # cells: [종목명, 주식수(천주), 구성비율(%), 시세, 등락, 등락률]
+            weight_str = cells[2] if len(cells) > 2 else ""
+            weight_str = weight_str.replace("%", "").replace(",", "").strip()
+            try:
+                weight = float(weight_str)
+            except ValueError:
+                continue
+
+            rank += 1
+            result.append({
+                "rank":       rank,
+                "asset_type": "주식",
+                "name":       name,
+                "weight":     round(weight, 2),
+                "stock_code": stock_code,
+            })
+
+            if rank >= top_n:
+                break
+
+        return result
+
+    except Exception as e:
+        _logger.warning("ETF 구성 종목 스크래핑 실패 [%s]: %s", etf_code, e)
+        return []

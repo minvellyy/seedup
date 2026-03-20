@@ -4,6 +4,7 @@ from __future__ import annotations
 import json
 import subprocess
 import sys
+import threading
 from functools import lru_cache
 from pathlib import Path
 
@@ -11,7 +12,14 @@ from crewai.tools import tool
 
 from config import FIN_MODEL_DIR as _FIN_MODEL_DIR
 
-_PARQUET_PATH   = _FIN_MODEL_DIR / "data" / "processed" / "fin_scores_v2_2024_CONSOL_with_mc_with_price.parquet"
+
+def _resolve_parquet_path() -> Path:
+    """가장 최신 연도의 fin_scores parquet 파일을 자동 선택."""
+    processed = _FIN_MODEL_DIR / "data" / "processed"
+    candidates = sorted(processed.glob("fin_scores_v2_*_CONSOL_with_mc_with_price.parquet"))
+    return candidates[-1] if candidates else processed / "fin_scores_v2_2024_CONSOL_with_mc_with_price.parquet"
+
+_PARQUET_PATH   = _resolve_parquet_path()
 _UNIVERSE_PATH  = _FIN_MODEL_DIR / "data" / "processed" / "universe_k200_k150_fixed.parquet"
 _NO_FIN_PATH    = _FIN_MODEL_DIR / "data" / "processed" / "no_fin_data_tickers.json"
 
@@ -89,6 +97,9 @@ def _get_db_sector(ticker: str) -> str | None:
             password=os.getenv("DB_PASSWORD"),
             db=os.getenv("DB_NAME"),
             charset="utf8mb4",
+            connect_timeout=5,   # 연결 대기 최대 5초
+            read_timeout=5,      # 쿼리 응답 대기 최대 5초
+            write_timeout=5,
         )
         try:
             with conn.cursor() as cur:
@@ -256,10 +267,11 @@ def read_fin_structured_report(ticker: str) -> str:
         "ticker": t,
         "ticker_name": ticker_name,
         "reason": (
-            "DART 재무제표 데이터가 없습니다. 신규 상장 종목이거나 비상장/관리종목일 수 있습니다. "
-            "재무 분석 없이 가격/뉴스/ESG 데이터만으로 분석을 진행하거나, "
-            "아래 대안 종목 중 하나를 분석하세요."
-        ),
+            "DART 재무제표 데이터가 없습니다. 우선주(preferred stock)이거나 신규 상장·비상장·관리종목일 수 있습니다. "
+            "반드시 현재 분석 대상 종목({t})의 분석을 계속 진행하되, "
+            "재무 지표 없이 가격·뉴스·ESG 데이터만으로 분석을 수행하세요. "
+            "아래 alternatives 종목은 절대로 현재 종목의 분석 내용으로 사용하지 마세요."
+        ).format(t=t),
         "fin_score": None,
         "summary": None,
         "alternatives": alternatives,
@@ -286,6 +298,18 @@ def get_no_fin_data_tickers(dummy: str = "") -> str:
     }, ensure_ascii=False)
 
 
+# 종목별 생성 락 — 같은 종목의 동시 중복 실행 방지
+_generate_locks: dict[str, threading.Lock] = {}
+_generate_locks_mutex = threading.Lock()
+
+
+def _get_generate_lock(ticker: str) -> threading.Lock:
+    with _generate_locks_mutex:
+        if ticker not in _generate_locks:
+            _generate_locks[ticker] = threading.Lock()
+        return _generate_locks[ticker]
+
+
 @tool("generate_fin_structured_report")
 def generate_fin_structured_report(ticker: str, as_of: str) -> str:
     """fin_structured_model 파이프라인을 실행하여 해당 종목/기준일의 재무 리포트를 새로 생성합니다.
@@ -294,30 +318,45 @@ def generate_fin_structured_report(ticker: str, as_of: str) -> str:
         ticker: 종목코드 (예: '005930')
         as_of: 기준일 YYYY-MM-DD (예: '2024-12-31')
     """
+    t = str(ticker).zfill(6)
+    lock = _get_generate_lock(t)
+
+    # 이미 같은 종목 생성 중이면 완료될 때까지 대기 후 결과 반환 (중복 subprocess 방지)
+    if not lock.acquire(blocking=True, timeout=360):
+        return json.dumps({"error": "GENERATE_TIMEOUT", "ticker": t}, ensure_ascii=False)
+
     try:
-        _target_year = int(str(as_of)[:4])
-    except (ValueError, TypeError):
-        from datetime import date
-        _target_year = date.today().year - 1  # 직전 회계연도
-    _base_year = _target_year - 1
+        # 락 획득 직후 다른 스레드가 이미 생성했을 수 있으므로 다시 확인
+        report = _load_report(t)
+        if report:
+            return json.dumps(report, ensure_ascii=False, indent=2)
 
-    cmd = [
-        sys.executable, "-m", "scripts.run_full_auto_structured",
-        "--ticker", str(ticker).zfill(6),
-        "--as_of", str(as_of),
-        "--target_year", str(_target_year),
-        "--base_year", str(_base_year),
-        "--fs_div", "CONSOL",
-    ]
-    proc = subprocess.run(cmd, capture_output=True, text=True, cwd=str(_FIN_MODEL_DIR))
-    if proc.returncode != 0:
-        return json.dumps({
-            "error": "PIPELINE_FAILED",
-            "stderr": proc.stderr[:1000],
-            "stdout": proc.stdout[:500],
-        }, ensure_ascii=False)
+        try:
+            _target_year = int(str(as_of)[:4])
+        except (ValueError, TypeError):
+            from datetime import date
+            _target_year = date.today().year - 1
+        _base_year = _target_year - 1
 
-    report = _load_report(ticker)
-    if report:
-        return json.dumps(report, ensure_ascii=False, indent=2)
-    return json.dumps({"error": "REPORT_NOT_GENERATED", "ticker": ticker}, ensure_ascii=False)
+        cmd = [
+            sys.executable, "-m", "scripts.run_full_auto_structured",
+            "--ticker", t,
+            "--as_of", str(as_of),
+            "--target_year", str(_target_year),
+            "--base_year", str(_base_year),
+            "--fs_div", "CONSOL",
+        ]
+        proc = subprocess.run(cmd, capture_output=True, text=True, cwd=str(_FIN_MODEL_DIR), timeout=300)
+        if proc.returncode != 0:
+            return json.dumps({
+                "error": "PIPELINE_FAILED",
+                "stderr": proc.stderr[:1000],
+                "stdout": proc.stdout[:500],
+            }, ensure_ascii=False)
+
+        report = _load_report(t)
+        if report:
+            return json.dumps(report, ensure_ascii=False, indent=2)
+        return json.dumps({"error": "REPORT_NOT_GENERATED", "ticker": t}, ensure_ascii=False)
+    finally:
+        lock.release()

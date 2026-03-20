@@ -22,10 +22,10 @@ if str(_BACKEND_DIR) not in sys.path:
 
 def run_news_daily_batch() -> None:
     """신규 뉴스 1일치 수집 → LLM 분석 → 90일 초과 항목 삭제."""
-    from news_model.pipeline_news_analysis_mvp import smart_daily_batch
+    from news_model.pipeline_news_analysis_mvp import daily_batch
 
     print(f"[{datetime.now():%Y-%m-%d %H:%M:%S}] 뉴스 daily_batch 시작")
-    smart_daily_batch()
+    daily_batch(days_back=1, retention_days=90)
     print(f"[{datetime.now():%Y-%m-%d %H:%M:%S}] 뉴스 daily_batch 완료")
 
 

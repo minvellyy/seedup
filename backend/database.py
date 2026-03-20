@@ -15,7 +15,11 @@ DATABASE_URL = f"mysql+pymysql://{os.getenv('DB_USER')}:{os.getenv('DB_PASSWORD'
 engine = create_engine(
     DATABASE_URL,
     echo=False,  # True로 설정하면 모든 SQL 쿼리가 출력됩니다
-    pool_pre_ping=True
+    pool_pre_ping=True,
+    pool_size=20,       # 동시 연결 수 (기본 5 → 20)
+    max_overflow=40,    # 초과 허용 연결 수 (기본 10 → 40)
+    pool_recycle=3600,  # 1시간마다 연결 재생성 (MySQL 8시간 유휴 후 끊김 방지)
+    pool_timeout=30,    # 연결 못 얻으면 30초 후 TimeoutError (무한 대기 방지)
 )
 # 4. 세션 생성
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

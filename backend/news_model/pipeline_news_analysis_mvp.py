@@ -144,16 +144,20 @@ def _get_openai_client():
 # 모듈 import 시점이 아닌 실제 첫 사용 시점에 연결 (서버 기동 보호)
 _chroma_client = None
 _news_analysis_index = None
+_chroma_init_lock = __import__("threading").Lock()  # 멀티스레드 동시 초기화 방지
+_chroma_query_lock = __import__("threading").Lock()  # SQLite 동시 쿼리 경쟁 방지
 
 
 def _get_chroma_index():
     """ChromaDB 클라이언트와 컬렉션을 lazy 싱글턴으로 반환합니다."""
     global _chroma_client, _news_analysis_index
     if _news_analysis_index is None:
-        _chroma_client = chromadb.PersistentClient(path=NEWS_CHROMA_PATH)
-        _news_analysis_index = _chroma_client.get_or_create_collection(
-            name="news_analysis_index"
-        )
+        with _chroma_init_lock:
+            if _news_analysis_index is None:  # double-checked locking
+                _chroma_client = chromadb.PersistentClient(path=NEWS_CHROMA_PATH)
+                _news_analysis_index = _chroma_client.get_or_create_collection(
+                    name="news_analysis_index"
+                )
     return _news_analysis_index
 
 
@@ -996,7 +1000,8 @@ def search_news_context(query, n_results=5, company_name: str | None = None):
         kwargs = dict(query_embeddings=[query_emb], n_results=n_results)
         if where_doc:
             kwargs["where_document"] = where_doc
-        res = news_analysis_index.query(**kwargs)
+        with _chroma_query_lock:  # SQLite 동시 접근 경쟁 방지
+            res = news_analysis_index.query(**kwargs)
         docs = res.get("documents", [[]])[0]
         metas = res.get("metadatas", [[]])[0]
         return [{"doc": d, "meta": m} for d, m in zip(docs, metas)]

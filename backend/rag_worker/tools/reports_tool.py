@@ -11,6 +11,7 @@ from __future__ import annotations
 import json
 import os
 import sys
+import threading
 from pathlib import Path
 
 _BACKEND_DIR = Path(__file__).resolve().parent.parent.parent  # backend/
@@ -28,24 +29,30 @@ _EMBED_MODEL = os.getenv("OPENAI_EMBED_MODEL", "text-embedding-3-small")
 _COLLECTION = "financial_reports"
 
 _vectorstore = None
+_vectorstore_lock = threading.Lock()  # 멀티스레드 동시 접근 보호
 
 
 def _get_vectorstore():
     global _vectorstore
     if _vectorstore is None:
-        from langchain_openai import OpenAIEmbeddings
-        try:
-            from langchain_chroma import Chroma
-        except ImportError:
-            from langchain_community.vectorstores import Chroma
+        with _vectorstore_lock:
+            if _vectorstore is None:  # double-checked locking
+                from langchain_openai import OpenAIEmbeddings
+                try:
+                    from langchain_chroma import Chroma
+                except ImportError:
+                    from langchain_community.vectorstores import Chroma
 
-        embeddings = OpenAIEmbeddings(model=_EMBED_MODEL)
-        _vectorstore = Chroma(
-            persist_directory=_REPORTS_DB_PATH,
-            embedding_function=embeddings,
-            collection_name=_COLLECTION,
-        )
+                embeddings = OpenAIEmbeddings(model=_EMBED_MODEL)
+                _vectorstore = Chroma(
+                    persist_directory=_REPORTS_DB_PATH,
+                    embedding_function=embeddings,
+                    collection_name=_COLLECTION,
+                )
     return _vectorstore
+
+
+_search_lock = threading.Lock()  # ChromaDB SQLite 동시 읽기 경쟁 방지
 
 
 def search_reports_context(query: str, k: int = 3, ticker: str | None = None) -> list[dict]:
@@ -55,12 +62,12 @@ def search_reports_context(query: str, k: int = 3, ticker: str | None = None) ->
     Returns: list of {"content": str, "metadata": dict}
     """
     db = _get_vectorstore()
-    if ticker:
-        docs = db.similarity_search(query, k=k, filter={"ticker": str(ticker).zfill(6)})
-        if not docs:  # 해당 ticker 리포트 없으면 일반 검색으로 fallback
+    with _search_lock:
+        if ticker:
+            docs = db.similarity_search(query, k=k, filter={"ticker": str(ticker).zfill(6)})
+            # ticker 지정 시 결과 없으면 빈 결과 반환 (다른 종목 리포트 노출 방지)
+        else:
             docs = db.similarity_search(query, k=k)
-    else:
-        docs = db.similarity_search(query, k=k)
     return [{"content": d.page_content, "metadata": d.metadata} for d in docs]
 
 

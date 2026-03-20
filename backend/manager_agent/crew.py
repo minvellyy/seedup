@@ -17,7 +17,6 @@ from crewai import Agent, Task, Crew, Process
 
 from manager_agent.tools.fin_structured_tool import (
     read_fin_structured_report,
-    generate_fin_structured_report,
 )
 from manager_agent.tools.stock_direction_tool import (
     read_stock_direction_signal,
@@ -94,10 +93,11 @@ def run_manager_analysis(
             "DART 공시 데이터와 시가총액 기반 밸류에이션에 정통하며, "
             "정량 지표를 실용적인 투자 판단으로 전환하는 데 특화되어 있다."
         ),
-        tools=[read_fin_structured_report, generate_fin_structured_report],
+        tools=[read_fin_structured_report],
         llm=llm,
         verbose=True,
         allow_delegation=False,
+        max_iter=4,
     )
 
     direction_analyst = Agent(
@@ -115,6 +115,7 @@ def run_manager_analysis(
         llm=llm,
         verbose=True,
         allow_delegation=False,
+        max_iter=4,
     )
 
     unstructured_analyst = Agent(
@@ -132,6 +133,7 @@ def run_manager_analysis(
         llm=llm,
         verbose=True,
         allow_delegation=False,
+        max_iter=4,
     )
 
     manager = Agent(
@@ -149,6 +151,7 @@ def run_manager_analysis(
         llm=llm,
         verbose=True,
         allow_delegation=False,
+        max_iter=3,
     )
 
     # ── 태스크 ─────────────────────────────────────────────────────────────────
@@ -156,9 +159,11 @@ def run_manager_analysis(
     t_fin = Task(
         description=(
             f"종목 {ticker}의 정형 재무 데이터를 분석하라. 기준일: {as_of_label}.\n\n"
+            f"[절대 규칙] 분석 대상은 반드시 {ticker}이어야 한다. "
+            "조회 결과에 alternatives 필드가 있더라도 그 종목을 현재 분석 대상으로 대체하지 말 것.\n\n"
             "절차:\n"
             "1) read_fin_structured_report 툴로 데이터를 먼저 조회하라.\n"
-            "2) NOT_FOUND 오류가 반환되면 generate_fin_structured_report 툴을 사용해 생성하라.\n"
+            "2) NOT_FOUND이면 재무 데이터 없이 '재무 데이터 미확보 종목'으로 표시하고 분석 가능한 항목만 작성하라.\n"
             "3) 조회된 데이터를 기반으로 다음 항목을 각각 분석하라:\n"
             "   - overall_score와 overall_grade\n"
             "   - 수익성: OPM, ROA\n"
@@ -188,7 +193,6 @@ def run_manager_analysis(
             '  "data_quality_note": str|null\n'
             '}'
         ),
-        async_execution=True,
         agent=fin_analyst,
     )
 
@@ -220,7 +224,6 @@ def run_manager_analysis(
             '  "interpretation": str    // 1~2문장 해석\n'
             '}'
         ),
-        async_execution=True,
         agent=direction_analyst,
     )
 
@@ -251,7 +254,6 @@ def run_manager_analysis(
             '  "last_updated": str|null\n'
             '}'
         ),
-        async_execution=True,
         agent=unstructured_analyst,
     )
 
@@ -380,6 +382,7 @@ def run_manager_analysis(
             llm=llm,
             verbose=True,
             allow_delegation=False,
+            max_iter=4,
         )
 
         company_analyst = Agent(
@@ -393,10 +396,11 @@ def run_manager_analysis(
                 "재무 데이터와 시장 모멘텀을 통합 분석하여 기업 가치를 평가하며, "
                 "입문자도 이해할 수 있는 명확한 언어로 기업 분석 리포트를 작성하는 데 특화."
             ),
-            tools=[read_fin_structured_report, generate_fin_structured_report, read_stock_direction_signal],
+            tools=[read_fin_structured_report, read_stock_direction_signal],
             llm=llm,
             verbose=True,
             allow_delegation=False,
+            max_iter=4,
         )
 
         industry_analyst = Agent(
@@ -416,11 +420,13 @@ def run_manager_analysis(
             llm=llm,
             verbose=True,
             allow_delegation=False,
+            max_iter=4,
         )
 
         t_fit = Task(
             description=(
                 f"종목 {ticker}에 대해 사용자 투자원칙 적합도 분석을 수행하라.{context_label}\n\n"
+                f"[절대 규칙] 분석 대상은 반드시 {ticker}이어야 한다. 다른 종목을 분석 대상으로 대체하지 말 것.\n\n"
                 "절차:\n"
                 f"1) read_investment_fit_data 툴을 호출하라.\n"
                 f"   - user_profile_json: {user_profile_json!r}\n"
@@ -448,16 +454,19 @@ def run_manager_analysis(
                 '  "caution": str|null          // 주의사항 1가지 (없으면 null)\n'
                 '}'
             ),
-            async_execution=True,
             agent=fit_analyst,
         )
 
         t_company = Task(
             description=(
                 f"종목 {ticker}에 대한 기업 심층 분석을 수행하라. 기준일: {as_of_label}.\n\n"
+                f"[절대 규칙] 분석 대상은 반드시 {ticker}이어야 한다. "
+                "read_fin_structured_report 결과에 alternatives 필드가 있더라도 "
+                "그 종목들의 데이터를 현재 분석에 사용하거나 언급하지 말 것. "
+                "재무 데이터가 없으면 '재무 데이터 미확보 종목'으로 표기하고 다른 종목을 분석하지 말 것.\n\n"
                 "절차:\n"
                 "1) read_fin_structured_report 툴로 재무 데이터를 조회하라.\n"
-                "2) NOT_FOUND이면 generate_fin_structured_report를 사용하라.\n"
+                "2) NOT_FOUND이면 재무 데이터 없이 분석 가능한 항목만 작성하라.\n"
                 "3) read_stock_direction_signal 툴로 모멘텀 정보를 보완하라.\n"
                 "4) 다음 항목을 분석하라:\n"
                 "   - 사업 개요: 주력 사업, 위치한 산업/섹터\n"
@@ -491,20 +500,24 @@ def run_manager_analysis(
                 '  "overall_company_view": str   // 기업 전반 평가 2~3문장\n'
                 '}'
             ),
-            async_execution=True,
             agent=company_analyst,
         )
 
         t_industry = Task(
             description=(
                 f"종목 {ticker}가 속한 산업/섹터에 대한 분석을 수행하라.\n\n"
+                f"[절대 규칙] 분석 대상은 반드시 {ticker}이어야 한다. "
+                "read_fin_structured_report 결과에 alternatives 필드가 있더라도 "
+                "그 종목들의 정보를 현재 분석에 절대 사용하지 말 것. "
+                "재무 데이터가 없으면 sector/industry를 null로 두고 분석을 계속 진행하라.\n\n"
                 "절차:\n"
                 "1) read_fin_structured_report 툴로 종목의 sector, industry 정보를 확인하라.\n"
                 "   - 툴이 반환한 'sector' 값을 결과 JSON의 sector 필드에 그대로 사용하라.\n"
                 "   - 절대로 LLM 자신의 지식으로 sector/industry 값을 수정하거나 대체하지 말 것.\n"
                 "   - sector가 null이면 null 그대로 두고 industry_overview에 '섹터 정보 없음'으로 명시하라.\n"
                 "2) news_rag_search 툴로 해당 산업·섹터 관련 최신 뉴스를 검색하라.\n"
-                "   - 검색 질의 예시: '[산업명] 트렌드', '[산업명] 성장', '[종목명] 경쟁사', '[산업명] 규제'\n"
+                f"   - 검색 질의 예시: '[산업명] 트렌드', '[산업명] 성장', '{ticker} 경쟁사', '[산업명] 규제'\n"
+                "   - 검색 결과의 뉴스가 현재 종목의 산업과 무관하면 사용하지 말 것.\n"
                 "   - 뉴스가 없거나 검색 실패 시에도 멈추지 말고 다음 단계로 진행하라.\n"
                 "3) 수집한 데이터를 바탕으로 다음을 분석하라:\n"
                 "   - 산업 정의: 이 산업이 어떤 산업인지 쉬운 말로 설명\n"
@@ -537,22 +550,23 @@ def run_manager_analysis(
                 '  "opportunity_threat_summary": str // 기회·위협 종합 2문장\n'
                 '}'
             ),
-            async_execution=True,
             agent=industry_analyst,
         )
 
         t_unstr_sd = Task(
             description=(
                 f"종목 {ticker}의 ESG 보고서, 최신 뉴스, 증권사 리포트를 조회하라.\n\n"
+                f"[절대 규칙] 모든 데이터는 반드시 {ticker} 종목과 직접 관련된 것만 사용하라. "
+                "다른 종목의 데이터를 현재 종목의 내용으로 포함시키지 말 것.\n\n"
                 "절차:\n"
                 "1) read_unstructured_analysis 툴로 ESG 분석·뉴스·증권사 리포트를 한 번에 조회하라.\n"
                 "2) 조회 결과에서 다음을 추출하라:\n"
                 "   - esg.risks : ESG 리스크 요인 (있으면 1문장 요약)\n"
                 "   - esg.opportunities : ESG 기대 요인 (있으면 1문장 요약)\n"
-                "   - news : 반드시 해당 종목({ticker}) 또는 동일 산업·섹터와 직접 관련된 뉴스만 2~3개 요약하라.\n"
+                f"   - news : 반드시 해당 종목({ticker}) 또는 동일 산업·섹터와 직접 관련된 뉴스만 2~3개 요약하라.\n"
                 "     뉴스 doc 내 companies/industries 필드를 확인하여 이 종목과 무관한 타 산업 뉴스(예: 유가, 환율, 전혀 다른 업종)는 절대 포함하지 말라.\n"
                 "     관련 뉴스가 없으면 news_summary를 null로 설정하라.\n"
-                "   - reports : 증권사 리포트 목표주가·투자의견·핵심 인사이트\n"
+                "   - reports : 증권사 리포트 목표주가·투자의견·핵심 인사이트 (결과가 비어있으면 reports_insight는 null)\n"
                 "3) 각 항목이 없거나 NO_REPORT/ERROR이면 null로 표시하고 에러처럼 보이지 않도록 하라."
             ),
             expected_output=(
@@ -565,7 +579,6 @@ def run_manager_analysis(
                 '  "reports_insight": str|null    // 증권사 리포트 핵심 인사이트\n'
                 '}'
             ),
-            async_execution=True,
             agent=unstructured_analyst,
         )
 
@@ -575,6 +588,9 @@ def run_manager_analysis(
                 f"{context_label}\n\n"
                 f"작성 언어: {lang_label}\n"
                 f"작성 톤: {style_label} 문체\n\n"
+                f"[절대 규칙] 이 리포트의 분석 대상은 반드시 {ticker}이어야 한다. "
+                "다른 종목(alternatives)의 내용을 현재 종목 분석으로 채워넣지 말 것. "
+                "재무 데이터가 없으면 해당 섹션을 '재무 데이터 미확보'로 표기하라.\n\n"
                 "앞서 네 분석가(투자원칙 적합도 / 기업분석 / 산업분석 / 비정형 데이터)의 결과를 종합하여 "
                 "단일 종목 상세 페이지에 바로 사용할 수 있는 통합 리포트를 생성하라.\n\n"
                 "[핵심 원칙]\n"
@@ -1355,7 +1371,12 @@ async def _run_crew_in_executor(func, **kwargs) -> str:
     import asyncio
     import functools
     loop = asyncio.get_running_loop()
-    return await loop.run_in_executor(None, functools.partial(func, **kwargs))
+    try:
+        return await loop.run_in_executor(None, functools.partial(func, **kwargs))
+    except RuntimeError as e:
+        if "cannot schedule new futures after shutdown" in str(e):
+            raise asyncio.CancelledError("Server is shutting down") from None
+        raise
 
 
 async def run_manager_analysis_async(

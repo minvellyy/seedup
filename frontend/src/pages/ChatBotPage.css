@@ -102,9 +102,36 @@
   text-overflow: ellipsis;
 }
 
+.session-item-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
 .session-time {
   font-size: 12px;
   color: #999;
+}
+
+.session-delete-btn {
+  display: none;
+  background: none;
+  border: none;
+  color: #9CA3AF;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 5px;
+  border-radius: 4px;
+  line-height: 1;
+  transition: color 0.15s, background 0.15s;
+  flex-shrink: 0;
+}
+.session-delete-btn:hover {
+  color: #EF4444;
+  background: #FEE2E2;
+}
+.session-item:hover .session-delete-btn {
+  display: block;
 }
 
 /* 메인 채팅 영역 */
@@ -179,6 +206,31 @@
   display: flex;
   gap: 12px;
   animation: fadeIn 0.3s ease;
+  position: relative;
+}
+
+.message-delete-btn {
+  display: none;
+  position: absolute;
+  top: 6px;
+  right: 8px;
+  background: rgba(255,255,255,0.8);
+  border: none;
+  color: #9CA3AF;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  line-height: 1;
+  transition: color 0.15s, background 0.15s;
+  z-index: 2;
+}
+.message-delete-btn:hover {
+  color: #EF4444;
+  background: #FEE2E2;
+}
+.message-content:hover .message-delete-btn {
+  display: block;
 }
 
 .message.user {
@@ -512,6 +564,46 @@
   border-left: 4px solid #ffc107;
   border-radius: 4px;
   font-weight: 500;
+}
+
+/* 출처 블록 */
+.formatted-message .chat-sources {
+  font-size: 12px;
+  color: #666;
+  margin-top: 10px;
+  padding-top: 8px;
+  border-top: 1px solid #d1e8da;
+  line-height: 1.5;
+}
+.formatted-message .chat-sources br {
+  display: none;
+}
+.formatted-message .chat-sources .chat-bullet {
+  margin: 1px 0;
+  padding: 0;
+  font-size: 12px;
+  color: #666;
+}
+.formatted-message .chat-sources .chat-bullet::before {
+  display: none;
+}
+.formatted-message .chat-sources strong {
+  color: #444;
+  font-size: 12px;
+}
+.formatted-message .chat-sources .chat-link {
+  font-size: 12px;
+}
+
+/* 링크 스타일 */
+.formatted-message .chat-link {
+  color: #4A7C59;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  word-break: break-all;
+}
+.formatted-message .chat-link:hover {
+  color: #2d5a3d;
 }
 
 /* 별점 스타일 */

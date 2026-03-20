@@ -269,6 +269,7 @@ function StocksPage() {
               code: stockCode,
               name: stockName,
               market: stock.market || 'KOSPI',
+              assetType: stock.asset_type || 'STOCK',
               price: stock.current_price || stock.price || 0,
               changeRate: stock.change_rate || stock.changeRate || 0,
             }
@@ -320,7 +321,11 @@ function StocksPage() {
   const handleSearchResultClick = (stock) => {
     setSearchKeyword('')
     setShowSearchResults(false)
-    handleStockClick(stock.code)
+    if (stock.assetType === 'ETF') {
+      navigate(`/etf/${stock.code}`)
+    } else {
+      handleStockClick(stock.code)
+    }
   }
 
   // 가격 포맷팅
@@ -518,6 +523,9 @@ function StocksPage() {
                           <span className={`market-badge ${stock.market.toLowerCase()}`}>
                             {stock.market}
                           </span>
+                          {stock.assetType === 'ETF' && (
+                            <span className="market-badge etf-badge">ETF</span>
+                          )}
                         </div>
                         <div className="result-code">{stock.code}</div>
                       </div>

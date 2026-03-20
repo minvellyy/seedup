@@ -192,11 +192,49 @@ async def get_session_messages(
         if not session:
             raise HTTPException(status_code=404, detail="세션을 찾을 수 없습니다")
         
-        messages = get_conversation_history(session_id, db, limit=50)
+        from models import ChatMessage
+        from sqlalchemy import desc
+        raw = db.query(ChatMessage).filter(
+            ChatMessage.session_id == session_id
+        ).order_by(ChatMessage.created_at).limit(50).all()
+        messages = [
+            {"id": m.id, "role": m.role, "content": m.content, "created_at": m.created_at.isoformat() if m.created_at else None}
+            for m in raw
+        ]
         return {"messages": messages, "success": True}
         
     except Exception as e:
         return {"success": False, "error": str(e), "messages": []}
+
+@router.delete("/message/{message_id}")
+async def delete_chat_message(
+    message_id: int,
+    user_id: int = Query(..., description="사용자 ID"),
+    db: Session = Depends(get_db)
+):
+    """개별 채팅 메시지 삭제"""
+    try:
+        from models import ChatMessage, ChatSession
+
+        msg = db.query(ChatMessage).filter(ChatMessage.id == message_id).first()
+        if not msg:
+            raise HTTPException(status_code=404, detail="메시지를 찾을 수 없습니다")
+
+        session = db.query(ChatSession).filter(
+            ChatSession.id == msg.session_id,
+            ChatSession.user_id == user_id
+        ).first()
+        if not session:
+            raise HTTPException(status_code=403, detail="삭제 권한이 없습니다")
+
+        db.delete(msg)
+        db.commit()
+        return {"success": True}
+    except HTTPException:
+        raise
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=f"메시지 삭제 오류: {str(e)}")
+
 
 @router.delete("/session/{session_id}")
 async def delete_chat_session(
