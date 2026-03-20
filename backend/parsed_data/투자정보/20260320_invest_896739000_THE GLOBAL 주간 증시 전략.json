@@ -1,0 +1,50 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-20",
+        "brokerage": "대신증권",
+        "analyst_name": "문남중, 문건우",
+        "report_title": "THE GLOBAL 주간 증시 전략"
+    },
+    "specific_data": {
+        "strategy_theme": "중동 정세에 따른 유럽 및 일본 증시 반등 모색",
+        "recommended_portfolio": [
+            "iShares Core MSCI Emerging Markets",
+            "Invesco QQQ Trust Series 1",
+            "Xtrackers Harvest CSI300 China A-Shares ETF",
+            "iShares MSCI India ETF",
+            "iShares MSCI Taiwan ETF",
+            "iShares MSCI South Korea ETF",
+            "Technology Select Sector SPDR",
+            "Materials Select Sector SPDR",
+            "Industrial Select Sector SPDR Fund",
+            "Global x Artificial Intelligence & Technology ETF",
+            "iShares Semiconductor ETF",
+            "Health Care Select Sector SPDR",
+            "Global X Management Co LLC URA",
+            "VanEck Uranium and Nuclear Energy ETF",
+            "Defiance Quantum ETF",
+            "ProShares Bitcoin",
+            "Global X Robotics & Artificial Intelligence ETF",
+            "iShares 7-10 Year Treasury Bond ETF",
+            "SPDR Gold Shares",
+            "United States Copper Index Fund",
+            "Vanguard Real Estate Index Fund",
+            "Invesco DB US Dollar Index Bearish Fund",
+            "Invesco CurrencyShares Japanese Yen Trust"
+        ],
+        "strategy_logic": [
+            "중동 정세의 불확실성이 유럽 및 일본 증시에 미치는 영향",
+            "ECB와 BOJ의 금리 동결 결정",
+            "전쟁 확전 우려에도 불구하고 증시 반등 가능성",
+            "AI 및 반도체 관련 산업의 성장 기대"
+        ],
+        "quant_factors": [
+            "금리 동결",
+            "인플레이션",
+            "정치적 불확실성",
+            "AI 수요 증가",
+            "반도체 산업 성장"
+        ]
+    }
+}

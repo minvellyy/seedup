@@ -1,0 +1,20 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-19",
+        "brokerage": "IBKS",
+        "analyst_name": "이건재",
+        "report_title": "[코스닥 시장 승강제 도입] 코스닥 시장 승강제 도입"
+    },
+    "specific_data": {
+        "strategy_theme": "코스닥 시장 승강제 도입",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "1부 성격의 프리미엄 시장에는 시가총액 상위의 대형, 우량 혁신기업이 들어감",
+            "2부 성격의 스탠다드 시장에는 일반적인 코스닥 스케일업 기업과 기술특례 상장 기업 등이 포함됨",
+            "승강제 도입을 통해 실적이 좋아진 기업은 1부로 올라가고, 요건을 충족하지 못하는 기업은 2부로 내려가는 시스템을 운용",
+            "향후 1부 리그 기업들만을 대상으로 한 별도의 지수를 개발하고, 이를 추종하는 ETF를 출시할 계획"
+        ],
+        "quant_factors": null
+    }
+}

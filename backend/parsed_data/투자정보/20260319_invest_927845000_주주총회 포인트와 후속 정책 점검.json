@@ -1,0 +1,33 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2023-10-18",
+        "brokerage": "키움증권",
+        "analyst_name": "키움증권 리서치센터",
+        "report_title": "주주총회 포인트와 후속 정책 점검"
+    },
+    "specific_data": {
+        "strategy_theme": "거버넌스 개혁 및 주주환원 확대",
+        "recommended_portfolio": [
+            "삼성전자",
+            "SK",
+            "롯데지주",
+            "SK네트웍스",
+            "에스디바이오센서",
+            "KCC",
+            "두산",
+            "한화"
+        ],
+        "strategy_logic": [
+            "2026년 주주총회에서의 거버넌스 개혁과 자사주 소각 의무화",
+            "행동주의 펀드의 증가와 경영권 분쟁의 심화",
+            "PBR 1배 미만 기업의 밸류업 의무화"
+        ],
+        "quant_factors": [
+            "PBR",
+            "ROE",
+            "주주환원 비율",
+            "자사주 매입 및 소각 비율"
+        ]
+    }
+}

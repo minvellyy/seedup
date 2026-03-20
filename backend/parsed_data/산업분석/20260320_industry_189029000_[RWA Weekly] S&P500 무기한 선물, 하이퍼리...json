@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-19",
+        "brokerage": "한화리서치",
+        "analyst_name": "최윤영",
+        "report_title": "[RWA Weekly] S&P500 무기한 선물, 하이퍼리.."
+    },
+    "specific_data": {
+        "sector_name": "디지털자산",
+        "industry_rating": "Positive",
+        "top_picks": [],
+        "industry_trends": [
+            "S&P500가 온체인 무기한 선물 형태로 확장",
+            "토큰화 범위가 원자재, 개별 주식에서 지수까지 확장",
+            "하이퍼리퀴드에서 24/7 거래 가능"
+        ],
+        "risk_factors": [
+            "무기한 선물의 규제 불확실성",
+            "레버리지",
+            "비 KYC 접근성"
+        ]
+    }
+}

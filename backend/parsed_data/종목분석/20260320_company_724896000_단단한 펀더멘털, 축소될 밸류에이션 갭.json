@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-20",
+        "brokerage": "미래에셋증권",
+        "analyst_name": "류제현",
+        "report_title": "단단한 펀더멘털, 축소될 밸류에이션 갭"
+    },
+    "specific_data": {
+        "company_name": "포스코인터내셔널",
+        "ticker": "047050",
+        "investment_rating": "매수",
+        "investment_points": [
+            "단단한 펀더멘털",
+            "ROE 기여도 확대 전망",
+            "모빌리티 사업의 장기 성장 가능성",
+            "유가 상승에 따른 주가 반등 기대"
+        ],
+        "risk_factors": [
+            "EV 캐즘",
+            "중국 경쟁 리스크"
+        ],
+        "shareholder_structure": "주요 주주 지분율은 외국인 보유비중 6.7%로 나타남"
+    }
+}

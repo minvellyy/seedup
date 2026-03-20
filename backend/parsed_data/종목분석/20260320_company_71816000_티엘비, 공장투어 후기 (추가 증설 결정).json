@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-20",
+        "brokerage": "SK증권",
+        "analyst_name": "박형우",
+        "report_title": "티엘비, 공장투어 후기 (추가 증설 결정)"
+    },
+    "specific_data": {
+        "company_name": "티엘비",
+        "ticker": "356860",
+        "investment_rating": "Not Rated",
+        "investment_points": [
+            "베트남 2공장 투자 결정 (1공장 대비 4배 규모)",
+            "모듈PCB 수요 폭증",
+            "국내 모듈PCB 기업들의 수혜 전망"
+        ],
+        "risk_factors": [
+            "적층공정부족",
+            "미중분쟁",
+            "차세대패키지"
+        ],
+        "shareholder_structure": "백성현(외8) 29.12%, 자사주 1.12%, 외국인 지분율 16.28%"
+    }
+}

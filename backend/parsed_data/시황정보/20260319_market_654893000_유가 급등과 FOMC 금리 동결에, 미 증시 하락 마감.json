@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-19",
+        "brokerage": "null",
+        "analyst_name": "null",
+        "report_title": "유가 급등과 FOMC 금리 동결에, 미 증시 하락 마감"
+    },
+    "specific_data": {
+        "market_summary": "유가 급등과 FOMC 금리 동결에, 미 증시 하락 마감. 국내 증시는 반도체 업종 강세로 상승 마감.",
+        "macro_indicators": "미국 국채 10년물 금리 4.40%, 달러-원 환율 1,483.10원.",
+        "fund_flows": "외국인 수급강도 순매수 금액: 496억원, 기관 수급강도 순매수 금액: 734억원.",
+        "key_news": [
+            "마이크론 실적 어닝서프라이즈 기록, FOMC 금리 동결",
+            "국제 유가 급등으로 인플레이션 상방 압력",
+            "이스라엘과 이란 간의 갈등 격화"
+        ]
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-20",
+        "brokerage": "유안타증권",
+        "analyst_name": "이창영",
+        "report_title": "실적은 센티를 이긴다"
+    },
+    "specific_data": {
+        "company_name": "엔씨소프트",
+        "ticker": "036570",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "아이온2의 출시 초반 트래픽 유지",
+            "리니지클래식의 동시접속자수 증가",
+            "M&A를 통한 성장성 추가"
+        ],
+        "risk_factors": [
+            "MMORPG 위주의 높은 흥행 리스크",
+            "오랜 개발기간으로 인한 게임 출시 주기"
+        ],
+        "shareholder_structure": "주요주주 김택진 외 14 인"
+    }
+}

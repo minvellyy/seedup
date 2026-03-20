@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-20",
+        "brokerage": "유진투자증권",
+        "analyst_name": "정의훈",
+        "report_title": "NVIDIA, 우주 데이터센터 모듈 발표"
+    },
+    "specific_data": {
+        "sector_name": "우주",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "NVIDIA의 우주 데이터센터 모듈 발표",
+            "AI 컴퓨팅을 지상에서 우주로 전환",
+            "우주 데이터센터에 대한 투자 증가"
+        ],
+        "risk_factors": [
+            "기술적 한계",
+            "비용적 한계"
+        ]
+    }
+}

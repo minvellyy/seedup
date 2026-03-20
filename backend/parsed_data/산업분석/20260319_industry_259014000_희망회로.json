@@ -1,0 +1,29 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2023-03-17",
+        "brokerage": "한화투자증권",
+        "analyst_name": "한화리서치센터",
+        "report_title": "희망회로"
+    },
+    "specific_data": {
+        "sector_name": "음식료",
+        "industry_rating": "Positive",
+        "top_picks": [
+            "삼양식품",
+            "CJ제일제당",
+            "오리온",
+            "롯데웰푸드"
+        ],
+        "industry_trends": [
+            "1~2인 가구 비중 증가로 소용량, 간편식, 프리미엄 제품 수요 증가",
+            "온라인 채널 비중 확대",
+            "전통적인 생필품 중심의 소비에서 가치소비로의 전환"
+        ],
+        "risk_factors": [
+            "고환율 및 고유가로 인한 원가 상승",
+            "가격 전가력 약화",
+            "모조품 유통 증가에 따른 브랜드 훼손 리스크"
+        ]
+    }
+}

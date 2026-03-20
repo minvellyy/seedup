@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-20",
+        "brokerage": "하나증권",
+        "analyst_name": "유재선, 성무규",
+        "report_title": "올해 배출권 가격 50% 이상 상승 중"
+    },
+    "specific_data": {
+        "sector_name": "유틸리티",
+        "industry_rating": null,
+        "top_picks": [
+            "SK가스",
+            "한국가스공사"
+        ],
+        "industry_trends": [
+            "온실가스 배출권 가격 상승",
+            "해상풍력 사업 추진 방식 변경",
+            "에너지 공급망 불안정"
+        ],
+        "risk_factors": [
+            "원가 상승으로 인한 요금 인상 압박",
+            "중동 에너지 공급망 마비",
+            "석탄 발전량 급증에 따른 배출권 수요 증가"
+        ]
+    }
+}

@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-20",
+        "brokerage": "유진투자증권",
+        "analyst_name": "양승윤",
+        "report_title": "보스턴다이내믹스의 로봇 설계 철학"
+    },
+    "specific_data": {
+        "sector_name": "로보틱스",
+        "industry_rating": "OVERWEIGHT",
+        "top_picks": [
+            "현대모비스",
+            "에스피지",
+            "한국피아이엠"
+        ],
+        "industry_trends": [
+            "모듈성 강조",
+            "고성능 액츄에이터 개발",
+            "자동차 산업 공급망과 결합"
+        ],
+        "risk_factors": [
+            "열 문제",
+            "비효율적인 배터리 관리"
+        ]
+    }
+}

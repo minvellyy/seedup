@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-19",
+        "brokerage": "하나증권",
+        "analyst_name": "김현수, 홍지원",
+        "report_title": "2월 ESS Battery  미국 Grid ESS 증가"
+    },
+    "specific_data": {
+        "sector_name": "ESS 배터리",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "LG에너지솔루션",
+            "삼성SDI",
+            "더블유씨피",
+            "한중엔시에스"
+        ],
+        "industry_trends": [
+            "미국 Grid ESS 설치량 큰 폭 증가",
+            "유럽 및 북미의 견조한 수요 증가",
+            "LFP 케미스트리의 비중 증가"
+        ],
+        "risk_factors": [
+            "입찰 및 인허가 일정에 따른 설치량 변동",
+            "중국 시장의 성장 둔화"
+        ]
+    }
+}

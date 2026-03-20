@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-20",
+        "brokerage": "IBK투자증권",
+        "analyst_name": "이동욱",
+        "report_title": "Kraton, 이어지고 있는 판가 인상과 수익성 .."
+    },
+    "specific_data": {
+        "sector_name": "에너지/소재",
+        "industry_rating": null,
+        "top_picks": [
+            "Kraton"
+        ],
+        "industry_trends": [
+            "폴리머부문 판가 인상",
+            "바이오 기반 화학부문 판가 전가",
+            "부타디엔 가격 상승"
+        ],
+        "risk_factors": [
+            "원자재 가격 변동",
+            "수급 타이트 현상"
+        ]
+    }
+}

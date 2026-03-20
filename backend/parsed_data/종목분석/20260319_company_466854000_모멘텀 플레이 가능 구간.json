@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-19",
+        "brokerage": "유안타증권",
+        "analyst_name": "이환욱",
+        "report_title": "모멘텀 플레이 가능 구간"
+    },
+    "specific_data": {
+        "company_name": "와이지엔터테인먼트",
+        "ticker": "122870",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "2026 연간 예상 매출액 +9.0% yoy, 영업이익 +13.5% yoy",
+            "블랙핑크의 추가 월드투어 및 신보 발매에 따른 외형 성장",
+            "‘빅뱅’ 20주년 활동에 따른 추가적인 이익 개선세"
+        ],
+        "risk_factors": [
+            "기저부담 영향으로 YoY 매출액 감소 불가피",
+            "신인 IP의 성공 여부에 따른 밸류에이션 유동성"
+        ],
+        "shareholder_structure": "주요주주 양현석 외 5 인"
+    }
+}

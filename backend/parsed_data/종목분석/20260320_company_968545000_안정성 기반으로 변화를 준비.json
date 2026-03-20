@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-20",
+        "brokerage": "키움증권",
+        "analyst_name": "김학준",
+        "report_title": "안정성 기반으로 변화를 준비"
+    },
+    "specific_data": {
+        "company_name": "아이디피",
+        "ticker": "332370",
+        "investment_rating": "Not Rated",
+        "investment_points": [
+            "안정성 기반으로 변화를 준비",
+            "오스크용 카드프린터 판매가 꾸준히 진행됨에 따라 안정적인 현금창출",
+            "신성장 동력으로 자율주행 로봇을 준비 중"
+        ],
+        "risk_factors": [
+            "이익률이 크게 높지 않음",
+            "재전사 ASP가 직전사에 비해 높음"
+        ],
+        "shareholder_structure": "주요 주주: 아이디스홀딩스 58.6%"
+    }
+}
