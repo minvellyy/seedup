@@ -757,10 +757,10 @@ const DashboardPage = () => {
 
           {/* 포트폴리오 추천 — 단일 카드 (종목 추천과 동일한 구조) */}
           {(() => {
-            const BLUE_PALETTE = ['#1E3A8A','#2D5BB5','#2563EB','#3B82F6','#60A5FA','#93C5FD','#BAD4F5','#DBEAFE']
+            const BLUE_PALETTE = ['#C2410C','#EA580C','#F97316','#FB923C','#FDBA74','#FED7AA','#FFEDD5','#FFF4E6']
             const getColor = (idx) => BLUE_PALETTE[Math.min(idx, BLUE_PALETTE.length - 1)]
             // Top 순위별 강조색
-            const TOP_COLORS = ['#2563EB', '#7C3AED', '#0891B2']
+            const TOP_COLORS = ['#FFB84D', '#FF8F00', '#FFD66B']
             const getTopColor = (idx) => TOP_COLORS[idx] || '#3498db'
             const buildCardSummary = (pf) => {
               const ctx = pf.survey_context || {}
@@ -872,8 +872,8 @@ const DashboardPage = () => {
                               {perf && (
                                 <span style={{
                                   fontSize: '0.7rem', fontWeight: 700,
-                                  color: perf.ann_return_pct >= 0 ? '#e74c3c' : '#3B82F6',
-                                  background: perf.ann_return_pct >= 0 ? '#fff1eb' : '#eff6ff',
+                                  color: perf.ann_return_pct >= 0 ? '#C2410C' : '#3B82F6',
+                                  background: perf.ann_return_pct >= 0 ? '#FFF8E1' : '#eff6ff',
                                   padding: '3px 8px', borderRadius: 10,
                                 }}>
                                   3Y {fmtPct(perf.ann_return_pct)}
@@ -904,10 +904,10 @@ const DashboardPage = () => {
                                 fontSize: '0.75rem',
                                 padding: '4px 10px',
                                 borderRadius: '12px',
-                                background: '#2563EB',
-                                color: 'white',
+                                background: '#FFB84D',
+                                color: '#1a1a1a',
                                 fontWeight: '600',
-                                boxShadow: '0 2px 4px rgba(37, 99, 235, 0.2)',
+                                boxShadow: '0 2px 4px rgba(255, 184, 77, 0.3)',
                               }}>
                                 {item.name} {item.weight_pct.toFixed(0)}%
                               </span>

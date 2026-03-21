@@ -414,115 +414,116 @@ const InquirySection = () => {
     }
   }
 
-  return (
-    <div className="cs-content-section">
-      <div className="cs-section-header">
-        <div>
-          <h2 className="cs-section-title">1:1 문의</h2>
-          <p className="cs-section-description">궁금한 점이나 불편 사항을 남겨주시면 빠르게 답변드릴게요</p>
-        </div>
-        <button className="btn-new-inquiry" onClick={() => setIsModalOpen(true)}>
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-            <path d="M10 4v12M4 10h12" stroke="currentColor" strokeWidth="2" strokeLinecap="round"/>
-          </svg>
-          문의 작성
-        </button>
-      </div>
+  const pendingCount = inquiryData.filter(i => i.status === 'pending').length
+  const resolvedCount = inquiryData.filter(i => i.status === 'completed').length
 
+  const getTypeConfig = (type) => {
+    const map = {
+      '포트폴리오': { label: 'INVESTMENT' },
+      '계정/로그인': { label: 'ACCOUNT/LOGIN' },
+      '설문조사': { label: 'SURVEY' },
+      '서비스 이용': { label: 'SERVICE' },
+      '결제/환불': { label: 'PAYMENT' },
+      '기타': { label: 'OTHER' },
+    }
+    return map[type] || { label: type.toUpperCase() }
+  }
+
+  const displayName = user?.name || user?.email?.split('@')[0] || 'User'
+
+  return (
+    <div className="cs-content-section inq-wrapper">
       {isLoading ? (
-        <div className="loading-state">
-          <div className="spinner"></div>
-          <p>문의 내역을 불러오는 중...</p>
-        </div>
+        <div className="loading-state"><div className="spinner"></div><p>문의 내역을 불러오는 중...</p></div>
       ) : error ? (
-        <div className="error-state">
-          <p className="error-message">{error}</p>
-        </div>
+        <div className="error-state"><p className="error-message">{error}</p></div>
       ) : (
-        <div className="inquiry-container">
-          <div className="inquiry-detail-card">
+        <div className="inq-layout">
+          {/* ── Left: greeting + detail ── */}
+          <div className="inq-main">
+            <div className="inq-greeting">
+              <h2 className="inq-greeting-title">Hello, {displayName}.</h2>
+              <p className="inq-greeting-sub">
+                Welcome to your personal 1:1 inquiry portal. Here you can track the progress of your financial consultations and technical support requests.
+              </p>
+            </div>
+
             {selectedInquiry ? (
-              <>
-                <div className="inquiry-detail-header">
-                  <h3 className="inquiry-detail-title">문의 상세</h3>
+              <div className="inq-detail-box">
+                <div className="inq-detail-topbar">
+                  <div className="inq-detail-meta">
+                    <span className="inq-type-badge">{getTypeConfig(selectedInquiry.type).label}</span>
+                    <span className="inq-detail-date">{selectedInquiry.date}</span>
+                  </div>
                   <StatusBadge status={selectedInquiry.status} />
                 </div>
+                <h3 className="inq-detail-title">{selectedInquiry.title}</h3>
+                <p className="inq-detail-content">{selectedInquiry.content}</p>
 
-                <div className="inquiry-info-section">
-                  <h4 className="inquiry-subject">{selectedInquiry.title}</h4>
-                  <div className="inquiry-meta">
-                    <div className="inquiry-meta-item">
-                      <span className="meta-label">문의 유형</span>
-                      <span className="meta-value">{selectedInquiry.type}</span>
-                    </div>
-                    <div className="inquiry-meta-item">
-                      <span className="meta-label">작성일</span>
-                      <span className="meta-value">{selectedInquiry.date}</span>
+                {selectedAnswer ? (
+                  <div className="inq-support-reply">
+                    <div className="inq-support-avatar">S</div>
+                    <div className="inq-support-body">
+                      <div className="inq-support-name">SeedUp Support Team</div>
+                      <p className="inq-support-text">{selectedAnswer}</p>
                     </div>
                   </div>
-                </div>
-
-                <div className="inquiry-content-section">
-                  <h5 className="content-section-label">사용자 문의 내용</h5>
-                  <p className="content-text">{selectedInquiry.content}</p>
-                </div>
-
-                <div className="inquiry-answer-section">
-                  <h5 className="content-section-label">SeedUp 답변</h5>
-                  {selectedAnswer ? (
-                    <p className="answer-text">{selectedAnswer}</p>
-                  ) : (
-                    <div className="answer-pending">
-                      <svg width="48" height="48" viewBox="0 0 48 48" fill="none">
-                        <circle cx="24" cy="24" r="24" fill="#FFF7ED"/>
-                        <path d="M24 16v12l8 4" stroke="#F59E0B" strokeWidth="2" strokeLinecap="round"/>
-                      </svg>
-                      <p className="pending-message">답변 대기 중입니다</p>
-                      <p className="pending-description">확인 후 빠르게 답변드릴게요</p>
-                    </div>
-                  )}
-                </div>
-              </>
+                ) : (
+                  <div className="inq-pending-notice">
+                    <span>⏳</span> 담당자에게 배정되었습니다. 빠른 시일 내에 답변드리겠습니다.
+                  </div>
+                )}
+              </div>
             ) : (
-              <div className="empty-state">
-                <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-                  <circle cx="32" cy="32" r="32" fill="#F3F4F6"/>
-                  <path d="M32 20v24M32 48h.02" stroke="#9CA3AF" strokeWidth="3" strokeLinecap="round"/>
-                </svg>
-                <p className="empty-message">문의 내역을 선택해주세요</p>
+              <div className="inq-empty">
+                <p>오른쪽 목록에서 문의를 선택해주세요</p>
               </div>
             )}
           </div>
 
-          <div className="inquiry-history-card">
-            <div className="inquiry-history-header">
-              <h3 className="inquiry-history-title">문의 내역</h3>
-              <span className="inquiry-count">{inquiryData.length}건</span>
+          {/* ── Right: stats + list + button ── */}
+          <div className="inq-sidebar">
+            <div className="inq-stats">
+              <div className="inq-stat-item">
+                <span className="inq-stat-num">{String(pendingCount).padStart(2, '0')}</span>
+                <span className="inq-stat-label">PENDING</span>
+              </div>
+              <div className="inq-stat-divider" />
+              <div className="inq-stat-item">
+                <span className="inq-stat-num">{String(resolvedCount).padStart(2, '0')}</span>
+                <span className="inq-stat-label">RESOLVED</span>
+              </div>
             </div>
 
-            <div className="inquiry-list">
-              {inquiryData.length > 0 ? (
-                inquiryData.map((inquiry) => (
-                  <button
-                    key={inquiry.id}
-                    className={`inquiry-item ${selectedInquiryId === inquiry.id ? 'active' : ''}`}
-                    onClick={() => setSelectedInquiryId(inquiry.id)}
-                  >
-                    <div className="inquiry-item-header">
-                      <StatusBadge status={inquiry.status} />
-                      <span className="inquiry-item-date">{inquiry.date}</span>
-                    </div>
-                    <h4 className="inquiry-item-title">{inquiry.title}</h4>
-                    <span className="inquiry-item-type">{inquiry.type}</span>
-                  </button>
-                ))
-              ) : (
-                <div className="empty-state">
-                  <p className="empty-message">등록된 문의가 없습니다</p>
-                  <p className="empty-description">새로운 문의를 작성해보세요</p>
-                </div>
+            <div className="inq-list-header">
+              <span className="inq-list-title">문의 내역</span>
+              <span className="inq-list-all">View All →</span>
+            </div>
+
+            <div className="inq-list">
+              {inquiryData.length > 0 ? inquiryData.map(inquiry => (
+                <button
+                  key={inquiry.id}
+                  className={`inq-list-item ${selectedInquiryId === inquiry.id ? 'active' : ''}`}
+                  onClick={() => setSelectedInquiryId(inquiry.id)}
+                >
+                  <div className="inq-list-item-top">
+                    <span className="inq-type-badge">{getTypeConfig(inquiry.type).label}</span>
+                    <span className={`inq-dot-status ${inquiry.status}`}>
+                      {inquiry.status === 'pending' ? 'PENDING' : 'COMPLETED'}
+                    </span>
+                  </div>
+                  <p className="inq-list-item-title">{inquiry.title}</p>
+                  <span className="inq-list-item-date">{inquiry.date}</span>
+                </button>
+              )) : (
+                <p className="inq-list-empty">등록된 문의가 없습니다</p>
               )}
             </div>
+
+            <button className="inq-write-btn" onClick={() => setIsModalOpen(true)}>
+              ✏ &nbsp;문의 작성
+            </button>
           </div>
         </div>
       )}
@@ -541,26 +542,21 @@ const CustomerCenterPage = () => {
   const [activeTab, setActiveTab] = useState('faq')
 
   const menuItems = [
-    { key: 'faq', label: 'FAQ', icon: '❓' },
-    { key: 'inquiry', label: '1:1 문의', icon: '💬' }
+    {
+      key: 'faq', label: 'FAQ',
+      icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3M12 17h.01"/></svg>
+    },
+    {
+      key: 'inquiry', label: '1:1 문의',
+      icon: <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+    }
   ]
 
   return (
     <div className="customer-center">
       <div className="cs-container">
         <aside className="cs-sidebar">
-          <h2 className="cs-sidebar-title">고객센터</h2>
-          
-          <div className="cs-info-box">
-            <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-              <circle cx="10" cy="10" r="8" stroke="currentColor" strokeWidth="1.5"/>
-              <path d="M10 6v4M10 13h.01" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-            </svg>
-            <p className="cs-info-text">
-              문의 전 FAQ를 확인하시면<br/>더 빠르게 해결할 수 있어요
-            </p>
-          </div>
-
+          <p className="cs-sidebar-category">CATEGORIES</p>
           <nav className="cs-menu">
             {menuItems.map((item) => (
               <button
@@ -570,7 +566,6 @@ const CustomerCenterPage = () => {
               >
                 <span className="menu-icon">{item.icon}</span>
                 <span className="menu-label">{item.label}</span>
-                {activeTab === item.key && <span className="active-indicator" />}
               </button>
             ))}
           </nav>

@@ -12,7 +12,7 @@ export default function Header({ currentPath }) {
           <a href="/">홈</a>
           <a href="/portfolio">포트폴리오</a>
           <a href="/investment">개별종목</a>
-          <a href="/chatbot">챗봇</a>
+          <a href="/chatbot">Chatbot</a>
           <a href="/support">고객센터</a>
           <a href="/mypage">마이페이지</a>
         </nav>

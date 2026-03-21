@@ -35,15 +35,7 @@ def build_ttm(df_q: pd.DataFrame) -> pd.DataFrame:
     for c in flow_cols:
         if c in d.columns:
             d[f"{c}_ttm"] = d.groupby("ticker")[c].rolling(4, min_periods=4).sum().reset_index(level=0, drop=True)
-
-    # Fallback for cfo/capex: annual (FY, reprt_code=11011) data is already full-year TTM.
-    # If rolling TTM is NaN but the FY annual value is available, use it directly.
-    for c in ["cfo", "capex"]:
-        ttm_col = f"{c}_ttm"
-        if c in d.columns and ttm_col in d.columns:
-            fy_mask = (d["reprt_code"] == "11011") & d[ttm_col].isna() & d[c].notna()
-            d.loc[fy_mask, ttm_col] = d.loc[fy_mask, c]
-
+    
     # --- explainability flag: propagate proxy usage into TTM window ---
     if "net_income_proxy" in d.columns:
         d["ttm_net_income_proxy"] = (
@@ -112,21 +104,10 @@ def compute_features(ttm_df: pd.DataFrame, market_cap_df: pd.DataFrame | None = 
     # negative earnings -> PER invalid
     d.loc[d.get("net_income_ttm") <= 0, "per"] = np.nan
 
-    # ── Piotroski helpers ─────────────────────────────────────────────────────
-    # 자산회전율 (F9), CFO/총자산 (F2, F4)
-    d["asset_turnover"] = safe_div(d.get("revenue_ttm"),  d.get("total_assets_curr"))
-    d["cfo_to_assets"]  = safe_div(d.get("cfo_ttm"),      d.get("total_assets_curr"))
-
-    # YoY 라그 (4분기 전 = 1년 전) — delta 신호용
-    for _lc in ["roa", "debt_equity", "current_ratio", "opm", "asset_turnover"]:
-        d[f"{_lc}_lag4"] = d.groupby("ticker")[_lc].shift(4)
-
     cols = [
         "ticker", "as_of",
         "opm","roa","sales_yoy","op_income_yoy",
         "debt_equity","current_ratio","cfo_margin","fcf_margin","per","pbr",
-        "asset_turnover","cfo_to_assets",
-        "roa_lag4","debt_equity_lag4","current_ratio_lag4","opm_lag4","asset_turnover_lag4",
         "market_cap","ttm_net_income_proxy"
     ]
     return d[cols].copy()
