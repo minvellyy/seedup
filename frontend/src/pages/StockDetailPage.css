@@ -16,7 +16,7 @@
   border: 2px solid #F97316;
   padding: 12px 24px;
   border-radius: 30px;
-  font-size: 1em;
+  font-size: 1.1em;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
@@ -29,7 +29,7 @@
 
 .back-button::before {
   content: '←';
-  font-size: 1.2em;
+  font-size: 1.3em;
   transition: transform 0.3s ease;
 }
 
@@ -84,7 +84,7 @@
 }
 
 .stock-detail-name {
-  font-size: 2.2em;
+  font-size: 2.3em;
   font-weight: bold;
   color: #2c3e50;
   margin: 0;
@@ -96,27 +96,27 @@
   color: white;
   padding: 6px 14px;
   border-radius: 20px;
-  font-size: 0.5em;
+  font-size: 0.6em;
   font-weight: 600;
   letter-spacing: 0.5px;
 }
 
 .stock-detail-code {
-  font-size: 1.1em;
+  font-size: 1.2em;
   color: #7f8c8d;
   margin: 0;
   font-family: 'Courier New', monospace;
 }
 
 .current-price-large {
-  font-size: 2.5em;
+  font-size: 2.6em;
   font-weight: bold;
   color: #2c3e50;
   margin-bottom: 8px;
 }
 
 .price-change-large {
-  font-size: 1.5em;
+  font-size: 1.6em;
   font-weight: bold;
   display: flex;
   gap: 12px;
@@ -132,7 +132,7 @@
 }
 
 .price-change-large .percent {
-  font-size: 0.9em;
+  font-size: 1em;
 }
 
 .stock-detail-content {
@@ -142,7 +142,7 @@
 }
 
 .section-heading {
-  font-size: 1.2em;
+  font-size: 1.5em;
   font-weight: 700;
   color: #1a1a1a;
   margin: 0 0 20px 0;
@@ -182,14 +182,14 @@
   display: flex;
   justify-content: space-between;
   color: #7f8c8d;
-  font-size: 0.9em;
+  font-size: 1em;
   margin-bottom: 10px;
 }
 
 .chart-price-labels {
   display: flex;
   justify-content: space-between;
-  font-size: 0.95em;
+  font-size: 1.05em;
 }
 
 .max-price {
@@ -240,7 +240,7 @@
   align-items: center;
   padding: 4px 12px;
   border-radius: 20px;
-  font-size: 0.82em;
+  font-size: 0.92em;
   font-weight: 700;
   letter-spacing: -0.2px;
 }
@@ -261,7 +261,7 @@
 }
 
 .fit-summary {
-  font-size: 0.95em;
+  font-size: 1.05em;
   color: #444;
   margin: 0 0 16px 0;
   font-weight: 600;
@@ -278,7 +278,7 @@
   padding: 10px 0;
   color: #555;
   line-height: 1.7;
-  font-size: 0.95em;
+  font-size: 1.05em;
   border-bottom: 1px solid #f0f0f0;
 }
 
@@ -298,7 +298,7 @@
 }
 
 .fit-list-tag {
-  font-size: 0.78em;
+  font-size: 0.88em;
   font-weight: 700;
   color: #F97316;
   letter-spacing: 0.2px;
@@ -334,6 +334,8 @@
   flex-direction: column;
   gap: 8px;
   transition: all 0.3s ease;
+  align-items: center;
+  text-align: center;
 }
 
 .info-item:hover {
@@ -342,7 +344,7 @@
 }
 
 .info-label {
-  font-size: 0.9em;
+  font-size: 1.2em;
   color: #F97316;
   font-weight: 600;
   text-transform: uppercase;
@@ -350,7 +352,7 @@
 }
 
 .info-value {
-  font-size: 0.95em;
+  font-size: 1.25em;
   color: #333;
   font-weight: 600;
 }
@@ -383,7 +385,7 @@
   background: #fafafa;
   border-radius: 10px;
   color: #444;
-  font-size: 0.95em;
+  font-size: 1.05em;
   line-height: 1.7;
   position: relative;
   transition: all 0.3s ease;
@@ -399,7 +401,7 @@
   position: absolute;
   left: 16px;
   color: #F97316;
-  font-size: 0.8em;
+  font-size: 0.9em;
   top: 50%;
   transform: translateY(-50%);
 }
@@ -419,7 +421,7 @@
 }
 
 .unstructured-card-title {
-  font-size: 0.9em;
+  font-size: 1em;
   font-weight: 700;
   color: #444;
   margin: 0 0 12px 0;
@@ -431,7 +433,7 @@
 
 .unstr-label {
   display: inline-block;
-  font-size: 0.78em;
+  font-size: 0.88em;
   font-weight: 600;
   padding: 2px 8px;
   border-radius: 4px;
@@ -450,14 +452,14 @@
 
 .unstructured-card p {
   margin: 0;
-  font-size: 0.9em;
+  font-size: 1em;
   color: #555;
   line-height: 1.7;
 }
 
 /* 증권사 리포트 목록 */
 .reports-ai-summary {
-  font-size: 0.9em;
+  font-size: 1em;
   color: #555;
   line-height: 1.7;
   margin: 0 0 12px 0;
@@ -486,18 +488,18 @@
 }
 
 .report-brokerage {
-  font-size: 0.75rem;
+  font-size: 0.85rem;
   font-weight: 600;
   color: #F97316;
 }
 
 .report-date {
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   color: #9ca3af;
 }
 
 .report-pdf-btn {
-  font-size: 0.72rem;
+  font-size: 0.82rem;
   font-weight: 600;
   color: #F97316;
   text-decoration: none;
@@ -512,14 +514,14 @@
 }
 
 .report-title {
-  font-size: 0.9em;
+  font-size: 1em;
   font-weight: 600;
   color: #444;
   margin: 0 0 6px 0;
 }
 
 .report-content {
-  font-size: 0.88em;
+  font-size: 0.98em;
   color: #666;
   line-height: 1.7;
   margin: 0;
@@ -591,13 +593,13 @@
 }
 
 .label-text {
-  font-size: 0.85em;
+  font-size: 0.95em;
   color: #555;
   font-weight: 600;
 }
 
 .label-value {
-  font-size: 1.3em;
+  font-size: 1.5em;
   color: #F97316;
   font-weight: bold;
 }
@@ -612,7 +614,7 @@
   color: white;
   padding: 10px 14px;
   border-radius: 6px;
-  font-size: 0.8em;
+  font-size: 0.9em;
   white-space: nowrap;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
   z-index: 100;
@@ -654,7 +656,7 @@
 .recommendation-detail {
   color: #444;
   line-height: 1.7;
-  font-size: 0.95em;
+  font-size: 1.05em;
   margin: 0;
 }
 
@@ -662,7 +664,7 @@
 .error-message {
   text-align: center;
   color: #333;
-  font-size: 1.5em;
+  font-size: 1.6em;
   padding: 60px 20px;
 }
 
@@ -706,15 +708,15 @@
   }
 
   .stock-detail-name {
-    font-size: 1.8em;
+    font-size: 1.9em;
   }
 
   .current-price-large {
-    font-size: 2em;
+    font-size: 2.1em;
   }
 
   .section-heading {
-    font-size: 1.2em;
+    font-size: 1.5em;
   }
 
   .fit-container {
@@ -734,38 +736,38 @@
   }
 
   .radar-label {
-    font-size: 0.85em;
+    font-size: 0.95em;
   }
 
   .label-value {
-    font-size: 1.1em;
+    font-size: 1.2em;
   }
 }
 
 @media (max-width: 480px) {
   .stock-detail-name {
-    font-size: 1.5em;
+    font-size: 1.6em;
   }
 
   .market-badge {
-    font-size: 0.6em;
+    font-size: 0.7em;
     padding: 4px 10px;
   }
 
   .current-price-large {
-    font-size: 1.8em;
+    font-size: 1.9em;
   }
 
   .price-change-large {
-    font-size: 1.2em;
+    font-size: 1.3em;
   }
 
   .section-heading {
-    font-size: 1.2em;
+    font-size: 1.5em;
   }
 
   .fit-score {
-    font-size: 3em;
+    font-size: 3.1em;
   }
 }
 
@@ -778,7 +780,7 @@
   border: 2px solid #F97316;
   padding: 10px 20px;
   border-radius: 25px;
-  font-size: 1em;
+  font-size: 1.1em;
   cursor: pointer;
   transition: all 0.3s ease;
   margin-bottom: 30px;
@@ -803,7 +805,7 @@
   color: white;
   padding: 6px 16px;
   border-radius: 24px;
-  font-size: 0.95em;
+  font-size: 1.05em;
   font-weight: 700;
   width: fit-content;
   box-shadow: 0 3px 12px rgba(249, 115, 22, 0.4);
@@ -811,7 +813,7 @@
 }
 
 .sd-ticker {
-  font-size: 1.1em;
+  font-size: 1.2em;
   color: #7f8c8d;
   font-family: 'Courier New', monospace;
   font-weight: 600;
@@ -824,7 +826,7 @@
   color: white;
   padding: 5px 14px;
   border-radius: 18px;
-  font-size: 0.85em;
+  font-size: 0.95em;
   font-weight: 600;
   width: fit-content;
   box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
@@ -837,7 +839,7 @@
   border: 2px solid #FDBA74;
   padding: 5px 14px;
   border-radius: 16px;
-  font-size: 0.85em;
+  font-size: 0.95em;
   font-weight: 700;
   width: fit-content;
   letter-spacing: 0.2px;
@@ -850,13 +852,13 @@
 }
 
 .sd-score-label {
-  font-size: 0.85em;
+  font-size: 0.95em;
   color: #7f8c8d;
   margin-bottom: 4px;
 }
 
 .sd-score-large {
-  font-size: 2em;
+  font-size: 2.1em;
   font-weight: 700;
   color: #EA580C;
   line-height: 1.2;
@@ -894,7 +896,7 @@
 }
 
 .sd-section-heading {
-  font-size: 1.2em;
+  font-size: 1.5em;
   font-weight: 700;
   color: #1a1a1a;
   margin: 0 0 20px 0;
@@ -948,7 +950,7 @@
 }
 
 .sd-feature-label {
-  font-size: 0.8em;
+  font-size: 0.9em;
   color: #7f8c8d;
   margin-bottom: 10px;
   font-weight: 600;
@@ -957,7 +959,7 @@
 }
 
 .sd-feature-value {
-  font-size: 1.25em;
+  font-size: 1.35em;
   font-weight: 700;
   letter-spacing: -0.3px;
 }
@@ -970,7 +972,7 @@
   padding: 20px 24px;
   line-height: 1.8;
   color: #2c3e50;
-  font-size: 1em;
+  font-size: 1.1em;
   box-shadow: 0 2px 12px rgba(249, 115, 22, 0.08);
 }
 
@@ -989,7 +991,7 @@
   border-left: 4px solid #F97316;
   padding: 14px 18px;
   border-radius: 0 12px 12px 0;
-  font-size: 0.98em;
+  font-size: 1.08em;
   color: #333;
   line-height: 1.7;
   box-shadow: 0 2px 8px rgba(249, 115, 22, 0.06);
@@ -1017,7 +1019,7 @@
   align-items: center;
   justify-content: center;
   color: white;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: bold;
 }
 
@@ -1034,7 +1036,7 @@
 }
 
 .sd-notice-list li {
-  font-size: 0.88em;
+  font-size: 0.98em;
   color: #7f8c8d;
   line-height: 1.6;
   margin-bottom: 6px;
@@ -1063,7 +1065,7 @@
   border: 2px solid #F97316;
   padding: 8px 18px;
   border-radius: 25px;
-  font-size: 0.9em;
+  font-size: 1em;
   cursor: pointer;
   transition: all 0.2s ease;
   margin-bottom: 24px;
@@ -1078,7 +1080,7 @@
   border: 1px solid #d1d5db;
   padding: 6px 12px;
   border-radius: 6px;
-  font-size: 0.85em;
+  font-size: 0.95em;
   cursor: pointer;
   transition: all 0.2s ease;
 }
@@ -1098,7 +1100,7 @@
 }
 
 .sd-loading p {
-  font-size: 15px;
+  font-size: 17px;
   color: #888;
   margin: 0;
 }
@@ -1125,7 +1127,7 @@
 }
 
 .sd-current-price {
-  font-size: 34px;
+  font-size: 36px;
   font-weight: 800;
   color: #1a1a1a;
   display: flex;
@@ -1138,7 +1140,7 @@
   display: inline-flex;
   align-items: center;
   gap: 5px;
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 700;
   color: #EA580C;
   background: rgba(234, 88, 12, 0.1);
@@ -1151,7 +1153,7 @@
 
 .sd-realtime-badge::before {
   content: '●';
-  font-size: 8px;
+  font-size: 10px;
   animation: blink 1.5s ease-in-out infinite;
 }
 
@@ -1176,7 +1178,7 @@
 }
 
 .sd-change-badge {
-  font-size: 17px;
+  font-size: 19px;
   font-weight: 700;
   padding: 6px 14px;
   border-radius: 16px;
@@ -1184,7 +1186,7 @@
 }
 
 .sd-price-date {
-  font-size: 12px;
+  font-size: 14px;
   color: #999;
   margin-top: 4px;
   font-weight: 500;
@@ -1196,7 +1198,7 @@
   color: #7c3aed;
   border-radius: 18px;
   padding: 5px 14px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   letter-spacing: 0.3px;
   box-shadow: 0 2px 8px rgba(124, 58, 237, 0.15);
@@ -1222,7 +1224,7 @@
 }
 
 .sd-score-label {
-  font-size: 14px;
+  font-size: 16px;
   color: #555;
   white-space: nowrap;
   font-weight: 700;
@@ -1270,7 +1272,7 @@
 }
 
 .sd-score-value {
-  font-size: 16px;
+  font-size: 18px;
   font-weight: 800;
   color: #F97316;
   white-space: nowrap;
@@ -1288,7 +1290,7 @@
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  font-size: 11px;
+  font-size: 13px;
   color: #aaa;
   text-align: right;
   padding: 4px 0;
@@ -1300,7 +1302,7 @@
 .sd-price-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: 15px;
 }
 .sd-price-table th {
   padding: 8px 12px;
@@ -1330,7 +1332,7 @@
   border-left: 3px solid #F97316;
   padding: 10px 14px;
   border-radius: 0 8px 8px 0;
-  font-size: 14px;
+  font-size: 16px;
   color: #444;
 }
 
@@ -1340,7 +1342,7 @@
   }
   .sd-price-box { align-items: flex-start; }
   .stock-detail-header { flex-direction: column; gap: 16px; }
-  .sd-current-price { font-size: 22px; }
+  .sd-current-price { font-size: 24px; }
 }
 
 /* ── 캔들스틱 차트 ─────────────────────────────────────────────────────── */
@@ -1359,7 +1361,7 @@
   border-radius: 10px;
   padding: 10px 14px;
   box-shadow: 0 4px 16px rgba(0,0,0,0.10);
-  font-size: 12px;
+  font-size: 14px;
   min-width: 140px;
   z-index: 10;
   pointer-events: none;
@@ -1370,7 +1372,7 @@
   font-weight: 700;
   color: #555;
   margin-bottom: 6px;
-  font-size: 11px;
+  font-size: 13px;
 }
 
 .sd-candle-tooltip-row {
@@ -1389,7 +1391,7 @@
   display: flex;
   justify-content: space-between;
   margin-top: 10px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   padding-top: 10px;
   border-top: 1px solid #f0f0f0;
@@ -1404,7 +1406,7 @@
 
 .sd-candle-high::before {
   content: '⬆';
-  font-size: 0.9em;
+  font-size: 1em;
 }
 
 .sd-candle-low {
@@ -1416,7 +1418,7 @@
 
 .sd-candle-low::before {
   content: '⬇';
-  font-size: 0.9em;
+  font-size: 1em;
 }
 
 /* ── 레이더 차트 래퍼 ──────────────────────────────────────────────────── */
@@ -1439,8 +1441,8 @@
   gap: 2px;
   pointer-events: none;
 }
-.sd-radar-label-name  { font-size: 11px; color: #666; font-weight: 600; }
-.sd-radar-label-score { font-size: 15px; color: #F97316; font-weight: 700; }
+.sd-radar-label-name  { font-size: 13px; color: #666; font-weight: 600; }
+.sd-radar-label-score { font-size: 17px; color: #F97316; font-weight: 700; }
 
 /* ── 스켈레톤 로딩 ─────────────────────────────────────────────────────── */
 .sd-skeleton { display: flex; flex-direction: column; gap: 10px; }
@@ -1476,7 +1478,7 @@
   to { transform: rotate(360deg); }
 }
 .sd-spinner-text {
-  font-size: 14px;
+  font-size: 16px;
   color: #6b7280;
   text-align: center;
   margin: 0;
@@ -1485,7 +1487,7 @@
 /* ── 분석 대기 안내 ─────────────────────────────────────────────────────── */
 .sd-analysis-pending {
   color: #aaa;
-  font-size: 13px;
+  font-size: 15px;
   font-style: italic;
   margin: 0;
   display: flex;
@@ -1495,7 +1497,7 @@
 }
 
 .sd-retry-btn {
-  font-size: 12px;
+  font-size: 14px;
   font-style: normal;
   padding: 4px 10px;
   border: 1px solid #d1d5db;
@@ -1535,7 +1537,7 @@
 }
 
 .sd-intraday-title {
-  font-size: 1.1em;
+  font-size: 1.2em;
   font-weight: 700;
   color: #1a1a1a;
   letter-spacing: -0.3px;
@@ -1546,11 +1548,11 @@
 
 .sd-intraday-title::before {
   content: '📈';
-  font-size: 1.2em;
+  font-size: 1.3em;
 }
 
 .sd-intraday-change {
-  font-size: 0.85em;
+  font-size: 0.95em;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
@@ -1571,7 +1573,7 @@
 }
 
 .sd-intraday-change .percent {
-  font-size: 0.9em;
+  font-size: 1em;
   font-weight: 600;
 }
 
@@ -1579,7 +1581,7 @@
   padding: 40px;
   text-align: center;
   color: #999;
-  font-size: 0.95em;
+  font-size: 1.05em;
 }
 
 @media (max-width: 768px) {
@@ -1595,11 +1597,11 @@
   }
   
   .sd-intraday-title {
-    font-size: 1em;
+    font-size: 1.1em;
   }
   
   .sd-intraday-change {
-    font-size: 0.95em;
+    font-size: 1.05em;
     padding: 5px 12px;
   }
 }
@@ -1625,7 +1627,7 @@
 }
 
 .investor-flow-market-label {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   color: #333;
   margin-bottom: 12px;
@@ -1637,7 +1639,7 @@
 .investor-flow-tbl {
   width: 100%;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: 15px;
 }
 
 .investor-flow-tbl th {
@@ -1645,7 +1647,7 @@
   padding: 6px 8px;
   color: #888;
   font-weight: 600;
-  font-size: 12px;
+  font-size: 14px;
   border-bottom: 1px solid #ebebeb;
 }
 
@@ -1655,7 +1657,7 @@
   padding: 7px 8px;
   text-align: center;
   border-bottom: 1px solid #f5f5f5;
-  font-size: 13px;
+  font-size: 15px;
   font-variant-numeric: tabular-nums;
 }
 
@@ -1672,13 +1674,13 @@
 
 .investor-flow-date {
   margin-top: 10px;
-  font-size: 11px;
+  font-size: 13px;
   color: #bbb;
   text-align: right;
 }
 
 .investor-flow-err {
-  font-size: 12px;
+  font-size: 14px;
   color: #aaa;
   padding: 12px 0;
   text-align: center;
@@ -1693,7 +1695,7 @@
 }
 
 .investor-flow-thermo-title {
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 700;
   color: #333;
   margin-bottom: 14px;
@@ -1708,7 +1710,7 @@
 
 .investor-flow-bar-label {
   width: 44px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 600;
   color: #555;
   flex-shrink: 0;
@@ -1744,7 +1746,7 @@
 
 .investor-flow-bar-value {
   width: 72px;
-  font-size: 13px;
+  font-size: 15px;
   font-weight: 700;
   text-align: right;
   flex-shrink: 0;
@@ -1752,7 +1754,7 @@
 }
 
 .investor-flow-thermo-hint {
-  font-size: 11px;
+  font-size: 13px;
   color: #ccc;
   margin-top: 6px;
   text-align: right;

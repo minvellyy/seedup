@@ -37,6 +37,16 @@ def create_document_from_json(json_path):
     clean_metadata = flatten_metadata(raw_metadata)
     clean_metadata["source"] = os.path.basename(json_path)
 
+    # 원문 URL 사이드카 파일 읽기 (크롤러가 저장한 .url 파일)
+    # parsed_data/.../file.json → reports/.../file.url 경로 추정
+    json_basename = os.path.basename(json_path).replace(".json", "")
+    category = os.path.basename(os.path.dirname(json_path))
+    _backend_dir = os.path.dirname(os.path.dirname(os.path.abspath(json_path)))
+    url_path = os.path.join(_backend_dir, "reports", category, json_basename + ".url")
+    if os.path.exists(url_path):
+        with open(url_path, "r", encoding="utf-8") as _f:
+            clean_metadata["naver_pdf_url"] = _f.read().strip()
+
     content_lines = []
     content_lines.append(f"리포트 제목: {common_meta.get('report_title', '제목없음')}")
     

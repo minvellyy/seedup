@@ -1,14 +1,133 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
-import html2pdf from 'html2pdf.js'
+import html2canvas from 'html2canvas'
+import { jsPDF } from 'jspdf'
 import { useAuth } from '../contexts/AuthContext'
 import './PortfolioDetailPage.css'
-import { TermText, DynamicTermProvider } from '../components/TermTooltip'
 
 const COLOR_PALETTE = [
   '#C2410C', '#EA580C', '#F97316', '#FB923C',
   '#FDBA74', '#FED7AA', '#FFEDD5', '#FFF4E6',
 ]
+
+function isLightColor(hex) {
+  const r = parseInt(hex.slice(1, 3), 16)
+  const g = parseInt(hex.slice(3, 5), 16)
+  const b = parseInt(hex.slice(5, 7), 16)
+  return (0.299 * r + 0.587 * g + 0.114 * b) / 255 > 0.55
+}
+
+function DonutChart({ items, centerAmount, navigate, riskData }) {
+  const [hovered, setHovered] = React.useState(null)
+  const [tooltipPos, setTooltipPos] = React.useState({ x: 0, y: 0 })
+  const wrapRef = React.useRef(null)
+
+  const hoveredRisk = hovered && riskData
+    ? riskData.find(r => r.ticker === hovered)
+    : null
+
+  const handleMouseMove = (e) => {
+    if (!wrapRef.current) return
+    const rect = wrapRef.current.getBoundingClientRect()
+    setTooltipPos({ x: e.clientX - rect.left, y: e.clientY - rect.top })
+  }
+  const size = 300
+  const cx = size / 2
+  const cy = size / 2
+  const r = 105
+  const strokeWidth = 50
+  const circumference = 2 * Math.PI * r
+  let cumulative = 0
+  const segments = items.map((item, idx) => {
+    const length = (item.weight_pct / 100) * circumference
+    const dashOffset = circumference - cumulative
+    const midAngleDeg = ((cumulative + length / 2) / circumference) * 360 - 90
+    const midAngleRad = (midAngleDeg * Math.PI) / 180
+    const lx = cx + r * Math.cos(midAngleRad)
+    const ly = cy + r * Math.sin(midAngleRad)
+    cumulative += length
+    return { ...item, length, dashOffset, color: COLOR_PALETTE[idx % COLOR_PALETTE.length], lx, ly }
+  })
+  const centerLabel = centerAmount == null ? '-'
+    : centerAmount >= 100_000_000
+      ? `${(centerAmount / 100_000_000).toFixed(0)}억원`
+      : `${(centerAmount / 10_000).toFixed(0)}만원`
+
+  return (
+    <div className="pd-donut-wrap" ref={wrapRef} onMouseMove={handleMouseMove}>
+      {hoveredRisk && (
+        <div className="pd-donut-tooltip" style={{ left: tooltipPos.x + 14, top: tooltipPos.y - 10 }}>
+          <span className="pd-donut-tooltip-name">{hoveredRisk.name}</span>
+          <span className="pd-donut-tooltip-text">{hoveredRisk.risk_text}</span>
+        </div>
+      )}
+      <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`} style={{ overflow: 'visible' }}>
+        {segments.map((seg) => {
+          const isActive = hovered === seg.ticker
+          const isDimmed = hovered !== null && !isActive
+          return (
+            <circle
+              key={seg.ticker}
+              cx={cx} cy={cy} r={r}
+              fill="none"
+              stroke={seg.color}
+              strokeWidth={isActive ? strokeWidth + 8 : strokeWidth}
+              strokeDasharray={`${seg.length} ${circumference - seg.length}`}
+              strokeDashoffset={seg.dashOffset}
+              transform={`rotate(-90 ${cx} ${cy})`}
+              opacity={isDimmed ? 0.3 : 1}
+              style={{ cursor: 'pointer', transition: 'all 0.2s ease' }}
+              onMouseEnter={() => setHovered(seg.ticker)}
+              onMouseLeave={() => setHovered(null)}
+              onClick={() => navigate(`/stock/${seg.ticker}`)}
+            />
+          )
+        })}
+        {segments.map((seg) => seg.weight_pct >= 5 && (
+          <text
+            key={`lbl-${seg.ticker}`}
+            x={seg.lx} y={seg.ly}
+            textAnchor="middle" dominantBaseline="middle"
+            fontSize="11" fontWeight="700"
+            fill={isLightColor(seg.color) ? '#1e293b' : '#ffffff'}
+            opacity={hovered !== null && hovered !== seg.ticker ? 0.3 : 1}
+            style={{ pointerEvents: 'none', transition: 'opacity 0.2s ease' }}
+          >
+            {seg.weight_pct.toFixed(0)}%
+          </text>
+        ))}
+        <text x={cx} y={cy - 10} textAnchor="middle" fontSize="13" fill="#94a3b8">가용금액</text>
+        <text x={cx} y={cy + 14} textAnchor="middle" fontSize="20" fontWeight="800" fill="#1e293b">{centerLabel}</text>
+      </svg>
+      <div className="pd-donut-legend">
+        {items.map((item, idx) => {
+          const isActive = hovered === item.ticker
+          const isDimmed = hovered !== null && !isActive
+          return (
+          <div
+            key={item.ticker}
+            className="pd-donut-legend-item"
+            style={{
+              opacity: isDimmed ? 0.35 : 1,
+              fontWeight: isActive ? 700 : 400,
+              transform: isActive ? 'translateX(6px)' : 'none',
+              transition: 'all 0.2s ease',
+              cursor: 'default',
+            }}
+            onMouseEnter={() => setHovered(item.ticker)}
+            onMouseLeave={() => setHovered(null)}
+            onClick={() => navigate(`/stock/${item.ticker}`)}
+          >
+            <span className="pd-donut-dot" style={{ background: COLOR_PALETTE[idx % COLOR_PALETTE.length], transform: isActive ? 'scale(1.3)' : 'scale(1)', transition: 'transform 0.2s ease' }} />
+            <span className="pd-donut-name">{item.name}</span>
+            <span className="pd-donut-pct">{item.weight_pct.toFixed(1)}%</span>
+          </div>
+        )
+        })}
+      </div>
+    </div>
+  )
+}
 
 const fmtNum = (v) =>
   v == null ? '-' : new Intl.NumberFormat('ko-KR').format(Math.round(v))
@@ -279,28 +398,7 @@ function PortfolioDetailPage() {
   const [aiData, setAiData] = useState(passedAiData)
   const [riskStatus, setRiskStatus] = useState('idle')
   const [riskAnalysis, setRiskAnalysis] = useState(null)
-  const [dynamicTerms, setDynamicTerms] = useState({})
   const cardRef = useRef(null)
-
-  // 페이지 로딩 시 portfolioData 텍스트로 LLM 용어 추출
-  useEffect(() => {
-    if (!portfolioData) return
-    const texts = [
-      ...(portfolioData.portfolio_items || []).map(i => i.selection_reason).filter(Boolean),
-      portfolioData.overall_summary,
-      portfolioData.portfolio_summary,
-    ].filter(Boolean)
-    const combined = texts.join('\n')
-    if (combined.length < 30) return
-    fetch('/api/v1/terms/extract', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ text: combined }),
-    })
-      .then(r => r.json())
-      .then(d => setDynamicTerms(prev => ({ ...prev, ...(d.terms || {}) })))
-      .catch(() => {})
-  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // 데이터가 없을 때 3초 후에 로딩을 멈추고 에러 표시
   useEffect(() => {
@@ -312,21 +410,265 @@ function PortfolioDetailPage() {
     }
   }, [portfolioData])
 
-  const handlePdf = () => {
-    const el = cardRef.current
-    if (!el) return
-    const footer = el.querySelector('.pd-footer')
-    if (footer) footer.style.display = 'none'
-    html2pdf().set({
-      margin: [10, 10, 10, 10],
-      filename: `${new Date().toISOString().slice(0,10)}_${portfolioRank ? `TOP${portfolioRank}_` : ''}${risk_tier || '포트폴리오'}_${user?.name || user?.userId || 'user'}.pdf`,
-      image: { type: 'jpeg', quality: 0.98 },
-      html2canvas: { scale: 2, useCORS: true, logging: false },
-      jsPDF: { unit: 'mm', format: 'a4', orientation: 'portrait' },
-      pagebreak: { mode: ['css', 'legacy'] },
-    }).from(el).save().then(() => {
-      if (footer) footer.style.display = ''
+  const buildPdfParts = () => {
+    const today = new Date().toLocaleDateString('ko-KR', { year: 'numeric', month: 'long', day: 'numeric' })
+    const userName = user?.name || user?.userId || '투자자'
+    const fmtA = (n) => n == null ? '-' : n >= 100_000_000 ? `${(n / 100_000_000).toFixed(0)}억 원` : `${(n / 10_000).toFixed(0)}만 원`
+    const lbl = 'font-size:12px;font-weight:700;color:#F97316;padding-bottom:6px;border-bottom:2px solid #F97316;margin-bottom:12px;'
+    // 각 유닛을 독립 렌더링 가능한 794px div로 감쌈
+    const W = `font-family:'Malgun Gothic','맑은 고딕',AppleGothic,sans-serif;font-size:13px;color:#1e293b;background:white;width:794px;`
+    const divider = ``
+
+    // ── 헤더 (매 페이지 상단) ──────────────────────────────────
+    const headerHtml = `<div id="pdf-header" style="${W}background:#1e293b;padding:20px 40px;display:flex;justify-content:space-between;align-items:center;">
+      <div><span style="color:#ffec48;font-size:22px;font-weight:700;letter-spacing:-0.5px;">SeedUp</span>
+        <span style="color:#94a3b8;font-size:12px;margin-left:12px;">포트폴리오 분석 보고서</span></div>
+      <div style="color:#94a3b8;font-size:11px;">${today}</div>
+    </div>`
+
+    // ── 푸터 (매 페이지 하단) ──────────────────────────────────
+    const footerHtml = `<div id="pdf-footer" style="${W}">
+      <div style="padding:10px 40px;background:#f8fafc;border-top:1px solid #e2e8f0;">
+        <ul style="margin:0;padding-left:18px;font-size:11px;color:#94a3b8;line-height:1.7;">
+          <li>본 포트폴리오는 AI가 생성한 참고용이며, 최종 투자 결정은 투자자 본인의 판단으로 합니다.</li>
+          <li>과거 성과지표가 미래의 성과를 보장하지 않으며, 투자 원금의 일부 또는 전부를 잃을 수 있습니다.</li>
+        </ul>
+      </div>
+      <div style="background:#1e293b;padding:14px 40px;display:flex;justify-content:space-between;align-items:center;">
+        <span style="color:#ffec48;font-size:16px;font-weight:700;">SeedUp</span>
+        <span style="color:#64748b;font-size:11px;">AI 기반 투자 포트폴리오 분석 서비스</span>
+        <span style="color:#94a3b8;font-size:11px;">${today}</span>
+      </div>
+    </div>`
+
+    // ── 바디 유닛 배열 ──────────────────────────────────────────
+    const units = []
+
+    // 타이틀
+    units.push(`<div style="${W}padding:20px 40px;background:#fff7ed;border-bottom:1px solid #fed7aa;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <div style="font-size:18px;font-weight:700;color:#1e293b;margin-bottom:4px;">${risk_tier || '포트폴리오'} 보고서</div>
+          <div style="font-size:12px;color:#64748b;">${userName} 님을 위한 맞춤 포트폴리오</div>
+        </div>
+        ${investable_amount_krw != null ? `<div style="text-align:right;"><div style="font-size:11px;color:#94a3b8;margin-bottom:2px;">투자 가능 금액</div>
+          <div style="font-size:18px;font-weight:700;color:#F97316;">${fmtA(investable_amount_krw)}</div></div>` : ''}
+      </div>
+    </div>`)
+
+    // 추천 이유 — 항목별 개별 유닛
+    const reasons = buildRecommendationReason({ risk_tier, monte_carlo_1y, portfolio_items: sortedItems, quant_signals, survey_context })
+    units.push(`<div style="${W}padding:16px 40px 4px;"><div style="${lbl}">포트폴리오 추천 이유</div></div>`)
+    reasons.forEach(r => {
+      const txt = r.parts.map(p => typeof p === 'string' ? p : `<strong>${p.b}</strong>`).join('')
+      units.push(`<div style="${W}padding:4px 40px 4px 58px;font-size:12px;color:#1e293b;line-height:1.65;">• ${txt}</div>`)
     })
+    units.push(divider)
+
+    // 구성종목 — 고정 컬럼 너비로 헤더+행 정렬 맞춤
+    const hasShares = sortedItems.some(i => i.shares_to_buy != null)
+    const colW = hasShares ? ['45%', '20%', '17%', '18%'] : ['55%', '25%', '20%']
+    const thBase = 'padding:8px 12px;font-size:11px;font-weight:600;color:#475569;border-bottom:2px solid #e2e8f0;'
+    const colGroup = `<colgroup>
+      <col style="width:${colW[0]}"/><col style="width:${colW[1]}"/>
+      <col style="width:${colW[2]}"/>${hasShares ? `<col style="width:${colW[3]}"/>` : ''}
+    </colgroup>`
+
+    units.push(`<div style="${W}padding:16px 40px 0;">
+      <div style="${lbl}">구성종목</div>
+      <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
+        ${colGroup}
+        <thead><tr style="background:#f1f5f9;">
+          <th style="${thBase}text-align:left;">종목명</th>
+          <th style="${thBase}text-align:left;">코드</th>
+          <th style="${thBase}text-align:right;">비중</th>
+          ${hasShares ? `<th style="${thBase}text-align:right;">매수수량</th>` : ''}
+        </tr></thead>
+      </table>
+    </div>`)
+    sortedItems.forEach((item, idx) => {
+      units.push(`<div style="${W}padding:0 40px;">
+        <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
+          ${colGroup}
+          <tbody><tr style="background:${idx % 2 === 0 ? '#ffffff' : '#f8fafc'};">
+            <td style="padding:8px 12px;font-size:12px;overflow:hidden;">${item.name}</td>
+            <td style="padding:8px 12px;font-size:11px;color:#94a3b8;">${item.ticker}</td>
+            <td style="padding:8px 12px;font-size:12px;font-weight:600;text-align:right;">${item.weight_pct.toFixed(1)}%</td>
+            ${hasShares ? `<td style="padding:8px 12px;font-size:12px;text-align:right;">${item.shares_to_buy != null ? item.shares_to_buy + '주' : '-'}</td>` : ''}
+          </tr></tbody>
+        </table>
+      </div>`)
+    })
+    if (total_invested_krw != null) {
+      units.push(`<div style="${W}padding:6px 40px 16px;font-size:11px;color:#64748b;">총 투자금액: <strong>${fmtA(total_invested_krw)}</strong>${leftover_krw != null ? ` · 잔여금: ${fmtA(leftover_krw)}` : ''}</div>`)
+    }
+    units.push(divider)
+
+    // 몬테카를로
+    if (monte_carlo_1y) {
+      units.push(`<div style="${W}padding:16px 40px 20px;">
+        <div style="${lbl}">향후 1년 수익률 시뮬레이션</div>
+        <table style="width:100%;border-collapse:collapse;"><tbody><tr>
+          <td style="width:33%;padding-right:8px;"><div style="background:#fef2f2;border-radius:8px;padding:14px;text-align:center;">
+            <div style="font-size:11px;color:#64748b;margin-bottom:6px;">비관적 시나리오</div>
+            <div style="font-size:20px;font-weight:700;color:#ef4444;">${fmtPct(monte_carlo_1y.p10_pct)}</div>
+          </div></td>
+          <td style="width:33%;padding:0 4px;"><div style="background:#fff7ed;border:2px solid #F97316;border-radius:8px;padding:14px;text-align:center;">
+            <div style="font-size:11px;color:#64748b;margin-bottom:6px;">중립 시나리오 (중앙값)</div>
+            <div style="font-size:20px;font-weight:700;color:#F97316;">${fmtPct(monte_carlo_1y.p50_pct)}</div>
+          </div></td>
+          <td style="width:33%;padding-left:8px;"><div style="background:#f0fdf4;border-radius:8px;padding:14px;text-align:center;">
+            <div style="font-size:11px;color:#64748b;margin-bottom:6px;">낙관적 시나리오</div>
+            <div style="font-size:20px;font-weight:700;color:#16a34a;">${fmtPct(monte_carlo_1y.p90_pct)}</div>
+          </div></td>
+        </tr></tbody></table>
+        ${monte_carlo_1y.interpretation ? `<div style="font-size:11px;color:#64748b;margin-top:10px;line-height:1.65;">${monte_carlo_1y.interpretation}</div>` : ''}
+      </div>`)
+      units.push(divider)
+    }
+
+    // 퀀트 시그널
+    const stOk = quant_signals?.short_term?.weighted_p_adj != null
+    const mtOk = quant_signals?.medium_term?.weighted_ret_12m_pct != null
+    if (stOk || mtOk) {
+      const stItems = stOk ? quant_signals.short_term.items.filter(si => si.p_adj != null).map(si =>
+        `<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f1f5f9;font-size:12px;">
+          <span>${si.name}</span><span style="font-weight:600;color:${si.p_adj >= 0.5 ? '#16a34a' : '#ef4444'}">${(si.p_adj * 100).toFixed(1)}%</span>
+        </div>`).join('') : ''
+      const ret = mtOk ? quant_signals.medium_term.weighted_ret_12m_pct : 0
+      const mtItems = mtOk ? quant_signals.medium_term.items.filter(mi => mi.ret_12m_pct != null).map(mi =>
+        `<div style="display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #f1f5f9;font-size:12px;">
+          <span>${mi.name}</span><span style="font-weight:600;color:${mi.ret_12m_pct >= 0 ? '#16a34a' : '#ef4444'}">${mi.ret_12m_pct >= 0 ? '+' : ''}${mi.ret_12m_pct.toFixed(1)}%</span>
+        </div>`).join('') : ''
+      units.push(`<div style="${W}padding:16px 40px 20px;">
+        <table style="width:100%;border-collapse:collapse;"><tbody><tr>
+          <td style="width:50%;padding-right:20px;vertical-align:top;">
+            ${stOk ? `<div style="${lbl}">5일 후 상승 확률</div>
+              <div style="background:#fff7ed;border-radius:6px;padding:10px 14px;margin-bottom:10px;">
+                <span style="font-size:15px;font-weight:700;color:#ea580c;">상승확률 ${(quant_signals.short_term.weighted_p_adj * 100).toFixed(1)}%</span>
+              </div>${stItems}` : ''}
+          </td>
+          <td style="width:50%;padding-left:20px;vertical-align:top;border-left:1px solid #e2e8f0;">
+            ${mtOk ? `<div style="${lbl}">최근 12개월 과거 수익률</div>
+              <div style="background:${ret >= 0 ? '#f0fdf4' : '#fef2f2'};border-radius:6px;padding:10px 14px;margin-bottom:10px;">
+                <span style="font-size:22px;font-weight:700;color:${ret >= 0 ? '#16a34a' : '#ef4444'}">${ret >= 0 ? '+' : ''}${ret.toFixed(1)}%</span>
+              </div>${mtItems}` : ''}
+          </td>
+        </tr></tbody></table>
+      </div>`)
+      units.push(divider)
+    }
+
+    // 리스크 — 헤더+요약 + 카드별 개별 유닛
+    if (riskAnalysis) {
+      units.push(`<div style="${W}padding:16px 40px 8px;">
+        <div style="${lbl}">리스크</div>
+        ${riskAnalysis.risk_summary ? `<div style="background:#fff1f2;border-left:3px solid #ef4444;padding:10px 14px;border-radius:0 6px 6px 0;font-size:12px;line-height:1.6;">${riskAnalysis.risk_summary}</div>` : ''}
+      </div>`)
+      ;(riskAnalysis.per_stock || []).forEach(ps => {
+        units.push(`<div style="${W}padding:4px 40px;">
+          <div style="background:#f8fafc;border-radius:6px;padding:10px 14px;">
+            <strong style="font-size:12px;">${ps.name}</strong>
+            <div style="font-size:12px;color:#475569;margin-top:4px;line-height:1.5;">${ps.risk_text}</div>
+          </div>
+        </div>`)
+      })
+      units.push(`<div style="${W}padding-bottom:16px;"></div>`)
+      units.push(divider)
+    }
+
+    // 종목별 분석 — 항목별 개별 유닛
+    units.push(`<div style="${W}padding:16px 40px 4px;"><div style="${lbl}">종목별 분석</div></div>`)
+    sortedItems.forEach((item, idx) => {
+      const narrative = buildStockNarrative(item, aiData[item.ticker])
+      const color = COLOR_PALETTE[idx % COLOR_PALETTE.length]
+      units.push(`<div style="${W}padding:4px 40px 14px;border-bottom:1px solid #f1f5f9;">
+        <div style="margin-bottom:6px;">
+          <span style="display:inline-block;width:10px;height:10px;border-radius:50%;background:${color};margin-right:8px;vertical-align:middle;"></span>
+          <strong style="font-size:13px;vertical-align:middle;">${item.name}</strong>
+          <span style="font-size:11px;color:#94a3b8;margin-left:8px;vertical-align:middle;">${item.ticker}</span>
+          <span style="font-size:12px;color:#64748b;float:right;">${item.weight_pct.toFixed(1)}%</span>
+        </div>
+        ${narrative ? `<div style="font-size:12px;color:#475569;line-height:1.7;padding-left:18px;">${narrative}</div>` : ''}
+      </div>`)
+    })
+
+    return { headerHtml, footerHtml, units }
+  }
+
+  const handlePdf = async () => {
+    const filename = `${new Date().toISOString().slice(0, 10)}_${portfolioRank ? `TOP${portfolioRank}_` : ''}${risk_tier || '포트폴리오'}_${user?.name || user?.userId || 'user'}.pdf`
+
+    const overlay = document.createElement('div')
+    overlay.style.cssText = 'position:fixed;inset:0;background:white;z-index:9999;display:flex;align-items:center;justify-content:center;'
+    overlay.innerHTML = '<div class="loading-container"><div class="loading-spinner"></div><p>PDF 생성 중...</p></div>'
+    document.body.appendChild(overlay)
+
+    try {
+      const { headerHtml, footerHtml, units } = buildPdfParts()
+      const opts = { scale: 2, useCORS: true, scrollX: 0, scrollY: 0, windowWidth: 794, logging: false }
+
+      // 헤더·푸터 캡처
+      const renderUnit = async (html) => {
+        const div = document.createElement('div')
+        div.style.cssText = 'position:absolute;top:0;left:900px;z-index:9998;'
+        div.innerHTML = html
+        document.body.appendChild(div)
+        const canvas = await html2canvas(div.firstElementChild || div, opts)
+        document.body.removeChild(div)
+        return canvas
+      }
+
+      const headerCanvas = await renderUnit(headerHtml)
+      const footerCanvas = await renderUnit(footerHtml)
+
+      // 유닛별 개별 캡처
+      const sectionCanvases = []
+      for (const html of units) {
+        if (!html) continue
+        sectionCanvases.push(await renderUnit(html))
+      }
+
+      // jsPDF bin-packing 조립
+      const pdf = new jsPDF({ unit: 'mm', format: 'a4', orientation: 'portrait' })
+      const pageW = pdf.internal.pageSize.getWidth()
+      const pageH = pdf.internal.pageSize.getHeight()
+
+      const pxPerMm = headerCanvas.width / pageW
+      const hMm = headerCanvas.height / pxPerMm
+      const fMm = footerCanvas.height / pxPerMm
+      const hImg = headerCanvas.toDataURL('image/jpeg', 0.95)
+      const fImg = footerCanvas.toDataURL('image/jpeg', 0.95)
+
+      const addHF = () => {
+        pdf.addImage(hImg, 'JPEG', 0, 0, pageW, hMm)
+        pdf.addImage(fImg, 'JPEG', 0, pageH - fMm, pageW, fMm)
+      }
+
+      let isFirst = true
+      let curYMm = hMm  // 첫 페이지: 헤더에 바로 붙음
+      addHF()
+
+      for (const canvas of sectionCanvases) {
+        const sHMm = canvas.height / pxPerMm
+        const bottomLimit = pageH - fMm
+
+        // 현재 페이지에 안 들어가면 새 페이지
+        if (curYMm + sHMm > bottomLimit) {
+          pdf.addPage()
+          isFirst = false
+          addHF()
+          curYMm = hMm + 3  // 2페이지부터 3mm gap
+        }
+
+        pdf.addImage(canvas.toDataURL('image/jpeg', 0.95), 'JPEG', 0, curYMm, pageW, sHMm)
+        curYMm += sHMm
+      }
+
+      pdf.save(filename)
+    } finally {
+      document.body.removeChild(overlay)
+    }
   }
 
   if (isLoading) {
@@ -382,24 +724,8 @@ function PortfolioDetailPage() {
         signal: controller.signal,
       })
       if (!res.ok) throw new Error(await res.text())
-      const aiResult = await res.json()
-      setAiData(aiResult)
+      setAiData(await res.json())
       setAiStatus('done')
-      // AI narrative 텍스트로 추가 용어 추출
-      const aiTexts = Object.values(aiResult)
-        .flatMap(v => [v?.narrative, v?.selection_reason, ...(v?.strengths || []), ...(v?.weaknesses || [])])
-        .filter(Boolean)
-      const aiCombined = aiTexts.join('\n')
-      if (aiCombined.length >= 30) {
-        fetch('/api/v1/terms/extract', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ text: aiCombined }),
-        })
-          .then(r => r.json())
-          .then(d => setDynamicTerms(prev => ({ ...prev, ...(d.terms || {}) })))
-          .catch(() => {})
-      }
     } catch (e) {
       console.warn('AI 분석 실패:', e)
       setAiStatus(e.name === 'AbortError' ? 'timeout' : 'error')
@@ -437,7 +763,6 @@ function PortfolioDetailPage() {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
-    <DynamicTermProvider extraDict={dynamicTerms}>
     <div className="portfolio-detail-page">
       <div className="portfolio-detail-container">
 
@@ -461,7 +786,7 @@ function PortfolioDetailPage() {
                 survey_context,
                 portfolio_style: portfolioData.portfolio_style,
               })
-              return oneLiner ? <div className="pd-tier-summary"><TermText text={oneLiner} /></div> : null
+              return oneLiner ? <ul className="pd-tier-summary-list"><li>{oneLiner}</li></ul> : null
             })()}
           </div>
 
@@ -517,20 +842,7 @@ function PortfolioDetailPage() {
           {/* 구성비율 */}
           <div className="pd-section-row pdf-page-break">
             <div className="pd-section-label">구성비율 / 구성종목</div>
-            <div className="pd-labeled-bar">
-              {sortedItems.map((item, idx) => (
-                <div
-                  key={item.ticker}
-                  className="pd-bar-segment"
-                  style={{ width: `${item.weight_pct}%`, background: COLOR_PALETTE[idx % COLOR_PALETTE.length] }}
-                  title={`${item.name} ${item.weight_pct.toFixed(1)}%`}
-                >
-                  <span className="pd-bar-label">
-                    {item.name}({item.weight_pct.toFixed(0)}%)
-                  </span>
-                </div>
-              ))}
-            </div>
+            <DonutChart items={sortedItems} centerAmount={investable_amount_krw} navigate={navigate} riskData={riskAnalysis?.per_stock} />
           </div>
 
           <div className="pd-divider" />
@@ -538,10 +850,10 @@ function PortfolioDetailPage() {
           {/* 단기 방향성 / 중장기 기대수익률 / 리스크 */}
           {quant_signals && (
             <>
+              {/* 5일 후 상승확률 / 최근 12개월 과거 수익률 - 좌우 배치 */}
               <div className="pd-section-row pd-two-col">
-                {/* 왼쪽: 단기 + 중장기 */}
                 <div className="pd-col">
-                  <div className="pd-section-label">(단기) 20일 후 예상 수익률</div>
+                  <div className="pd-section-label">5일 후 상승 확률</div>
                   {quant_signals.short_term?.weighted_p_adj != null ? (
                     <>
                       <div className="pd-signal-bar-wrap">
@@ -567,14 +879,15 @@ function PortfolioDetailPage() {
                       </div>
                     </>
                   ) : <p className="pd-no-data">데이터 없음</p>}
+                </div>
 
-                  <div className="pd-section-label pd-section-label-mt">(중장기) 기대수익률 (CAPM 기반)</div>
+                <div className="pd-col">
+                  <div className="pd-section-label">최근 12개월 과거 수익률</div>
                   {quant_signals.medium_term?.weighted_ret_12m_pct != null ? (
                     <>
                       <div className={`pd-big-value ${quant_signals.medium_term.weighted_ret_12m_pct >= 0 ? 'pd-pos' : 'pd-neg'}`}>
                         {quant_signals.medium_term.weighted_ret_12m_pct >= 0 ? '+' : ''}
                         {quant_signals.medium_term.weighted_ret_12m_pct.toFixed(1)}%
-                        <span className="pd-big-value-sub"> (12M 과거 수익률 기반)</span>
                       </div>
                       <div className="pd-signal-items">
                         {quant_signals.medium_term.items
@@ -591,48 +904,50 @@ function PortfolioDetailPage() {
                     </>
                   ) : <p className="pd-no-data">데이터 없음</p>}
                 </div>
+              </div>
 
-                {/* 오른쪽: 리스크 */}
-                <div className="pd-col">
-                  <div className="pd-section-label">리스크</div>
-                  {riskStatus === 'loading' && (
-                    <p className="pd-status-msg">⏳ AI 리스크 분석 중...</p>
-                  )}
-                  {riskStatus === 'done' && riskAnalysis ? (
-                    <>
-                      <div className="pd-risk-summary"><TermText text={riskAnalysis.risk_summary} /></div>
-                      <div className="pd-signal-items">
-                        {(riskAnalysis.per_stock || []).map(ps => (
-                          <div key={ps.ticker} className="pd-signal-item pd-risk-item">
-                            <span className="pd-signal-name">{ps.name}</span>
-                            <span className="pd-risk-text pd-neg"><TermText text={ps.risk_text} /></span>
+              <div className="pd-divider" />
+
+              {/* 리스크 - 전체 폭 */}
+              <div className="pd-section-row">
+                <div className="pd-section-label">리스크</div>
+                {riskStatus === 'loading' && (
+                  <p className="pd-status-msg">⏳ AI 리스크 분석 중...</p>
+                )}
+                {riskStatus === 'done' && riskAnalysis ? (
+                  <>
+                    <div className="pd-risk-summary">{riskAnalysis.risk_summary}</div>
+                    <div className="pd-signal-items">
+                      {(riskAnalysis.per_stock || []).map(ps => (
+                        <div key={ps.ticker} className="pd-signal-item pd-risk-item">
+                          <span className="pd-signal-name">{ps.name}</span>
+                          <span className="pd-risk-text pd-neg">{ps.risk_text}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </>
+                ) : riskStatus !== 'loading' && quant_signals.risk?.weighted_vol_3m_pct != null ? (
+                  <>
+                    <div className="pd-big-value pd-neg">
+                      {quant_signals.risk.weighted_vol_3m_pct.toFixed(1)}%
+                      <span className="pd-big-value-sub"> 3개월 변동성</span>
+                    </div>
+                    <div className="pd-signal-items">
+                      {quant_signals.risk.items
+                        .filter(ri => ri.vol_3m_pct != null)
+                        .map(ri => (
+                          <div key={ri.ticker} className="pd-signal-item">
+                            <span className="pd-signal-name">{ri.name}</span>
+                            <span className="pd-neg">{ri.vol_3m_pct.toFixed(1)}%</span>
                           </div>
                         ))}
-                      </div>
-                    </>
-                  ) : riskStatus !== 'loading' && quant_signals.risk?.weighted_vol_3m_pct != null ? (
-                    <>
-                      <div className="pd-big-value pd-neg">
-                        {quant_signals.risk.weighted_vol_3m_pct.toFixed(1)}%
-                        <span className="pd-big-value-sub"> 3개월 변동성</span>
-                      </div>
-                      <div className="pd-signal-items">
-                        {quant_signals.risk.items
-                          .filter(ri => ri.vol_3m_pct != null)
-                          .map(ri => (
-                            <div key={ri.ticker} className="pd-signal-item">
-                              <span className="pd-signal-name">{ri.name}</span>
-                              <span className="pd-neg">{ri.vol_3m_pct.toFixed(1)}%</span>
-                            </div>
-                          ))}
-                      </div>
-                    </>
-                  ) : riskStatus === 'error' || riskStatus === 'timeout' ? (
-                    <p className="pd-no-data">리스크 분석을 불러오지 못했습니다.</p>
-                  ) : (
-                    <p className="pd-no-data">데이터 없음</p>
-                  )}
-                </div>
+                    </div>
+                  </>
+                ) : riskStatus === 'error' || riskStatus === 'timeout' ? (
+                  <p className="pd-no-data">리스크 분석을 불러오지 못했습니다.</p>
+                ) : (
+                  <p className="pd-no-data">데이터 없음</p>
+                )}
               </div>
               <div className="pd-divider" />
             </>
@@ -657,7 +972,7 @@ function PortfolioDetailPage() {
                     </div>
                   </div>
                   {performance_3y.interpretation && (
-                    <div className="pd-interpretation"><TermText text={performance_3y.interpretation} /></div>
+                    <div className="pd-interpretation">{performance_3y.interpretation}</div>
                   )}
                 </div>
                 <div className="pd-col">
@@ -666,7 +981,7 @@ function PortfolioDetailPage() {
                     <p className="pd-status-msg">⏳ AI 리스크 분석 중...</p>
                   )}
                   {riskStatus === 'done' && riskAnalysis ? (
-                    <div className="pd-risk-summary"><TermText text={riskAnalysis.risk_summary} /></div>
+                    <div className="pd-risk-summary">{riskAnalysis.risk_summary}</div>
                   ) : riskStatus !== 'loading' ? (
                     <div className="pd-perf-boxes">
                       <div className="pd-perf-box">
@@ -684,34 +999,6 @@ function PortfolioDetailPage() {
               <div className="pd-divider" />
             </>
           )}
-
-          {/* 몬테카를로 시뮬레이션 */}
-          {monte_carlo_1y && (
-            <>
-              <div className="pd-section-row">
-                <div className="pd-section-label">(몬테카를로) 향후 1년 수익률 (현재 가격 기준)</div>
-                <div className="pd-mc-row">
-                  <div className="pd-mc-box pd-mc-bear">
-                    <div className="pd-mc-label">약세 (10%)</div>
-                    <div className="pd-mc-value">{fmtPct(monte_carlo_1y.p10_pct)}</div>
-                  </div>
-                  <div className="pd-mc-box pd-mc-base">
-                    <div className="pd-mc-label">기준 (50%)</div>
-                    <div className="pd-mc-value">{fmtPct(monte_carlo_1y.p50_pct)}</div>
-                  </div>
-                  <div className="pd-mc-box pd-mc-bull">
-                    <div className="pd-mc-label">강세 (90%)</div>
-                    <div className="pd-mc-value">{fmtPct(monte_carlo_1y.p90_pct)}</div>
-                  </div>
-                </div>
-                {monte_carlo_1y.interpretation && (
-                  <div className="pd-interpretation"><TermText text={monte_carlo_1y.interpretation} /></div>
-                )}
-              </div>
-              <div className="pd-divider" />
-            </>
-          )}
-
 
           {/* 종목별 분석 */}
           <div className="pd-section-row pdf-page-break">
@@ -739,7 +1026,7 @@ function PortfolioDetailPage() {
                       <span className="pd-stock-code">{item.ticker}</span>
                     </div>
                     <div className="pd-stock-right">
-                      {narrative && <p className="pd-stock-reason"><TermText text={narrative} /></p>}
+                      {narrative && <p className="pd-stock-reason">{narrative}</p>}
                     </div>
                   </div>
                 )
@@ -748,6 +1035,70 @@ function PortfolioDetailPage() {
           </div>
 
           <div className="pd-divider" />
+
+          {/* 매수 계획 */}
+          {buy_plan && buy_plan.length > 0 && (
+            <>
+              <div className="pd-section-row pdf-page-break">
+                <div className="pd-section-label">매수 계획</div>
+                {investable_amount_krw != null && (
+                  <div style={{ marginBottom: 10, fontSize: 13, color: '#64748b' }}>
+                    가용자산 <strong style={{ color: '#1e293b' }}>{investable_amount_krw.toLocaleString()}원</strong> 기준
+                  </div>
+                )}
+                {buy_plan.some(bp => bp.shares === 0) && (
+                  <div style={{ marginBottom: 10, padding: '8px 12px', background: '#fff7ed', border: '1px solid #fed7aa', borderRadius: 6, fontSize: 12, color: '#c2410c' }}>
+                    ⚠️ 입력하신 가용자산으로 매수 불가한 종목이 있습니다. 가용자산을 늘리면 더 많은 종목으로 구성된 포트폴리오를 받을 수 있습니다.
+                  </div>
+                )}
+                <div style={{ overflowX: 'auto' }}>
+                  <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: 13 }}>
+                    <thead>
+                      <tr style={{ borderBottom: '2px solid #e2e8f0', textAlign: 'left' }}>
+                        <th style={{ padding: '8px 12px', color: '#64748b', fontWeight: 600 }}>종목</th>
+                        <th style={{ padding: '8px 12px', color: '#64748b', fontWeight: 600, textAlign: 'right' }}>현재가</th>
+                        <th style={{ padding: '8px 12px', color: '#64748b', fontWeight: 600, textAlign: 'right' }}>목표비중</th>
+                        <th style={{ padding: '8px 12px', color: '#64748b', fontWeight: 600, textAlign: 'right' }}>수량</th>
+                        <th style={{ padding: '8px 12px', color: '#64748b', fontWeight: 600, textAlign: 'right' }}>투자금액</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {buy_plan.map((bp, i) => {
+                        const unaffordable = bp.shares === 0
+                        const matchedItem = sortedItems.find(it => it.ticker === bp.ticker)
+                        return (
+                          <tr key={bp.ticker} style={{ borderBottom: '1px solid #f1f5f9', background: unaffordable ? '#fef9f0' : (i % 2 === 0 ? '#fff' : '#f8fafc'), opacity: unaffordable ? 0.7 : 1 }}>
+                            <td style={{ padding: '8px 12px' }}>
+                              <span style={{ fontWeight: 600, color: unaffordable ? '#9ca3af' : '#1e293b' }}>{bp.name}</span>
+                              <span style={{ marginLeft: 6, fontSize: 11, color: '#94a3b8' }}>{bp.ticker}</span>
+                              {unaffordable && <span style={{ marginLeft: 6, fontSize: 10, color: '#f97316', fontWeight: 600 }}>매수불가</span>}
+                            </td>
+                            <td style={{ padding: '8px 12px', textAlign: 'right', color: unaffordable ? '#9ca3af' : '#374151' }}>
+                              {bp.price_krw.toLocaleString()}원
+                            </td>
+                            <td style={{ padding: '8px 12px', textAlign: 'right', color: '#64748b' }}>
+                              {matchedItem ? `${matchedItem.weight_pct.toFixed(1)}%` : '-'}
+                            </td>
+                            <td style={{ padding: '8px 12px', textAlign: 'right', color: unaffordable ? '#f97316' : '#374151', fontWeight: unaffordable ? 600 : 400 }}>
+                              {unaffordable ? '0주' : `${bp.shares.toLocaleString()}주`}
+                            </td>
+                            <td style={{ padding: '8px 12px', textAlign: 'right', fontWeight: 600, color: unaffordable ? '#9ca3af' : '#1e293b' }}>
+                              {unaffordable ? '-' : `${bp.allocated_budget_krw.toLocaleString()}원`}
+                            </td>
+                          </tr>
+                        )
+                      })}
+                    </tbody>
+                  </table>
+                </div>
+                <div style={{ marginTop: 10, padding: '8px 12px', background: '#f8fafc', borderRadius: 6, fontSize: 12, color: '#64748b', display: 'flex', gap: 16 }}>
+                  <span>총 투자금액: <strong style={{ color: '#1e293b' }}>{(total_invested_krw ?? 0).toLocaleString()}원</strong></span>
+                  <span>잔여금: <strong style={{ color: '#64748b' }}>{(leftover_krw ?? 0).toLocaleString()}원</strong></span>
+                </div>
+              </div>
+              <div className="pd-divider" />
+            </>
+          )}
 
           {/* 투자 유의사항 */}
           <div className="pd-section-row pd-notice">
@@ -767,7 +1118,6 @@ function PortfolioDetailPage() {
         </div>
       </div>
     </div>
-    </DynamicTermProvider>
   )
 }
 

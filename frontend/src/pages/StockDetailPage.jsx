@@ -375,14 +375,21 @@ function StockDetailPage() {
     if (!stockCode) return
     setLoading(true)
     setError(null)
+    const controller = new AbortController()
+    const timer = setTimeout(() => controller.abort(), 10000)
     Promise.all([
-      fetch(`/api/instruments/stocks/${stockCode}`).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() }),
-      fetch(`/api/instruments/stocks/${stockCode}/scores`).then(r => r.json()).catch(() => null),
+      fetch(`/api/instruments/stocks/${stockCode}`, { signal: controller.signal }).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() }),
+      fetch(`/api/instruments/stocks/${stockCode}/scores`, { signal: controller.signal }).then(r => r.json()).catch(() => null),
     ]).then(([det, sc]) => {
+      clearTimeout(timer)
       setDetail(det)
       setScores(sc)
       setLoading(false)
-    }).catch(err => { setError(err.message); setLoading(false) })
+    }).catch(err => {
+      clearTimeout(timer)
+      setError(err.name === 'AbortError' ? '데이터 로딩 시간이 초과되었습니다. 다시 시도해 주세요.' : err.message)
+      setLoading(false)
+    })
   }, [stockCode])
 
   // ── 실시간 가격 스트림 (SSE) ──────────────────────────────────────────────
@@ -495,9 +502,8 @@ function StockDetailPage() {
 
     // 종목 전환 시 이전 분석 즉시 초기화 (잘못된 내용이 잠깐 보이는 것 방지)
     setAnalysis(null)
-    setAnalysisError(false)
 
-    const cacheKey = `stock_analysis_${stockCode}`
+    const cacheKey = `stock_analysis_v2_${stockCode}`
     try {
       const raw = sessionStorage.getItem(cacheKey)
       if (raw) {

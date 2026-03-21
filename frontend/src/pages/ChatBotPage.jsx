@@ -337,22 +337,6 @@ const ChatBotPage = () => {
     })
   }
 
-  // 세션 삭제
-  const deleteSession = async (e, sessionId) => {
-    e.stopPropagation() // 세션 클릭 이벤트 방지
-    if (!user?.userId) return
-    try {
-      await axios.delete(`/api/chat/session/${sessionId}?user_id=${user.userId}`)
-      setSessions(prev => prev.filter(s => s.id !== sessionId))
-      if (currentSessionId === sessionId) {
-        setMessages([])
-        setCurrentSessionId(null)
-      }
-    } catch (err) {
-      console.error('세션 삭제 실패:', err)
-    }
-  }
-
   // 메시지 삭제
   const deleteMessage = async (messageId) => {
     if (!user?.userId) return

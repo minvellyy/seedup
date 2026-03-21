@@ -1273,6 +1273,7 @@ async def get_portfolio_recommendations_ai(
     user_id: int,
     koscom_score: int = 20,
     refresh: bool = False,
+    available_amount: int = None,
     conn=Depends(_get_db_conn_dep),
 ):
     """포트폴리오 추천.
@@ -1284,9 +1285,10 @@ async def get_portfolio_recommendations_ai(
 
     - refresh=false(기본): 캐시 반환
     - refresh=true: 재실행 후 캐시 갱신
+    - available_amount: 가용자산 직접 입력 시 survey_ctx의 LUMP_SUM_AMOUNT를 덮어씀
     """
-    # ── 파일 캐시 ──────────────────────────────────────────────────────────
-    if not refresh:
+    # ── 파일 캐시 (가용자산 직접 입력 시 캐시 우회) ────────────────────────
+    if not refresh and available_amount is None:
         cached = _load_pf_cache(user_id)
         if cached:
             portfolios = cached.get("portfolios", [])
@@ -1334,6 +1336,11 @@ async def get_portfolio_recommendations_ai(
     except Exception:
         pass
 
+    # 가용자산 직접 입력 시 survey_ctx 덮어쓰기
+    if available_amount is not None and available_amount > 0:
+        survey_ctx["LUMP_SUM_AMOUNT"] = str(available_amount)
+        survey_ctx["CONTRIBUTION_TYPE"] = "LUMP_SUM"
+
     if not _MODELS_AVAILABLE:
         raise HTTPException(status_code=503, detail=f"모델 로드 실패: {_MODELS_IMPORT_ERR}")
 
@@ -1355,6 +1362,7 @@ async def get_portfolio_recommendations_ai(
             user_id, conn,
             signal_map=signal_map,
             fin_map=fin_map,
+            total_assets_override=available_amount if available_amount and available_amount > 0 else None,
         )
     except Exception as e:
         # MC 모델 오류 시 마지막 캐시 반환 (refresh=true여도 캐시 우선)
@@ -1404,6 +1412,20 @@ async def get_portfolio_recommendations_ai(
                 }
                 for it in pf_d.get("portfolio_items", [])
             ],
+            "buy_plan": [
+                {
+                    "ticker": bp.get("ticker", ""),
+                    "name": bp.get("name", ""),
+                    "price_krw": bp.get("price_krw", 0),
+                    "shares": bp.get("shares", 0),
+                    "allocated_budget_krw": bp.get("allocated_budget_krw", 0),
+                    "expected_return_1y_pct": bp.get("expected_return_1y_pct"),
+                }
+                for bp in pf_d.get("buy_plan", [])
+            ],
+            "investable_amount_krw": pf_d.get("investable_amount_krw"),
+            "total_invested_krw": pf_d.get("total_invested_krw"),
+            "leftover_krw": pf_d.get("leftover_krw"),
             "monte_carlo_1y": mc,
             "survey_context": survey_ctx,
         })
@@ -1457,7 +1479,9 @@ async def get_portfolio_recommendations_ai(
     # ── 4단계: 정량 지표 후처리 ──────────────────────────────────────────
     portfolios = _enrich_portfolio_quant_signals(portfolios)
 
-    _save_pf_cache(user_id, portfolios)
+    # 가용자산 직접 입력 시 캐시 저장 생략 (1회성 조회)
+    if available_amount is None:
+        _save_pf_cache(user_id, portfolios)
 
     # ── 5단계: DB에 히스토리 저장 ──────────────────────────────────────────
     try:
