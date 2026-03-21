@@ -62,6 +62,7 @@ def _db():
         db=os.getenv("DB_NAME"),
         charset="utf8mb4",
         cursorclass=pymysql.cursors.DictCursor,
+        connect_timeout=5,
     )
 
 
@@ -287,11 +288,13 @@ def get_stock_detail(stock_code: str):
             "price_date": str(row["last_price_date"] or ""),
         }
 
-    # ── 3. KIS API — 1년 일별 히스토리 ───────────────────────────────────────
+    # ── 3. KIS API — 1년 일별 히스토리 (최대 8초 타임아웃) ──────────────────
     try:
-        hist = get_daily_prices_1y(stock_code)   # [{"date","close","volume"}, ...]
-    except Exception as e:
-        hist = []  # 히스토리 실패 시 빈 배열로 폴백 (현재가는 표시)
+        with ThreadPoolExecutor(max_workers=1) as ex:
+            future = ex.submit(get_daily_prices_1y, stock_code)
+            hist = future.result(timeout=8)
+    except Exception:
+        hist = []  # 히스토리 실패/타임아웃 시 빈 배열로 폴백 (현재가는 표시)
 
     price_history = [
         PricePoint(

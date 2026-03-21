@@ -130,6 +130,9 @@ def get_report_insights(
                 if pdf_path.exists():
                     encoded = urllib.parse.quote(pdf_filename, safe="")
                     pdf_url = f"/api/v1/reports/pdf/{urllib.parse.quote(report_type, safe='')}/{encoded}"
+            # 로컬 PDF 없으면 Naver 원문 URL로 폴백
+            if pdf_url is None:
+                pdf_url = r["metadata"].get("naver_pdf_url") or None
 
             items.append(
                 ReportInsightItem(

@@ -581,15 +581,17 @@ def run_manager_analysis(
                 f"{context_label}\n\n"
                 f"작성 언어: {lang_label}\n"
                 f"작성 톤: {style_label} 문체\n\n"
-                "앞서 세 분석가(투자원칙 적합도 / 기업분석 / 산업분석)의 결과를 종합하여 "
+                "앞서 네 분석가(투자원칙 적합도 / 기업분석 / 산업분석 / 비정형 데이터)의 결과를 종합하여 "
                 "단일 종목 상세 페이지에 바로 사용할 수 있는 통합 리포트를 생성하라.\n\n"
                 "[핵심 원칙]\n"
                 "- 문체: 모든 문장은 반드시 '~합니다', '~입니다', '~있습니다' 등 격식체(합쇼체)로 통일하라. "
                 "'~함', '~임', '~됨' 같은 명사형 종결이나 '~이다', '~한다' 같은 평서형은 절대 사용하지 말 것.\n"
                 "- 전문용어(예: OPM, PER, CDMO, HBM, FCF, ETF, 밸류체인 등)는 반드시 괄호 안에 쉬운 한국어 설명을 덧붙여라.\n"
-                "- 세 섹션의 내용이 서로 연결되도록 통합적 관점으로 서술하라.\n"
+                "- 네 섹션의 내용이 서로 연결되도록 통합적 관점으로 서술하라.\n"
                 "- 전체 요약 summary는 사용자가 이 종목을 '내가 살 종목인지'를 "
-                "  직관적으로 판단할 수 있도록 핵심만 담아라."
+                "  직관적으로 판단할 수 있도록 핵심만 담아라.\n"
+                "- 비정형 분석가의 결과(뉴스·센티멘트)와 기업분석가가 수집한 ESG·증권사 리포트 데이터를 "
+                "  unstructured_analysis 필드에 반드시 포함하라. 데이터가 없으면 null로 두어라."
             ),
             expected_output=(
                 "단일 종목 상세 페이지 통합 리포트 JSON:\n"
@@ -631,19 +633,25 @@ def run_manager_analysis(
                 '    "competitive_position": str,\n'
                 '    "policy_regulatory": str|null,\n'
                 '    "opportunity_threat_summary": str\n'
+                '  },\n'
+                '  "unstructured_analysis": {     // ESG·뉴스·증권사 리포트 인사이트\n'
+                '    "esg_risks": str|null,        // ESG 주요 리스크 (없으면 null)\n'
+                '    "esg_opportunities": str|null, // ESG 기대 요인 (없으면 null)\n'
+                '    "news_summary": str|null,     // 최신 뉴스 요약 1~2문장 (없으면 null)\n'
+                '    "reports_insight": str|null   // 증권사 리포트 핵심 인사이트 (없으면 null)\n'
                 '  }\n'
                 '}'
             ),
-            context=[t_fit, t_company, t_industry],
+            context=[t_fit, t_company, t_industry, t_unstr],
             agent=manager,
         )
 
         crew = Crew(
-            agents=[fit_analyst, company_analyst, industry_analyst, manager],
-            tasks=[t_fit, t_company, t_industry, t_detail_mgr],
+            agents=[fit_analyst, company_analyst, industry_analyst, unstructured_analyst, manager],
+            tasks=[t_fit, t_company, t_industry, t_unstr, t_detail_mgr],
             process=Process.sequential,
             verbose=True,
-            max_execution_time=180,
+            max_execution_time=240,
         )
 
     else:

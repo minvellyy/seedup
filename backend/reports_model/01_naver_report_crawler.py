@@ -87,6 +87,10 @@ def download_all_naver_reports(base_dir="reports", days_to_fetch=30):
                     pdf_response = requests.get(pdf_url, headers=headers)
                     with open(save_path, "wb") as f:
                         f.write(pdf_response.content)
+                    # 원문 URL 저장 (백엔드에서 직접 링크 제공용)
+                    url_path = save_path.replace(".pdf", ".url")
+                    with open(url_path, "w", encoding="utf-8") as f:
+                        f.write(pdf_url)
                     print(f" -> 다운로드 완료: [{broker_name}] {new_filename} ({date_str})")
                     downloaded += 1
                 except Exception as e:

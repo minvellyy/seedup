@@ -16,6 +16,7 @@ const DashboardPage = () => {
   const [stockRecsUpdatedAt, setStockRecsUpdatedAt] = useState(null)  // 종목 분석 완료 시각
   const [stockRecsLoading, setStockRecsLoading] = useState(false)
   const [pfRecsLoading, setPfRecsLoading] = useState(false)
+  const [pfAvailableAmount, setPfAvailableAmount] = useState('')
   const [recRequested, setRecRequested] = useState(false)  // 사용자가 추천 버튼을 누른 적 있는지
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
@@ -193,11 +194,11 @@ const DashboardPage = () => {
     }
   }
 
-  const fetchPortfolioRecs = async (userId, refresh = false) => {
+  const fetchPortfolioRecs = async (userId, refresh = false, availableAmount = null) => {
     setPfRecsLoading(true)
 
-    // sessionStorage 캐시 확인 (refresh=false 일 때만)
-    if (!refresh) {
+    // sessionStorage 캐시 확인 (refresh=false이고 가용자산 미입력 시에만)
+    if (!refresh && !availableAmount) {
       try {
         const cached = sessionStorage.getItem(`pf_recs_${userId}`)
         if (cached) {
@@ -216,8 +217,9 @@ const DashboardPage = () => {
     // 190초 후 자동 중단 (백엔드 타임아웃 180초 + 여유 10초)
     const timeoutId = setTimeout(() => controller.abort(), 190000)
     try {
+      const amountParam = availableAmount ? `&available_amount=${availableAmount}` : ''
       const prRes = await fetch(
-        `${API_BASE_URL}/api/dashboard/portfolio-recommendations-ai?user_id=${userId}&refresh=${refresh}`,
+        `${API_BASE_URL}/api/dashboard/portfolio-recommendations-ai?user_id=${userId}&refresh=${refresh}${amountParam}`,
         { signal: controller.signal }
       )
       if (prRes.ok) {
@@ -225,14 +227,16 @@ const DashboardPage = () => {
         setMultiPortfolios(newPortfolios)
         const cachedAt = newPortfolios?.[0]?._cached_at || new Date().toISOString()
         setPfRecsUpdatedAt(cachedAt)
-        // sessionStorage에 저장
-        try {
-          sessionStorage.setItem(`pf_recs_${userId}`, JSON.stringify({
-            portfoliosData: newPortfolios,
-            cachedAt,
-            ts: Date.now(),
-          }))
-        } catch {}
+        // 가용자산 직접 입력 시 세션 캐시 저장 생략 (1회성 조회)
+        if (!availableAmount) {
+          try {
+            sessionStorage.setItem(`pf_recs_${userId}`, JSON.stringify({
+              portfoliosData: newPortfolios,
+              cachedAt,
+              ts: Date.now(),
+            }))
+          } catch {}
+        }
       } else {
         const detail = await prRes.json().catch(() => ({}))
         const msg = detail?.detail || `오류 코드: ${prRes.status}`
@@ -802,23 +806,44 @@ const DashboardPage = () => {
                 <div className="card-header">
                   <h2>포트폴리오 추천</h2>
                   <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    {pfRecsUpdatedAt && !pfRecsLoading && (
-                      <span style={{ fontSize: 11, color: '#999' }}>
-                        {new Date(pfRecsUpdatedAt).toLocaleDateString('ko-KR', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' })} 기준
-                      </span>
-                    )}
-                    {multiPortfolios.length > 0 && !pfRecsLoading && (
-                      <span style={{ fontSize: 11, color: '#2563EB', fontWeight: 600 }}></span>
-                    )}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: 4 }}>
+                      <input
+                        type="number"
+                        min="0"
+                        step="10000"
+                        placeholder="가용자산 (원)"
+                        value={pfAvailableAmount}
+                        onChange={(e) => setPfAvailableAmount(e.target.value)}
+                        style={{
+                          width: 140,
+                          padding: '5px 8px',
+                          fontSize: 12,
+                          border: '1px solid #d1d5db',
+                          borderRadius: 6,
+                          outline: 'none',
+                          color: '#374151',
+                        }}
+                        disabled={pfRecsLoading}
+                      />
+                    </div>
                     <button
                       className="dash-analysis-btn"
                       disabled={pfRecsLoading || !user?.userId}
-                      onClick={() => user?.userId && fetchPortfolioRecs(user.userId, true)}
+                      onClick={() => {
+                        const amt = pfAvailableAmount ? parseInt(pfAvailableAmount, 10) : null
+                        user?.userId && fetchPortfolioRecs(user.userId, true, amt)
+                      }}
                     >
                       {pfRecsLoading ? <><span className="dash-analysis-spinner" />분석 중...</> : '포트폴리오 분석'}
                     </button>
                   </div>
                 </div>
+                {pfRecsUpdatedAt && !pfRecsLoading && (
+                  <div style={{ padding: '0 16px 6px', color: '#aaa', fontSize: 11 }}>
+                    마지막 분석: {new Date(pfRecsUpdatedAt).toLocaleString('ko-KR', { month: 'numeric', day: 'numeric', hour: '2-digit', minute: '2-digit' })}
+                    {pfAvailableAmount && ` · 가용자산 ${parseInt(pfAvailableAmount).toLocaleString()}원 기준`}
+                  </div>
+                )}
                 <div className="recommendations-list">
                   {pfRecsLoading && multiPortfolios.length === 0 ? (
                     <div style={{ padding: '16px', color: '#888', textAlign: 'center' }}>AI 포트폴리오 구성 중...</div>

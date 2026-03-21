@@ -182,6 +182,11 @@ def _recommend_portfolio_db(
     """)
     etfs = cur.fetchall()
 
+    # 예산 지정 시 — 1주라도 살 수 없는 종목은 후보에서 선제 제외
+    if total_assets_override:
+        stocks = [s for s in stocks if (s.get("last_price") or 0) <= total_budget]
+        etfs   = [e for e in etfs   if (e.get("last_price") or 0) <= total_budget]
+
     # ── 3. 가격 데이터 로딩 ───────────────────────────────────────────────
     ref_date = _date.today()
     cutoff_3y = (ref_date - _timedelta(days=365 * 3 + 30)).isoformat()
@@ -402,6 +407,29 @@ def _recommend_portfolio_db(
             explanation=f"{s['name']}은(는) 포트폴리오 안정성 제고를 위한 ETF입니다.",
         ))
 
+    # ── 5.5 예산 기반 매수 불가 종목 제거 + 비중 재정규화 (반복 수렴) ─────
+    # total_assets_override 지정 시: 재정규화 후에도 못 사는 종목을 반복 제거
+    if total_assets_override:
+        for _ in range(5):  # 최대 5회 반복으로 수렴
+            feasible = [
+                (item, cand)
+                for item, cand in zip(p_items, portfolio_candidates)
+                if int(cand.get("current_price", 0)) > 0
+                and int(total_budget * item.weight) >= int(cand["current_price"])
+            ]
+            if len(feasible) == len(p_items):
+                break  # 모두 매수 가능 — 수렴 완료
+            if len(feasible) == 0:
+                break  # 전부 불가 — buy_plan에서 0주로 표시
+            p_items = [pair[0] for pair in feasible]
+            portfolio_candidates = [pair[1] for pair in feasible]
+            total_n = len(p_items)
+            total_w = sum(i.weight for i in p_items)
+            if total_w > 0:
+                for i in p_items:
+                    i.weight = round(i.weight / total_w, 4)
+                    i.weight_pct = round(i.weight * 100, 1)
+
     # ── 6. 매수 계획 ─────────────────────────────────────────────────────
     buy_plan: List[BuyPlanItem] = []
     total_invested = 0
@@ -411,17 +439,19 @@ def _recommend_portfolio_db(
         if price <= 0:
             continue
         shares = max(0, allocated // price)
-        if shares == 0:
-            continue  # 예산 부족으로 구매 불가한 종목 건너뜀
         actual = shares * price
         total_invested += actual
         ret_1y = cand.get("ret_1y") or 0.0
+        if shares == 0:
+            rationale = f"예산 부족 — 목표 비중 {item.weight_pct:.1f}% 배정 {allocated:,}원, 최소 필요 {price:,}원"
+        else:
+            rationale = f"비중 {item.weight_pct:.1f}% 매수 ({shares}주 × {price:,}원)"
         buy_plan.append(BuyPlanItem(
             ticker=item.ticker, name=item.name,
             price_krw=price, shares=shares,
             allocated_budget_krw=actual,
             expected_return_1y_pct=round(ret_1y * 100, 1),
-            rationale=f"비중 {item.weight_pct:.1f}% 매수 ({shares}주 × {price:,}원)",
+            rationale=rationale,
         ))
 
     leftover = total_budget - total_invested
