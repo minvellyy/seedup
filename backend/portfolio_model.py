@@ -410,7 +410,7 @@ def _recommend_portfolio_db(
     # ── 5.5 예산 기반 매수 불가 종목 제거 + 비중 재정규화 (반복 수렴) ─────
     # total_assets_override 지정 시: 재정규화 후에도 못 사는 종목을 반복 제거
     if total_assets_override:
-        for _ in range(5):  # 최대 5회 반복으로 수렴
+        for _ in range(len(p_items)):  # 최대 종목 수만큼 반복
             feasible = [
                 (item, cand)
                 for item, cand in zip(p_items, portfolio_candidates)
@@ -420,7 +420,20 @@ def _recommend_portfolio_db(
             if len(feasible) == len(p_items):
                 break  # 모두 매수 가능 — 수렴 완료
             if len(feasible) == 0:
-                break  # 전부 불가 — buy_plan에서 0주로 표시
+                # 비중 배분 후 전부 불가 → 1주라도 살 수 있는 종목 중 최고 점수 1개로 구성
+                affordable_single = [
+                    (item, cand)
+                    for item, cand in zip(p_items, portfolio_candidates)
+                    if int(cand.get("current_price", 0)) <= total_budget
+                ]
+                if affordable_single:
+                    best = affordable_single[0]  # 이미 스코어 순 정렬 → 첫 번째가 최고 점수
+                    best[0].weight = 1.0
+                    best[0].weight_pct = 100.0
+                    p_items = [best[0]]
+                    portfolio_candidates = [best[1]]
+                # affordable_single도 없으면 예산이 너무 작음 — 원본 유지 후 buy_plan에서 0주 표시
+                break
             p_items = [pair[0] for pair in feasible]
             portfolio_candidates = [pair[1] for pair in feasible]
             total_n = len(p_items)
@@ -432,24 +445,66 @@ def _recommend_portfolio_db(
 
     # ── 6. 매수 계획 ─────────────────────────────────────────────────────
     buy_plan: List[BuyPlanItem] = []
+
+    # ── 1차: 비중 기준 초기 매수 ─────────────────────────────────────────
+    plan_data = []
     total_invested = 0
     for item, cand in zip(p_items, portfolio_candidates):
-        allocated = int(total_budget * item.weight)
         price = int(cand["current_price"])
         if price <= 0:
             continue
+        allocated = int(total_budget * item.weight)
         shares = max(0, allocated // price)
-        actual = shares * price
-        total_invested += actual
+        cost = shares * price
+        total_invested += cost
+        plan_data.append({
+            "item": item, "cand": cand,
+            "price": price, "shares": shares, "cost": cost,
+        })
+
+    # ── 2차: 잔여금으로 추가 매수 (그리디) ─────────────────────────────────
+    # 실제 투자금 합계 기준으로 비중 계산 → overweight 판정으로 조기 종료하는 버그 방지
+    remaining = total_budget - total_invested
+    while remaining > 0:
+        total_cost_so_far = sum(p["cost"] for p in plan_data) or 1
+        best_idx = None
+        best_deficit = float('-inf')
+        for i, pd_ in enumerate(plan_data):
+            if pd_["price"] > remaining:
+                continue
+            deficit = pd_["item"].weight - pd_["cost"] / total_cost_so_far
+            if deficit > best_deficit:
+                best_deficit = deficit
+                best_idx = i
+        if best_idx is None:
+            break
+        pd_ = plan_data[best_idx]
+        pd_["shares"] += 1
+        pd_["cost"] += pd_["price"]
+        total_invested += pd_["price"]
+        remaining -= pd_["price"]
+
+    # ── p_items 비중을 실제 투자금 기준으로 재계산 ────────────────────────
+    if total_invested > 0:
+        ticker_cost = {pd_["item"].ticker: pd_["cost"] for pd_ in plan_data}
+        for item in p_items:
+            actual_cost = ticker_cost.get(item.ticker, 0)
+            item.weight = round(actual_cost / total_invested, 4)
+            item.weight_pct = round(item.weight * 100, 1)
+
+    # ── BuyPlanItem 생성 ──────────────────────────────────────────────────
+    for pd_ in plan_data:
+        item, cand = pd_["item"], pd_["cand"]
+        shares, cost, price = pd_["shares"], pd_["cost"], pd_["price"]
         ret_1y = cand.get("ret_1y") or 0.0
         if shares == 0:
-            rationale = f"예산 부족 — 목표 비중 {item.weight_pct:.1f}% 배정 {allocated:,}원, 최소 필요 {price:,}원"
+            rationale = f"예산 부족 — 목표 비중 {item.weight_pct:.1f}% 배정 {int(total_budget * item.weight):,}원, 최소 필요 {price:,}원"
         else:
             rationale = f"비중 {item.weight_pct:.1f}% 매수 ({shares}주 × {price:,}원)"
         buy_plan.append(BuyPlanItem(
             ticker=item.ticker, name=item.name,
             price_krw=price, shares=shares,
-            allocated_budget_krw=actual,
+            allocated_budget_krw=cost,
             expected_return_1y_pct=round(ret_1y * 100, 1),
             rationale=rationale,
         ))

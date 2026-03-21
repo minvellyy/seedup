@@ -826,7 +826,9 @@ def index_news_analysis(news_row, analysis):
             "published_at": str(news_row["published_at"]),
             "query_topic": news_row["query_topic"],
             "sentiment": analysis["sentiment"],
-            "importance_score": analysis["importance_score"]
+            "importance_score": analysis["importance_score"],
+            "title": news_row.get("title", "") or "",
+            "source_url": news_row.get("source_url", "") or "",
         }]
     )
 
@@ -840,7 +842,7 @@ def reindex_all_to_chroma(batch_size: int = 50) -> int:
     cur = conn.cursor(dictionary=True)
     cur.execute("""
         SELECT
-            nr.news_id, nr.title, nr.published_at, nr.query_topic,
+            nr.news_id, nr.title, nr.source_url, nr.published_at, nr.query_topic,
             na.article_summary,
             na.themes_json, na.events_json, na.companies_json,
             na.organizations_json, na.industries_json,
@@ -988,11 +990,12 @@ def daily_batch(days_back=90, retention_days=90):
 # 조회용
 # =========================================================
 
-def search_news_context(query, n_results=5):
+def search_news_context(query, n_results=5, company_name=None):
     """
-    임베딩 유사도로 후보를 넓게 수집한 뒤 published_at 기준 최신순으로 재정렬하여 반환.
+    임베딩 유사도로 후보를 넓게 수집한 뒤 유사도(60%) + 최신성(40%) 결합 스코어로 재정렬하여 반환.
     - 후보 풀: n_results * 4 (유사도 기반 광역 검색)
-    - 재정렬: published_at DESC (최신 뉴스 우선)
+    - company_name 전달 시 해당 기업 관련 기사 우선 필터링
+    - 재정렬: similarity 순위 60% + recency 40% 결합 스코어
     - 반환: 상위 n_results 건
     """
     query_emb = get_embedding(query)
@@ -1008,15 +1011,65 @@ def search_news_context(query, n_results=5):
         docs = res.get("documents", [[]])[0]
         metas = res.get("metadatas", [[]])[0]
 
+        # ChromaDB 반환 순서 = 유사도 내림차순 (best first)
         candidates = [{"doc": d, "meta": m} for d, m in zip(docs, metas)]
 
-        # published_at 기준 최신순 정렬
-        candidates.sort(
-            key=lambda x: x["meta"].get("published_at", ""),
-            reverse=True
+        # company_name 필터링: query_topic 또는 doc 본문에 회사명 포함 여부
+        if company_name:
+            filtered = [
+                c for c in candidates
+                if company_name in c["meta"].get("query_topic", "")
+                or company_name in c.get("doc", "")
+            ]
+            if filtered:
+                candidates = filtered
+
+        total = len(candidates)
+        now_dt = datetime.now()
+
+        def combined_score(idx, meta):
+            # 유사도 스코어: idx가 낮을수록(ChromaDB 상위) 높음
+            sim_score = (total - idx) / total if total > 0 else 0.0
+            # 최신성 스코어: published_at이 최근일수록 높음 (90일 기준 선형 감쇠)
+            pub = meta.get("published_at", "")
+            try:
+                pub_dt = datetime.fromisoformat(str(pub))
+                days_old = max(0, (now_dt - pub_dt).days)
+                rec_score = max(0.0, 1.0 - days_old / 90.0)
+            except Exception:
+                rec_score = 0.0
+            return sim_score * 0.6 + rec_score * 0.4
+
+        scored = sorted(
+            enumerate(candidates),
+            key=lambda x: combined_score(x[0], x[1]["meta"]),
+            reverse=True,
         )
 
-        return candidates[:n_results]
+        results = [c for _, c in scored[:n_results]]
+
+        # MySQL에서 title, source_url 보완 (ChromaDB 메타에 없는 경우)
+        news_ids = [r["meta"].get("news_id") for r in results if r["meta"].get("news_id")]
+        if news_ids:
+            try:
+                conn = get_mysql()
+                cur = conn.cursor(dictionary=True)
+                placeholders = ",".join(["%s"] * len(news_ids))
+                cur.execute(
+                    f"SELECT news_id, title, source_url FROM news_raw WHERE news_id IN ({placeholders})",
+                    news_ids,
+                )
+                db_rows = {row["news_id"]: row for row in cur.fetchall()}
+                conn.close()
+                for r in results:
+                    nid = r["meta"].get("news_id")
+                    if nid and nid in db_rows:
+                        r["meta"]["title"] = db_rows[nid].get("title") or r["meta"].get("title", "")
+                        r["meta"]["source_url"] = db_rows[nid].get("source_url") or r["meta"].get("source_url", "")
+            except Exception as db_err:
+                print(f"[news] MySQL title/url 보완 실패: {db_err}")
+
+        return results
 
     except Exception as e:
         print("검색 오류:", e)
@@ -1047,6 +1100,8 @@ def parse_args():
     p_batch.add_argument("--days-back", type=int, default=90)
     p_batch.add_argument("--retention-days", type=int, default=90)
 
+    sub.add_parser("reindex-all")
+
     return parser.parse_args()
 
 
@@ -1068,6 +1123,9 @@ def main():
     elif args.command == "daily-batch":
         daily_batch(days_back=args.days_back, retention_days=args.retention_days)
 
+    elif args.command == "reindex-all":
+        reindex_all_to_chroma()
+
     else:
         print("""
 사용 예시:
@@ -1076,6 +1134,7 @@ def main():
   python pipeline_news_analysis_mvp.py analyze-pending --limit 300
   python pipeline_news_analysis_mvp.py prune --retention-days 90
   python pipeline_news_analysis_mvp.py daily-batch --days-back 90 --retention-days 90
+  python pipeline_news_analysis_mvp.py reindex-all
 """)
 
 

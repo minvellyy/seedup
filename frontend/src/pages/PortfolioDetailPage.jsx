@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import html2canvas from 'html2canvas'
 import { jsPDF } from 'jspdf'
 import { useAuth } from '../contexts/AuthContext'
+import AnalysisProgressBar from '../components/AnalysisProgressBar'
 import './PortfolioDetailPage.css'
 
 const COLOR_PALETTE = [
@@ -577,10 +578,58 @@ function PortfolioDetailPage() {
       units.push(divider)
     }
 
+    // 매수 계획
+    if (buy_plan && buy_plan.length > 0) {
+      const fmtN = (n) => n == null ? '-' : n.toLocaleString('ko-KR')
+      const thS = 'padding:8px 12px;font-size:11px;font-weight:600;color:#475569;border-bottom:2px solid #e2e8f0;'
+      units.push(`<div style="${W}padding:16px 40px 0;">
+        <div style="${lbl}">매수 계획</div>
+        ${investable_amount_krw != null ? `<div style="font-size:12px;color:#64748b;margin-bottom:10px;">가용자산 <strong style="color:#1e293b">${fmtA(investable_amount_krw)}</strong> 기준</div>` : ''}
+        <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
+          <colgroup><col style="width:35%"/><col style="width:16%"/><col style="width:13%"/><col style="width:12%"/><col style="width:24%"/></colgroup>
+          <thead><tr style="background:#f1f5f9;">
+            <th style="${thS}text-align:left;">종목</th>
+            <th style="${thS}text-align:right;">현재가</th>
+            <th style="${thS}text-align:right;">목표비중</th>
+            <th style="${thS}text-align:right;">수량</th>
+            <th style="${thS}text-align:right;">투자금액</th>
+          </tr></thead>
+        </table>
+      </div>`)
+      buy_plan.forEach((bp, i) => {
+        const unaffordable = bp.shares === 0
+        const matchedItem = sortedItems.find(it => it.ticker === bp.ticker)
+        units.push(`<div style="${W}padding:0 40px;">
+          <table style="width:100%;border-collapse:collapse;table-layout:fixed;">
+            <colgroup><col style="width:35%"/><col style="width:16%"/><col style="width:13%"/><col style="width:12%"/><col style="width:24%"/></colgroup>
+            <tbody><tr style="background:${unaffordable ? '#fef9f0' : (i % 2 === 0 ? '#fff' : '#f8fafc')};opacity:${unaffordable ? '0.75' : '1'};">
+              <td style="padding:8px 12px;font-size:12px;">
+                <span style="font-weight:600;color:${unaffordable ? '#9ca3af' : '#1e293b'}">${bp.name}</span>
+                <span style="margin-left:6px;font-size:10px;color:#94a3b8;">${bp.ticker}</span>
+                ${unaffordable ? `<span style="margin-left:6px;font-size:10px;color:#f97316;font-weight:600;">매수불가</span>` : ''}
+              </td>
+              <td style="padding:8px 12px;font-size:12px;text-align:right;color:${unaffordable ? '#9ca3af' : '#374151'}">${fmtN(bp.price_krw)}원</td>
+              <td style="padding:8px 12px;font-size:12px;text-align:right;color:#64748b;">${matchedItem ? matchedItem.weight_pct.toFixed(1) + '%' : '-'}</td>
+              <td style="padding:8px 12px;font-size:12px;text-align:right;color:${unaffordable ? '#f97316' : '#374151'};font-weight:${unaffordable ? '600' : '400'};">${unaffordable ? '0주' : fmtN(bp.shares) + '주'}</td>
+              <td style="padding:8px 12px;font-size:12px;text-align:right;font-weight:600;color:${unaffordable ? '#9ca3af' : '#1e293b'}">${unaffordable ? '-' : fmtN(bp.allocated_budget_krw) + '원'}</td>
+            </tr></tbody>
+          </table>
+        </div>`)
+      })
+      units.push(`<div style="${W}padding:6px 40px 16px;">
+        <div style="background:#f8fafc;border-radius:6px;padding:8px 14px;font-size:12px;color:#64748b;display:flex;gap:20px;">
+          <span>총 투자금액: <strong style="color:#1e293b">${fmtN(total_invested_krw ?? 0)}원</strong></span>
+          <span>잔여금: <strong style="color:#64748b">${fmtN(leftover_krw ?? 0)}원</strong></span>
+        </div>
+      </div>`)
+      units.push(divider)
+    }
+
     // 종목별 분석 — 항목별 개별 유닛
     units.push(`<div style="${W}padding:16px 40px 4px;"><div style="${lbl}">종목별 분석</div></div>`)
     sortedItems.forEach((item, idx) => {
-      const narrative = buildStockNarrative(item, aiData[item.ticker])
+      const ai = aiData[item.ticker]
+      const narrative = buildStockNarrative(item, ai)
       const color = COLOR_PALETTE[idx % COLOR_PALETTE.length]
       units.push(`<div style="${W}padding:4px 40px 14px;border-bottom:1px solid #f1f5f9;">
         <div style="margin-bottom:6px;">
@@ -748,7 +797,23 @@ function PortfolioDetailPage() {
         signal: controller.signal,
       })
       if (!res.ok) throw new Error(await res.text())
-      setRiskAnalysis(await res.json())
+      const riskData = await res.json()
+      setRiskAnalysis(riskData)
+      // per_stock의 company_overview + narrative를 aiData에 병합
+      if (riskData.per_stock?.length) {
+        setAiData(prev => {
+          const next = { ...prev }
+          riskData.per_stock.forEach(ps => {
+            next[ps.ticker] = {
+              ...(next[ps.ticker] || {}),
+              ...(ps.company_overview ? { company_overview: ps.company_overview } : {}),
+              ...(ps.narrative ? { narrative: ps.narrative } : {}),
+            }
+          })
+          return next
+        })
+        setAiStatus('done')
+      }
       setRiskStatus('done')
     } catch (e) {
       console.warn('리스크 분석 실패:', e)
@@ -912,7 +977,12 @@ function PortfolioDetailPage() {
               <div className="pd-section-row">
                 <div className="pd-section-label">리스크</div>
                 {riskStatus === 'loading' && (
-                  <p className="pd-status-msg">⏳ AI 리스크 분석 중...</p>
+                  <AnalysisProgressBar loading={true} steps={[
+                    { label: '포트폴리오 리스크 산출', icon: '📐' },
+                    { label: '종목별 변동성 분석', icon: '📉' },
+                    { label: '시나리오 시뮬레이션', icon: '🔬' },
+                    { label: 'AI 리스크 리포트 생성', icon: '✍️' },
+                  ]} />
                 )}
                 {riskStatus === 'done' && riskAnalysis ? (
                   <>
@@ -978,7 +1048,12 @@ function PortfolioDetailPage() {
                 <div className="pd-col">
                   <div className="pd-section-label">리스크</div>
                   {riskStatus === 'loading' && (
-                    <p className="pd-status-msg">⏳ AI 리스크 분석 중...</p>
+                    <AnalysisProgressBar loading={true} steps={[
+                      { label: '포트폴리오 리스크 산출', icon: '📐' },
+                      { label: '종목별 변동성 분석', icon: '📉' },
+                      { label: '시나리오 시뮬레이션', icon: '🔬' },
+                      { label: 'AI 리스크 리포트 생성', icon: '✍️' },
+                    ]} />
                   )}
                   {riskStatus === 'done' && riskAnalysis ? (
                     <div className="pd-risk-summary">{riskAnalysis.risk_summary}</div>
@@ -1004,14 +1079,8 @@ function PortfolioDetailPage() {
           <div className="pd-section-row pdf-page-break">
             <div className="pd-section-label">종목별 분석</div>
 
-            {aiStatus !== 'done' && (
-              <div style={{ marginBottom: 12 }}>
-                <button onClick={runAiEnrich} disabled={aiStatus === 'loading'} className="pd-ai-btn">
-                  {aiStatus === 'loading' ? '뉴스 분석 중...' : '뉴스 기반 선정 근거 분석'}
-                </button>
-                {aiStatus === 'error' && <p className="pd-status-msg pd-status-err">AI 분석에 실패했습니다.</p>}
-                {aiStatus === 'timeout' && <p className="pd-status-msg pd-status-warn">3분을 초과하여 중단했습니다. 잠시 후 다시 시도해 주세요.</p>}
-              </div>
+            {riskStatus === 'loading' && aiStatus !== 'done' && (
+              <p className="pd-status-msg" style={{ fontSize: 12, color: '#94a3b8' }}>⏳ 리스크 분석 완료 후 기업 설명이 표시됩니다.</p>
             )}
 
             <div className="pd-stock-list">

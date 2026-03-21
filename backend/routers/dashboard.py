@@ -152,7 +152,10 @@ def _save_portfolio_to_db(user_id: int, conn, pf_results: list):
     
     # 새 추천을 ACTIVE로 저장
     for key, rec in zip(_MULTI_CACHE_KEYS, pf_results):
-        content_json = json.dumps(_safe_model_dump(rec), ensure_ascii=False, default=_json_default)
+        content_json = json.dumps(
+            rec if isinstance(rec, dict) else _safe_model_dump(rec),
+            ensure_ascii=False, default=_json_default,
+        )
         cur.execute(
             """
             INSERT INTO portfolio_recommendations
@@ -1166,6 +1169,89 @@ def _build_fit_label(pf: dict, inv_type: str, survey_ctx: dict) -> str:
     return f"{char} {suffix}"
 
 
+_NAMING_PROMPT_TEMPLATE = """\
+당신은 투자 입문자를 위한 '국내 주식 투자 네이밍 전문가'입니다.
+아래 제공된 [추천 종목 리스트]와 [사용자 성향]을 분석하여, 이 포트폴리오의 특징을 한눈에 보여주는 이름을 5개 생성하세요.
+
+### 지침(Instructions)
+1. **테마 반영**: 종목들의 공통 산업군(예: 반도체, 2차전지, 저PBR 등)을 키워드로 활용하세요.
+2. **성향 맞춤**: 사용자의 손실 허용 범위에 따라 어조를 조절하세요.
+   - 공격형: "성장", "도약", "주도" 키워드 중심
+   - 안정형: "방어", "수성", "기초", "배당" 키워드 중심
+3. **입문자 친화**: 너무 어려운 금융 용어보다는 직관적이고 이해하기 쉬운 단어를 사용하세요.
+4. **금지 사항**: "100% 수익", "원금 보장" 등 확정적인 수익을 약속하는 단어는 절대 사용하지 마세요.
+5. **섹터 불일치 대응**: 만약 종목들의 섹터가 서로 판이하게 다르다면, '산업 명칭' 대신 '상태 키워드'를 조합하여 이름을 지으세요.
+
+### 입력 데이터
+- 추천 종목: {stock_list}
+- 주요 산업군: {sector_info}
+- 사용자 투자 성향: {user_profile}
+- 투자 목적: {investment_goal}
+
+### 출력 형식 (JSON만 반환, 설명 없이)
+{{
+  "portfolio_names": [
+    {{"name": "이름1", "reason": "이 이름이 추천된 근거"}},
+    {{"name": "이름2", "reason": "이 이름이 추천된 근거"}},
+    {{"name": "이름3", "reason": "이 이름이 추천된 근거"}},
+    {{"name": "이름4", "reason": "이 이름이 추천된 근거"}},
+    {{"name": "이름5", "reason": "이 이름이 추천된 근거"}}
+  ]
+}}"""
+
+
+async def _generate_portfolio_names_llm(
+    portfolios: list, inv_type: str, survey_ctx: dict, llm
+) -> list | None:
+    """LLM으로 포트폴리오별 맞춤 이름을 생성합니다. 실패 시 None 반환."""
+    results = []
+
+    for pf in portfolios:
+        items = pf.get("portfolio_items", [])
+
+        stock_list = ", ".join(
+            f"{it.get('name', it.get('ticker', ''))}({it.get('weight_pct', 0):.1f}%)"
+            for it in items
+        ) or "정보 없음"
+
+        # asset_type 기반 산업군 추정 (sector 필드가 있으면 활용)
+        sectors = list({
+            it.get("sector") or it.get("asset_type", "STOCK")
+            for it in items
+            if it.get("sector") or it.get("asset_type")
+        })
+        sector_info = ", ".join(sectors) if sectors else "다양한 산업"
+
+        goal = survey_ctx.get("INVEST_GOAL", "미입력")
+        horizon = survey_ctx.get("TARGET_HORIZON", "")
+        investment_goal = f"{goal}" + (f" / 목표 기간: {horizon}" if horizon else "")
+
+        prompt = _NAMING_PROMPT_TEMPLATE.format(
+            stock_list=stock_list,
+            sector_info=sector_info,
+            user_profile=inv_type,
+            investment_goal=investment_goal,
+        )
+
+        def _call(p=prompt):
+            return llm.call([{"role": "user", "content": p}])
+
+        raw = await asyncio.to_thread(_call)
+        s = raw.strip()
+        if s.startswith("```"):
+            s = s.split("```")[1].lstrip("json").strip()
+
+        parsed = json.loads(s)
+        names = parsed.get("portfolio_names", [])
+        # 후보 중 첫 번째 이름 사용
+        chosen = names[0]["name"] if names else None
+        results.append(chosen)
+
+    if all(r is not None for r in results):
+        return results
+    return None
+
+
 def _enrich_portfolio_quant_signals(portfolios: list) -> list:
     """각 포트폴리오에 단기 방향성 신호(p_adj), 기대수익률(ret_12m), 리스크(vol_3m)를 추가합니다.
     signal_pack_latest.csv 와 fin_scores parquet 에서 가중평균을 계산합니다."""
@@ -1479,13 +1565,27 @@ async def get_portfolio_recommendations_ai(
     # ── 4단계: 정량 지표 후처리 ──────────────────────────────────────────
     portfolios = _enrich_portfolio_quant_signals(portfolios)
 
+    # ── 5단계: LLM 포트폴리오 이름 생성 ──────────────────────────────────
+    if _CREW_AVAILABLE:
+        try:
+            llm_for_names = _make_analysis_llm()
+            generated_names = await asyncio.wait_for(
+                _generate_portfolio_names_llm(portfolios, inv_type, survey_ctx, llm_for_names),
+                timeout=30.0,
+            )
+            if generated_names:
+                for pf, name in zip(portfolios, generated_names):
+                    pf["portfolio_label"] = name
+        except Exception as _name_err:
+            _cache_logger.warning("포트폴리오 LLM 이름 생성 실패 — 규칙 기반 유지: %s", _name_err)
+
     # 가용자산 직접 입력 시 캐시 저장 생략 (1회성 조회)
     if available_amount is None:
         _save_pf_cache(user_id, portfolios)
 
-    # ── 5단계: DB에 히스토리 저장 ──────────────────────────────────────────
+    # ── 6단계: DB에 히스토리 저장 (enriched portfolios 기준) ──────────────
     try:
-        _save_portfolio_to_db(user_id, conn, pf_results)
+        _save_portfolio_to_db(user_id, conn, portfolios)
     except Exception as e:
         import traceback
         _cache_logger.error("포트폴리오 DB 저장 실패 (user_id=%s): %s\n%s", user_id, e, traceback.format_exc())
@@ -1535,7 +1635,7 @@ async def get_portfolio_history(
     """
     cur = conn.cursor()
     
-    portfolio_strategy_names = ("balanced", "momentum", "lowvol")
+    portfolio_strategy_names = ("pf_optimal", "pf_growth", "pf_stable")
 
     # 동적 쿼리 생성
     query = """
@@ -1692,7 +1792,7 @@ async def portfolio_ai_enrich(req: PortfolioAiEnrichRequest):
                 "반드시 아래 JSON 형식으로만 응답하라. 추가 설명 없이 JSON만 출력하라:\n"
                 "{\n"
                 '  "narratives": [\n'
-                '    {"ticker": "종목코드", "narrative": "왜 이 종목이 선정됐는지 2-3문장 한국어 설명"},\n'
+                '    {"ticker": "종목코드", "company_overview": "기업명 + 주요 사업(제품·서비스) + 시장 내 위치를 사실 기반으로 1문장. 예: \'삼성전자는 반도체·스마트폰·가전을 제조하는 글로벌 전자기업으로, 메모리 반도체 세계 1위 기업입니다.\' — 성장 가능성·투자 의견 등 전망 문구 금지", "narrative": "왜 이 종목이 선정됐는지 뉴스 근거 기반 2-3문장"},\n'
                 "    ...\n"
                 "  ]\n"
                 "}"
@@ -1719,7 +1819,10 @@ async def portfolio_ai_enrich(req: PortfolioAiEnrichRequest):
                 parsed_crew = {}
 
             narratives_map = {
-                n.get("ticker"): n.get("narrative", "")
+                n.get("ticker"): {
+                    "narrative": n.get("narrative", ""),
+                    "company_overview": n.get("company_overview", ""),
+                }
                 for n in parsed_crew.get("narratives", [])
             }
         except Exception as crew_err:
@@ -1729,16 +1832,21 @@ async def portfolio_ai_enrich(req: PortfolioAiEnrichRequest):
         for t in tickers:
             name = ticker_to_name.get(t, t)
             ctx_snippet = news_contexts.get(t, "")
-            if narratives_map.get(t):
-                narrative = narratives_map[t]
+            crew_entry = narratives_map.get(t)
+            if crew_entry:
+                narrative = crew_entry.get("narrative", "")
+                company_overview = crew_entry.get("company_overview", "")
             elif ctx_snippet and ctx_snippet not in ("관련 뉴스 없음", "뉴스 데이터를 불러올 수 없습니다."):
                 # CrewAI 실패 시 뉴스 첫 문장만 fallback으로 사용
                 first_line = ctx_snippet.strip().split("\n")[0][:200]
                 narrative = f"{name}: {first_line}"
+                company_overview = ""
             else:
                 narrative = f"{name}에 대한 뉴스 데이터가 충분하지 않습니다. 재무 실적 및 시장 모멘텀을 바탕으로 선정되었습니다."
+                company_overview = ""
             news_results[t] = {
                 "narrative": narrative,
+                "company_overview": company_overview,
                 "selection_reason": narrative,
             }
         return news_results
@@ -1920,7 +2028,13 @@ async def portfolio_risk_analysis(req: PortfolioRiskRequest):
         "{\n"
         '  "risk_summary": "전체 포트폴리오 리스크를 2-3문장으로 요약한 한국어 텍스트",\n'
         '  "per_stock": [\n'
-        '    {"ticker": "종목코드", "name": "종목명", "risk_text": "해당 종목 리스크 1-2문장 한국어 설명"},\n'
+        '    {\n'
+        '      "ticker": "종목코드",\n'
+        '      "name": "종목명",\n'
+        '      "company_overview": "이 기업이 실제로 무엇을 만들거나 파는지 1문장. 반드시 \'[기업명]은(는) [주요제품/서비스]를 [생산/운영/판매]하는 [업종] 기업입니다\' 형식으로 작성. 성장성·투자의견·전망 표현 금지. 예시: \'삼성전자는 반도체·스마트폰·TV·가전을 제조하는 글로벌 전자기업으로, D램 메모리 반도체 세계 1위입니다.\'",\n'
+        '      "narrative": "뉴스 근거 기반으로 이 종목이 포트폴리오에 선정된 이유 2문장",\n'
+        '      "risk_text": "해당 종목의 주요 리스크 1-2문장"\n'
+        '    },\n'
         "    ...\n"
         "  ]\n"
         "}"
