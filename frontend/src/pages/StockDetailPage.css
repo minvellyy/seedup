@@ -142,10 +142,13 @@
 }
 
 .section-heading {
-  font-size: 1.8em;
-  color: #333;
+  font-size: 1.2em;
+  font-weight: 700;
+  color: #1a1a1a;
   margin: 0 0 20px 0;
-  font-weight: bold;
+  padding-bottom: 14px;
+  border-bottom: 2px solid #fff3e0;
+  letter-spacing: -0.3px;
 }
 
 /* 차트 섹션 */
@@ -203,8 +206,16 @@
 .investment-fit-section {
   background: white;
   border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.investment-fit-section:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
 }
 
 .fit-container {
@@ -213,37 +224,48 @@
   align-items: flex-start;
 }
 
-.fit-score-box {
-  background: linear-gradient(135deg, #F97316, #EA580C);
-  color: white;
-  border-radius: 12px;
-  padding: 30px;
-  text-align: center;
-  min-width: 160px;
-  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.3);
-}
-
-.fit-score {
-  font-size: 4em;
-  font-weight: bold;
-  line-height: 1;
-  margin-bottom: 8px;
-}
-
-.fit-score-label {
-  font-size: 1em;
-  opacity: 0.9;
-}
-
 .fit-details {
   flex: 1;
 }
 
+.fit-metrics {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.fit-metric-chip {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 0.82em;
+  font-weight: 700;
+  letter-spacing: -0.2px;
+}
+
+.fit-metric-chip.up {
+  background: rgba(234, 88, 12, 0.08);
+  color: #EA580C;
+}
+
+.fit-metric-chip.down {
+  background: rgba(59, 130, 246, 0.08);
+  color: #3B82F6;
+}
+
+.fit-metric-chip.neutral {
+  background: #f3f4f6;
+  color: #555;
+}
+
 .fit-summary {
-  font-size: 1.15em;
-  color: #2c3e50;
+  font-size: 0.95em;
+  color: #444;
   margin: 0 0 16px 0;
   font-weight: 600;
+  line-height: 1.7;
 }
 
 .fit-list {
@@ -255,7 +277,8 @@
 .fit-list li {
   padding: 10px 0;
   color: #555;
-  line-height: 1.6;
+  line-height: 1.7;
+  font-size: 0.95em;
   border-bottom: 1px solid #f0f0f0;
 }
 
@@ -263,12 +286,38 @@
   border-bottom: none;
 }
 
+.fit-caution {
+  color: #b45309;
+}
+
+.fit-list-extra {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #555;
+}
+
+.fit-list-tag {
+  font-size: 0.78em;
+  font-weight: 700;
+  color: #F97316;
+  letter-spacing: 0.2px;
+}
+
 /* 기업 요약 섹션 */
 .company-info-section {
   background: white;
   border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.company-info-section:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
 }
 
 .company-info-grid {
@@ -301,17 +350,25 @@
 }
 
 .info-value {
-  font-size: 1.2em;
-  color: #2c3e50;
-  font-weight: 500;
+  font-size: 0.95em;
+  color: #333;
+  font-weight: 600;
 }
 
 /* 기업/산업 분석 섹션 */
 .industry-analysis-section {
   background: white;
   border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.industry-analysis-section:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
 }
 
 .analysis-list {
@@ -321,11 +378,12 @@
 }
 
 .analysis-list li {
-  padding: 16px 20px 16px 50px;
-  margin-bottom: 12px;
+  padding: 12px 16px 12px 42px;
+  margin-bottom: 10px;
   background: #fafafa;
   border-radius: 10px;
-  color: #34495e;
+  color: #444;
+  font-size: 0.95em;
   line-height: 1.7;
   position: relative;
   transition: all 0.3s ease;
@@ -339,9 +397,11 @@
 .analysis-list li::before {
   content: '●';
   position: absolute;
-  left: 20px;
+  left: 16px;
   color: #F97316;
-  font-size: 1.2em;
+  font-size: 0.8em;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 /* ESG · 뉴스 · 리포트 인사이트 섹션 */
@@ -359,9 +419,9 @@
 }
 
 .unstructured-card-title {
-  font-size: 0.95rem;
+  font-size: 0.9em;
   font-weight: 700;
-  color: #374151;
+  color: #444;
   margin: 0 0 12px 0;
 }
 
@@ -371,7 +431,7 @@
 
 .unstr-label {
   display: inline-block;
-  font-size: 0.72rem;
+  font-size: 0.78em;
   font-weight: 600;
   padding: 2px 8px;
   border-radius: 4px;
@@ -390,17 +450,99 @@
 
 .unstructured-card p {
   margin: 0;
-  font-size: 0.875rem;
-  color: #4b5563;
-  line-height: 1.6;
+  font-size: 0.9em;
+  color: #555;
+  line-height: 1.7;
+}
+
+/* 증권사 리포트 목록 */
+.reports-ai-summary {
+  font-size: 0.9em;
+  color: #555;
+  line-height: 1.7;
+  margin: 0 0 12px 0;
+  padding-bottom: 12px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.reports-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.report-item {
+  padding: 12px;
+  background: #fff;
+  border-radius: 8px;
+  border: 1px solid #e5e7eb;
+}
+
+.report-item-meta {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 4px;
+}
+
+.report-brokerage {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #F97316;
+}
+
+.report-date {
+  font-size: 0.72rem;
+  color: #9ca3af;
+}
+
+.report-pdf-btn {
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: #F97316;
+  text-decoration: none;
+  padding: 2px 8px;
+  border: 1px solid #F97316;
+  border-radius: 4px;
+  transition: background 0.15s, color 0.15s;
+}
+.report-pdf-btn:hover {
+  background: #F97316;
+  color: #fff;
+}
+
+.report-title {
+  font-size: 0.9em;
+  font-weight: 600;
+  color: #444;
+  margin: 0 0 6px 0;
+}
+
+.report-content {
+  font-size: 0.88em;
+  color: #666;
+  line-height: 1.7;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 /* 종합 분석 섹션 */
 .comprehensive-analysis-section {
   background: white;
   border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.comprehensive-analysis-section:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
 }
 
 .radar-chart-container {
@@ -490,21 +632,29 @@
 .recommendation-section {
   background: white;
   border-radius: 16px;
-  padding: 30px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+
+.recommendation-section:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
 }
 
 .recommendation-box {
   background: linear-gradient(135deg, #FFF4E6 0%, #FFEDD5 100%);
   border-left: 4px solid #F97316;
   border-radius: 8px;
-  padding: 24px;
+  padding: 20px;
 }
 
 .recommendation-detail {
-  color: #34495e;
-  line-height: 1.8;
-  font-size: 1.1em;
+  color: #444;
+  line-height: 1.7;
+  font-size: 0.95em;
   margin: 0;
 }
 
@@ -564,7 +714,7 @@
   }
 
   .section-heading {
-    font-size: 1.5em;
+    font-size: 1.2em;
   }
 
   .fit-container {
@@ -611,7 +761,7 @@
   }
 
   .section-heading {
-    font-size: 1.3em;
+    font-size: 1.2em;
   }
 
   .fit-score {
@@ -1201,6 +1351,40 @@
   border-radius: 12px;
 }
 
+.sd-candle-tooltip {
+  position: absolute;
+  top: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px 14px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  font-size: 12px;
+  min-width: 140px;
+  z-index: 10;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.sd-candle-tooltip-date {
+  font-weight: 700;
+  color: #555;
+  margin-bottom: 6px;
+  font-size: 11px;
+}
+
+.sd-candle-tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 2px 0;
+  color: #333;
+  font-weight: 500;
+}
+
+.sd-candle-tooltip-row .up { color: #EA580C; font-weight: 700; }
+.sd-candle-tooltip-row .down { color: #3B82F6; font-weight: 700; }
+
 .sd-candle-minmax {
   display: flex;
   justify-content: space-between;
@@ -1366,12 +1550,12 @@
 }
 
 .sd-intraday-change {
-  font-size: 1.05em;
+  font-size: 0.85em;
   font-weight: 700;
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  padding: 6px 14px;
+  padding: 4px 10px;
   border-radius: 20px;
   letter-spacing: -0.2px;
 }

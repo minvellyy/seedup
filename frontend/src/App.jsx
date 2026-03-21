@@ -12,6 +12,7 @@ import InvestTypeSurveyPage from './pages/InvestTypeSurveyPage'
 import RecommendationsPage from './pages/RecommendationsPage'
 import StocksPage from './pages/StocksPage'
 import StockDetailPage from './pages/StockDetailPage'
+import ETFDetailPage from './pages/ETFDetailPage'
 import PortfolioDetailPage from './pages/PortfolioDetailPage'
 import MyPage from './pages/MyPage'
 import ChatBotPage from './pages/ChatBotPage'
@@ -35,6 +36,7 @@ function App() {
             <Route path="/recommendations" element={<RecommendationsPage />} />
             <Route path="/stocks" element={<StocksPage />} />
             <Route path="/stock/:stockCode" element={<StockDetailPage />} />
+            <Route path="/etf/:etfCode" element={<ETFDetailPage />} />
             <Route path="/portfolio/:portfolioId" element={<PortfolioDetailPage />} />
             <Route path="/mypage" element={<MyPage />} />
             <Route path="/chat" element={<ChatBotPage />} />

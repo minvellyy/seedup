@@ -837,7 +837,7 @@ const DashboardPage = () => {
                           key={pfIdx}
                           className="recommendation-item"
                           style={{ cursor: 'pointer', borderLeft: `3px solid ${accentColor}` }}
-                          onClick={() => navigate('/portfolio/recommendation', { state: { portfolioData: pf } })}
+                          onClick={() => navigate('/portfolio/recommendation', { state: { portfolioData: pf, portfolioRank: pfIdx + 1 } })}
                         >
                           <div className="recommendation-header">
                             <h3 style={{ color: '#1a202c', fontSize: '1.05rem', fontWeight: 600 }}>

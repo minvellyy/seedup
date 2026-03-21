@@ -24,7 +24,7 @@ from dotenv import load_dotenv
 from fastapi import APIRouter, HTTPException, Query
 from pydantic import BaseModel
 
-from kis_client import get_current_price, get_daily_prices_1y
+from kis_client import get_current_price, get_daily_prices_1y, get_etf_info, get_etf_holdings_pykrx
 
 load_dotenv(dotenv_path=Path(__file__).parent.parent / ".env")
 
@@ -485,3 +485,128 @@ def list_etfs(
         ))
 
     return result_list
+
+
+# ── ETF 상세 엔드포인트 ─────────────────────────────────────────────────────
+
+class EtfDetail(BaseModel):
+    stock_code: str
+    name: str
+    exchange: str
+    sector: Optional[str] = None
+    asset_type: str
+    current_price: float
+    prev_close: Optional[float] = None
+    change: Optional[float] = None
+    change_rate: Optional[float] = None
+    price_date: Optional[str] = None
+    price_history: List[PricePoint] = []
+    ret_1m: Optional[float] = None
+    ret_3m: Optional[float] = None
+    ret_6m: Optional[float] = None
+    ret_1y: Optional[float] = None
+    vol_ann: Optional[float] = None
+    high_52w: Optional[float] = None
+    low_52w: Optional[float] = None
+    tracking_index: Optional[str] = None
+    fund_manager: Optional[str] = None
+    aum: Optional[float] = None
+    expense_ratio: Optional[float] = None
+    distribution: Optional[str] = None
+
+
+class EtfHoldingItem(BaseModel):
+    rank: int
+    asset_type: str = "주식"
+    name: str
+    weight: float
+    stock_code: Optional[str] = None
+
+
+@router.get("/etfs/{etf_code}", response_model=EtfDetail)
+def get_etf_detail(etf_code: str):
+    """ETF 상세.
+    - 현재가·차트: KIS API
+    - ETF 메타데이터(추종지수·운용사·AUM·보수율·분배방식): KIS FHPST02400000
+    """
+    conn = _db()
+    try:
+        cur = conn.cursor()
+        cur.execute(
+            "SELECT stock_code, name, exchange, sector, asset_type, last_price, last_price_date "
+            "FROM instruments WHERE stock_code = %s AND asset_type = 'ETF'",
+            (etf_code,),
+        )
+        row = cur.fetchone()
+    finally:
+        conn.close()
+
+    if not row:
+        raise HTTPException(status_code=404, detail=f"ETF {etf_code}을 찾을 수 없습니다.")
+
+    live = _get_price_cached(etf_code)
+    if live is None:
+        db_price = float(row["last_price"] or 0)
+        if db_price <= 0:
+            raise HTTPException(status_code=502, detail=f"KIS 현재가 조회 실패: {etf_code}")
+        live = {"current_price": db_price, "prev_close": None, "change": None,
+                "change_rate": None, "volume": None, "price_date": str(row["last_price_date"] or "")}
+
+    try:
+        hist = get_daily_prices_1y(etf_code)
+    except Exception:
+        hist = []
+
+    price_history = [
+        PricePoint(date=p["date"], open=p.get("open"), high=p.get("high"),
+                   low=p.get("low"), close=p["close"], volume=p.get("volume"))
+        for p in hist
+    ]
+    closes_1y = [p["close"] for p in hist]
+
+    # KIS ETF 기본정보 조회 (실패해도 graceful fallback)
+    etf_meta = get_etf_info(etf_code)
+
+    return EtfDetail(
+        stock_code=row["stock_code"],
+        name=row["name"],
+        exchange=row["exchange"] or "",
+        sector=row["sector"],
+        asset_type=row["asset_type"],
+        current_price=live["current_price"],
+        prev_close=live.get("prev_close"),
+        change=live.get("change"),
+        change_rate=live.get("change_rate"),
+        price_date=live.get("price_date"),
+        price_history=price_history,
+        ret_1m=_calc_ret(hist, 30),
+        ret_3m=_calc_ret(hist, 90),
+        ret_6m=_calc_ret(hist, 180),
+        ret_1y=_calc_ret(hist, 365),
+        vol_ann=_calc_vol(hist, 252),
+        high_52w=max(closes_1y) if closes_1y else None,
+        low_52w=min(closes_1y) if closes_1y else None,
+        tracking_index=etf_meta.get("tracking_index"),
+        fund_manager=etf_meta.get("fund_manager"),
+        aum=etf_meta.get("aum"),
+        expense_ratio=etf_meta.get("expense_ratio"),
+        distribution=etf_meta.get("distribution"),
+    )
+
+
+@router.get("/etfs/{etf_code}/holdings", response_model=List[EtfHoldingItem])
+def get_etf_holdings(etf_code: str, limit: int = Query(25, le=100)):
+    """ETF 구성 종목 TOP N.
+    pykrx(KRX 공시 데이터)에서 실시간 조회합니다.
+    """
+    holdings = get_etf_holdings_pykrx(etf_code, top_n=limit)
+    return [
+        EtfHoldingItem(
+            rank=h["rank"],
+            asset_type=h.get("asset_type") or "주식",
+            name=h["name"],
+            weight=h["weight"],
+            stock_code=h.get("stock_code"),
+        )
+        for h in holdings
+    ]

@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+﻿import React, { useState, useEffect, useRef } from 'react'
 import { useAuth } from '../contexts/AuthContext'
 import axios from 'axios'
 import './ChatBotPage.css'
@@ -6,8 +6,18 @@ import './ChatBotPage.css'
 // 메시지 포맷팅 컴포넌트
 const FormattedMessage = ({ content }) => {
   const formatText = (text) => {
-    // 텍스트를 HTML로 변환하는 함수
-    let formatted = text
+    // 출처 블록 분리: 📰가 포함된 줄 이후를 출처 섹션으로 처리
+    const sourcesIdx = text.search(/\n?---?\n?📰/)
+    const altIdx = sourcesIdx === -1 ? text.indexOf('\n📰') : sourcesIdx
+    const splitIdx = altIdx !== -1 ? altIdx : -1
+    const mainText = splitIdx !== -1 ? text.slice(0, splitIdx) : text
+    const sourcesRaw = splitIdx !== -1 ? text.slice(splitIdx) : ''
+    // 앞뒤 --- 구분선 및 빈 줄 제거
+    const sourcesText = sourcesRaw.replace(/^[\n\-]+/, '').replace(/[\n\-]+$/, '')
+
+    const transform = (part) => part
+      // 마크다운 링크 처리 ([텍스트](URL)) — 절대 URL(https://) 및 상대 경로(/api/...) 모두 처리
+      .replace(/\[([^\]]+)\]\(((?:https?:\/\/|\/)[^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener noreferrer" class="chat-link">$1</a>')
       // 제목 처리 (## 제목)
       .replace(/^##\s+(.+)$/gm, '<h3 class="chat-heading">$1</h3>')
       // 굵은 글자 처리 (**굵은 글자**)
@@ -24,8 +34,14 @@ const FormattedMessage = ({ content }) => {
       .replace(/⭐/g, '<span class="chat-star">⭐</span>')
       // 줄바꿈 처리
       .replace(/\n/g, '<br>')
-    
-    return formatted
+
+    if (splitIdx !== -1) console.log('[출처블록]', JSON.stringify(sourcesText.slice(0, 200)))
+    const mainHtml = transform(mainText)
+    if (!sourcesText) return mainHtml
+
+    // 출처 블록: 연속 빈 줄 제거 후 변환
+    const sourcesHtml = transform(sourcesText.replace(/\n{2,}/g, '\n'))
+    return mainHtml + `<div class="chat-sources">${sourcesHtml}</div>`
   }
 
   return (
@@ -299,12 +315,53 @@ const ChatBotPage = () => {
     }
   }
 
-  // 시간 포맷팅
+  // 날짜·시간 파싱 (MySQL "YYYY-MM-DD HH:MM:SS" 형식 대응)
+  const parseDate = (timestamp) => {
+    if (!timestamp) return null
+    const date = new Date(
+      typeof timestamp === 'string' ? timestamp.replace(' ', 'T') : timestamp
+    )
+    return isNaN(date.getTime()) ? null : date
+  }
+
+  // 시간 포맷팅 (날짜 + 시간)
   const formatTime = (timestamp) => {
-    return new Date(timestamp).toLocaleTimeString(LOCALE_KR, {
+    const date = parseDate(timestamp)
+    if (!date) return ''
+    return date.toLocaleString(LOCALE_KR, {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
       hour: '2-digit',
       minute: '2-digit'
     })
+  }
+
+  // 세션 삭제
+  const deleteSession = async (e, sessionId) => {
+    e.stopPropagation() // 세션 클릭 이벤트 방지
+    if (!user?.userId) return
+    try {
+      await axios.delete(`/api/chat/session/${sessionId}?user_id=${user.userId}`)
+      setSessions(prev => prev.filter(s => s.id !== sessionId))
+      if (currentSessionId === sessionId) {
+        setMessages([])
+        setCurrentSessionId(null)
+      }
+    } catch (err) {
+      console.error('세션 삭제 실패:', err)
+    }
+  }
+
+  // 메시지 삭제
+  const deleteMessage = async (messageId) => {
+    if (!user?.userId) return
+    try {
+      await axios.delete(`/api/chat/message/${messageId}?user_id=${user.userId}`)
+      setMessages(prev => prev.filter(m => m.id !== messageId))
+    } catch (e) {
+      console.error('메시지 삭제 실패:', e)
+    }
   }
 
   // 빠른 질문 목록
@@ -351,7 +408,7 @@ const ChatBotPage = () => {
             ) : sessions.length > 0 ? (
               <ul className="session-list">
                 {sessions.map((session) => (
-                  <li 
+                  <li
                     key={session.id}
                     className={`session-item ${currentSessionId === session.id ? 'active' : ''}`}
                     onClick={() => loadSessionMessages(session.id)}
@@ -452,6 +509,13 @@ const ChatBotPage = () => {
                       )}
                     </div>
                     <div className="message-content">
+                      {message.id && isLoggedIn && (
+                        <button
+                          className="message-delete-btn"
+                          onClick={() => deleteMessage(message.id)}
+                          title="메시지 삭제"
+                        >✕</button>
+                      )}
                       {message.role === 'assistant' ? (
                         <FormattedMessage content={message.content} />
                       ) : (

@@ -1,7 +1,0 @@
-{
-  "permissions": {
-    "allow": [
-      "Bash(python -c \"import os; from dotenv import load_dotenv; load_dotenv\\(''.env''\\); print\\(''HOST:'', os.getenv\\(''DB_HOST''\\)\\); print\\(''USER:'', os.getenv\\(''DB_USER''\\)\\); print\\(''DB:'', os.getenv\\(''DB_NAME''\\)\\)\")"
-    ]
-  }
-}

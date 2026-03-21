@@ -1,4 +1,4 @@
-# manager_agent/crew.py
+﻿# manager_agent/crew.py
 #
 # 세 가지 분석 모델(정형 재무 / 주가 방향성 / 비정형)의 결과를 종합하는
 # CrewAI 매니저 에이전트 크루.
@@ -96,10 +96,11 @@ def run_manager_analysis(
             "DART 공시 데이터와 시가총액 기반 밸류에이션에 정통하며, "
             "정량 지표를 실용적인 투자 판단으로 전환하는 데 특화되어 있다."
         ),
-        tools=[read_fin_structured_report, generate_fin_structured_report],
+        tools=[read_fin_structured_report],
         llm=llm,
         verbose=True,
         allow_delegation=False,
+        max_iter=4,
     )
 
     direction_analyst = Agent(
@@ -117,6 +118,7 @@ def run_manager_analysis(
         llm=llm,
         verbose=True,
         allow_delegation=False,
+        max_iter=4,
     )
 
     unstructured_analyst = Agent(
@@ -134,6 +136,7 @@ def run_manager_analysis(
         llm=llm,
         verbose=True,
         allow_delegation=False,
+        max_iter=4,
     )
 
     manager = Agent(
@@ -151,6 +154,7 @@ def run_manager_analysis(
         llm=llm,
         verbose=True,
         allow_delegation=False,
+        max_iter=3,
     )
 
     # ── 태스크 ─────────────────────────────────────────────────────────────────
@@ -158,9 +162,11 @@ def run_manager_analysis(
     t_fin = Task(
         description=(
             f"종목 {ticker}의 정형 재무 데이터를 분석하라. 기준일: {as_of_label}.\n\n"
+            f"[절대 규칙] 분석 대상은 반드시 {ticker}이어야 한다. "
+            "조회 결과에 alternatives 필드가 있더라도 그 종목을 현재 분석 대상으로 대체하지 말 것.\n\n"
             "절차:\n"
             "1) read_fin_structured_report 툴로 데이터를 먼저 조회하라.\n"
-            "2) NOT_FOUND 오류가 반환되면 generate_fin_structured_report 툴을 사용해 생성하라.\n"
+            "2) NOT_FOUND이면 재무 데이터 없이 '재무 데이터 미확보 종목'으로 표시하고 분석 가능한 항목만 작성하라.\n"
             "3) 조회된 데이터를 기반으로 다음 항목을 각각 분석하라:\n"
             "   - overall_score와 overall_grade\n"
             "   - 수익성: OPM, ROA\n"
@@ -377,6 +383,7 @@ def run_manager_analysis(
             llm=llm,
             verbose=True,
             allow_delegation=False,
+            max_iter=4,
         )
 
         company_analyst = Agent(
@@ -394,6 +401,7 @@ def run_manager_analysis(
             llm=llm,
             verbose=True,
             allow_delegation=False,
+            max_iter=4,
         )
 
         industry_analyst = Agent(
@@ -413,11 +421,13 @@ def run_manager_analysis(
             llm=llm,
             verbose=True,
             allow_delegation=False,
+            max_iter=4,
         )
 
         t_fit = Task(
             description=(
                 f"종목 {ticker}에 대해 사용자 투자원칙 적합도 분석을 수행하라.{context_label}\n\n"
+                f"[절대 규칙] 분석 대상은 반드시 {ticker}이어야 한다. 다른 종목을 분석 대상으로 대체하지 말 것.\n\n"
                 "절차:\n"
                 f"1) read_investment_fit_data 툴을 호출하라.\n"
                 f"   - user_profile_json: {user_profile_json!r}\n"
@@ -454,9 +464,13 @@ def run_manager_analysis(
         t_company = Task(
             description=(
                 f"종목 {ticker}에 대한 기업 심층 분석을 수행하라. 기준일: {as_of_label}.\n\n"
+                f"[절대 규칙] 분석 대상은 반드시 {ticker}이어야 한다. "
+                "read_fin_structured_report 결과에 alternatives 필드가 있더라도 "
+                "그 종목들의 데이터를 현재 분석에 사용하거나 언급하지 말 것. "
+                "재무 데이터가 없으면 '재무 데이터 미확보 종목'으로 표기하고 다른 종목을 분석하지 말 것.\n\n"
                 "절차:\n"
                 "1) read_fin_structured_report 툴로 재무 데이터를 조회하라.\n"
-                "2) NOT_FOUND이면 generate_fin_structured_report를 사용하라.\n"
+                "2) NOT_FOUND이면 재무 데이터 없이 분석 가능한 항목만 작성하라.\n"
                 "3) read_stock_direction_signal 툴로 모멘텀 정보를 보완하라.\n"
                 "4) esg_analysis 툴로 ESG 보고서를 조회하라. NO_REPORT이면 ESG 항목은 생략하라.\n"
                 "5) reports_rag_search 툴로 해당 종목·기업 관련 증권사 리포트를 검색하라.\n"
@@ -509,10 +523,15 @@ def run_manager_analysis(
         t_industry = Task(
             description=(
                 f"종목 {ticker}가 속한 산업/섹터에 대한 분석을 수행하라.\n\n"
+                f"[절대 규칙] 분석 대상은 반드시 {ticker}이어야 한다. "
+                "read_fin_structured_report 결과에 alternatives 필드가 있더라도 "
+                "그 종목들의 정보를 현재 분석에 절대 사용하지 말 것. "
+                "재무 데이터가 없으면 sector/industry를 null로 두고 분석을 계속 진행하라.\n\n"
                 "절차:\n"
                 "1) read_fin_structured_report 툴로 종목의 sector, industry 정보를 확인하라.\n"
                 "2) news_rag_search 툴로 해당 산업·섹터 관련 최신 뉴스를 검색하라.\n"
-                "   - 검색 질의 예시: '[산업명] 트렌드', '[산업명] 성장', '[종목명] 경쟁사', '[산업명] 규제'\n"
+                f"   - 검색 질의 예시: '[산업명] 트렌드', '[산업명] 성장', '{ticker} 경쟁사', '[산업명] 규제'\n"
+                "   - 검색 결과의 뉴스가 현재 종목의 산업과 무관하면 사용하지 말 것.\n"
                 "   - 뉴스가 없거나 검색 실패 시에도 멈추지 말고 다음 단계로 진행하라.\n"
                 "3) reports_rag_search 툴로 해당 산업·섹터 관련 증권사 리포트를 검색하라.\n"
                 "   - 검색 질의 예시: '[산업명] 업황', '[산업명] 전망', '[산업명] 성장성'\n"

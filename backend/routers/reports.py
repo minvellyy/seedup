@@ -14,13 +14,18 @@ from __future__ import annotations
 
 import logging
 import threading
+import urllib.parse
+from pathlib import Path
 from typing import Any
 
 from fastapi import APIRouter, BackgroundTasks, HTTPException, Query
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 from rag_worker.tools.reports_tool import search_reports_context
 from rag_worker.scheduler import run_reports_etl, run_reports_init
+
+_REPORTS_DIR = Path(__file__).resolve().parent.parent / "reports"
 
 logger = logging.getLogger("reports_router")
 
@@ -46,6 +51,117 @@ def search_reports(
     except Exception as exc:
         logger.error(f"리포트 검색 오류: {exc}")
         raise HTTPException(status_code=500, detail=str(exc))
+
+
+class ReportInsightItem(BaseModel):
+    brokerage: str
+    title: str
+    date: str
+    content: str
+    pdf_url: str | None = None
+
+
+class ReportInsightsResponse(BaseModel):
+    ticker: str
+    count: int
+    items: list[ReportInsightItem]
+
+
+@router.get("/insights/{ticker}", response_model=ReportInsightsResponse, summary="종목 증권사 리포트 인사이트 조회")
+def get_report_insights(
+    ticker: str,
+    k: int = Query(3, ge=1, le=10, description="반환 건수"),
+):
+    """특정 종목의 증권사 리포트를 ChromaDB에서 직접 조회한다. ticker 필터를 우선 적용하고, 없으면 회사명으로 폴백한다."""
+    import os
+    import sys
+    from pathlib import Path
+
+    ticker = ticker.zfill(6)
+
+    # ticker → 회사명 (MySQL 또는 parquet)
+    company_name: str | None = None
+    try:
+        import pymysql
+        from dotenv import load_dotenv
+        load_dotenv()
+        conn = pymysql.connect(
+            host=os.getenv("DB_HOST", "192.168.101.70"),
+            port=int(os.getenv("DB_PORT", 3306)),
+            user=os.getenv("DB_USER"),
+            password=os.getenv("DB_PASSWORD"),
+            database=os.getenv("DB_NAME"),
+            charset="utf8mb4",
+            cursorclass=pymysql.cursors.DictCursor,
+            connect_timeout=3,
+        )
+        with conn:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "SELECT name FROM instruments WHERE stock_code=%s LIMIT 1",
+                    (ticker,),
+                )
+                row = cur.fetchone()
+        if row and row.get("name"):
+            company_name = row["name"]
+    except Exception:
+        pass
+
+    query = company_name or ticker
+
+    try:
+        # 청크 중복 제거를 위해 k보다 많이 가져온 후 report_title 기준으로 dedup
+        raw = search_reports_context(query, k=k * 3, ticker=ticker)
+        seen_titles: set[str] = set()
+        items: list[ReportInsightItem] = []
+        for r in raw:
+            title = r["metadata"].get("report_title", "제목 없음")
+            if title in seen_titles:
+                continue
+            seen_titles.add(title)
+
+            # PDF URL 생성: report_type(카테고리) + source(파일명) → /api/v1/reports/pdf/{category}/{filename}
+            pdf_url: str | None = None
+            source = r["metadata"].get("source", "")
+            report_type = r["metadata"].get("report_type", "")
+            if source and report_type:
+                pdf_filename = source.replace(".json", ".pdf")
+                pdf_path = _REPORTS_DIR / report_type / pdf_filename
+                if pdf_path.exists():
+                    encoded = urllib.parse.quote(pdf_filename, safe="")
+                    pdf_url = f"/api/v1/reports/pdf/{urllib.parse.quote(report_type, safe='')}/{encoded}"
+
+            items.append(
+                ReportInsightItem(
+                    brokerage=r["metadata"].get("brokerage", "증권사 미상"),
+                    title=title,
+                    date=r["metadata"].get("report_date", "날짜 미상"),
+                    content=r["content"],
+                    pdf_url=pdf_url,
+                )
+            )
+            if len(items) >= k:
+                break
+        return ReportInsightsResponse(ticker=ticker, count=len(items), items=items)
+    except Exception as exc:
+        logger.error(f"리포트 인사이트 조회 오류 (ticker={ticker}): {exc}")
+        raise HTTPException(status_code=500, detail=str(exc))
+
+
+@router.get("/pdf/{report_type}/{filename}", summary="증권사 리포트 PDF 다운로드")
+def get_report_pdf(report_type: str, filename: str):
+    """로컬에 저장된 증권사 리포트 PDF 파일을 반환한다."""
+    if ".." in report_type or ".." in filename:
+        raise HTTPException(status_code=400, detail="잘못된 경로입니다.")
+    pdf_path = _REPORTS_DIR / report_type / filename
+    if not pdf_path.exists() or pdf_path.suffix.lower() != ".pdf":
+        raise HTTPException(status_code=404, detail="리포트 파일을 찾을 수 없습니다.")
+    encoded_filename = urllib.parse.quote(filename)
+    return FileResponse(
+        path=str(pdf_path),
+        media_type="application/pdf",
+        headers={"Content-Disposition": f"inline; filename*=UTF-8''{encoded_filename}"},
+    )
 
 
 @router.post("/init", summary="리포트 초기 DB 구축 (30일치, 관리용)")

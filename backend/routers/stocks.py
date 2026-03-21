@@ -396,18 +396,19 @@ def search_stocks(
             # 종목명 또는 종목코드로 검색 (LIKE 사용)
             cur.execute(
                 """
-                SELECT stock_code, name, exchange as market, sector
-                FROM instruments 
+                SELECT stock_code, name, exchange as market, sector, asset_type
+                FROM instruments
                 WHERE (name LIKE %s OR stock_code LIKE %s)
-                  AND asset_type = 'STOCK'
+                  AND asset_type IN ('STOCK', 'ETF')
                   AND price_status = 'ACTIVE'
-                ORDER BY 
-                    CASE 
+                ORDER BY
+                    CASE
                         WHEN stock_code = %s THEN 0
                         WHEN stock_code LIKE %s THEN 1
                         WHEN name LIKE %s THEN 2
                         ELSE 3
                     END,
+                    asset_type,
                     name
                 LIMIT %s
                 """,
@@ -428,6 +429,7 @@ def search_stocks(
                 "stock_code": code,
                 "stock_name": row['name'],
                 "market": row['market'] or 'KOSPI',
+                "asset_type": row['asset_type'],
                 "current_price": price_data.get("current_price", 0),
                 "change_rate": price_data.get("change_rate", 0),
             })

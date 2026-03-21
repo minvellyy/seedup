@@ -58,6 +58,7 @@ backend/portfolio_cache/*
 *.parquet
 *.joblib
 *.pkl
+*.pickle
 *.h5
 *.csv.gz
 
@@ -92,10 +93,11 @@ build/
 dist/
 
 # =============================================================================
-# Test result files
+# Test result files & debug output
 # =============================================================================
 backend/_test_result.txt
 _test_result.txt
+*_out.txt
 
 # =============================================================================
 # IDE / Editor settings
