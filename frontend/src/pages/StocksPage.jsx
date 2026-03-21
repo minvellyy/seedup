@@ -114,17 +114,25 @@ const STOCK_NAME_MAP = {
   '145020': '휴젤',
 }
 
+const INFINITE_SCROLL_STEP = 20
+const INFINITE_SCROLL_MAX  = 50
+
 function StocksPage() {
   const navigate = useNavigate()
   const [period, setPeriod] = useState('realtime')
   const [topStocks, setTopStocks] = useState([])
+  const [visibleCount, setVisibleCount] = useState(INFINITE_SCROLL_STEP)
   const [selectedStockCode, setSelectedStockCode] = useState(null)
   const [searchKeyword, setSearchKeyword] = useState('')
   const [searchResults, setSearchResults] = useState([])
   const [showSearchResults, setShowSearchResults] = useState(false)
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
-  
+
+  // 무한 스크롤 — 리스트 컨테이너 & 하단 sentinel refs
+  const listRef      = useRef(null)
+  const sentinelRef  = useRef(null)
+
   // SSE 연결 관리
   const esRef = useRef(null)
   const subscribedCodesRef = useRef('')
@@ -225,10 +233,26 @@ function StocksPage() {
     }
   }, [])
 
-  // 기간 변경 시 데이터 다시 가져오기
+  // 기간 변경 시 데이터 다시 가져오기 + visibleCount 초기화
   useEffect(() => {
+    setVisibleCount(INFINITE_SCROLL_STEP)
     fetchTopStocks(period)
   }, [period])
+
+  // 무한 스크롤 — sentinel이 리스트 내 viewport에 들어오면 visibleCount 증가
+  useEffect(() => {
+    if (!sentinelRef.current || !listRef.current) return
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting) {
+          setVisibleCount(prev => Math.min(prev + INFINITE_SCROLL_STEP, INFINITE_SCROLL_MAX))
+        }
+      },
+      { root: listRef.current, threshold: 0.1 }
+    )
+    observer.observe(sentinelRef.current)
+    return () => observer.disconnect()
+  }, [loading])
 
   // topStocks 업데이트 시 SSE 재연결
   useEffect(() => {
@@ -388,7 +412,7 @@ function StocksPage() {
             </div>
 
             {/* 종목 리스트 */}
-            <div className="stocks-list">
+            <div className="stocks-list" ref={listRef}>
               {loading ? (
                 <div className="loading-state">
                   {[...Array(10)].map((_, i) => (
@@ -412,7 +436,7 @@ function StocksPage() {
                   <p>조회 가능한 종목이 없습니다.</p>
                 </div>
               ) : (
-                topStocks.map(stock => {
+                topStocks.slice(0, visibleCount).map(stock => {
                   const stockColor = getStockColor(stock.code)
                   const displayName = stock.name
                   const logoText = displayName.length <= 3 ? displayName : displayName.substring(0, 3)
@@ -455,6 +479,22 @@ function StocksPage() {
                   </div>
                   )
                 })
+              )}
+              {/* 무한 스크롤 sentinel */}
+              {!loading && !error && topStocks.length > 0 && (
+                <>
+                  <div ref={sentinelRef} style={{ height: 1 }} />
+                  {visibleCount < topStocks.length && visibleCount < INFINITE_SCROLL_MAX && (
+                    <div className="scroll-load-hint">아래로 스크롤하면 더 보기</div>
+                  )}
+                  {(visibleCount >= topStocks.length || visibleCount >= INFINITE_SCROLL_MAX) && (
+                    <div className="scroll-load-hint">
+                      {topStocks.length <= INFINITE_SCROLL_MAX
+                        ? `전체 ${topStocks.length}개 종목`
+                        : `Top ${INFINITE_SCROLL_MAX} 까지 표시됩니다`}
+                    </div>
+                  )}
+                </>
               )}
             </div>
           </div>

@@ -39,6 +39,26 @@ except Exception as _e:
     _CREW_AVAILABLE = False
     _CREW_ERR = str(_e)
 
+# ── [옵션2] CrewAI 0.203.2 버그 monkey-patch ────────────────────────────────
+# 버그 원인: Task._execute_task_async()가 _execute_core() 예외를 처리하지 않아
+#           concurrent.futures.Future가 영원히 pending → future.result() 무한 블록
+#           → ThreadPoolExecutor 스레드 누수 → 스레드풀 포화 → 새 요청 진행 불가
+# 수정: 예외 발생 시 future.set_exception()을 호출해 즉시 예외를 전파하도록 패치
+try:
+    from concurrent.futures import Future as _CFuture
+    from crewai.task import Task as _CrewTask
+
+    def _patched_execute_task_async(self, agent, context, tools, future: _CFuture):
+        try:
+            result = self._execute_core(agent, context, tools)
+            future.set_result(result)
+        except Exception as _exc:
+            future.set_exception(_exc)
+
+    _CrewTask._execute_task_async = _patched_execute_task_async
+except Exception:
+    pass  # crewai 없으면 무시
+
 router = APIRouter(prefix="/analysis", tags=["analysis"])
 
 

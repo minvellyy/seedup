@@ -22,6 +22,7 @@ if _PKG_PATH and _PKG_PATH not in sys.path:
 
 import json as _json
 import logging as _logging
+import time
 import pymysql
 from datetime import datetime, timedelta
 from dotenv import load_dotenv
@@ -153,6 +154,51 @@ STOCK_NAME_MAP = {
 }
 
 
+# ── DB 종목 캐시 (1시간) ─────────────────────────────────────────────────────
+_db_stock_cache: dict = {}    # {stock_code: {name, market, last_price}}
+_db_stock_cache_ts: float = 0.0
+_DB_CACHE_TTL = 3600
+
+
+def _load_db_stocks() -> dict:
+    """DB instruments 테이블에서 종목명+last_price 전체 조회 — 1시간 캐시."""
+    global _db_stock_cache, _db_stock_cache_ts
+    if _db_stock_cache and (time.time() - _db_stock_cache_ts) < _DB_CACHE_TTL:
+        return _db_stock_cache
+    try:
+        conn = pymysql.connect(
+            host=os.getenv("DB_HOST", "localhost"),
+            port=int(os.getenv("DB_PORT", 3306)),
+            user=os.getenv("DB_USER"),
+            password=os.getenv("DB_PASSWORD"),
+            db=os.getenv("DB_NAME"),
+            charset="utf8mb4",
+            cursorclass=pymysql.cursors.DictCursor,
+        )
+        try:
+            with conn.cursor() as cur:
+                cur.execute(
+                    "SELECT stock_code, name, exchange, last_price "
+                    "FROM instruments "
+                    "WHERE asset_type='STOCK' AND price_status='ACTIVE'"
+                )
+                rows = cur.fetchall()
+            _db_stock_cache = {
+                r["stock_code"]: {
+                    "name": r["name"],
+                    "market": r["exchange"] or "KOSPI",
+                    "last_price": float(r["last_price"] or 0),
+                }
+                for r in rows
+            }
+            _db_stock_cache_ts = time.time()
+        finally:
+            conn.close()
+    except Exception as e:
+        _logger.warning("DB 종목 일괄 조회 실패: %s", e)
+    return _db_stock_cache
+
+
 def _save_stock_rec_json(user_id: int, result: StockRecommendationResponse) -> None:
     """종목 추천 결과를 portfolio_cache/user_{id}_stock_rec.json 에 저장합니다."""
     try:
@@ -258,77 +304,67 @@ def get_top_stocks(
         limit: 반환할 종목 수 (기본 100)
     """
     try:
-        # KIS WebSocket의 실시간 데이터 가져오기
         from kis_ws_client import get_price_store
         price_store = get_price_store()
-        
-        # price_store가 비어있으면 샘플 데이터 반환
-        if not price_store or len(price_store) == 0:
-            _logger.warning("price_store가 비어있음. 샘플 데이터 반환")
-           
-            sample_stocks = [
-                {"stock_code": "005930", "stock_name": "삼성전자", "market": "KOSPI", "current_price": 75000, "change_rate": -0.94},
-                {"stock_code": "373220", "stock_name": "LG에너지솔루션", "market": "KOSPI", "current_price": 456000, "change_rate": 1.48},
-                {"stock_code": "000660", "stock_name": "SK하이닉스", "market": "KOSPI", "current_price": 188200, "change_rate": -0.64},
-                {"stock_code": "207940", "stock_name": "삼성바이오로직스", "market": "KOSPI", "current_price": 935000, "change_rate": -2.09},
-                {"stock_code": "005935", "stock_name": "삼성전자우", "market": "KOSPI", "current_price": 63500, "change_rate": -0.84},
-                {"stock_code": "051910", "stock_name": "LG화학", "market": "KOSPI", "current_price": 349500, "change_rate": 0.55},
-                {"stock_code": "006400", "stock_name": "삼성SDI", "market": "KOSPI", "current_price": 314500, "change_rate": 0.64},
-                {"stock_code": "005380", "stock_name": "현대차", "market": "KOSPI", "current_price": 207000, "change_rate": -0.94},
-                {"stock_code": "336260", "stock_name": "두산퓨얼셀", "market": "KOSPI", "current_price": 46250, "change_rate": -2.31},
-                {"stock_code": "000270", "stock_name": "기아", "market": "KOSPI", "current_price": 103300, "change_rate": 2.27},
-                {"stock_code": "068270", "stock_name": "셀트리온", "market": "KOSPI", "current_price": 525000, "change_rate": -0.94},
-                {"stock_code": "035420", "stock_name": "NAVER", "market": "KOSPI", "current_price": 149900, "change_rate": 1.48},
-                {"stock_code": "105560", "stock_name": "KB금융", "market": "KOSPI", "current_price": 80393, "change_rate": -2.31},
-                {"stock_code": "055550", "stock_name": "신한지주", "market": "KOSPI", "current_price": 53000, "change_rate": 3.11},
-                {"stock_code": "035720", "stock_name": "카카오", "market": "KOSPI", "current_price": 70800, "change_rate": -0.84},
-                {"stock_code": "012330", "stock_name": "현대모비스", "market": "KOSPI", "current_price": 4372, "change_rate": 9.55},
-                {"stock_code": "028260", "stock_name": "삼성물산", "market": "KOSPI", "current_price": 13777, "change_rate": -1.98},
-                {"stock_code": "066570", "stock_name": "LG전자", "market": "KOSPI", "current_price": 39734, "change_rate": 4.63},
-                {"stock_code": "003670", "stock_name": "포스코퓨처엠", "market": "KOSPI", "current_price": 30850, "change_rate": 7.11},
-                {"stock_code": "096770", "stock_name": "SK이노베이션", "market": "KOSPI", "current_price": 103300, "change_rate": 2.27},
-            ]
-            
-            return [{
-                **stock,
-                "change": stock["current_price"] * stock["change_rate"] / 100,
-                "volume": 1000000 + (i * 50000),
-                "trade_value": stock["current_price"] * (1000000 + (i * 50000)),
-            } for i, stock in enumerate(sample_stocks[:limit])]
-        
-        # price_store의 모든 종목을 거래대금 기준으로 정렬
-        stocks = []
-        for code, data in price_store.items():
+
+        # ── DB 종목 사전 로드 (name + last_price) ─────────────────────────────
+        db_stocks = _load_db_stocks()
+
+        def _get_name(code: str) -> str:
+            return STOCK_NAME_MAP.get(code) or (db_stocks.get(code) or {}).get("name") or code
+
+        # ── price_store 데이터 → 실시간 딕셔너리 ─────────────────────────────
+        live: dict = {}
+        for code, data in (price_store or {}).items():
             if not data:
                 continue
-            
-            # 거래대금 = 현재가 × 거래량
-            current_price = data.get("current_price", 0)
-            volume = data.get("volume", 0)
-            trade_value = current_price * volume
-            
-            # 종목명은 매핑 테이블에서 가져오기
-            stock_name = STOCK_NAME_MAP.get(code, code)
-            
-            stocks.append({
+            cp = data.get("current_price", 0) or 0
+            vol = data.get("volume", 0) or 0
+            live[code] = {
                 "stock_code": code,
-                "stock_name": stock_name,
+                "stock_name": _get_name(code),
                 "market": data.get("market", "KOSPI"),
-                "current_price": current_price,
+                "current_price": cp,
                 "change": data.get("change", 0),
                 "change_rate": data.get("change_rate", 0),
-                "volume": volume,
-                "trade_value": trade_value,
-            })
-        
-        # 거래대금 기준 내림차순 정렬
-        stocks.sort(key=lambda x: x["trade_value"], reverse=True)
-        
-        # limit만큼 반환
+                "volume": vol,
+                "trade_value": cp * vol,
+            }
+
+        # ── price_store가 limit보다 부족하면 DB last_price로 보완 ─────────────
+        if len(live) < limit:
+            _logger.info("price_store 종목 수(%d) < %d → DB last_price로 보완", len(live), limit)
+            for code, info in db_stocks.items():
+                if code in live:
+                    continue  # 실시간 데이터 우선
+                lp = info["last_price"]
+                if lp <= 0:
+                    continue
+                live[code] = {
+                    "stock_code": code,
+                    "stock_name": info["name"],
+                    "market": info["market"],
+                    "current_price": lp,
+                    "change": 0,
+                    "change_rate": 0,
+                    "volume": 0,
+                    "trade_value": 0,   # 거래량 정보 없음 — 정렬 시 실시간 종목 하위
+                }
+
+        if not live:
+            _logger.warning("price_store + DB 모두 비어있음")
+            return []
+
+        # 정렬: 실시간 trade_value 내림차순 → DB 종목은 last_price 내림차순
+        stocks = sorted(
+            live.values(),
+            key=lambda x: (x["trade_value"], x["current_price"]),
+            reverse=True,
+        )
         return stocks[:limit]
-        
+
     except Exception as e:
-        _logger.error(f"거래대금 Top 조회 오류: {e}")
+        _logger.error("거래대금 Top 조회 오류: %s", e)
         raise HTTPException(status_code=500, detail=f"거래대금 Top 조회 오류: {e}")
 
 

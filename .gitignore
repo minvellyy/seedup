@@ -1,3 +1,32 @@
+# Chroma / vector DB
+./backend/reports_chroma_db/
+./backend/reports/
+./backend/parsed_data/
+
+**/*.sqlite3
+**/*.bin
+**/*.pickle
+**/*.pdf
+backend/reports_chroma_db/
+backend/news_chroma_db/
+**/chroma.sqlite3
+**/*.bin
+
+# Python
+__pycache__/
+*.pyc
+
+# env
+.venv/
+venv/
+.env
+
+./backend/stock_direction_model/data
+./backend/chroma_db
+./backend/news_chroma_db
+./backend/reports_chroma_db
+./backend/reports
+
 # =============================================================================
 # Environment variables & API keys  (NEVER commit real credentials)
 # =============================================================================
@@ -13,10 +42,6 @@ backend/.kis_approval_cache
 # Database
 # =============================================================================
 *.db
-
-# ChromaDB vector stores (re-generated at runtime)
-backend/chroma_db/
-backend/news_chroma_db/
 
 # =============================================================================
 # Portfolio user-specific cache (runtime only)
@@ -81,7 +106,6 @@ _test_result.txt
 .idea/
 *.swp
 *.swo
-.claude/
 
 # =============================================================================
 # Conda / Python virtual environments
@@ -121,14 +145,3 @@ build/
 .DS_Store
 Thumbs.db
 desktop.ini
-
-# =============================================================================
-# Data Files
-backend/reports/
-backend/reports_chroma_db/
-backend/parsed_data/
-backend/docs_cache/
-
-*.pdf
-*.sqlite3
-*.bin

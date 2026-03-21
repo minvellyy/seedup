@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-18",
+        "brokerage": "KB증권",
+        "analyst_name": "임정은, 태윤선, 김상엽",
+        "report_title": "318 KB 리서치 장마감코멘트"
+    },
+    "specific_data": {
+        "market_summary": "반도체가 이끄는 증시. KOSPI 5,925pt (+5.04%), KOSDAQ 1,164pt (+2.41%). 반도체 Top 2의 주도로 KOSPI +5%대 급등하며 3거래일 연속 상승.",
+        "macro_indicators": null,
+        "fund_flows": {
+            "individual": -38691,
+            "foreign": 8864,
+            "institution": 31094
+        },
+        "key_news": [
+            "미 증시는 전일에 이어 3대 지수 상승 지속.",
+            "마이크론 실적 기대감 지속되며 삼성전자와 SK하이닉스가 KOSPI 상승을 견인.",
+            "삼성전자는 사상 최대 실적을 바탕으로 한 주주환원정책을 재확인.",
+            "대미투자특별법 통과 이후 원전 수출 담당 실무진도 동행 예정이라는 소식."
+        ]
+    }
+}

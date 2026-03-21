@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-19",
+        "brokerage": "유안타증권",
+        "analyst_name": "황규원",
+        "report_title": "호르무즈 봉쇄, 오히려 전화위복!"
+    },
+    "specific_data": {
+        "company_name": "S-Oil",
+        "ticker": "010950",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "2026년 상반기 2.5조원 깜짝 실적 가능",
+            "호르무즈 봉쇄로 인한 정유설비 가동률 유지",
+            "샤힌 프로젝트 완공으로 인한 우려 감소"
+        ],
+        "risk_factors": [
+            "국제유가 변동성",
+            "정제마진 하락 가능성",
+            "지정학적 리스크"
+        ],
+        "shareholder_structure": "주요주주: Aramco Overseas Company BV 외 5인"
+    }
+}

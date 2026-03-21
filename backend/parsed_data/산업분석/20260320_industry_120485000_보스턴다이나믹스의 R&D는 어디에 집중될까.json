@@ -1,0 +1,29 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2023-03-20",
+        "brokerage": "대신증권",
+        "analyst_name": "김귀연",
+        "report_title": "보스턴다이나믹스의 R&D는 어디에 집중될까"
+    },
+    "specific_data": {
+        "sector_name": "자동차/부품",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "현대차",
+            "기아",
+            "현대모비스",
+            "에스엘",
+            "현대오토에버"
+        ],
+        "industry_trends": [
+            "BD R&D는 액츄에이터 중심으로 모듈화/열관리/헤드/배터리시스템에 초점",
+            "로봇 포트폴리오별 설계 방향성과 전략 공유",
+            "산업용 노동 로봇에 초점"
+        ],
+        "risk_factors": [
+            "내구성/비용/효율성 측면에서 균형점 찾는 것 중요",
+            "과도한 over-engineering 방지 필요"
+        ]
+    }
+}

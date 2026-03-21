@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-19",
+        "brokerage": "한화리서치",
+        "analyst_name": "안현국",
+        "report_title": "[EPS LIVE #203] 27년 실적 모멘텀 강한 종목 삼성전.."
+    },
+    "specific_data": {
+        "strategy_theme": "27년 실적 모멘텀 강한 종목",
+        "recommended_portfolio": [
+            "삼성전기",
+            "이수페타시스",
+            "에이피알"
+        ],
+        "strategy_logic": [
+            "글로벌 시장 EPS 상승",
+            "한국 산업재, 소재, IT 상승"
+        ],
+        "quant_factors": [
+            "MSCI KOREA 12MF EPS 성장률 78.2%",
+            "PER 8.9배",
+            "KOSPI 3개월 수익률 +33.6%"
+        ]
+    }
+}

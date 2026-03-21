@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-20",
+        "brokerage": "한화투자증권",
+        "analyst_name": "김성래, 김예인",
+        "report_title": "GTC 2026 HMG-엔비디아 로봇자율주행 협력의.."
+    },
+    "specific_data": {
+        "company_name": "현대오토에버",
+        "ticker": "307950",
+        "investment_rating": "Hold",
+        "investment_points": [
+            "AI와 로봇SI 등 미래 모빌리티 솔루션 공급자로의 구조적 전환",
+            "HMG-엔비디아 협력의 숨은 수혜자",
+            "스마트팩토리 및 디지털트윈 솔루션의 매출 반영 기대"
+        ],
+        "risk_factors": [
+            "고객 고지 리스크"
+        ],
+        "shareholder_structure": "현대자동차 (외 4인) 75.3%, 국민연금공단 (외 1인) 8.2%, 현대오토에버우리사주 (외 1인) 0.2%"
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-19",
+        "brokerage": "하나증권",
+        "analyst_name": "김록호, 김영규",
+        "report_title": "예상보다 좋습니다"
+    },
+    "specific_data": {
+        "company_name": "브이엠",
+        "ticker": "089970",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "예상보다 좋은 실적",
+            "고객사 신규 투자 수혜 집중",
+            "영업이익률 개선 기대"
+        ],
+        "risk_factors": [
+            "고객사 의존도",
+            "글로벌 반도체 시장 변동성"
+        ],
+        "shareholder_structure": "최우형 외 1인 10.07%, 국민연금공단 5.37%"
+    }
+}

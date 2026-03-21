@@ -1,0 +1,30 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-19",
+        "brokerage": "대신증권",
+        "analyst_name": "정해창, 이경민",
+        "report_title": "유가 불확실성을 완전히 지우지 못한 FOMC"
+    },
+    "specific_data": {
+        "strategy_theme": "고유가 환경에서의 원전 및 신재생 에너지 수혜 기대",
+        "recommended_portfolio": [
+            "대우건설",
+            "한전KPS",
+            "LS ELECTRIC",
+            "SK이터닉스",
+            "씨에스윈드",
+            "OCI홀딩스"
+        ],
+        "strategy_logic": [
+            "지정학적 리스크로 인한 유가 상승",
+            "반도체주 투자심리 냉각",
+            "고유가 환경에서 원전 및 신재생 에너지에 대한 수혜 기대"
+        ],
+        "quant_factors": [
+            "PPI 상승",
+            "금리 동결",
+            "지정학적 갈등"
+        ]
+    }
+}

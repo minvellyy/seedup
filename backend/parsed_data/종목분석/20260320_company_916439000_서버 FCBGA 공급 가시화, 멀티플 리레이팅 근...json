@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-20",
+        "brokerage": "하나증권",
+        "analyst_name": "김민경",
+        "report_title": "서버 FCBGA 공급 가시화, 멀티플 리레이팅 근.."
+    },
+    "specific_data": {
+        "company_name": "대덕전자",
+        "ticker": "353200",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "서버 FCBGA 공급 가시화",
+            "멀티플 리레이팅 근거 확보",
+            "26년 대덕전자 영업이익 추정치를 16% 상향조정"
+        ],
+        "risk_factors": [
+            "글로벌 기판 업체들의 평균 멀티플 변동성",
+            "서버급 제품 양산 지연 가능성"
+        ],
+        "shareholder_structure": "대덕 외 6 인 32.77%, 국민연금공단 12.03%"
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-19",
+        "brokerage": "하나증권",
+        "analyst_name": "최정욱, 정소영",
+        "report_title": "푸드빌 호실적. 올리브영 가치도 multiple에 .."
+    },
+    "specific_data": {
+        "company_name": "CJ",
+        "ticker": "001040",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "푸드빌 호실적",
+            "올리브영 가치도 multiple에 온전히 반영 예상",
+            "목표주가 상향 배경으로 올리브영 IPO 리스크 소멸"
+        ],
+        "risk_factors": [
+            "제일제당 부진",
+            "국내식품 매출 역성장",
+            "라이신 경쟁 심화"
+        ],
+        "shareholder_structure": "이재현 외 7 인 47.59%, 국민연금공단 13.40%"
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-19",
+        "brokerage": "하나증권",
+        "analyst_name": "유재선, 성무규",
+        "report_title": "보유 자사주 소각 긍정적"
+    },
+    "specific_data": {
+        "company_name": "삼천리",
+        "ticker": "004690",
+        "investment_rating": "Not Rated",
+        "investment_points": [
+            "보유 자사주 소각 긍정적",
+            "안정적인 이익으로 증명되고 있다.",
+            "중장기 이익 성장 가능성"
+        ],
+        "risk_factors": [
+            "도시가스 실적 변동성",
+            "천연가스 도매가격 하락"
+        ],
+        "shareholder_structure": "이만득 외 23 인 39.14%, 더제이자산운용 5.16%"
+    }
+}

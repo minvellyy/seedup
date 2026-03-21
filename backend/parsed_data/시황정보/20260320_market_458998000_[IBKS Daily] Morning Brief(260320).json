@@ -1,0 +1,18 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-20",
+        "brokerage": "IBK투자증권",
+        "analyst_name": null,
+        "report_title": "[IBKS Daily] Morning Brief(260320)"
+    },
+    "specific_data": {
+        "market_summary": "KOSPI는 전 거래일 대비 2.7% 하락한 5,763.2P로 마감, KOSDAQ은 전 거래일 대비 1.8% 하락한 1,143.5P로 마감. 유가 급등·연준 매파 발언 겹치며 코스피 2.7% 하락, 외인·기관 매도 확대 속 원/달러도 1,501원 급등.",
+        "macro_indicators": null,
+        "fund_flows": "외국인 -10,000억원, 기관 -6,649억원, 개인 -2,612억원",
+        "key_news": [
+            "삼성생명·화재, 삼성전자 자사주 소각 후 금산법 위반 방지 위해 삼성전자 지분 1.5조원 선제 매각 결정.",
+            "카타르, 이란 공습으로 LNG 수출능력 17% 손상돼 한국 등 장기계약에 최장 5년 불가항력 가능성 언급, 국내 가스 수급·요금 부담 우려."
+        ]
+    }
+}

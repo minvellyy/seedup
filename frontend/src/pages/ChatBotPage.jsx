@@ -182,6 +182,30 @@ const ChatBotPage = () => {
     }
   }
 
+  // 채팅 세션 삭제
+  const deleteSession = async (e, sessionId) => {
+    e.stopPropagation()
+    if (!window.confirm('이 대화를 삭제하시겠습니까?')) return
+
+    try {
+      const userId = isLoggedIn && user?.userId ? user.userId : 999999
+      await axios.delete(`/api/chat/session/${sessionId}?user_id=${userId}`)
+
+      if (currentSessionId === sessionId) {
+        setMessages([])
+        setCurrentSessionId(null)
+        if (isLoggedIn && user?.userId) {
+          localStorage.removeItem(`lastSessionId_${user.userId}`)
+        }
+      }
+
+      await loadSessions(false)
+    } catch (err) {
+      console.error('세션 삭제 오류:', err)
+      setError('대화 삭제에 실패했습니다.')
+    }
+  }
+
   // 새 채팅 시작
   const startNewChat = () => {
     setMessages([])
@@ -389,16 +413,18 @@ const ChatBotPage = () => {
                     className={`session-item ${currentSessionId === session.id ? 'active' : ''}`}
                     onClick={() => loadSessionMessages(session.id)}
                   >
-                    <div className="session-title">{session.title || NEW_CHAT_TITLE}</div>
-                    <div className="session-item-footer">
-                      <div className="session-time">
-                        {parseDate(session.updated_at)?.toLocaleString(LOCALE_KR, { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit" }) ?? "N/A"}
+                    <div className="session-item-content">
+                      <div className="session-title">{session.title || NEW_CHAT_TITLE}</div>
+                      <div className="session-item-footer">
+                        <div className="session-time">
+                          {session.updated_at ? new Date(session.updated_at).toLocaleDateString(LOCALE_KR) : "N/A"}
+                        </div>
+                        <button
+                          className="session-delete-btn"
+                          onClick={(e) => deleteSession(e, session.id)}
+                          title="대화 삭제"
+                        >✕</button>
                       </div>
-                      <button
-                        className="session-delete-btn"
-                        onClick={(e) => deleteSession(e, session.id)}
-                        title="대화 삭제"
-                      >✕</button>
                     </div>
                   </li>
                 ))}

@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-19",
+        "brokerage": "유진투자증권",
+        "analyst_name": "허재환",
+        "report_title": "3 월 FOMC 회의 불확실성 다음을 기약"
+    },
+    "specific_data": {
+        "strategy_theme": "금리 동결 및 인하 전망",
+        "recommended_portfolio": [],
+        "strategy_logic": [
+            "미국 FOMC 회의에서 기준금리 동결",
+            "인플레 전망 상향",
+            "고용 악화 시 금리 인하 가능성"
+        ],
+        "quant_factors": [
+            "미국 서비스 물가",
+            "임금 상승률",
+            "장단기 금리 차"
+        ]
+    }
+}

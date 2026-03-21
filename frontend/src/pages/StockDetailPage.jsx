@@ -1,6 +1,7 @@
 ﻿import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import './StockDetailPage.css'
+import { TermText, DynamicTermProvider } from '../components/TermTooltip'
 
 // ── AI 텍스트 내 1인칭 → 이름으로 치환 ─────────────────────────────────────
 const personalizeText = (text, name) => {
@@ -315,7 +316,6 @@ function Skeleton({ rows = 3 }) {
   )
 }
 
-
 // ── 메인 컴포넌트 ──────────────────────────────────────────────────────────
 function StockDetailPage() {
   const { stockCode } = useParams()
@@ -332,13 +332,12 @@ function StockDetailPage() {
   const [scores,           setScores]           = useState(null)
   const [analysis,         setAnalysis]         = useState(null)
   const [analysisLoading,  setAnalysisLoading]  = useState(false)
-  const [analysisError,    setAnalysisError]    = useState(false)
-  const [analysisRetry,    setAnalysisRetry]    = useState(0)
   const [realtimePrice,    setRealtimePrice]    = useState(null) // 실시간 가격 데이터
   const [intradayData,     setIntradayData]     = useState(null) // 일중 차트 데이터
   const [wsStatus,         setWsStatus]         = useState(null) // WebSocket 상태 (디버그용)
   const [reportItems,      setReportItems]      = useState(null) // 증권사 리포트 직접 조회 결과
   const [reportLoading,    setReportLoading]    = useState(false)
+  const [dynamicTerms,     setDynamicTerms]     = useState({})   // LLM 동적 용어 사전
 
   // ── WebSocket 상태 확인 (디버그용) ──────────────────────────────────────
   const checkWebSocketStatus = async () => {
@@ -347,7 +346,6 @@ function StockDetailPage() {
       const data = await res.json()
       setWsStatus(data)
       console.log('[WebSocket 상태]', data)
-      // 백엔드 응답: single → subscribed_count / subscribed_sample, pool → total_subscribed / workers
       const subscribedCount = data.subscribed_count ?? data.total_subscribed ?? 0
       const subscribedSample = data.subscribed_sample ?? []
       const isInSample = subscribedSample.includes(stockCode)
@@ -490,6 +488,7 @@ function StockDetailPage() {
       .catch(() => setReportLoading(false))
   }, [stockCode])
 
+
   // ── AI 분석 로드 (sessionStorage 캐시, 비동기) ─────────────────────────
   useEffect(() => {
     if (!stockCode) return
@@ -499,17 +498,13 @@ function StockDetailPage() {
     setAnalysisError(false)
 
     const cacheKey = `stock_analysis_${stockCode}`
-
-    // 재시도가 아닐 때만 캐시 사용
-    if (analysisRetry === 0) {
-      try {
-        const raw = sessionStorage.getItem(cacheKey)
-        if (raw) {
-          const { data, ts } = JSON.parse(raw)
-          if (Date.now() - ts < 3_600_000) { setAnalysis(data); return }
-        }
-      } catch {}
-    }
+    try {
+      const raw = sessionStorage.getItem(cacheKey)
+      if (raw) {
+        const { data, ts } = JSON.parse(raw)
+        if (Date.now() - ts < 3_600_000) { setAnalysis(data); return }
+      }
+    } catch {}
 
     const investmentType = localStorage.getItem('investment_type') || '위험중립형'
     const userProfile = JSON.stringify({
@@ -520,52 +515,56 @@ function StockDetailPage() {
     })
 
     setAnalysisLoading(true)
-
-    const controller = new AbortController()
-    // 서버 타임아웃(420s)보다 30초 여유를 두고 클라이언트에서도 abort
-    const timerId = setTimeout(() => controller.abort(), 450_000)
-
     fetch('/api/v1/analysis/report', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      signal: controller.signal,
       body: JSON.stringify({
         ticker: stockCode, mode: 'stock_detail',
         user_profile_json: userProfile,
         stock_item_json: stockItem ? JSON.stringify(stockItem) : '{}',
       }),
     })
-      .then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() })
+      .then(r => r.json())
       .then(data => {
         let parsed = null
-        try { parsed = JSON.parse(data.report) } catch { /* parsed stays null */ }
-        // JSON 파싱 실패 또는 필수 섹션 없으면 에러로 처리
-        const hasContent = parsed &&
-          (parsed.investment_fit || parsed.company_analysis || parsed.industry_analysis)
-        if (!hasContent) {
-          setAnalysisLoading(false)
-          setAnalysisError(true)
-          return
-        }
+        try { parsed = JSON.parse(data.report) } catch { parsed = { raw: data.report } }
         setAnalysis(parsed)
         setAnalysisLoading(false)
         try { sessionStorage.setItem(cacheKey, JSON.stringify({ data: parsed, ts: Date.now() })) } catch {}
-      })
-      .catch(err => {
-        setAnalysisLoading(false)
-        if (err.name === 'AbortError') return  // unmount로 인한 취소 — 에러 표시 안 함
-        setAnalysisError(true)
-      })
 
-    return () => {
-      clearTimeout(timerId)
-      controller.abort()
-    }
-  }, [stockCode, analysisRetry])
+        // ── LLM 동적 용어 추출 ──────────────────────────────────────────
+        const texts = [
+          ...(parsed?.industry_analysis?.current_trends ?? []),
+          ...(parsed?.company_analysis?.strengths ?? []),
+          parsed?.page_summary,
+          parsed?.company_analysis?.overall_company_view,
+          parsed?.investment_fit?.fit_summary,
+          ...(parsed?.investment_fit?.reason_explanations ?? []),
+          parsed?.investment_fit?.caution,
+          parsed?.industry_analysis?.industry,
+          parsed?.company_analysis?.sector,
+        ].filter(Boolean)
+        const combinedText = texts.join('\n')
+        if (combinedText.length > 30) {
+          fetch('/api/v1/terms/extract', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ text: combinedText }),
+          })
+            .then(r => r.json())
+            .then(d => setDynamicTerms(d.terms || {}))
+            .catch(() => {})
+        }
+      })
+      .catch(() => setAnalysisLoading(false))
+  }, [stockCode])
 
   if (loading) return (
     <div className="stock-detail-page">
-      <div className="sd-loading">주가 데이터를 불러오는 중...</div>
+      <div className="sd-loading">
+        <div className="sd-spinner" />
+        <p>주가 데이터를 불러오는 중...</p>
+      </div>
     </div>
   )
   if (error || !detail) return (
@@ -603,17 +602,18 @@ function StockDetailPage() {
 
   // ── 기업 요약 그리드 ─────────────────────────────────────────────────────
   const mcap = scores?.market_cap ? fmtMcap(scores.market_cap) : '-'
-  // 산업분류: DB 섹터(확정값) 우선 → AI 분석 폴백
+  // 산업분류: AI 분석의 섹터 → DB 섹터(비의미 값 제외) 순으로 폴백
   const sectorLabel =
-    (detail.sector && detail.sector !== '시장' ? detail.sector : null) ||
     analysis?.company_analysis?.sector ||
     analysis?.industry_analysis?.sector ||
+    (detail.sector && detail.sector !== '시장' ? detail.sector : null) ||
     '-'
-  // 사업영역: AI 분석의 세부 업종(industry) 우선 → DB 섹터 순으로 폴백
+  // 사업영역: AI 분석의 세부 업종 → 섹터 순으로 폴백 (줄글 제외)
   const industryLabel =
     analysis?.industry_analysis?.industry ||
-    (detail.sector && detail.sector !== '시장' ? detail.sector : null) ||
     analysis?.company_analysis?.sector ||
+    analysis?.industry_analysis?.sector ||
+    (detail.sector && detail.sector !== '시장' ? detail.sector : null) ||
     '-'
   const companyFields = [
     { label: '기업명',   value: detail.name },
@@ -625,20 +625,7 @@ function StockDetailPage() {
   ]
 
   // ── 레이더 점수 ───────────────────────────────────────────────────────────
-  const fallbackRadarPoints = fitScore != null
-    ? [
-      { key: 'profitability', label: '수익성', score: fitScore },
-      { key: 'growth', label: '성장성', score: fitScore },
-      { key: 'stability', label: '안정성', score: fitScore },
-      { key: 'cashflow', label: '현금흐름', score: fitScore },
-      { key: 'valuation', label: '밸류에이션', score: fitScore },
-    ]
-    : null
-
-  const radarPoints =
-    scores?.available && Array.isArray(scores?.radar) && scores.radar.length >= 3
-      ? scores.radar
-      : fallbackRadarPoints
+  const radarPoints = scores?.available ? scores.radar : null
 
   // ── 추천 이유 (분석 API 또는 stockItem) ─────────────────────────────────
   const recText = analysis?.page_summary
@@ -653,23 +640,13 @@ function StockDetailPage() {
   const reportsInsight  = ua?.reports_insight ?? null
   const hasUnstructured = esgRisks || esgOpportunities || newsSummary || reportsInsight || (reportItems && reportItems.length > 0)
 
+
   return (
+    <DynamicTermProvider extraDict={dynamicTerms}>
     <div className="stock-detail-page">
       <div className="stock-detail-container">
 
         <button onClick={() => navigate(-1)} className="sd-back-btn">← 추천 목록으로</button>
-
-        {/* 디버그 버튼 (개발용 - 나중에 제거 가능) */}
-        {process.env.NODE_ENV === 'development' && (
-          <div style={{ display: 'flex', gap: '10px', marginBottom: '20px' }}>
-            <button onClick={checkWebSocketStatus} className="sd-debug-btn">
-              🔍 WebSocket 상태 확인
-            </button>
-            <button onClick={injectTestPrices} className="sd-debug-btn">
-              🧪 테스트 가격 주입 (10초)
-            </button>
-          </div>
-        )}
 
         {/* ── 1. 헤더 ────────────────────────────────────────────── */}
         <div className="stock-detail-header">
@@ -717,7 +694,6 @@ function StockDetailPage() {
             <CandlestickChart data={detail.price_history} days={30} />
           </section>
         )}
-
 
         {/* ── 3. 내 투자 원칙 적합도 분석 ───────────────────────── */}
         {(fitScore != null || fitSummary) && (
@@ -783,7 +759,7 @@ function StockDetailPage() {
             {companyFields.map(({ label, value }) => (
               <div key={label} className="info-item">
                 <span className="info-label">{label}</span>
-                <span className="info-value">{value}</span>
+                <span className="info-value"><TermText text={String(value)} /></span>
               </div>
             ))}
           </div>
@@ -797,19 +773,14 @@ function StockDetailPage() {
             : industryBullets.length > 0
               ? (
                 <ul className="analysis-list">
-                  {industryBullets.map((b, i) => <li key={i}>{b}</li>)}
+                  {industryBullets.map((b, i) => (
+                    <li key={i}><TermText text={b} /></li>
+                  ))}
                 </ul>
               )
-              : analysisError
-                ? (
-                  <p className="sd-analysis-pending">
-                    AI 분석을 불러오지 못했습니다.
-                    <button className="sd-retry-btn" onClick={() => setAnalysisRetry(r => r + 1)}>🔄 다시 시도</button>
-                  </p>
-                )
-                : !analysisLoading && (
-                  <p className="sd-analysis-pending">분석 데이터를 준비 중입니다. 잠시 후 페이지를 새로고침해 주세요.</p>
-                )
+              : !analysisLoading && (
+                <p className="sd-analysis-pending">AI 분석 데이터를 불러오는 중입니다. 잠시 후 페이지를 새로고침해 주세요.</p>
+              )
           }
         </section>
 
@@ -888,29 +859,20 @@ function StockDetailPage() {
           }
         </section>
 
-        {/* ── 7. 추천 이유 / AI 분석 요약 ─────────────────────── */}
-        <section className="recommendation-section">
-          <h2 className="section-heading">{stockItem ? '추천 이유' : 'AI 분석 요약'}</h2>
-          {analysisLoading && !recText
-            ? <Skeleton rows={2} />
-            : recText
-              ? (
+        {/* ── 7. 추천 이유 ──────────────────────────────────────── */}
+        {(recText || analysisLoading) && (
+          <section className="recommendation-section">
+            <h2 className="section-heading">추천 이유</h2>
+            {analysisLoading && !recText
+              ? <Skeleton rows={2} />
+              : recText && (
                 <div className="recommendation-box">
-                  <p className="recommendation-detail">{recText}</p>
+                  <p className="recommendation-detail"><TermText text={recText} /></p>
                 </div>
               )
-              : analysisError
-                ? (
-                  <p className="sd-analysis-pending">
-                    AI 분석을 불러오지 못했습니다.
-                    <button className="sd-retry-btn" onClick={() => setAnalysisRetry(r => r + 1)}>🔄 다시 시도</button>
-                  </p>
-                )
-                : !analysisLoading && (
-                  <p className="sd-analysis-pending">분석 데이터를 준비 중입니다. 잠시 후 페이지를 새로고침해 주세요.</p>
-                )
-          }
-        </section>
+            }
+          </section>
+        )}
 
         {/* ── 주요 지표 ──────────────────────────────────────────── */}
         <section className="sd-section">
@@ -933,6 +895,7 @@ function StockDetailPage() {
 
       </div>
     </div>
+    </DynamicTermProvider>
   )
 }
 

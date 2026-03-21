@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-19",
+        "brokerage": "SK증권",
+        "analyst_name": "최관순",
+        "report_title": "올리브영이 하드캐리"
+    },
+    "specific_data": {
+        "company_name": "CJ올리브영",
+        "ticker": "001040",
+        "investment_rating": "매수(유지)",
+        "investment_points": [
+            "CJ올리브영 4Q25 순이익은 1,329억원(-0.2%)",
+            "목표주가: 230,000 원(상향)",
+            "상장자회사 실적개선이 필요한 시기",
+            "CJ올리브영의 호실적이 CJ 주가로 반영될 전망"
+        ],
+        "risk_factors": [
+            "상장자회사 실적개선이 필요한 시기",
+            "CJ제일제당과 CJ ENM의 4분기 순이익 적자"
+        ],
+        "shareholder_structure": "이재현(외7) 47.59%, 국민연금공단 13.40%, 외국인 지분율 15.89%"
+    }
+}

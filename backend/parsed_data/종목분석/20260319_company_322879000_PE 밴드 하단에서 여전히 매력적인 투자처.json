@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-19",
+        "brokerage": "유안타증권",
+        "analyst_name": "이환욱",
+        "report_title": "PE 밴드 하단에서 여전히 매력적인 투자처"
+    },
+    "specific_data": {
+        "company_name": "에스엠",
+        "ticker": "041510",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "P/E 밴드 하단에서 여전히 매력적인 투자처",
+            "주력 아티스트 IP 향 MD/라이선싱 매출 증가",
+            "비용 효율화가 전사 실적 성장을 견인할 전망"
+        ],
+        "risk_factors": [
+            "미/이스라엘 대이란 공습 여파로 발생한 주가 하락",
+            "아시아권 코어 팬덤 충성도"
+        ],
+        "shareholder_structure": "주요주주 카카오 외 8 인"
+    }
+}

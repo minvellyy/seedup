@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-19",
+        "brokerage": "대신증권",
+        "analyst_name": "유정현",
+        "report_title": "BTS 콘서트 보러 오세요!"
+    },
+    "specific_data": {
+        "sector_name": "유통업",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "신세계",
+            "현대백화점",
+            "롯데쇼핑"
+        ],
+        "industry_trends": [
+            "BTS 콘서트로 인한 방한 외국인 수 증가",
+            "K-컬쳐 열풍으로 외국인 관광객 증가",
+            "일본 백화점의 외국인 매출 증가 사례"
+        ],
+        "risk_factors": [
+            "중동 지역의 전쟁 발발로 인한 소비 심리 위축",
+            "자회사 실적 부진 우려"
+        ]
+    }
+}

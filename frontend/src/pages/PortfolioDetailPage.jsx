@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom'
 import html2pdf from 'html2pdf.js'
 import { useAuth } from '../contexts/AuthContext'
 import './PortfolioDetailPage.css'
+import { TermText, DynamicTermProvider } from '../components/TermTooltip'
 
 const COLOR_PALETTE = [
   '#C2410C', '#EA580C', '#F97316', '#FB923C',
@@ -278,7 +279,28 @@ function PortfolioDetailPage() {
   const [aiData, setAiData] = useState(passedAiData)
   const [riskStatus, setRiskStatus] = useState('idle')
   const [riskAnalysis, setRiskAnalysis] = useState(null)
+  const [dynamicTerms, setDynamicTerms] = useState({})
   const cardRef = useRef(null)
+
+  // 페이지 로딩 시 portfolioData 텍스트로 LLM 용어 추출
+  useEffect(() => {
+    if (!portfolioData) return
+    const texts = [
+      ...(portfolioData.portfolio_items || []).map(i => i.selection_reason).filter(Boolean),
+      portfolioData.overall_summary,
+      portfolioData.portfolio_summary,
+    ].filter(Boolean)
+    const combined = texts.join('\n')
+    if (combined.length < 30) return
+    fetch('/api/v1/terms/extract', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ text: combined }),
+    })
+      .then(r => r.json())
+      .then(d => setDynamicTerms(prev => ({ ...prev, ...(d.terms || {}) })))
+      .catch(() => {})
+  }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   // 데이터가 없을 때 3초 후에 로딩을 멈추고 에러 표시
   useEffect(() => {
@@ -360,8 +382,24 @@ function PortfolioDetailPage() {
         signal: controller.signal,
       })
       if (!res.ok) throw new Error(await res.text())
-      setAiData(await res.json())
+      const aiResult = await res.json()
+      setAiData(aiResult)
       setAiStatus('done')
+      // AI narrative 텍스트로 추가 용어 추출
+      const aiTexts = Object.values(aiResult)
+        .flatMap(v => [v?.narrative, v?.selection_reason, ...(v?.strengths || []), ...(v?.weaknesses || [])])
+        .filter(Boolean)
+      const aiCombined = aiTexts.join('\n')
+      if (aiCombined.length >= 30) {
+        fetch('/api/v1/terms/extract', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ text: aiCombined }),
+        })
+          .then(r => r.json())
+          .then(d => setDynamicTerms(prev => ({ ...prev, ...(d.terms || {}) })))
+          .catch(() => {})
+      }
     } catch (e) {
       console.warn('AI 분석 실패:', e)
       setAiStatus(e.name === 'AbortError' ? 'timeout' : 'error')
@@ -399,6 +437,7 @@ function PortfolioDetailPage() {
   }, []) // eslint-disable-line react-hooks/exhaustive-deps
 
   return (
+    <DynamicTermProvider extraDict={dynamicTerms}>
     <div className="portfolio-detail-page">
       <div className="portfolio-detail-container">
 
@@ -422,7 +461,7 @@ function PortfolioDetailPage() {
                 survey_context,
                 portfolio_style: portfolioData.portfolio_style,
               })
-              return oneLiner ? <ul className="pd-tier-summary-list"><li>{oneLiner}</li></ul> : null
+              return oneLiner ? <div className="pd-tier-summary"><TermText text={oneLiner} /></div> : null
             })()}
           </div>
 
@@ -486,10 +525,7 @@ function PortfolioDetailPage() {
                   style={{ width: `${item.weight_pct}%`, background: COLOR_PALETTE[idx % COLOR_PALETTE.length] }}
                   title={`${item.name} ${item.weight_pct.toFixed(1)}%`}
                 >
-                  <span
-                    className="pd-bar-label pd-bar-label-link"
-                    onClick={() => navigate(`/stock/${item.ticker}`)}
-                  >
+                  <span className="pd-bar-label">
                     {item.name}({item.weight_pct.toFixed(0)}%)
                   </span>
                 </div>
@@ -505,7 +541,7 @@ function PortfolioDetailPage() {
               <div className="pd-section-row pd-two-col">
                 {/* 왼쪽: 단기 + 중장기 */}
                 <div className="pd-col">
-                  <div className="pd-section-label">5일 후 상승 확률</div>
+                  <div className="pd-section-label">(단기) 20일 후 예상 수익률</div>
                   {quant_signals.short_term?.weighted_p_adj != null ? (
                     <>
                       <div className="pd-signal-bar-wrap">
@@ -532,12 +568,13 @@ function PortfolioDetailPage() {
                     </>
                   ) : <p className="pd-no-data">데이터 없음</p>}
 
-                  <div className="pd-section-label pd-section-label-mt">최근 12개월 과거 수익률</div>
+                  <div className="pd-section-label pd-section-label-mt">(중장기) 기대수익률 (CAPM 기반)</div>
                   {quant_signals.medium_term?.weighted_ret_12m_pct != null ? (
                     <>
                       <div className={`pd-big-value ${quant_signals.medium_term.weighted_ret_12m_pct >= 0 ? 'pd-pos' : 'pd-neg'}`}>
                         {quant_signals.medium_term.weighted_ret_12m_pct >= 0 ? '+' : ''}
                         {quant_signals.medium_term.weighted_ret_12m_pct.toFixed(1)}%
+                        <span className="pd-big-value-sub"> (12M 과거 수익률 기반)</span>
                       </div>
                       <div className="pd-signal-items">
                         {quant_signals.medium_term.items
@@ -563,12 +600,12 @@ function PortfolioDetailPage() {
                   )}
                   {riskStatus === 'done' && riskAnalysis ? (
                     <>
-                      <div className="pd-risk-summary">{riskAnalysis.risk_summary}</div>
+                      <div className="pd-risk-summary"><TermText text={riskAnalysis.risk_summary} /></div>
                       <div className="pd-signal-items">
                         {(riskAnalysis.per_stock || []).map(ps => (
                           <div key={ps.ticker} className="pd-signal-item pd-risk-item">
                             <span className="pd-signal-name">{ps.name}</span>
-                            <span className="pd-risk-text pd-neg">{ps.risk_text}</span>
+                            <span className="pd-risk-text pd-neg"><TermText text={ps.risk_text} /></span>
                           </div>
                         ))}
                       </div>
@@ -620,7 +657,7 @@ function PortfolioDetailPage() {
                     </div>
                   </div>
                   {performance_3y.interpretation && (
-                    <div className="pd-interpretation">{performance_3y.interpretation}</div>
+                    <div className="pd-interpretation"><TermText text={performance_3y.interpretation} /></div>
                   )}
                 </div>
                 <div className="pd-col">
@@ -629,7 +666,7 @@ function PortfolioDetailPage() {
                     <p className="pd-status-msg">⏳ AI 리스크 분석 중...</p>
                   )}
                   {riskStatus === 'done' && riskAnalysis ? (
-                    <div className="pd-risk-summary">{riskAnalysis.risk_summary}</div>
+                    <div className="pd-risk-summary"><TermText text={riskAnalysis.risk_summary} /></div>
                   ) : riskStatus !== 'loading' ? (
                     <div className="pd-perf-boxes">
                       <div className="pd-perf-box">
@@ -647,6 +684,34 @@ function PortfolioDetailPage() {
               <div className="pd-divider" />
             </>
           )}
+
+          {/* 몬테카를로 시뮬레이션 */}
+          {monte_carlo_1y && (
+            <>
+              <div className="pd-section-row">
+                <div className="pd-section-label">(몬테카를로) 향후 1년 수익률 (현재 가격 기준)</div>
+                <div className="pd-mc-row">
+                  <div className="pd-mc-box pd-mc-bear">
+                    <div className="pd-mc-label">약세 (10%)</div>
+                    <div className="pd-mc-value">{fmtPct(monte_carlo_1y.p10_pct)}</div>
+                  </div>
+                  <div className="pd-mc-box pd-mc-base">
+                    <div className="pd-mc-label">기준 (50%)</div>
+                    <div className="pd-mc-value">{fmtPct(monte_carlo_1y.p50_pct)}</div>
+                  </div>
+                  <div className="pd-mc-box pd-mc-bull">
+                    <div className="pd-mc-label">강세 (90%)</div>
+                    <div className="pd-mc-value">{fmtPct(monte_carlo_1y.p90_pct)}</div>
+                  </div>
+                </div>
+                {monte_carlo_1y.interpretation && (
+                  <div className="pd-interpretation"><TermText text={monte_carlo_1y.interpretation} /></div>
+                )}
+              </div>
+              <div className="pd-divider" />
+            </>
+          )}
+
 
           {/* 종목별 분석 */}
           <div className="pd-section-row pdf-page-break">
@@ -674,7 +739,7 @@ function PortfolioDetailPage() {
                       <span className="pd-stock-code">{item.ticker}</span>
                     </div>
                     <div className="pd-stock-right">
-                      {narrative && <p className="pd-stock-reason">{narrative}</p>}
+                      {narrative && <p className="pd-stock-reason"><TermText text={narrative} /></p>}
                     </div>
                   </div>
                 )
@@ -702,6 +767,7 @@ function PortfolioDetailPage() {
         </div>
       </div>
     </div>
+    </DynamicTermProvider>
   )
 }
 

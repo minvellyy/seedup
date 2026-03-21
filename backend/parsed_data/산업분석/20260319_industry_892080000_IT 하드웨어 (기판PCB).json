@@ -1,0 +1,29 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-19",
+        "brokerage": "SK증권",
+        "analyst_name": "박형우",
+        "report_title": "IT 하드웨어 (기판PCB)"
+    },
+    "specific_data": {
+        "sector_name": "IT 하드웨어 (기판/PCB)",
+        "industry_rating": null,
+        "top_picks": [
+            "이수페타시스",
+            "삼성전기",
+            "티엘비",
+            "대덕전자",
+            "롯데에너지머티리얼즈"
+        ],
+        "industry_trends": [
+            "모듈 PCB 기판 단가 인상",
+            "메모리모듈 쇼티지 심화",
+            "AI서버향 기판 수혜 확대"
+        ],
+        "risk_factors": [
+            "원재료 조달 문제",
+            "글로벌 FCBGA 기판업체의 투자지원 요구"
+        ]
+    }
+}

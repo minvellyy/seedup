@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-20",
+        "brokerage": "미래에셋증권",
+        "analyst_name": "이진호",
+        "report_title": "태양광 중심으로 재편되는 에너지 안보 패러.."
+    },
+    "specific_data": {
+        "company_name": "OCI홀딩스",
+        "ticker": "010060",
+        "investment_rating": "매수",
+        "investment_points": [
+            "에너지 안보 패러다임 변화로 인한 신재생에너지 매력도 증가",
+            "폴리실리콘 가격 상승 기대",
+            "단순 폴리실리콘 사업자에서 복합 태양광 발전 사업자로의 진화"
+        ],
+        "risk_factors": [
+            "Section 232의 결과 발표 지연",
+            "폴리실리콘 가격 변동성"
+        ],
+        "shareholder_structure": "주요 주주 지분율에 대한 정보는 제공되지 않음"
+    }
+}

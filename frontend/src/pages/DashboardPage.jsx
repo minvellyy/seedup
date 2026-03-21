@@ -512,42 +512,43 @@ const DashboardPage = () => {
             <div style={{ display: 'flex', gap: '1.5rem', flexWrap: 'wrap' }}>
               {/* 총 보유 자산 */}
               <div style={{
-                background: 'rgba(255, 255, 255, 0.25)',
+                background: 'rgba(255, 255, 255, 0.18)',
                 backdropFilter: 'blur(10px)',
                 padding: '1.2rem 1.8rem',
-                borderRadius: '16px',
-                border: '1px solid rgba(255, 255, 255, 0.3)',
+                borderRadius: '10px',
+                border: '1px solid rgba(255, 255, 255, 0.25)',
                 minWidth: '200px'
               }}>
-                <div style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.9)', marginBottom: '0.4rem', fontWeight: '600' }}>
+                <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.75)', marginBottom: '0.5rem', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                   총 보유 자산
                 </div>
-                <div style={{ fontSize: '2rem', fontWeight: '800', color: 'white', letterSpacing: '-0.5px' }}>
+                <div style={{ fontSize: '2rem', fontWeight: '800', color: 'white', letterSpacing: '-0.5px', lineHeight: 1 }}>
                   ₩{holdingsSummary.total_current_value.toLocaleString()}
                 </div>
               </div>
               
               {/* 전일 대비 */}
               <div style={{
-                background: 'rgba(255, 255, 255, 0.25)',
+                background: 'rgba(255, 255, 255, 0.18)',
                 backdropFilter: 'blur(10px)',
                 padding: '1.2rem 1.8rem',
-                borderRadius: '16px',
-                border: '1px solid rgba(255, 255, 255, 0.3)',
+                borderRadius: '10px',
+                border: '1px solid rgba(255, 255, 255, 0.25)',
                 minWidth: '180px'
               }}>
-                <div style={{ fontSize: '0.85rem', color: 'rgba(255, 255, 255, 0.9)', marginBottom: '0.4rem', fontWeight: '600' }}>
+                <div style={{ fontSize: '0.75rem', color: 'rgba(255, 255, 255, 0.75)', marginBottom: '0.5rem', fontWeight: '500', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
                   전일 대비
                 </div>
                 <div style={{ 
                   fontSize: '1.6rem', 
                   fontWeight: '800', 
                   color: holdingsSummary.total_return_amount >= 0 ? '#fef3c7' : '#bfdbfe',
-                  letterSpacing: '-0.5px'
+                  letterSpacing: '-0.5px',
+                  lineHeight: 1
                 }}>
                   {holdingsSummary.total_return_amount >= 0 ? '+' : ''}
                   {holdingsSummary.total_return_amount.toLocaleString()}원
-                  <span style={{ fontSize: '1.1rem', marginLeft: '0.5rem', fontWeight: '700' }}>
+                  <span style={{ fontSize: '1rem', marginLeft: '0.5rem', fontWeight: '700' }}>
                     {holdingsSummary.total_return_rate >= 0 ? '▲' : '▼'}
                     {Math.abs(holdingsSummary.total_return_rate).toFixed(2)}%
                   </span>
@@ -932,7 +933,7 @@ const DashboardPage = () => {
           <path 
             d="M 48 38 Q 38 32, 30 26" 
             fill="none"
-            stroke="#5a9068" 
+            stroke="#6FBF8F" 
             strokeWidth="2"
             strokeLinecap="round"
             opacity="0.6"
@@ -952,7 +953,7 @@ const DashboardPage = () => {
           <path 
             d="M 48 38 Q 58 32, 66 26" 
             fill="none"
-            stroke="#5a9068" 
+            stroke="#6FBF8F" 
             strokeWidth="2"
             strokeLinecap="round"
             opacity="0.6"

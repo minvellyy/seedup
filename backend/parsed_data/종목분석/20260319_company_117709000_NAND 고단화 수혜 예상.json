@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-19",
+        "brokerage": "iM증권",
+        "analyst_name": "송명섭",
+        "report_title": "NAND 고단화 수혜 예상"
+    },
+    "specific_data": {
+        "company_name": "이오테크닉스",
+        "ticker": "039030",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "FY26 매출과 영업이익이 전년 대비 각각 28%, 65% 증가할 전망",
+            "NAND 고단화 수혜 예상",
+            "목표주가 485,000원으로 상향"
+        ],
+        "risk_factors": [
+            "영업이익이 예상보다 하회할 가능성",
+            "일회성 요인에 따른 주가 변동성"
+        ],
+        "shareholder_structure": "외국인지분율 21.1%, 자본금 6십억원, 발행주식수 1,232만주"
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-19",
+        "brokerage": "대신증권",
+        "analyst_name": "문남중",
+        "report_title": "전쟁 그리고 FOMC. 미국 증시, 호재 요인"
+    },
+    "specific_data": {
+        "strategy_theme": "전쟁과 금리 동결에 따른 투자 전략",
+        "recommended_portfolio": [
+            "AI 및 반도체",
+            "우라늄ㆍ원전",
+            "가상자산&스테이블코인",
+            "양자컴퓨터"
+        ],
+        "strategy_logic": [
+            "전쟁 장기화에 따른 고유가 지속",
+            "미국 증시의 상대적 강세 예상",
+            "연준의 금리 인하 가능성"
+        ],
+        "quant_factors": [
+            "물가 상승률",
+            "고용시장 지표",
+            "실질정책금리"
+        ]
+    }
+}
