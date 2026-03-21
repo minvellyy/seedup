@@ -1,248 +1,163 @@
-﻿/* 개별종목 페이지 스타일 */
+﻿/* =====================================================
+   StocksPage — Editorial "The Market Report" Style
+   ===================================================== */
+
 .stocks-page {
-  min-height: calc(100vh - 80px);
-  background: #F7F9F8;
-  padding-bottom: 40px;
+  min-height: calc(100vh - 64px);
+  background: #F7F8FA;
 }
 
-/* 페이지 헤더 */
-.stocks-page-header {
-  background: white;
+/* == Editorial Header == */
+.stocks-editorial-header {
+  background: #ffffff;
   border-bottom: 1px solid #E5E7EB;
-  padding: 40px 60px;
+  padding: 56px 60px 48px;
 }
 
-.header-content {
-  max-width: 1400px;
+.stocks-editorial-inner {
+  max-width: 1200px;
   margin: 0 auto;
 }
 
-.page-title {
-  font-size: 32px;
+.stocks-live-badge {
+  font-size: 11px;
   font-weight: 700;
-  color: #1F2937;
-  margin: 0 0 12px 0;
+  letter-spacing: 1.5px;
+  color: #16A34A;
+  text-transform: uppercase;
+  margin-bottom: 20px;
 }
 
-.page-description {
-  font-size: 16px;
-  color: #9CA3AF;
-  margin: 0;
+.stocks-main-title {
+  font-size: 1.8rem;
+  font-weight: 700;
+  color: #111827;
+  line-height: 1.2;
+  margin: 0 0 12px 0;
+  letter-spacing: -0.5px;
+}
+
+.stocks-title-accent {
+  font-style: italic;
+  color: #16A34A;
+  font-weight: 800;
+}
+
+.stocks-subtitle {
+  font-size: 15px;
+  color: #6B7280;
+  margin: 0 0 32px 0;
   line-height: 1.6;
 }
 
-/* 메인 컨텐츠 영역 */
-.stocks-page-body {
-  max-width: 1400px;
-  margin: 0 auto;
-  padding: 40px 60px;
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 30px;
-}
-
-/* 섹션 카드 공통 스타일 */
-.section-card {
-  background: white;
+/* == Search Bar == */
+.stocks-search-wrap {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 520px;
+  background: #F9FAFB;
+  border: 1.5px solid #E5E7EB;
   border-radius: 12px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-  padding: 30px;
-  height: fit-content;
+  padding: 0 16px;
+  transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.section-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 24px;
+.stocks-search-wrap:focus-within {
+  border-color: #16A34A;
+  box-shadow: 0 0 0 3px rgba(22, 163, 74, 0.1);
+  background: #fff;
 }
 
-.section-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #1F2937;
-  margin: 0;
-}
-
-.update-time {
-  font-size: 13px;
-  color: #6FBF8F;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-}
-
-.update-time::before {
-  content: '●';
-  font-size: 8px;
-  animation: pulse 2s infinite;
-}
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
-}
-
-/* 거래대금 Top 100 섹션 */
-.top-stocks-section {
-  position: relative;
-}
-
-.top-stocks-section .section-card {
-  position: sticky;
-  top: 100px;
-  max-height: calc(100vh - 140px);
-  display: flex;
-  flex-direction: column;
-  overflow: hidden;
-}
-
-/* 기간 필터 탭 */
-.period-tabs {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 20px;
-  padding-bottom: 20px;
-  border-bottom: 1px solid #E5E7EB;
-  overflow-x: auto;
-}
-
-.period-tab {
-  padding: 8px 16px;
-  border: 1px solid #E5E7EB;
-  background: white;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 500;
+.stocks-search-icon {
   color: #9CA3AF;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  white-space: nowrap;
-}
-
-.period-tab:hover {
-  border-color: #6FBF8F;
-  color: #6FBF8F;
-}
-
-.period-tab.active {
-  background: #6FBF8F;
-  border-color: #6FBF8F;
-  color: white;
-}
-
-/* 종목 리스트 */
-.stocks-list {
-  overflow-y: auto;
-  flex: 1;
-  margin: 0 -30px;
-  padding: 0 30px;
-}
-
-.stocks-list::-webkit-scrollbar {
-  width: 6px;
-}
-
-.stocks-list::-webkit-scrollbar-track {
-  background: transparent;
-}
-
-.stocks-list::-webkit-scrollbar-thumb {
-  background: #E5E7EB;
-  border-radius: 3px;
-}
-
-.stocks-list::-webkit-scrollbar-thumb:hover {
-  background: #9CA3AF;
-}
-
-.scroll-load-hint {
-  text-align: center;
-  font-size: 12px;
-  color: #9CA3AF;
-  padding: 12px 0 8px;
-}
-
-.stock-item {
-  display: grid;
-  grid-template-columns: 40px 44px 1fr auto;
-  gap: 12px;
-  align-items: center;
-  padding: 14px 16px;
-  border-bottom: 1px solid #F3F4F6;
-  cursor: pointer;
-  transition: all 0.2s ease;
-  position: relative;
-}
-
-.stock-item::before {
-  content: '';
-  position: absolute;
-  left: 0;
-  top: 0;
-  bottom: 0;
-  width: 3px;
-  background: #6FBF8F;
-  opacity: 0;
-  transition: opacity 0.2s ease;
-}
-
-.stock-item:hover {
-  background: #F7F9F8;
-}
-
-.stock-item.selected {
-  background: #E8F5EC;
-}
-
-.stock-item.selected::before {
-  opacity: 1;
-}
-
-.stock-rank {
-  font-size: 16px;
-  font-weight: 600;
-  color: #9CA3AF;
-  text-align: center;
-}
-
-.stock-logo {
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
-  overflow: hidden;
   flex-shrink: 0;
+  margin-right: 10px;
 }
 
-.logo-placeholder {
-  width: 100%;
-  height: 100%;
+.stocks-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 14px 0;
+  font-size: 15px;
+  color: #1F2937;
+  outline: none;
+}
+
+.stocks-search-input::placeholder {
+  color: #9CA3AF;
+}
+
+.stocks-search-clear {
+  border: none;
+  background: #D1D5DB;
+  color: #fff;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  font-size: 11px;
+  cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 12px;
-  font-weight: 700;
-  color: white;
-  text-align: center;
-  padding: 4px;
-  line-height: 1.2;
-  word-break: keep-all;
+  flex-shrink: 0;
+  transition: background 0.2s;
 }
 
-.stock-info {
+.stocks-search-clear:hover {
+  background: #6B7280;
+}
+
+/* == Search Dropdown == */
+.stocks-search-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: #fff;
+  border: 1px solid #E5E7EB;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0,0,0,0.1);
+  max-height: 360px;
+  overflow-y: auto;
+  z-index: 50;
+}
+
+.stocks-search-result {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  cursor: pointer;
+  border-bottom: 1px solid #F3F4F6;
+  transition: background 0.15s;
+}
+
+.stocks-search-result:last-child { border-bottom: none; }
+.stocks-search-result:hover { background: #F9FAFB; }
+
+.stocks-result-logo {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.stocks-result-info {
+  flex: 1;
   display: flex;
   flex-direction: column;
-  gap: 4px;
+  gap: 2px;
   min-width: 0;
 }
 
-.stock-name-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.stock-name {
+.stocks-result-name {
   font-size: 14px;
   font-weight: 600;
   color: #1F2937;
@@ -251,87 +166,205 @@
   text-overflow: ellipsis;
 }
 
-.stock-code {
+.stocks-result-code {
   font-size: 12px;
-  font-weight: 500;
   color: #9CA3AF;
   font-family: 'Courier New', monospace;
 }
 
-.market-badge {
-  display: inline-flex;
+.stocks-result-change {
+  font-size: 13px;
+  font-weight: 700;
+  flex-shrink: 0;
+}
+
+.stocks-result-change.positive { color: #16A34A; }
+.stocks-result-change.negative { color: #DC2626; }
+
+.stocks-no-results {
+  padding: 24px;
+  text-align: center;
+  color: #9CA3AF;
+  font-size: 14px;
+}
+
+/* == Table Section == */
+.stocks-table-section {
+  padding: 40px 60px;
+}
+
+.stocks-table-inner {
+  max-width: 1200px;
+  margin: 0 auto;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+  overflow: hidden;
+}
+
+.stocks-table-topbar {
+  display: flex;
   align-items: center;
-  padding: 2px 8px;
-  border-radius: 4px;
-  font-size: 11px;
+  justify-content: space-between;
+  padding: 28px 36px 20px;
+  border-bottom: 1px solid #F3F4F6;
+}
+
+.stocks-table-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #111827;
+  margin: 0;
+  letter-spacing: -0.5px;
+}
+
+.stocks-live-indicator {
+  font-size: 12px;
   font-weight: 600;
+  color: #16A34A;
+  letter-spacing: 0.5px;
+  animation: livePulse 2s infinite;
+}
+
+@keyframes livePulse {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+/* == Column Headers == */
+.stocks-col-header {
+  display: grid;
+  grid-template-columns: 60px 1fr 160px 160px 120px;
+  padding: 12px 36px;
+  background: #F9FAFB;
+  border-bottom: 1px solid #E5E7EB;
+}
+
+.stocks-col-header span {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  color: #9CA3AF;
+  text-transform: uppercase;
+}
+
+.stocks-col-header .scol-price,
+.stocks-col-header .scol-change,
+.stocks-col-header .scol-trend {
+  text-align: right;
+}
+
+/* == Table Body == */
+.stocks-table-body {
+  max-height: calc(100vh - 360px);
+  overflow-y: auto;
+}
+
+.stocks-table-body::-webkit-scrollbar { width: 5px; }
+.stocks-table-body::-webkit-scrollbar-thumb {
+  background: #E5E7EB;
+  border-radius: 4px;
+}
+
+/* == Table Row == */
+.stocks-table-row {
+  display: grid;
+  grid-template-columns: 60px 1fr 160px 160px 120px;
+  align-items: center;
+  padding: 18px 36px;
+  border-bottom: 1px solid #F3F4F6;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+
+.stocks-table-row:hover { background: #F9FAFB; }
+.stocks-table-row:last-child { border-bottom: none; }
+
+.stocks-table-row.selected {
+  background: #F0FDF4;
+  border-left: 3px solid #16A34A;
+}
+
+.scol-rank {
+  font-size: 16px;
+  font-weight: 700;
+  color: #9CA3AF;
   letter-spacing: 0.5px;
 }
 
-.market-badge.kospi {
-  background: rgba(220, 38, 38, 0.1);
-  color: #DC2626;
+.scol-asset {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  min-width: 0;
 }
 
-.market-badge.kosdaq {
-  background: rgba(37, 99, 235, 0.1);
-  color: #2563EB;
+.stocks-logo-circle {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 800;
+  flex-shrink: 0;
+  line-height: 1.1;
+  text-align: center;
 }
 
-.market-badge.konex {
-  background: rgba(245, 158, 11, 0.1);
-  color: #F59E0B;
-}
-
-.market-badge.etf-badge {
-  background: rgba(21, 128, 61, 0.1);
-  color: #15803d;
-}
-
-.stock-price-info {
+.stocks-asset-info {
   display: flex;
   flex-direction: column;
-  align-items: flex-end;
-  gap: 2px;
+  gap: 3px;
+  min-width: 0;
 }
 
-.stock-price {
+.stocks-asset-name {
   font-size: 15px;
   font-weight: 700;
-  color: #1F2937;
-  text-align: right;
+  color: #111827;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
-.stock-change {
+.stocks-asset-code {
   font-size: 12px;
-  font-weight: 600;
+  color: #9CA3AF;
+  font-family: 'Courier New', monospace;
+}
+
+.scol-price {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111827;
+  text-align: right;
+  letter-spacing: -0.3px;
+}
+
+.scol-change {
+  font-size: 15px;
+  font-weight: 700;
   text-align: right;
 }
 
-.stock-change.positive {
-  color: #DC2626;
+.scol-change.positive { color: #16A34A; }
+.scol-change.negative { color: #DC2626; }
+
+.scol-trend {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
 }
 
-.stock-change.negative {
-  color: #2563EB;
-}
-
-.favorite-btn {
-  display: none;
-}
-
-/* 로딩 상태 */
-.loading-state {
-  padding: 20px 0;
-}
-
-.skeleton-row {
-  height: 72px;
-  background: linear-gradient(90deg, #F7F9F8 25%, #E5E7EB 50%, #F7F9F8 75%);
+/* == Loading / Empty States == */
+.stocks-skeleton-row {
+  height: 76px;
+  background: linear-gradient(90deg, #F9FAFB 25%, #E5E7EB 50%, #F9FAFB 75%);
   background-size: 200% 100%;
   animation: shimmer 1.5s infinite;
-  border-radius: 8px;
-  margin-bottom: 12px;
+  margin: 1px 0;
 }
 
 @keyframes shimmer {
@@ -339,468 +372,34 @@
   100% { background-position: -200% 0; }
 }
 
-/* 빈 상태 */
-.empty-state {
-  padding: 60px 20px;
+.stocks-empty-state {
+  padding: 60px;
   text-align: center;
-}
-
-.empty-icon {
-  font-size: 48px;
-  margin-bottom: 16px;
-  opacity: 0.5;
-}
-
-.empty-state p {
-  font-size: 15px;
   color: #9CA3AF;
-  margin: 0 0 16px 0;
 }
 
-.retry-btn {
-  padding: 10px 20px;
-  background: #6FBF8F;
-  color: white;
+.stocks-empty-state p {
+  font-size: 15px;
+  margin: 0 0 16px;
+}
+
+.stocks-retry-btn {
+  padding: 10px 24px;
+  background: #16A34A;
+  color: #fff;
   border: none;
   border-radius: 8px;
   font-size: 14px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: background 0.2s;
 }
 
-.retry-btn:hover {
-  background: #4F8F6F;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(111, 191, 143, 0.3);
-}
+.stocks-retry-btn:hover { background: #15803D; }
 
-/* 종목 검색 섹션 */
-.stock-search-section {
-  position: relative;
-}
-
-.search-container {
-  position: relative;
-  margin-bottom: 30px;
-}
-
-.search-input-wrapper {
-  position: relative;
-  display: flex;
-  align-items: center;
-}
-
-.search-icon {
-  position: absolute;
-  left: 16px;
-  color: #9CA3AF;
-  pointer-events: none;
-}
-
-.search-input {
-  width: 100%;
-  padding: 14px 48px 14px 48px;
-  border: 2px solid #E5E7EB;
-  border-radius: 12px;
-  font-size: 15px;
-  color: #1F2937;
-  transition: all 0.2s ease;
-  background: white;
-}
-
-.search-input::placeholder {
-  color: #9CA3AF;
-}
-
-.search-input:focus {
-  outline: none;
-  border-color: #6FBF8F;
-  box-shadow: 0 0 0 3px rgba(111, 191, 143, 0.1);
-}
-
-.clear-btn {
-  position: absolute;
-  right: 16px;
-  width: 24px;
-  height: 24px;
-  border: none;
-  background: #9CA3AF;
-  border-radius: 50%;
-  color: white;
-  font-size: 14px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s ease;
-}
-
-.clear-btn:hover {
-  background: #1F2937;
-}
-
-/* 검색 결과 드롭다운 */
-.search-results-dropdown {
-  position: absolute;
-  top: calc(100% + 8px);
-  left: 0;
-  right: 0;
-  background: white;
-  border: 1px solid #E5E7EB;
-  border-radius: 12px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  max-height: 400px;
-  overflow-y: auto;
-  z-index: 10;
-}
-
-.search-result-item {
-  display: grid;
-  grid-template-columns: 40px 1fr auto;
-  gap: 12px;
-  align-items: center;
-  padding: 12px 16px;
-  border-bottom: 1px solid #E5E7EB;
-  cursor: pointer;
-  transition: background 0.2s ease;
-}
-
-.search-result-item:last-child {
-  border-bottom: none;
-}
-
-.search-result-item:hover {
-  background: #F7F9F8;
-}
-
-.result-logo {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 12px;
-  font-weight: 700;
-  color: white;
-  flex-shrink: 0;
+.stocks-scroll-hint {
   text-align: center;
-  padding: 4px;
-  line-height: 1.2;
-  word-break: keep-all;
-}
-
-.result-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  min-width: 0;
-}
-
-.result-name-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.result-name {
-  font-size: 15px;
-  font-weight: 600;
-  color: #1F2937;
-}
-
-.result-code {
   font-size: 12px;
   color: #9CA3AF;
-  font-family: 'Courier New', monospace;
+  padding: 16px 0 12px;
 }
-
-.result-price-info {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  gap: 4px;
-}
-
-.result-price {
-  font-size: 14px;
-  font-weight: 600;
-  color: #1F2937;
-}
-
-.result-change {
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.result-change.positive {
-  color: #DC2626;
-}
-
-.result-change.negative {
-  color: #2563EB;
-}
-
-/* 검색 결과 없음 */
-.no-results {
-  padding: 40px 20px;
-  text-align: center;
-}
-
-.no-results-icon {
-  font-size: 40px;
-  margin-bottom: 12px;
-  opacity: 0.5;
-}
-
-.no-results p {
-  font-size: 15px;
-  font-weight: 600;
-  color: #1F2937;
-  margin: 0 0 8px 0;
-}
-
-.no-results span {
-  font-size: 13px;
-  color: #9CA3AF;
-}
-
-/* 검색 안내 영역 */
-.search-guide {
-  text-align: center;
-  padding: 40px 20px;
-}
-
-.guide-icon {
-  margin-bottom: 24px;
-  display: flex;
-  justify-content: center;
-}
-
-.guide-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: #1F2937;
-  margin: 0 0 12px 0;
-}
-
-.guide-description {
-  font-size: 15px;
-  color: #9CA3AF;
-  margin: 0 0 32px 0;
-  line-height: 1.6;
-}
-
-/* 인기 검색어 */
-.popular-searches {
-  margin-top: 40px;
-  padding-top: 32px;
-  border-top: 1px solid #E5E7EB;
-}
-
-.popular-title {
-  font-size: 14px;
-  font-weight: 600;
-  color: #1F2937;
-  margin: 0 0 16px 0;
-}
-
-.popular-tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  justify-content: center;
-}
-
-.popular-tag {
-  padding: 8px 16px;
-  background: #E8F5EC;
-  border: 1px solid #E5E7EB;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #6FBF8F;
-  cursor: pointer;
-  transition: all 0.2s ease;
-}
-
-.popular-tag:hover {
-  background: #6FBF8F;
-  border-color: #6FBF8F;
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 8px rgba(111, 191, 143, 0.2);
-}
-
-/* 반응형 디자인 */
-
-/* 태블릿 */
-@media (max-width: 1024px) {
-  .stocks-page-header {
-    padding: 32px 40px;
-  }
-
-  .stocks-page-body {
-    padding: 32px 40px;
-    gap: 24px;
-  }
-
-  .page-title {
-    font-size: 28px;
-  }
-
-  .section-card {
-    padding: 24px;
-  }
-
-  .stock-item {
-    grid-template-columns: 36px 52px 1fr auto 36px;
-    gap: 12px;
-    padding: 16px 14px;
-  }
-
-  .stock-logo {
-    width: 52px;
-    height: 52px;
-  }
-
-  .logo-placeholder {
-    font-size: 12px;
-  }
-}
-
-/* 모바일 */
-@media (max-width: 768px) {
-  .stocks-page-header {
-    padding: 24px 20px;
-  }
-
-  .stocks-page-body {
-    padding: 20px;
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .page-title {
-    font-size: 24px;
-  }
-
-  .page-description {
-    font-size: 14px;
-  }
-
-  .section-card {
-    padding: 20px;
-  }
-
-  .section-title {
-    font-size: 18px;
-  }
-
-  .top-stocks-section .section-card {
-    position: static;
-    max-height: none;
-  }
-
-  .stock-item {
-    grid-template-columns: 28px 44px 1fr 36px;
-    gap: 10px;
-    padding: 14px 12px;
-  }
-
-  .stock-rank {
-    font-size: 14px;
-  }
-
-  .stock-logo {
-    width: 44px;
-    height: 44px;
-  }
-
-  .logo-placeholder {
-    font-size: 11px;
-  }
-
-  .stock-name {
-    font-size: 14px;
-  }
-
-  .stock-code {
-    font-size: 12px;
-  }
-
-  .market-badge {
-    font-size: 10px;
-    padding: 2px 6px;
-  }
-
-  .stock-price-info {
-    display: none;
-  }
-
-  .favorite-btn {
-    width: 28px;
-    height: 28px;
-    font-size: 18px;
-  }
-
-  .period-tabs {
-    overflow-x: auto;
-    padding-bottom: 16px;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-  }
-
-  .period-tabs::-webkit-scrollbar {
-    display: none;
-  }
-
-  .period-tab {
-    padding: 6px 14px;
-    font-size: 13px;
-  }
-
-  .search-input {
-    padding: 12px 40px 12px 40px;
-    font-size: 14px;
-  }
-
-  .guide-title {
-    font-size: 18px;
-  }
-
-  .guide-description {
-    font-size: 14px;
-  }
-
-  .popular-tag {
-    padding: 6px 12px;
-    font-size: 13px;
-  }
-}
-
-/* 작은 모바일 */
-@media (max-width: 480px) {
-  .stocks-page-header {
-    padding: 20px 16px;
-  }
-
-  .stocks-page-body {
-    padding: 16px;
-  }
-
-  .page-title {
-    font-size: 20px;
-  }
-
-  .section-card {
-    padding: 16px;
-  }
-
-  .stocks-list {
-    margin: 0 -16px;
-    padding: 0 16px;
-  }
-}
-

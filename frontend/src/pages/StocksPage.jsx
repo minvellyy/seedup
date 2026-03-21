@@ -376,252 +376,162 @@ function StocksPage() {
   // 종목별 고유 색상 생성
   const getStockColor = (code) => {
     const colors = [
-      { bg: '#3B82F6', text: '#FFFFFF' }, // 파랑
-      { bg: '#DC2626', text: '#FFFFFF' }, // 빨강
-      { bg: '#F59E0B', text: '#FFFFFF' }, // 주황
-      { bg: '#10B981', text: '#FFFFFF' }, // 초록
-      { bg: '#8B5CF6', text: '#FFFFFF' }, // 보라
-      { bg: '#EC4899', text: '#FFFFFF' }, // 핑크
-      { bg: '#14B8A6', text: '#FFFFFF' }, // 청록
-      { bg: '#F97316', text: '#FFFFFF' }, // 진한 주황
-      { bg: '#6366F1', text: '#FFFFFF' }, // 인디고
-      { bg: '#EF4444', text: '#FFFFFF' }, // 밝은 빨강
+      { bg: '#3B82F6', text: '#FFFFFF' },
+      { bg: '#DC2626', text: '#FFFFFF' },
+      { bg: '#F59E0B', text: '#FFFFFF' },
+      { bg: '#10B981', text: '#FFFFFF' },
+      { bg: '#8B5CF6', text: '#FFFFFF' },
+      { bg: '#EC4899', text: '#FFFFFF' },
+      { bg: '#14B8A6', text: '#FFFFFF' },
+      { bg: '#F97316', text: '#FFFFFF' },
+      { bg: '#6366F1', text: '#FFFFFF' },
+      { bg: '#EF4444', text: '#FFFFFF' },
     ]
     const hash = code.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0)
     return colors[hash % colors.length]
   }
 
+  // 스파크라인 SVG 경로 생성 (종목코드 기반 결정적 생성)
+  const getTrendPath = (code, changeRate) => {
+    const hash = code.split('').reduce((acc, c) => acc + c.charCodeAt(0), 0)
+    const steps = 8
+    const w = 80
+    const h = 50
+    const xStep = w / (steps - 1)
+    const points = []
+    for (let i = 0; i < steps; i++) {
+      const noise = Math.sin(hash * (i + 1) * 0.71) * 10
+      const trend = (changeRate > 0 ? 1 : -1) * (i / (steps - 1)) * 14
+      points.push(Math.max(6, Math.min(44, 25 + noise + trend - (changeRate > 0 ? 8 : -8))))
+    }
+    return points.map((y, i) => `${i === 0 ? 'M' : 'L'}${(i * xStep).toFixed(1)},${y.toFixed(1)}`).join(' ')
+  }
+
   return (
     <div className="stocks-page">
-      {/* 페이지 헤더 */}
-      <div className="stocks-page-header">
-        <div className="header-content">
-          <h1 className="page-title">실시간 조회</h1>
-          <p className="page-description">실시간으로 거래가 활발한 종목을 확인하고 원하는 종목을 검색해보세요.</p>
+      {/* Editorial Header */}
+      <div className="stocks-editorial-header">
+        <div className="stocks-editorial-inner">
+          <div className="stocks-live-badge">● LIVE MARKET INTELLIGENCE</div>
+          <h1 className="stocks-main-title">
+            실시간 TOP 50<br />
+          </h1>
+          <p className="stocks-subtitle">실시간으로 거래가 활발한 종목을 확인하고 원하는 종목을 검색해보세요</p>
+
+          {/* 검색바 */}
+          <div className="stocks-search-wrap">
+            <svg width="18" height="18" viewBox="0 0 20 20" fill="none" className="stocks-search-icon">
+              <path d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <input
+              type="text"
+              className="stocks-search-input"
+              placeholder="종목명 또는 종목코드 검색..."
+              value={searchKeyword}
+              onChange={(e) => setSearchKeyword(e.target.value)}
+              onFocus={() => searchResults.length > 0 && setShowSearchResults(true)}
+            />
+            {searchKeyword && (
+              <button className="stocks-search-clear" onClick={() => { setSearchKeyword(''); setShowSearchResults(false) }}>✕</button>
+            )}
+            {showSearchResults && searchResults.length > 0 && (
+              <div className="stocks-search-dropdown">
+                {searchResults.map(stock => {
+                  const sc = getStockColor(stock.code)
+                  const dn = stock.name
+                  const lt = dn.length <= 3 ? dn : dn.substring(0, 3)
+                  return (
+                    <div key={stock.code} className="stocks-search-result" onClick={() => handleSearchResultClick(stock)}>
+                      <div className="stocks-result-logo" style={{ background: sc.bg, color: sc.text }}>{lt}</div>
+                      <div className="stocks-result-info">
+                        <span className="stocks-result-name">{dn}</span>
+                        <span className="stocks-result-code">{stock.code}</span>
+                      </div>
+                      <span className={`stocks-result-change ${stock.changeRate >= 0 ? 'positive' : 'negative'}`}>
+                        {formatChangeRate(stock.changeRate)}
+                      </span>
+                    </div>
+                  )
+                })}
+              </div>
+            )}
+            {showSearchResults && searchResults.length === 0 && searchKeyword && (
+              <div className="stocks-search-dropdown">
+                <div className="stocks-no-results">검색 결과가 없습니다</div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
 
-      {/* 메인 컨텐츠 */}
-      <div className="stocks-page-body">
-        {/* 좌측: 거래대금 Top 100 섹션 */}
-        <div className="top-stocks-section">
-          <div className="section-card">
-            <div className="section-header">
-              <h2 className="section-title">거래대금 Top 100</h2>
-              <div className="update-time">실시간 업데이트</div>
-            </div>
+      {/* Table Section */}
+      <div className="stocks-table-section">
+        <div className="stocks-table-inner">
+          <div className="stocks-table-topbar">
+            <h2 className="stocks-table-title">Top Traded Assets</h2>
+            <span className="stocks-live-indicator">● 실시간 업데이트</span>
+          </div>
 
-            {/* 종목 리스트 */}
-            <div className="stocks-list" ref={listRef}>
-              {loading ? (
-                <div className="loading-state">
-                  {[...Array(10)].map((_, i) => (
-                    <div key={i} className="skeleton-row"></div>
-                  ))}
-                </div>
-              ) : error ? (
-                <div className="empty-state">
-                  <div className="empty-icon">⚠️</div>
-                  <p>{error}</p>
-                  <button 
-                    className="retry-btn"
-                    onClick={() => fetchTopStocks(period)}
-                  >
-                    다시 시도
-                  </button>
-                </div>
-              ) : topStocks.length === 0 ? (
-                <div className="empty-state">
-                  <div className="empty-icon">📊</div>
-                  <p>조회 가능한 종목이 없습니다.</p>
-                </div>
-              ) : (
-                topStocks.slice(0, visibleCount).map(stock => {
-                  const stockColor = getStockColor(stock.code)
-                  const displayName = stock.name
-                  const logoText = displayName.length <= 3 ? displayName : displayName.substring(0, 3)
-                  return (
+          {/* Column Header */}
+          <div className="stocks-col-header">
+            <span className="scol-rank">#</span>
+            <span className="scol-asset">ASSET</span>
+            <span className="scol-price">PRICE</span>
+            <span className="scol-change">24H CHANGE</span>
+            <span className="scol-trend">TREND</span>
+          </div>
+
+          {/* Rows */}
+          <div className="stocks-table-body" ref={listRef}>
+            {loading ? (
+              [...Array(8)].map((_, i) => <div key={i} className="stocks-skeleton-row" />)
+            ) : error ? (
+              <div className="stocks-empty-state">
+                <p>⚠️ {error}</p>
+                <button className="stocks-retry-btn" onClick={() => fetchTopStocks(period)}>다시 시도</button>
+              </div>
+            ) : topStocks.length === 0 ? (
+              <div className="stocks-empty-state"><p>조회 가능한 종목이 없습니다.</p></div>
+            ) : (
+              topStocks.slice(0, visibleCount).map(stock => {
+                const sc = getStockColor(stock.code)
+                const dn = stock.name
+                const lt = dn.length <= 3 ? dn : dn.substring(0, 3)
+                const isPos = stock.changeRate >= 0
+                const trendPath = getTrendPath(stock.code, stock.changeRate)
+                return (
                   <div
                     key={stock.code}
-                    className={`stock-item ${selectedStockCode === stock.code ? 'selected' : ''}`}
+                    className={`stocks-table-row ${selectedStockCode === stock.code ? 'selected' : ''}`}
                     onClick={() => handleStockClick(stock.code)}
                   >
-                    <div className="stock-rank">{stock.rank}</div>
-                    
-                    <div className="stock-logo">
-                      <div 
-                        className="logo-placeholder"
-                        style={{ 
-                          background: stockColor.bg,
-                          color: stockColor.text
-                        }}
-                      >
-                        {logoText}
+                    <span className="scol-rank">{String(stock.rank).padStart(2, '0')}</span>
+                    <div className="scol-asset">
+                      <div className="stocks-logo-circle" style={{ background: sc.bg, color: sc.text }}>{lt}</div>
+                      <div className="stocks-asset-info">
+                        <span className="stocks-asset-name">{dn}</span>
+                        <span className="stocks-asset-code">{stock.code}</span>
                       </div>
                     </div>
-
-                    <div className="stock-info">
-                      <div className="stock-name-row">
-                        <span className="stock-name">{displayName}</span>
-                        <span className={`market-badge ${stock.market.toLowerCase()}`}>
-                          {stock.market}
-                        </span>
-                      </div>
-                      <div className="stock-code">{stock.code}</div>
-                    </div>
-
-                    <div className="stock-price-info">
-                      <div className="stock-price">{formatPrice(stock.price)}원</div>
-                      <div className={`stock-change ${stock.changeRate >= 0 ? 'positive' : 'negative'}`}>
-                        {formatChangeRate(stock.changeRate)}
-                      </div>
+                    <span className="scol-price">₩{formatPrice(stock.price)}</span>
+                    <span className={`scol-change ${isPos ? 'positive' : 'negative'}`}>
+                      {formatChangeRate(stock.changeRate)}
+                    </span>
+                    <div className="scol-trend">
+                      <svg width="80" height="40" viewBox="0 0 80 50">
+                        <path d={trendPath} fill="none" stroke={isPos ? '#16A34A' : '#DC2626'} strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round"/>
+                      </svg>
                     </div>
                   </div>
-                  )
-                })
-              )}
-              {/* 무한 스크롤 sentinel */}
-              {!loading && !error && topStocks.length > 0 && (
-                <>
-                  <div ref={sentinelRef} style={{ height: 1 }} />
-                  {visibleCount < topStocks.length && visibleCount < INFINITE_SCROLL_MAX && (
-                    <div className="scroll-load-hint">아래로 스크롤하면 더 보기</div>
-                  )}
-                  {(visibleCount >= topStocks.length || visibleCount >= INFINITE_SCROLL_MAX) && (
-                    <div className="scroll-load-hint">
-                      {topStocks.length <= INFINITE_SCROLL_MAX
-                        ? `전체 ${topStocks.length}개 종목`
-                        : `Top ${INFINITE_SCROLL_MAX} 까지 표시됩니다`}
-                    </div>
-                  )}
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-
-        {/* 우측: 검색 섹션 */}
-        <div className="stock-search-section">
-          <div className="section-card">
-            <div className="section-header">
-              <h2 className="section-title">종목 검색</h2>
-            </div>
-
-            {/* 검색 입력창 */}
-            <div className="search-container">
-              <div className="search-input-wrapper">
-                <svg className="search-icon" width="20" height="20" viewBox="0 0 20 20" fill="none">
-                  <path d="M9 17A8 8 0 1 0 9 1a8 8 0 0 0 0 16zM19 19l-4.35-4.35" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
-                </svg>
-                <input
-                  type="text"
-                  className="search-input"
-                  placeholder="종목명 또는 종목코드를 검색해보세요"
-                  value={searchKeyword}
-                  onChange={(e) => setSearchKeyword(e.target.value)}
-                  onFocus={() => searchResults.length > 0 && setShowSearchResults(true)}
-                />
-                {searchKeyword && (
-                  <button
-                    className="clear-btn"
-                    onClick={() => {
-                      setSearchKeyword('')
-                      setShowSearchResults(false)
-                    }}
-                    aria-label="검색어 지우기"
-                  >
-                    ✕
-                  </button>
-                )}
-              </div>
-
-              {/* 검색 결과 드롭다운 */}
-              {showSearchResults && searchResults.length > 0 && (
-                <div className="search-results-dropdown">
-                  {searchResults.map(stock => {
-                    const stockColor = getStockColor(stock.code)
-                    const displayName = stock.name
-                    const logoText = displayName.length <= 3 ? displayName : displayName.substring(0, 3)
-                    return (
-                    <div
-                      key={stock.code}
-                      className="search-result-item"
-                      onClick={() => handleSearchResultClick(stock)}
-                    >
-                      <div 
-                        className="result-logo"
-                        style={{ 
-                          background: stockColor.bg,
-                          color: stockColor.text
-                        }}
-                      >
-                        {logoText}
-                      </div>
-                      <div className="result-info">
-                        <div className="result-name-row">
-                          <span className="result-name">{displayName}</span>
-                          <span className={`market-badge ${stock.market.toLowerCase()}`}>
-                            {stock.market}
-                          </span>
-                          {stock.assetType === 'ETF' && (
-                            <span className="market-badge etf-badge">ETF</span>
-                          )}
-                        </div>
-                        <div className="result-code">{stock.code}</div>
-                      </div>
-                      <div className="result-price-info">
-                        <div className="result-price">{formatPrice(stock.price)}원</div>
-                        <div className={`result-change ${stock.changeRate >= 0 ? 'positive' : 'negative'}`}>
-                          {formatChangeRate(stock.changeRate)}
-                        </div>
-                      </div>
-                    </div>
-                    )
-                  })}
-                </div>
-              )}
-
-              {/* 검색 결과 없음 */}
-              {showSearchResults && searchResults.length === 0 && searchKeyword && (
-                <div className="search-results-dropdown">
-                  <div className="no-results">
-                    <div className="no-results-icon">🔍</div>
-                    <p>검색 결과가 없습니다.</p>
-                    <span>다른 검색어를 입력해보세요.</span>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* 초기 안내 영역 */}
-            {!searchKeyword && (
-              <div className="search-guide">
-                <div className="guide-icon">
-                  <svg width="64" height="64" viewBox="0 0 64 64" fill="none">
-                    <circle cx="32" cy="32" r="30" fill="#E8F5EE"/>
-                    <path d="M28 42a10 10 0 1 0 0-20 10 10 0 0 0 0 20zM44 44l-5.4-5.4" stroke="#2E7D5B" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round"/>
-                  </svg>
-                </div>
-                <p className="guide-description">
-                  종목명 또는 종목코드를 입력하면<br />
-                  실시간 검색 결과를 확인할 수 있습니다.
-                </p>
-                
-                {/* 인기 검색어 */}
-                <div className="popular-searches">
-                  <h4 className="popular-title">인기 검색어</h4>
-                  <div className="popular-tags">
-                    {['삼성전자', 'SK하이닉스', 'NAVER', '카카오', '현대차'].map((keyword, index) => (
-                      <button
-                        key={index}
-                        className="popular-tag"
-                        onClick={() => setSearchKeyword(keyword)}
-                      >
-                        {keyword}
-                      </button>
-                    ))}
-                  </div>
-                </div>
+                )
+              })
+            )}
+            <div ref={sentinelRef} style={{ height: 1 }} />
+            {!loading && !error && topStocks.length > 0 && (
+              <div className="stocks-scroll-hint">
+                {visibleCount >= topStocks.length || visibleCount >= INFINITE_SCROLL_MAX
+                  ? `Top ${Math.min(topStocks.length, INFINITE_SCROLL_MAX)} 종목 표시 중`
+                  : '아래로 스크롤하면 더 보기'}
               </div>
             )}
           </div>
