@@ -92,6 +92,25 @@
   color: #333;
 }
 
+.nav-item.nav-avatar {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 4px;
+  color: #555;
+  border-radius: 50%;
+  transition: background 0.2s, color 0.2s;
+}
+
+.nav-item.nav-avatar:hover {
+  background: #f0f0f0;
+  color: #333;
+}
+
+.nav-item.nav-avatar.disabled {
+  color: #d0d0d0;
+}
+
 .nav-item.disabled {
   color: #d0d0d0;
   cursor: not-allowed;

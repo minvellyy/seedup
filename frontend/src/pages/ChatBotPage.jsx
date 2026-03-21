@@ -441,7 +441,7 @@ const ChatBotPage = () => {
       <div className="chatbot-main">
         <div className="chat-header">
           <div>
-            <div className="chat-title">투자 전문 AI 어시스턴트</div>
+            <div className="chat-title">투자 전문 AI Assistant</div>
             <div className="chat-subtitle">개인화된 투자 상담 및 포트폴리오 관리</div>
           </div>
           

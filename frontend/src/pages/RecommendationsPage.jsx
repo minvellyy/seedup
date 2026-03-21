@@ -11,6 +11,30 @@ const COLOR_PALETTE = [
 const fmtPct = (v) => (v == null ? '-' : `${v >= 0 ? '+' : ''}${v.toFixed(1)}%`)
 const fmtNum = (v) => (v == null ? '-' : new Intl.NumberFormat('ko-KR').format(Math.round(v)))
 
+function buildPieSlices(items, palette) {
+  const total = items.reduce((s, it) => s + it.weight_pct, 0)
+  let cumAngle = -Math.PI / 2
+  return items.map((item, idx) => {
+    const angle = (item.weight_pct / total) * 2 * Math.PI
+    const x1 = Math.cos(cumAngle)
+    const y1 = Math.sin(cumAngle)
+    cumAngle += angle
+    const x2 = Math.cos(cumAngle)
+    const y2 = Math.sin(cumAngle)
+    const large = angle > Math.PI ? 1 : 0
+    const path = `M 0 0 L ${x1} ${y1} A 1 1 0 ${large} 1 ${x2} ${y2} Z`
+    return { path, color: palette[idx % palette.length], name: item.name, pct: item.weight_pct }
+  })
+}
+
+function getGrowthBadge(item) {
+  const vol = item.features?.vol_ann ?? 0
+  const ret = item.features?.ret_3m ?? 0
+  if (vol > 0.4) return { label: 'Volatile Growth', cls: 'badge-volatile' }
+  if (ret > 0.08) return { label: 'High Momentum', cls: 'badge-momentum' }
+  return { label: 'Stable Growth', cls: 'badge-stable' }
+}
+
 function RecommendationsPage() {
   const [stockData, setStockData] = useState(null)
   const [portfolioData, setPortfolioData] = useState(null)
@@ -95,16 +119,16 @@ function RecommendationsPage() {
   }
 
   if (loading) return (
-    <div className="recommendations-page">
-      <div className="loading-container">
+    <div className="rec-page">
+      <div className="rec-loading-box">
         <div className="loading-spinner"></div>
         <p>추천 데이터를 불러오는 중...</p>
       </div>
     </div>
   )
   if (error) return (
-    <div className="recommendations-page">
-      <div className="error-message">{error}</div>
+    <div className="rec-page">
+      <div className="rec-error-box">{error}</div>
     </div>
   )
 
@@ -113,122 +137,125 @@ function RecommendationsPage() {
     : []
 
   return (
-    <div className="recommendations-page">
-      <div className="recommendations-container">
+    <div className="rec-page">
 
-        {/* 투자성향 배지 */}
-        {stockData && (
-          <div className="rec-profile-banner">
-            <span className="rec-risk-grade">{stockData.risk_grade}</span>
-            <span className="rec-risk-tier">{stockData.risk_tier} 맞춤 추천</span>
-            <span className="rec-generated-at">{stockData.generated_at?.slice(0, 10)} 기준</span>
-          </div>
-        )}
+      {/* ── Editorial Header ── */}
+      <div className="rec-editorial-header">
+        <div className="rec-editorial-inner">
+          <span className="rec-premium-badge">PREMIUM EDITORIAL</span>
+          <h1 className="rec-main-title">
+            맞춤 추천 Top {stockData?.items?.length ?? 0}
+          </h1>
+          <p className="rec-main-subtitle">
+            성장 잠재력과 재무 건전성을 바탕으로 엄선된,<br />
+            {stockData?.risk_tier} 투자자를 위한 프리미엄 추천 종목 리스트입니다.
+          </p>
+        </div>
+      </div>
 
-        {/* ── 종목 추천 섹션 ── */}
-        <section className="stocks-section">
-          <div className="section-title-row">
-            <h1 className="section-title">종목 Top {stockData?.items?.length ?? 0}</h1>
-            <button
-              className="analysis-btn"
-              onClick={refreshStocks}
-              disabled={stockLoading}
-            >
-              {stockLoading ? (
-                <><span className="analysis-btn-spinner" />분석 중...</>
-              ) : '종목 분석'}
-            </button>
-          </div>
-          <p className="section-subtitle">투자성향 기반 개별 종목 추천</p>
+      {/* ── 종목 카드 섹션 ── */}
+      <div className="rec-cards-section">
+        <div className="rec-cards-inner">
+          <div className="rec-cards-grid">
+            {stockData?.items?.map((item) => {
+              const score = Math.round(item.total_score * 100)
+              const barPct = Math.min(score / 10, 100)
+              const badge = getGrowthBadge(item)
+              const vol = item.features?.vol_ann
+              return (
+                <div key={item.ticker} className="rec-card">
+                  {/* 카드 헤더 */}
+                  <div className="rec-card-header">
+                    <div className="rec-card-name-row">
+                      <span className="rec-card-name">{item.name}</span>
+                      <span className="rec-card-code">{item.ticker}</span>
+                    </div>
+                    <div className="rec-card-market">{item.market}</div>
+                  </div>
 
-          <div className="stocks-list">
-            {stockData?.items?.map((item) => (
-              <div
-                key={item.ticker}
-                className="stock-card"
-                onClick={() => navigate(`/stock/${item.ticker}`, {
-                  state: { stockItem: item, riskTier: stockData.risk_tier }
-                })}
-              >
-                <div className="stock-header">
-                  <div className="stock-rank">#{item.rank}</div>
-                  <div className="stock-info">
-                    <h2 className="stock-name">{item.name}</h2>
-                    <div style={{ display: 'flex', gap: 8, alignItems: 'center', marginTop: 4 }}>
-                      <span className="stock-code">{item.ticker}</span>
-                      <span className="rec-market-badge">{item.market}</span>
+                  <hr className="rec-divider" />
+
+                  {/* 추천 점수 */}
+                  <div className="rec-score-section">
+                    <div className="rec-score-header">
+                      <span className="rec-score-label">Recommendation Score</span>
+                      <span className="rec-score-num">
+                        {score} <span className="rec-score-total">/ 1000</span>
+                      </span>
+                    </div>
+                    <div className="rec-score-bar-bg">
+                      <div className="rec-score-bar-fill" style={{ width: `${barPct}%` }} />
                     </div>
                   </div>
-                </div>
 
-                {/* 추천 점수 바 */}
-                <div className="rec-score-row">
-                  <span className="rec-score-label">추천 점수</span>
-                  <div className="rec-score-bar-bg">
-                    <div
-                      className="rec-score-bar-fill"
-                      style={{ width: `${Math.round(item.total_score * 100)}%` }}
-                    />
+                  {/* 변동성 지수 */}
+                  {vol != null && (
+                    <div className="rec-vol-box">
+                      <span className="rec-vol-label">변동성 지수</span>
+                      <span className="rec-vol-value">
+                        ± {(vol * 100).toFixed(1)}%
+                        <span className="rec-vol-trend">
+                          {vol > 0.3 ? ' ▲' : vol > 0.15 ? ' →' : ' ↘'}
+                        </span>
+                      </span>
+                    </div>
+                  )}
+
+                  {/* WHY RECOMMEND */}
+                  <div className="rec-why">
+                    <div className="rec-why-title">WHY RECOMMEND</div>
+                    <ul className="rec-why-list">
+                      {item.reasons.slice(0, 2).map((r, i) => (
+                        <li key={i}>
+                          <span className="rec-check-icon">✓</span>
+                          {r}
+                        </li>
+                      ))}
+                    </ul>
                   </div>
-                  <span className="rec-score-value">{Math.round(item.total_score * 100)}</span>
-                </div>
 
-                {/* 주요 지표 */}
-                <div className="rec-features">
-                  {item.features.ret_3m != null && (
-                    <div className="rec-feature-chip">
-                      <span>3개월수익</span>
-                      <strong style={{ color: item.features.ret_3m >= 0 ? '#EA580C' : '#3B82F6' }}>
-                        {fmtPct(item.features.ret_3m * 100)}
-                      </strong>
-                    </div>
-                  )}
-                  {item.features.vol_ann != null && (
-                    <div className="rec-feature-chip">
-                      <span>연변동성</span>
-                      <strong>{fmtPct(item.features.vol_ann * 100)}</strong>
-                    </div>
-                  )}
-                  {item.features.beta != null && (
-                    <div className="rec-feature-chip">
-                      <span>베타</span>
-                      <strong>{item.features.beta.toFixed(2)}</strong>
-                    </div>
-                  )}
+                  {/* 리포트 버튼 */}
+                  <button
+                    className="rec-report-btn"
+                    onClick={() => navigate(`/stock/${item.ticker}`, {
+                      state: { stockItem: item, riskTier: stockData.risk_tier }
+                    })}
+                  >
+                    상세 분석 리포트 보기
+                  </button>
                 </div>
-
-                {/* 추천 근거 (1~2줄) */}
-                <div className="stock-recommendation">
-                  <h3 className="recommendation-title">추천 이유</h3>
-                  <ul className="rec-reasons-list">
-                    {item.reasons.slice(0, 2).map((r, i) => (
-                      <li key={i}>{r}</li>
-                    ))}
-                  </ul>
-                </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
-        </section>
 
-        {/* ── 포트폴리오 추천 섹션 ── */}
-        <section className="portfolios-section">
-          <div className="section-title-row">
-            <h1 className="section-title">나의 맞춤 포트폴리오</h1>
-            <button
-              className="analysis-btn"
-              onClick={refreshPortfolio}
-              disabled={portfolioLoading}
-            >
-              {portfolioLoading ? (
-                <><span className="analysis-btn-spinner" />분석 중...</>
-              ) : '포트폴리오 분석'}
+          {/* 종목 갱신 */}
+          <div className="rec-refresh-row">
+            <button className="rec-refresh-btn" onClick={refreshStocks} disabled={stockLoading}>
+              {stockLoading
+                ? <><span className="analysis-btn-spinner" /> 분석 중...</>
+                : '🔄 종목 다시 분석'}
             </button>
           </div>
-          <p className="section-subtitle">투자성향·설문 기반 최적 구성</p>
+        </div>
+      </div>
+
+      {/* ── 포트폴리오 섹션 ── */}
+      <div className="rec-portfolio-section">
+        <div className="rec-portfolio-inner">
+          <div className="rec-portfolio-header-row">
+            <div>
+              <h2 className="rec-portfolio-title">나의 맞춤 포트폴리오</h2>
+              <p className="rec-portfolio-sub">투자성향·설문 기반 최적 구성</p>
+            </div>
+            <button className="rec-refresh-btn" onClick={refreshPortfolio} disabled={portfolioLoading}>
+              {portfolioLoading
+                ? <><span className="analysis-btn-spinner" /> 분석 중...</>
+                : '🔄 포트폴리오 분석'}
+            </button>
+          </div>
 
           {portfolioLoading && !portfolioData && (
-            <div className="loading-container" style={{ padding: '40px 0' }}>
+            <div className="rec-loading-box">
               <div className="loading-spinner"></div>
               <p>포트폴리오를 구성하는 중입니다...</p>
             </div>
@@ -236,47 +263,44 @@ function RecommendationsPage() {
 
           {portfolioData && (
             <div
-              className="portfolio-card"
+              className="rec-portfolio-card"
               onClick={() => navigate('/portfolio/recommendation', { state: { portfolioData } })}
             >
-              <div className="portfolio-header">
-                <div className="portfolio-info">
-                  <h2 className="portfolio-name">
-                    {portfolioData.risk_grade} · {portfolioData.risk_tier}
-                  </h2>
-                  <div className="portfolio-meta" style={{ gap: 16 }}>
-                    {portfolioData.performance_3y && (
-                      <>
-                        <span className="expected-return">
-                          연환산 수익률: <strong style={{ color: '#EA580C' }}>
-                            {fmtPct(portfolioData.performance_3y.ann_return_pct)}
-                          </strong>
-                        </span>
-                        <span className="expected-return">
-                          샤프: <strong>{portfolioData.performance_3y.sharpe.toFixed(2)}</strong>
-                        </span>
-                      </>
-                    )}
+              <div className="rec-portfolio-card-header">
+                <h3 className="rec-portfolio-card-name">
+                  {portfolioData.risk_grade} · {portfolioData.risk_tier}
+                </h3>
+                {portfolioData.performance_3y && (
+                  <div className="rec-portfolio-meta">
+                    <span>연환산 수익률&nbsp;
+                      <strong style={{ color: '#1B4332' }}>
+                        {fmtPct(portfolioData.performance_3y.ann_return_pct)}
+                      </strong>
+                    </span>
+                    <span>샤프&nbsp;
+                      <strong>{portfolioData.performance_3y.sharpe.toFixed(2)}</strong>
+                    </span>
                   </div>
-                </div>
+                )}
               </div>
 
-              {/* 자산 배분 바 */}
-              <div className="portfolio-allocation">
-                <h3 className="allocation-title">구성 종목 비중</h3>
-                <div className="allocation-bar">
-                  {sortedPortfolioItems.map((item, idx) => (
-                    <div
-                      key={item.ticker}
-                      className="allocation-segment"
-                      style={{
-                        width: `${item.weight_pct}%`,
-                        backgroundColor: COLOR_PALETTE[idx % COLOR_PALETTE.length],
-                      }}
-                      title={`${item.name}: ${item.weight_pct.toFixed(1)}%`}
-                    />
+              <div className="rec-pie-layout">
+                {/* SVG 파이차트 */}
+                <svg className="rec-pie-svg" viewBox="-1.1 -1.1 2.2 2.2">
+                  {buildPieSlices(sortedPortfolioItems, COLOR_PALETTE).map((slice, i) => (
+                    <path
+                      key={i}
+                      d={slice.path}
+                      fill={slice.color}
+                      stroke="#fff"
+                      strokeWidth="0.03"
+                    >
+                      <title>{slice.name}: {slice.pct.toFixed(1)}%</title>
+                    </path>
                   ))}
-                </div>
+                </svg>
+
+                {/* 범례 */}
                 <div className="allocation-list">
                   {sortedPortfolioItems.slice(0, 6).map((item, idx) => (
                     <div key={item.ticker} className="allocation-item">
@@ -293,20 +317,18 @@ function RecommendationsPage() {
                 </div>
               </div>
 
-              {/* 요약 */}
               <div className="portfolio-recommendation">
-                <h3 className="recommendation-title">포트폴리오 요약</h3>
                 <p className="recommendation-text">{portfolioData.overall_summary}</p>
               </div>
 
-              <div style={{ textAlign: 'center', marginTop: 16 }}>
-                <span className="rec-detail-link">상세 보기 →</span>
-              </div>
+              <button className="rec-report-btn" style={{ marginTop: 20 }}>
+                포트폴리오 상세 보기 →
+              </button>
             </div>
           )}
-        </section>
-
+        </div>
       </div>
+
     </div>
   )
 }

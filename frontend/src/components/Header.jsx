@@ -51,15 +51,17 @@ function Header() {
           </div>
           <nav className="nav-menu">
             <div className="nav-left">
-              <button className="nav-item disabled" disabled>홈</button>
-              <button className="nav-item disabled" disabled>포트폴리오</button>
-              <button className="nav-item disabled" disabled>개별종목</button>
-              <button className="nav-item disabled" disabled>챗봇</button>
-              <button className="nav-item disabled" disabled>고객센터</button>
+              <button className="nav-item disabled" disabled>Home</button>
+              <button className="nav-item disabled" disabled>Portfolio</button>
+              <button className="nav-item disabled" disabled>Stocks</button>
+              <button className="nav-item disabled" disabled>Chatbot</button>
+              <button className="nav-item disabled" disabled>Support</button>
             </div>
             <div className="nav-right">
-              <button className="nav-item disabled" disabled>로그아웃</button>
-              <button className="nav-item disabled" disabled>마이페이지</button>
+              <button className="nav-item disabled" disabled>Logout</button>
+              <button className="nav-item nav-avatar disabled" disabled>
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+              </button>
             </div>
           </nav>
         </div>
@@ -77,15 +79,17 @@ function Header() {
           </div>
           <nav className="nav-menu">
             <div className="nav-left">
-              <button className="nav-item" onClick={() => handleNavClick('/')}>홈</button>
-              <button className="nav-item" onClick={() => handleNavClick('/recommendations')}>포트폴리오</button>
-              <button className="nav-item" onClick={() => handleNavClick('/stocks')}>개별종목</button>
-              <button className="nav-item" onClick={() => handleNavClick('/chat')}>챗봇</button>
-              <button className="nav-item" onClick={() => handleNavClick('/support')}>고객센터</button>
+              <button className="nav-item" onClick={() => handleNavClick('/')}>Home</button>
+              <button className="nav-item" onClick={() => handleNavClick('/recommendations')}>Portfolio</button>
+              <button className="nav-item" onClick={() => handleNavClick('/stocks')}>Stocks</button>
+              <button className="nav-item" onClick={() => handleNavClick('/chat')}>Chatbot</button>
+              <button className="nav-item" onClick={() => handleNavClick('/support')}>Support</button>
             </div>
             <div className="nav-right">
-              <button className="nav-item logout-btn" onClick={handleLogout}>로그아웃</button>
-              <button className="nav-item" onClick={() => handleNavClick('/mypage')}>마이페이지</button>
+              <button className="nav-item logout-btn" onClick={handleLogout}>Logout</button>
+              <button className="nav-item nav-avatar" onClick={() => handleNavClick('/mypage')}>
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="8" r="4"/><path d="M4 20c0-4 3.6-7 8-7s8 3 8 7"/></svg>
+              </button>
             </div>
           </nav>
         </div>
@@ -106,13 +110,13 @@ function Header() {
               className="nav-item"
               onClick={() => handleNavClick('/about')}
             >
-              서비스 소개
+              About
             </button>
             <button 
               className="nav-item"
               onClick={() => handleNavClick('/support')}
             >
-              고객센터
+              Support
             </button>
           </div>
           <div className="nav-right">
@@ -122,7 +126,7 @@ function Header() {
                   className="nav-item logout-btn"
                   onClick={handleLogout}
                 >
-                  로그아웃
+                  Logout
                 </button>
               </>
             ) : (
@@ -131,13 +135,13 @@ function Header() {
                   className="nav-item"
                   onClick={() => handleNavClick('/login')}
                 >
-                  로그인
+                  Login
                 </button>
                 <button 
                   className="nav-item"
                   onClick={() => handleNavClick('/signup')}
                 >
-                  회원가입
+                  Sign Up
                 </button>
               </>
             )}
