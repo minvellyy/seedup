@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import './ETFDetailPage.css'
+import AnalysisProgressBar from '../components/AnalysisProgressBar'
 
 // ── 포매터 ──────────────────────────────────────────────────────────────────
 const fmtPrice = (v) => v == null ? '-' : Number(v).toLocaleString('ko-KR') + '원'
@@ -12,6 +13,8 @@ const fmtAum   = (v) => {
 
 // ── 캔들스틱 차트 ─────────────────────────────────────────────────────────
 function CandlestickChart({ data, days = 30 }) {
+  const [tooltip, setTooltip] = useState(null)
+
   if (!data || data.length < 2) return null
   const items = data.slice(-days)
   const hasOHLC = items.some(d => d.open != null && d.high != null && d.low != null)
@@ -36,7 +39,22 @@ function CandlestickChart({ data, days = 30 }) {
   const dlabels = [0, Math.floor(n / 2), n - 1]
 
   return (
-    <div className="etf-candle-wrap">
+    <div className="etf-candle-wrap" style={{ position: 'relative' }}>
+      {tooltip && (
+        <div
+          className="etf-candle-tooltip"
+          style={{
+            left: tooltip.pct > 70 ? 'auto' : `${tooltip.pct}%`,
+            right: tooltip.pct > 70 ? `${100 - tooltip.pct}%` : 'auto',
+          }}
+        >
+          <div className="etf-candle-tooltip-date">{tooltip.d.date}</div>
+          <div className="etf-candle-tooltip-row"><span>시가</span><span>{tooltip.d.open != null ? tooltip.d.open.toLocaleString('ko-KR') + '원' : '-'}</span></div>
+          <div className="etf-candle-tooltip-row"><span>고가</span><span className="up">{tooltip.d.high != null ? tooltip.d.high.toLocaleString('ko-KR') + '원' : '-'}</span></div>
+          <div className="etf-candle-tooltip-row"><span>저가</span><span className="down">{tooltip.d.low != null ? tooltip.d.low.toLocaleString('ko-KR') + '원' : '-'}</span></div>
+          <div className="etf-candle-tooltip-row"><span>종가</span><span>{tooltip.d.close != null ? tooltip.d.close.toLocaleString('ko-KR') + '원' : '-'}</span></div>
+        </div>
+      )}
       <svg viewBox={`0 0 ${W} ${H}`} width="100%" style={{ display: 'block' }}>
         {items.map((d, i) => {
           const x = padL + i * step + step / 2
@@ -48,8 +66,14 @@ function CandlestickChart({ data, days = 30 }) {
           const lowY   = sy(hasOHLC ? (d.low  ?? d.close) : d.close)
           const bodyTop = Math.min(openY, closeY)
           const bodyH   = Math.max(Math.abs(openY - closeY), 1)
+          const pct = ((x - padL) / plotW) * 100
           return (
-            <g key={i}>
+            <g key={i}
+              onMouseEnter={() => setTooltip({ d, pct })}
+              onMouseLeave={() => setTooltip(null)}
+              style={{ cursor: 'crosshair' }}
+            >
+              <rect x={x - step / 2} y={padT} width={step} height={plotH} fill="transparent" />
               <line x1={x} y1={highY} x2={x} y2={lowY} stroke={color} strokeWidth={1.5} />
               <rect x={x - barW / 2} y={bodyTop} width={barW} height={bodyH} fill={color} />
             </g>
@@ -119,6 +143,7 @@ function ETFDetailPage() {
   const etfItem  = state?.etfItem
   const riskTier = state?.riskTier
 
+  const [chartDays,       setChartDays]       = useState(30)
   const [detail,          setDetail]          = useState(null)
   const [loading,         setLoading]         = useState(true)
   const [error,           setError]           = useState(null)
@@ -145,7 +170,7 @@ function ETFDetailPage() {
   useEffect(() => {
     if (!etfCode) return
     setHoldingsLoading(true)
-    fetch(`/api/instruments/etfs/${etfCode}/holdings?limit=25`)
+    fetch(`/api/instruments/etfs/${etfCode}/holdings?limit=10`)
       .then(r => r.ok ? r.json() : [])
       .then(data => { setHoldings(data); setHoldingsLoading(false) })
       .catch(() => setHoldingsLoading(false))
@@ -339,22 +364,35 @@ function ETFDetailPage() {
         {/* ── 2. 주가 차트 ─────────────────────────────────────────── */}
         {detail.price_history.length > 1 && (
           <section className="etf-section">
-            <h2 className="etf-section-heading">NAV 차트 (최근 30일)</h2>
-            <CandlestickChart data={detail.price_history} days={30} />
+            <div className="etf-chart-header">
+              <h2 className="etf-section-heading" style={{ margin: 0, borderBottom: 'none', paddingBottom: 0 }}>NAV 차트</h2>
+              <div className="etf-chart-tabs">
+                {[
+                  { label: '1W', days: 7 },
+                  { label: '1M', days: 30 },
+                  { label: '3M', days: 90 },
+                  { label: '6M', days: 180 },
+                  { label: '1Y', days: 365 },
+                ].map(({ label, days }) => (
+                  <button
+                    key={days}
+                    className={`etf-chart-tab${chartDays === days ? ' active' : ''}`}
+                    onClick={() => setChartDays(days)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <CandlestickChart data={detail.price_history} days={chartDays} />
           </section>
         )}
 
         {/* ── 3. 투자 원칙 적합도 ──────────────────────────────────── */}
-        {(fitScore != null || fitSummary) && (
+        {(fitSummary || fitReasons.length > 0) && (
           <section className="etf-fit-section">
             <h2 className="etf-section-heading">내 투자 원칙 적합도 분석</h2>
             <div className="etf-fit-container">
-              {fitScore != null && (
-                <div className="etf-fit-score-box">
-                  <div className="etf-fit-score">{fitScore}</div>
-                  <div className="etf-fit-score-label">적합도 점수</div>
-                </div>
-              )}
               <div className="etf-fit-details">
                 {fitSummary && <p className="etf-fit-summary">{fitSummary}</p>}
                 {fitReasons.length > 0 && (
@@ -385,7 +423,7 @@ function ETFDetailPage() {
         <section className="etf-analysis-section">
           <h2 className="etf-section-heading">ETF 종합 분석</h2>
           {analysisLoading && etfBullets.length === 0
-            ? <Skeleton rows={5} />
+            ? <AnalysisProgressBar loading={analysisLoading} />
             : etfBullets.length > 0
               ? (
                 <ul className="etf-analysis-list">
@@ -405,9 +443,9 @@ function ETFDetailPage() {
           }
         </section>
 
-        {/* ── 6. 포트폴리오 TOP 25 ─────────────────────────────────── */}
+        {/* ── 6. ETF 구성 Top10 ────────────────────────────────────── */}
         <section className="etf-section">
-          <h2 className="etf-section-heading">포트폴리오 TOP 25</h2>
+          <h2 className="etf-section-heading">ETF 구성 Top10</h2>
           {holdingsLoading ? (
             <Skeleton rows={5} />
           ) : holdings.length > 0 ? (
@@ -418,7 +456,7 @@ function ETFDetailPage() {
                     <th>순위</th>
                     <th>구분</th>
                     <th>종목명</th>
-                    <th>편입비중(%)</th>
+                    <th>편입비중</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -428,13 +466,7 @@ function ETFDetailPage() {
                       <td className="etf-holdings-type">{h.asset_type}</td>
                       <td className="etf-holdings-name">{h.name}</td>
                       <td className="etf-holdings-weight">
-                        <div className="etf-weight-bar-wrap">
-                          <div
-                            className="etf-weight-bar"
-                            style={{ width: `${Math.min(h.weight * 5, 100)}%` }}
-                          />
-                          <span>{Number(h.weight).toFixed(2)}</span>
-                        </div>
+                        {Number(h.weight).toFixed(2)}%
                       </td>
                     </tr>
                   ))}

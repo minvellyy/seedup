@@ -2,6 +2,7 @@
 import { useParams, useNavigate, useLocation } from 'react-router-dom'
 import './StockDetailPage.css'
 import { TermText, DynamicTermProvider } from '../components/TermTooltip'
+import AnalysisProgressBar from '../components/AnalysisProgressBar'
 
 // ── AI 텍스트 내 1인칭 → 이름으로 치환 ─────────────────────────────────────
 const personalizeText = (text, name) => {
@@ -326,6 +327,7 @@ function StockDetailPage() {
   const userName  = localStorage.getItem('name') || '회원'
   const riskTier  = state?.riskTier
 
+  const [chartDays,        setChartDays]        = useState(30)
   const [detail,           setDetail]           = useState(null)
   const [loading,          setLoading]          = useState(true)
   const [error,            setError]            = useState(null)
@@ -693,11 +695,30 @@ function StockDetailPage() {
           </section>
         )}
 
-        {/* ── 3. 주가 차트 (최근 30일) ──────────────────────────── */}
+        {/* ── 3. 주가 차트 ──────────────────────────────────────── */}
         {detail.price_history.length > 1 && (
           <section className="sd-section">
-            <h2 className="sd-section-heading">주가 차트</h2>
-            <CandlestickChart data={detail.price_history} days={30} />
+            <div className="sd-chart-header">
+              <h2 className="sd-section-heading" style={{ margin: 0, borderBottom: 'none', paddingBottom: 0 }}>주가 차트</h2>
+              <div className="sd-chart-tabs">
+                {[
+                  { label: '1W', days: 7 },
+                  { label: '1M', days: 30 },
+                  { label: '3M', days: 90 },
+                  { label: '6M', days: 180 },
+                  { label: '1Y', days: 365 },
+                ].map(({ label, days }) => (
+                  <button
+                    key={days}
+                    className={`sd-chart-tab${chartDays === days ? ' active' : ''}`}
+                    onClick={() => setChartDays(days)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
+            <CandlestickChart data={detail.price_history} days={chartDays} />
           </section>
         )}
 
@@ -775,7 +796,7 @@ function StockDetailPage() {
         <section className="industry-analysis-section">
           <h2 className="section-heading">기업/산업 분석</h2>
           {analysisLoading && industryBullets.length === 0
-            ? <Skeleton rows={4} />
+            ? <AnalysisProgressBar loading={analysisLoading} />
             : industryBullets.length > 0
               ? (
                 <ul className="analysis-list">
@@ -870,7 +891,7 @@ function StockDetailPage() {
           <section className="recommendation-section">
             <h2 className="section-heading">추천 이유</h2>
             {analysisLoading && !recText
-              ? <Skeleton rows={2} />
+              ? <p className="sd-analysis-pending" style={{ fontSize: 13, color: '#9ca3af' }}>기업/산업 분석이 완료되면 표시됩니다.</p>
               : recText && (
                 <div className="recommendation-box">
                   <p className="recommendation-detail"><TermText text={recText} /></p>

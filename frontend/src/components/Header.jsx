@@ -20,6 +20,7 @@ function Header() {
     location.pathname === '/support' ||
     location.pathname === '/stocks' ||
     location.pathname.startsWith('/stock/') ||
+    location.pathname.startsWith('/etf/') ||
     location.pathname.startsWith('/portfolio/')
   )
   

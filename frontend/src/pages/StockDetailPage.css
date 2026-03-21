@@ -1345,6 +1345,42 @@
   .sd-current-price { font-size: 24px; }
 }
 
+/* ── 차트 헤더 (제목 + 기간 탭) ─────────────────────────────────────────── */
+.sd-chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid #fff3e0;
+}
+
+.sd-chart-tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.sd-chart-tab {
+  background: #f3f4f6;
+  color: #555;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.88em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.sd-chart-tab:hover {
+  background: #fff3e0;
+  color: #EA580C;
+}
+.sd-chart-tab.active {
+  background: #EA580C;
+  color: white;
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.3);
+}
+
 /* ── 캔들스틱 차트 ─────────────────────────────────────────────────────── */
 .sd-candle-wrap {
   width: 100%;

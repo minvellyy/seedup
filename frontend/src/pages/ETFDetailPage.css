@@ -1,3 +1,4 @@
+/* ── 페이지 레이아웃 ─────────────────────────────────────────────────────── */
 .etf-detail-page {
   min-height: 100vh;
   background: linear-gradient(135deg, #fafafa 0%, #f5f5f5 100%);
@@ -9,68 +10,88 @@
   margin: 0 auto;
 }
 
-/* ── 뒤로 가기 버튼 ─────────────────────────────────────────── */
+/* ── 뒤로 가기 버튼 ─────────────────────────────────────────────────────── */
 .etf-back-btn {
   background: white;
-  color: #F97316;
+  color: #333;
   border: 2px solid #F97316;
-  padding: 10px 22px;
-  border-radius: 30px;
-  font-size: 0.95em;
-  font-weight: 600;
+  padding: 8px 18px;
+  border-radius: 25px;
+  font-size: 1em;
   cursor: pointer;
-  transition: all 0.3s ease;
-  margin-bottom: 28px;
+  transition: all 0.2s ease;
+  margin-bottom: 24px;
   display: inline-block;
 }
-.etf-back-btn:hover {
-  background: #F97316;
-  color: white;
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(249, 115, 22, 0.3);
-}
+.etf-back-btn:hover { background: #F97316; color: white; }
 
-/* ── 로딩 / 에러 ─────────────────────────────────────────────── */
-.etf-loading,
+/* ── 로딩 / 에러 ─────────────────────────────────────────────────────────── */
+.etf-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 80px 20px;
+  gap: 20px;
+}
+.etf-loading p { font-size: 17px; color: #888; margin: 0; }
+
 .etf-error-box {
-  text-align: center;
-  padding: 60px 20px;
-  color: #666;
-  font-size: 1.1em;
-}
-
-/* ── 헤더 ─────────────────────────────────────────────────────── */
-.etf-detail-header {
   background: white;
   border-radius: 16px;
-  padding: 28px 32px;
-  margin-bottom: 24px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  padding: 40px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+  max-width: 500px;
+  margin: 60px auto;
+}
+.etf-error-box p { color: #7f8c8d; margin-bottom: 20px; }
+
+/* ── 헤더 ────────────────────────────────────────────────────────────────── */
+.etf-detail-header {
+  background: white;
+  border-radius: 20px;
+  padding: 32px;
+  margin-bottom: 30px;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+  border: 1px solid #f5f5f5;
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
-  gap: 24px;
   flex-wrap: wrap;
+  gap: 24px;
+  transition: all 0.3s ease;
+}
+.etf-detail-header:hover {
+  box-shadow: 0 6px 30px rgba(0,0,0,0.12);
 }
 
-.etf-header-left { flex: 1; min-width: 200px; }
+.etf-header-left {
+  flex: 1;
+  min-width: 200px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
 
 .etf-rank-badge {
   display: inline-block;
   background: linear-gradient(135deg, #F97316, #EA580C);
   color: white;
-  font-size: 0.8em;
+  padding: 6px 16px;
+  border-radius: 24px;
+  font-size: 1.05em;
   font-weight: 700;
-  padding: 2px 10px;
-  border-radius: 20px;
-  margin-bottom: 8px;
+  width: fit-content;
+  box-shadow: 0 3px 12px rgba(249, 115, 22, 0.4);
+  letter-spacing: 0.3px;
 }
 
 .etf-detail-name {
-  font-size: 1.8em;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0 0 10px;
+  font-size: 2.3em;
+  font-weight: bold;
+  color: #2c3e50;
+  margin: 0;
 }
 
 .etf-badges {
@@ -81,145 +102,170 @@
 }
 
 .etf-ticker {
-  background: #f3f4f6;
-  color: #374151;
-  padding: 3px 10px;
-  border-radius: 6px;
-  font-size: 0.85em;
+  font-size: 1.2em;
+  color: #7f8c8d;
+  font-family: 'Courier New', monospace;
   font-weight: 600;
-  font-family: monospace;
+  letter-spacing: 0.5px;
 }
 
-.etf-market-badge,
-.etf-type-badge {
-  background: #eff6ff;
-  color: #1d4ed8;
-  padding: 3px 10px;
-  border-radius: 6px;
-  font-size: 0.82em;
+.etf-market-badge {
+  display: inline-block;
+  background: linear-gradient(135deg, #F97316, #EA580C);
+  color: white;
+  padding: 5px 14px;
+  border-radius: 18px;
+  font-size: 0.95em;
   font-weight: 600;
+  width: fit-content;
+  box-shadow: 0 2px 8px rgba(249, 115, 22, 0.3);
 }
 
 .etf-type-badge {
-  background: #f0fdf4;
+  display: inline-block;
+  background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
   color: #15803d;
+  padding: 5px 14px;
+  border-radius: 18px;
+  font-size: 0.95em;
+  font-weight: 700;
+  width: fit-content;
+  box-shadow: 0 2px 8px rgba(21, 128, 61, 0.15);
 }
 
 .etf-sector-badge {
-  background: #fdf4ff;
-  color: #7e22ce;
-  padding: 3px 10px;
-  border-radius: 6px;
-  font-size: 0.82em;
-  font-weight: 600;
+  background: linear-gradient(135deg, #f3e8ff 0%, #e9d5ff 100%);
+  color: #7c3aed;
+  border-radius: 18px;
+  padding: 5px 14px;
+  font-size: 15px;
+  font-weight: 700;
+  letter-spacing: 0.3px;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.15);
 }
 
 .etf-risk-tier {
-  background: #fff7ed;
+  display: inline-block;
+  background: #fff3e0;
   color: #EA580C;
-  padding: 3px 10px;
-  border-radius: 6px;
-  font-size: 0.82em;
-  font-weight: 600;
-  border: 1px solid #fed7aa;
+  border: 2px solid #FDBA74;
+  padding: 5px 14px;
+  border-radius: 16px;
+  font-size: 0.95em;
+  font-weight: 700;
+  width: fit-content;
+  letter-spacing: 0.2px;
 }
 
-/* ── 가격 박스 ─────────────────────────────────────────────────── */
+/* ── 가격 박스 ───────────────────────────────────────────────────────────── */
 .etf-price-box {
-  text-align: right;
-  min-width: 180px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
 }
 
 .etf-current-price {
-  font-size: 2em;
-  font-weight: 700;
+  font-size: 36px;
+  font-weight: 800;
   color: #1a1a1a;
   display: flex;
   align-items: center;
-  gap: 8px;
-  justify-content: flex-end;
+  gap: 12px;
+  letter-spacing: -0.5px;
 }
 
 .etf-realtime-badge {
-  font-size: 0.45em;
-  background: #fee2e2;
-  color: #dc2626;
-  padding: 2px 6px;
-  border-radius: 4px;
-  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #EA580C;
+  background: rgba(234, 88, 12, 0.1);
+  padding: 5px 12px;
+  border-radius: 20px;
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  animation: etfPulse 2s ease-in-out infinite;
+}
+@keyframes etfPulse {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50%       { opacity: 0.8; transform: scale(0.98); }
 }
 
 .etf-change-badge {
-  font-size: 1em;
-  font-weight: 600;
-  margin-top: 4px;
+  font-size: 19px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 16px;
+  letter-spacing: -0.2px;
 }
 
 .etf-price-date {
-  font-size: 0.8em;
-  color: #9ca3af;
-  margin-top: 6px;
+  font-size: 14px;
+  color: #999;
+  margin-top: 4px;
+  font-weight: 500;
 }
 
-/* ── 섹션 공통 ─────────────────────────────────────────────────── */
+/* ── 섹션 공통 ───────────────────────────────────────────────────────────── */
 .etf-section {
   background: white;
   border-radius: 16px;
-  padding: 28px 32px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+.etf-section:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
 }
 
 .etf-section-heading {
-  font-size: 1.15em;
+  font-size: 1.5em;
   font-weight: 700;
   color: #1a1a1a;
-  margin: 0 0 20px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid #f3f4f6;
+  margin: 0 0 20px 0;
+  padding-bottom: 14px;
+  border-bottom: 2px solid #fff3e0;
+  letter-spacing: -0.3px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
-/* ── 투자 원칙 적합도 ──────────────────────────────────────────── */
+/* ── 투자 원칙 적합도 ────────────────────────────────────────────────────── */
 .etf-fit-section {
-  background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%);
+  background: white;
   border-radius: 16px;
-  padding: 28px 32px;
-  margin-bottom: 20px;
-  border: 1px solid #fed7aa;
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+.etf-fit-section:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
 }
 
 .etf-fit-container {
   display: flex;
-  gap: 28px;
+  gap: 30px;
   align-items: flex-start;
-  flex-wrap: wrap;
 }
 
-.etf-fit-score-box {
-  text-align: center;
-  min-width: 100px;
-}
-
-.etf-fit-score {
-  font-size: 3em;
-  font-weight: 800;
-  color: #EA580C;
-  line-height: 1;
-}
-
-.etf-fit-score-label {
-  font-size: 0.8em;
-  color: #9a3412;
-  margin-top: 4px;
-}
-
-.etf-fit-details { flex: 1; min-width: 200px; }
+.etf-fit-details { flex: 1; }
 
 .etf-fit-summary {
-  color: #7c2d12;
-  font-size: 0.95em;
-  margin: 0 0 12px;
-  line-height: 1.6;
+  font-size: 1.05em;
+  color: #444;
+  margin: 0 0 16px 0;
+  font-weight: 600;
+  line-height: 1.7;
 }
 
 .etf-fit-list {
@@ -227,85 +273,109 @@
   padding: 0;
   margin: 0;
 }
-
 .etf-fit-list li {
-  padding: 4px 0;
-  color: #7c2d12;
-  font-size: 0.9em;
+  padding: 10px 0;
+  color: #555;
+  line-height: 1.7;
+  font-size: 1.05em;
+  border-bottom: 1px solid #f0f0f0;
 }
+.etf-fit-list li:last-child { border-bottom: none; }
 
-/* ── ETF 상품 설명 ─────────────────────────────────────────────── */
+/* ── ETF 상품 설명 ───────────────────────────────────────────────────────── */
 .etf-info-section {
   background: white;
   border-radius: 16px;
-  padding: 28px 32px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+.etf-info-section:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
 }
 
 .etf-info-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 20px;
 }
 
 .etf-info-item {
+  background: #fafafa;
+  border-radius: 10px;
+  padding: 20px;
   display: flex;
   flex-direction: column;
-  gap: 4px;
-  padding: 14px 16px;
-  background: #f9fafb;
-  border-radius: 10px;
-  border-left: 3px solid #F97316;
+  gap: 8px;
+  transition: all 0.3s ease;
+  align-items: center;
+  text-align: center;
+}
+.etf-info-item:hover {
+  background: #fff8f0;
+  transform: translateY(-2px);
 }
 
 .etf-info-label {
-  font-size: 0.78em;
-  color: #9ca3af;
+  font-size: 1.2em;
+  color: #F97316;
   font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.5px;
 }
 
 .etf-info-value {
-  font-size: 0.95em;
-  color: #1a1a1a;
+  font-size: 1.25em;
+  color: #333;
   font-weight: 600;
 }
 
-/* ── ETF 종합 분석 ─────────────────────────────────────────────── */
+/* ── ETF 종합 분석 ───────────────────────────────────────────────────────── */
 .etf-analysis-section {
   background: white;
   border-radius: 16px;
-  padding: 28px 32px;
-  margin-bottom: 20px;
-  box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+  padding: 28px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+  border: 1px solid #f0f0f0;
+  transition: all 0.3s ease;
+}
+.etf-analysis-section:hover {
+  box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+  transform: translateY(-2px);
 }
 
 .etf-analysis-list {
   list-style: none;
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
 }
-
 .etf-analysis-list li {
-  padding: 12px 16px;
-  background: #f9fafb;
+  padding: 12px 16px 12px 42px;
+  margin-bottom: 10px;
+  background: #fafafa;
   border-radius: 10px;
-  border-left: 3px solid #F97316;
-  font-size: 0.92em;
-  color: #374151;
-  line-height: 1.6;
+  color: #444;
+  font-size: 1.05em;
+  line-height: 1.7;
+  position: relative;
+  transition: all 0.3s ease;
 }
-
+.etf-analysis-list li:hover {
+  background: #fff8f0;
+  transform: translateX(4px);
+}
 .etf-analysis-list li::before {
-  content: '•';
+  content: '●';
+  position: absolute;
+  left: 16px;
   color: #F97316;
-  font-weight: bold;
-  margin-right: 8px;
+  font-size: 0.9em;
+  top: 50%;
+  transform: translateY(-50%);
 }
 
 .etf-analysis-pending {
@@ -326,211 +396,258 @@
   cursor: pointer;
   transition: all 0.2s;
 }
-.etf-retry-btn:hover {
-  background: #F97316;
-  color: white;
-}
+.etf-retry-btn:hover { background: #F97316; color: white; }
 
-/* ── 포트폴리오 TOP 25 ────────────────────────────────────────── */
-.etf-holdings-table-wrap {
-  overflow-x: auto;
-}
+/* ── 포트폴리오 TOP 25 ───────────────────────────────────────────────────── */
+.etf-holdings-table-wrap { overflow-x: auto; }
 
 .etf-holdings-table {
   width: 100%;
   border-collapse: collapse;
-  font-size: 0.9em;
+  font-size: 15px;
 }
-
-.etf-holdings-table thead th {
-  background: #f9fafb;
-  padding: 10px 14px;
+.etf-holdings-table th {
+  padding: 8px 12px;
+  background: #fafafa;
+  border-bottom: 2px solid #eee;
+  font-weight: 600;
+  color: #555;
   text-align: left;
-  font-size: 0.82em;
-  font-weight: 700;
-  color: #6b7280;
-  text-transform: uppercase;
-  letter-spacing: 0.04em;
-  border-bottom: 2px solid #f3f4f6;
+  white-space: nowrap;
 }
-
-.etf-holdings-table tbody tr {
-  border-bottom: 1px solid #f3f4f6;
-  transition: background 0.15s;
-}
-
-.etf-holdings-table tbody tr:hover {
-  background: #fff7ed;
-}
-
 .etf-holdings-table td {
-  padding: 10px 14px;
+  padding: 8px 12px;
+  border-bottom: 1px solid #f3f3f3;
   color: #374151;
   vertical-align: middle;
 }
+.etf-holdings-table tbody tr:hover { background: #fffaf0; }
 
-.etf-holdings-rank {
-  font-weight: 700;
-  color: #9ca3af;
-  font-size: 0.85em;
-  width: 48px;
-}
-
-.etf-holdings-type {
-  color: #6b7280;
-  font-size: 0.85em;
-  width: 60px;
-}
-
-.etf-holdings-name {
-  font-weight: 600;
-  color: #1a1a1a;
-}
-
+.etf-holdings-rank { font-weight: 700; color: #9ca3af; font-size: 0.9em; width: 48px; }
+.etf-holdings-type { color: #6b7280; font-size: 0.9em; width: 60px; }
+.etf-holdings-name { font-weight: 600; color: #1a1a1a; }
 .etf-holdings-weight {
-  width: 160px;
-}
-
-.etf-weight-bar-wrap {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.etf-weight-bar {
-  height: 6px;
-  background: linear-gradient(90deg, #F97316, #EA580C);
-  border-radius: 3px;
-  min-width: 2px;
-  flex-shrink: 0;
-}
-
-.etf-weight-bar-wrap span {
   font-weight: 600;
   color: #EA580C;
-  font-size: 0.88em;
+  text-align: left;
   white-space: nowrap;
+  width: 80px;
 }
 
-/* ── 주요 지표 그리드 ──────────────────────────────────────────── */
+
+/* ── 주요 지표 그리드 ────────────────────────────────────────────────────── */
 .etf-features-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
-  gap: 14px;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 16px;
 }
 
 .etf-feature-card {
-  background: #f9fafb;
-  border-radius: 12px;
-  padding: 16px;
+  background: linear-gradient(135deg, #fffaf5 0%, #fff8f0 100%);
+  border: 1px solid #FDBA74;
+  border-radius: 14px;
+  padding: 18px 16px;
   text-align: center;
-  transition: transform 0.2s, box-shadow 0.2s;
   cursor: default;
+  transition: all 0.25s ease;
+  position: relative;
+  overflow: hidden;
+}
+.etf-feature-card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, #F97316, #EA580C);
+  transform: scaleX(0);
+  transition: transform 0.3s ease;
 }
 .etf-feature-card:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+  box-shadow: 0 6px 20px rgba(249,115,22,0.25);
+  transform: translateY(-4px);
+  border-color: #F97316;
 }
+.etf-feature-card:hover::before { transform: scaleX(1); }
 
 .etf-feature-label {
-  font-size: 0.78em;
-  color: #9ca3af;
+  font-size: 0.9em;
+  color: #7f8c8d;
+  margin-bottom: 10px;
   font-weight: 600;
-  margin-bottom: 6px;
   text-transform: uppercase;
-  letter-spacing: 0.04em;
+  letter-spacing: 0.5px;
 }
 
 .etf-feature-value {
-  font-size: 1.1em;
+  font-size: 1.35em;
   font-weight: 700;
-  color: #1a1a1a;
+  letter-spacing: -0.3px;
 }
 
-/* ── AI 분석 요약 ─────────────────────────────────────────────── */
+/* ── AI 분석 요약 ────────────────────────────────────────────────────────── */
 .etf-rec-box {
-  background: #f9fafb;
-  border-radius: 12px;
-  padding: 20px 24px;
+  background: linear-gradient(135deg, #FFF4E6 0%, #FFEDD5 100%);
   border-left: 4px solid #F97316;
+  border-radius: 8px;
+  padding: 20px;
 }
 
 .etf-rec-detail {
-  color: #374151;
-  font-size: 0.95em;
-  line-height: 1.8;
+  color: #444;
+  line-height: 1.7;
+  font-size: 1.05em;
   margin: 0;
 }
 
-/* ── 투자 유의사항 ─────────────────────────────────────────────── */
-.etf-notice-section { background: #fffbf5; border: 1px solid #fed7aa; }
+/* ── 투자 유의사항 ───────────────────────────────────────────────────────── */
+.etf-notice-section { background: #fafafa; border: 1px solid #eee; }
 
 .etf-notice-list {
-  list-style: none;
-  padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  padding-left: 22px;
+  list-style: disc;
 }
-
 .etf-notice-list li {
-  font-size: 0.88em;
-  color: #92400e;
-  padding-left: 16px;
-  position: relative;
+  font-size: 0.98em;
+  color: #7f8c8d;
   line-height: 1.6;
+  margin-bottom: 6px;
 }
 
-.etf-notice-list li::before {
-  content: '※';
-  position: absolute;
-  left: 0;
-  color: #EA580C;
-}
-
-/* ── 스켈레톤 ──────────────────────────────────────────────────── */
+/* ── 스켈레톤 ────────────────────────────────────────────────────────────── */
 .etf-skeleton { display: flex; flex-direction: column; gap: 10px; }
-
 .etf-skeleton-row {
-  height: 18px;
-  background: linear-gradient(90deg, #f3f4f6 25%, #e5e7eb 50%, #f3f4f6 75%);
-  background-size: 200% 100%;
-  border-radius: 6px;
-  animation: etf-shimmer 1.4s infinite;
+  height: 14px;
+  border-radius: 7px;
+  background: linear-gradient(90deg, #f0f0f0 25%, #e8e8e8 50%, #f0f0f0 75%);
+  background-size: 400% 100%;
+  animation: etfShimmer 1.4s infinite;
 }
-
-@keyframes etf-shimmer {
+@keyframes etfShimmer {
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
 
-/* ── 캔들 차트 ──────────────────────────────────────────────────── */
+/* ── 캔들 차트 ───────────────────────────────────────────────────────────── */
 .etf-candle-wrap {
-  background: #f9fafb;
+  width: 100%;
+  background: white;
+  padding: 20px;
   border-radius: 12px;
-  padding: 16px;
 }
 
 .etf-candle-minmax {
   display: flex;
   justify-content: space-between;
-  font-size: 0.82em;
-  margin-top: 6px;
-  padding: 0 4px;
+  margin-top: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  padding-top: 10px;
+  border-top: 1px solid #f0f0f0;
 }
 
-.etf-candle-high { color: #EA580C; font-weight: 600; }
-.etf-candle-low  { color: #3B82F6; font-weight: 600; }
+.etf-candle-high {
+  color: #EA580C;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.etf-candle-high::before { content: '⬆'; }
 
-/* ── 반응형 ────────────────────────────────────────────────────── */
+.etf-candle-low {
+  color: #3B82F6;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+.etf-candle-low::before { content: '⬇'; }
+
+/* ── 차트 헤더 (제목 + 기간 탭) ─────────────────────────────────────────── */
+.etf-chart-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+  padding-bottom: 14px;
+  border-bottom: 2px solid #fff3e0;
+}
+
+.etf-chart-tabs {
+  display: flex;
+  gap: 6px;
+}
+
+.etf-chart-tab {
+  background: #f3f4f6;
+  color: #555;
+  border: none;
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 0.88em;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.etf-chart-tab:hover {
+  background: #fff3e0;
+  color: #EA580C;
+}
+.etf-chart-tab.active {
+  background: #EA580C;
+  color: white;
+  box-shadow: 0 2px 8px rgba(234, 88, 12, 0.3);
+}
+
+/* ── 캔들 툴팁 ───────────────────────────────────────────────────────────── */
+.etf-candle-tooltip {
+  position: absolute;
+  top: 0;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 10px;
+  padding: 10px 14px;
+  box-shadow: 0 4px 16px rgba(0,0,0,0.10);
+  font-size: 14px;
+  min-width: 140px;
+  z-index: 10;
+  pointer-events: none;
+  transform: translateX(-50%);
+}
+
+.etf-candle-tooltip-date {
+  font-weight: 700;
+  color: #555;
+  margin-bottom: 6px;
+  font-size: 13px;
+}
+
+.etf-candle-tooltip-row {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 2px 0;
+  color: #333;
+  font-weight: 500;
+}
+.etf-candle-tooltip-row .up   { color: #EA580C; font-weight: 700; }
+.etf-candle-tooltip-row .down { color: #3B82F6; font-weight: 700; }
+
+/* ── 반응형 ──────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .etf-detail-header { flex-direction: column; }
-  .etf-price-box { text-align: left; }
-  .etf-current-price { justify-content: flex-start; font-size: 1.6em; }
-  .etf-detail-name { font-size: 1.4em; }
-  .etf-info-grid { grid-template-columns: repeat(2, 1fr); }
+  .etf-detail-page { padding: 20px 10px; }
+  .etf-detail-header { flex-direction: column; gap: 16px; }
+  .etf-price-box { align-items: flex-start; }
+  .etf-current-price { font-size: 24px; }
+  .etf-detail-name { font-size: 1.9em; }
+  .etf-info-grid { grid-template-columns: 1fr; }
   .etf-features-grid { grid-template-columns: repeat(2, 1fr); }
   .etf-section { padding: 20px 16px; }
   .etf-fit-section { padding: 20px 16px; }
+  .etf-fit-container { flex-direction: column; }
+  .etf-section-heading { font-size: 1.5em; }
+}
+
+@media (max-width: 480px) {
+  .etf-detail-name { font-size: 1.6em; }
+  .etf-current-price { font-size: 20px; }
 }

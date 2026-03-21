@@ -1,0 +1,8 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/Admin/OneDrive/Documents/03_work/01_seedup/seedup/backend/routers/**)",
+      "Read(//c/Users/Admin/OneDrive/Documents/03_work/01_seedup/seedup/backend/fin_structured_model/src/**)"
+    ]
+  }
+}

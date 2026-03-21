@@ -539,9 +539,14 @@ def build_rag_context(message: str, found_stocks: List[Dict[str, Any]]):
             for i, r in enumerate(news_results, 1):
                 doc = r.get("doc", "")[:300].strip()
                 meta = r.get("meta", {})
+                title = meta.get("title", "")
+                source_url = meta.get("source_url", "") or None
                 date_str = meta.get("date", meta.get("published_at", ""))
-                date_label = f" ({date_str})" if date_str else ""
+                date_label = f" ({date_str[:10]})" if date_str else ""
+                display_title = title or meta.get("query_topic", "")
                 lines.append(f"{i}. {doc}{date_label}")
+                citation_text = f"{display_title}{date_label}" if display_title else f"뉴스{date_label}"
+                citations.append({"text": citation_text, "url": source_url})
             context_parts.append("\n".join(lines))
             print(f"[CHATBOT RAG] 뉴스 {len(news_results)}건 로드")
     except Exception as e:
