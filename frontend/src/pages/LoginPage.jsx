@@ -69,7 +69,7 @@ function LoginPage() {
       <div className="login-container">
         <div className="login-card">
           <h1>로그인</h1>
-          <p className="login-subtitle">SeedUp 계정으로 로그인하세요</p>
+          <p className="login-subtitle">SeedUP 계정으로 로그인하세요</p>
 
           <form onSubmit={handleSubmit}>
             <div className="form-group">

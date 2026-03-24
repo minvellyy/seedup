@@ -47,7 +47,7 @@ function Header() {
       <header className="header">
         <div className="header-container">
           <div className="logo" onClick={handleLogoClick}>
-            <span className="logo-text">SeedUp</span>
+            <span className="logo-text">SeedUP</span>
           </div>
           <nav className="nav-menu">
             <div className="nav-left">
@@ -75,7 +75,7 @@ function Header() {
       <header className="header">
         <div className="header-container">
           <div className="logo" onClick={handleLogoClick}>
-            <span className="logo-text">SeedUp</span>
+            <span className="logo-text">SeedUP</span>
           </div>
           <nav className="nav-menu">
             <div className="nav-left">
@@ -102,7 +102,7 @@ function Header() {
     <header className="header">
       <div className="header-container">
         <div className="logo" onClick={handleLogoClick}>
-          <span className="logo-text">SeedUp</span>
+          <span className="logo-text">SeedUP</span>
         </div>
         <nav className="nav-menu">
           <div className="nav-left">
