@@ -22,20 +22,9 @@ const DashboardPage = () => {
   const [weatherLoading, setWeatherLoading] = useState(false)
   const [error, setError] = useState(null)
   const [selectedMarket, setSelectedMarket] = useState('KOSPI')
-  const [showChatbot, setShowChatbot] = useState(false)
-  const [chatMessages, setChatMessages] = useState([])
-  const [chatInput, setChatInput] = useState('')
   const [holdingsSummary, setHoldingsSummary] = useState(null)
-  const chatMessagesEndRef = useRef(null)
 
   const API_BASE_URL = ''
-
-  // 채팅 메시지가 업데이트될 때마다 스크롤을 맨 아래로
-  useEffect(() => {
-    if (chatMessagesEndRef.current) {
-      chatMessagesEndRef.current.scrollIntoView({ behavior: 'smooth' })
-    }
-  }, [chatMessages])
 
   useEffect(() => {
     fetchDashboardData()
@@ -368,83 +357,6 @@ const DashboardPage = () => {
     if (change > 0) return 'positive'
     if (change < 0) return 'negative'
     return 'neutral'
-  }
-
-  const handleSendMessage = async () => {
-    if (!chatInput.trim()) return
-
-    const userMessage = {
-      id: Date.now(),
-      text: chatInput,
-      sender: 'user',
-      timestamp: new Date()
-    }
-
-    setChatMessages(prev => [...prev, userMessage])
-    const currentMessage = chatInput
-    setChatInput('')
-
-    // 로딩 메시지 추가
-    const loadingMessage = {
-      id: Date.now() + 1,
-      text: '답변을 생성하는 중...',
-      sender: 'bot',
-      timestamp: new Date(),
-      loading: true
-    }
-    setChatMessages(prev => [...prev, loadingMessage])
-
-    try {
-      console.log('[챗봇] API 호출 시작:', currentMessage)
-      
-      // 실제 챗봇 API 호출
-      const response = await fetch(`${API_BASE_URL}/api/chat/send`, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          user_id: user?.userId || 999999,
-          message: currentMessage,
-          session_id: null // 대시보드에서는 간단한 질의응답만 지원
-        })
-      })
-
-      console.log('[챗봇] API 응답 상태:', response.status)
-
-      if (!response.ok) {
-        const errorText = await response.text()
-        console.error('[챗봇] API 오류 응답:', errorText)
-        throw new Error(`챗봇 응답 실패: ${response.status}`)
-      }
-
-      const data = await response.json()
-      console.log('[챗봇] API 응답 데이터:', data)
-
-      // 로딩 메시지 제거 후 실제 응답 추가
-      setChatMessages(prev => {
-        const filtered = prev.filter(msg => !msg.loading)
-        return [...filtered, {
-          id: Date.now(),
-          text: data.message || data.response || '응답을 받았지만 내용이 비어있습니다.',
-          sender: 'bot',
-          timestamp: new Date()
-        }]
-      })
-    } catch (error) {
-      console.error('[챗봇] 오류 발생:', error)
-      // 로딩 메시지 제거 후 오류 메시지 추가
-      setChatMessages(prev => {
-        const filtered = prev.filter(msg => !msg.loading)
-        return [...filtered, {
-          id: Date.now(),
-          text: `죄송합니다. 오류가 발생했습니다: ${error.message}`,
-          sender: 'bot',
-          timestamp: new Date(),
-          error: true
-        }]
-      })
-    }
   }
 
   if (loading) {
@@ -959,112 +871,6 @@ const DashboardPage = () => {
 
 
       </div>
-
-      {/* 플로팅 챗봇 버튼 */}
-      <button 
-        className="chatbot-float-button" 
-        onClick={() => setShowChatbot(!showChatbot)}
-        aria-label="챗봇 열기"
-      >
-        <svg width="46" height="46" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          {/* 줄기 */}
-          <path 
-            d="M 50 75 Q 48 65, 47 55 Q 46 45, 48 38" 
-            fill="none"
-            stroke="#ffffff" 
-            strokeWidth="6"
-            strokeLinecap="round"
-          />
-          
-          {/* 왼쪽 잎 - 더 둥글고 통통한 형태 */}
-          <path 
-            d="M 48 38 Q 35 35, 25 28 Q 18 23, 16 18 Q 16 15, 19 14 Q 23 14, 28 18 Q 38 25, 48 38" 
-            fill="#ffffff"
-            fillOpacity="0.95"
-            stroke="#ffffff" 
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          {/* 왼쪽 잎 중심맥 */}
-          <path 
-            d="M 48 38 Q 38 32, 30 26" 
-            fill="none"
-            stroke="#6FBF8F" 
-            strokeWidth="2"
-            strokeLinecap="round"
-            opacity="0.6"
-          />
-          
-          {/* 오른쪽 잎 - 더 둥글고 통통한 형태 */}
-          <path 
-            d="M 48 38 Q 61 35, 71 28 Q 78 23, 80 18 Q 80 15, 77 14 Q 73 14, 68 18 Q 58 25, 48 38" 
-            fill="#ffffff"
-            fillOpacity="0.95"
-            stroke="#ffffff" 
-            strokeWidth="3"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-          />
-          {/* 오른쪽 잎 중심맥 */}
-          <path 
-            d="M 48 38 Q 58 32, 66 26" 
-            fill="none"
-            stroke="#6FBF8F" 
-            strokeWidth="2"
-            strokeLinecap="round"
-            opacity="0.6"
-          />
-          
-          {/* 줄기 하단 (땅과의 연결) */}
-          <ellipse 
-            cx="50" 
-            cy="78" 
-            rx="8" 
-            ry="3.5" 
-            fill="#ffffff"
-            opacity="0.85"
-          />
-        </svg>
-      </button>
-
-      {/* 챗봇 모달 */}
-      {showChatbot && (
-        <div className="chatbot-modal">
-          <div className="chatbot-header">
-            <h3>투자 도우미 챗봇</h3>
-            <button onClick={() => setShowChatbot(false)} className="close-button">
-              ✕
-            </button>
-          </div>
-          <div className="chatbot-messages">
-            {chatMessages.length === 0 ? (
-              <div className="chatbot-welcome">
-                <p>안녕하세요! 투자 관련 질문이 있으시면 언제든지 물어보세요.</p>
-              </div>
-            ) : (
-              <>
-                {chatMessages.map((msg) => (
-                  <div key={msg.id} className={`chat-message ${msg.sender} ${msg.loading ? 'loading' : ''} ${msg.error ? 'error' : ''}`}>
-                    <p>{msg.text}</p>
-                  </div>
-                ))}
-                <div ref={chatMessagesEndRef} />
-              </>
-            )}
-          </div>
-          <div className="chatbot-input">
-            <input
-              type="text"
-              value={chatInput}
-              onChange={(e) => setChatInput(e.target.value)}
-              onKeyPress={(e) => e.key === 'Enter' && handleSendMessage()}
-              placeholder="질문을 입력하세요..."
-            />
-            <button onClick={handleSendMessage}>전송</button>
-          </div>
-        </div>
-      )}
     </div>
   )
 }
