@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-23",
+        "brokerage": "키움증권",
+        "analyst_name": "한지영, 이성훈",
+        "report_title": "0323, Kiwoom Weekly_지정학과 매크로 불안 국면에서.."
+    },
+    "specific_data": {
+        "strategy_theme": "지정학과 매크로 불안 국면에서 중심 잡기",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "전쟁 뉴스플로우가 증시의 단기 변동성을 주입시킬 수 있음",
+            "일일이 포지션 교체로 반응하기보다는 최소 기본 포지션을 유지하며 관망",
+            "주가 급락 출현 시 분할 매수로 대응하는 것이 적절"
+        ],
+        "quant_factors": [
+            "미국 시장 금리 향방",
+            "미-이란 전쟁 관련 뉴스플로우",
+            "미국 3월 소비자심리지수 및 기대인플레이션",
+            "반도체 업종의 이익 컨센서스 상향 여부"
+        ]
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-23",
+        "brokerage": "유안타증권",
+        "analyst_name": "김용민",
+        "report_title": "증익 지속, 2분기중 KKR의 그늘이 걷힌다면"
+    },
+    "specific_data": {
+        "company_name": "HD현대마린솔루션",
+        "ticker": "443060",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "1Q26 매출 5,740억 (+18% yoy) 유가 상승에 따른 벙커링 사업의 외형 성장",
+            "영업이익 1,030억 (+24% yoy) 육상발전 부문의 이연매출 인식",
+            "KKR의 지분 매각 해소로 인한 주가 상승 여력"
+        ],
+        "risk_factors": [
+            "KKR의 지분 완전 매각이 저가매수의 기회가 될 것이라는 예상",
+            "미국-이란 전쟁으로 인한 글로벌 LNG 공급처 다변화"
+        ],
+        "shareholder_structure": "주요주주 에이치디현대 외 5 인"
+    }
+}

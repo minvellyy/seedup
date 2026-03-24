@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-24",
+        "brokerage": "대신증권",
+        "analyst_name": "김아영",
+        "report_title": "우주, 이벤트와 기술혁신이 만드는 장기 성장.."
+    },
+    "specific_data": {
+        "sector_name": "우주",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "쎄트렉아이"
+        ],
+        "industry_trends": [
+            "2026-2027년, 글로벌 우주 이벤트 집중 구간",
+            "우주 산업 패러다임을 바꾸는 핵심 기술 트렌드",
+            "우주 교통관리(STM), 궤도상 서비스(OSAM), 위성통신 인프라 등 새로운 산업 영역 형성",
+            "AI 기반 데이터 분석의 부상"
+        ],
+        "risk_factors": [
+            "정치적 불안정성 및 국제 경쟁",
+            "기술적 실패 및 안전성 문제",
+            "규제 변화에 따른 시장 접근성 저하"
+        ]
+    }
+}

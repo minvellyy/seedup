@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2023-03-26",
+        "brokerage": "Daishin Securities",
+        "analyst_name": "김아영",
+        "report_title": "KAI 편입 이후 항공, 우주 핵심 부품 국산화.."
+    },
+    "specific_data": {
+        "company_name": "제노코",
+        "ticker": "361390",
+        "investment_rating": "N.R",
+        "investment_points": [
+            "KAI 체계 편입에 따른 구조적 수혜 본격화",
+            "2025년 저점 통과, 2026년 양산 전환에 따른 이익 구조 개선",
+            "정부의 우주, 방산 투자 확대의 직접적 수혜 기대",
+            "KAI 편입에 따른 항공, 우주 체계 내 역할 고도화",
+            "위성, 항공전자, EGSE 중심의 기술 진입 장벽 확"
+        ],
+        "risk_factors": [
+            "현 주가는 턴어라운드 기대를 상당 부분 반영하고 있어 점진적 리레이팅이 필요"
+        ],
+        "shareholder_structure": "한국항공우주산업㈜ 37.95%, 기타 49.78%, 안동명 6.56%"
+    }
+}

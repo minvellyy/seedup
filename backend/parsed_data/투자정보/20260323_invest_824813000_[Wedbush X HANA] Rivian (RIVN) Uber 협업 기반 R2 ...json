@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-20",
+        "brokerage": "하나증권",
+        "analyst_name": "박승진, 신민건",
+        "report_title": "[Wedbush X HANA] Rivian (RIVN) Uber 협업 기반 R2 .."
+    },
+    "specific_data": {
+        "strategy_theme": "Uber 협업 기반 R2 상업화 본격화",
+        "recommended_portfolio": [
+            "Rivian (RIVN)"
+        ],
+        "strategy_logic": [
+            "Uber와의 파트너십 체결을 통한 R2 상업화 가시성 확보",
+            "자율주행 차량 로드맵에 대한 시장 신뢰도 제고",
+            "R2 로보택시 배치 목표"
+        ],
+        "quant_factors": [
+            "시장 점유율 증가",
+            "자율주행 기술 발전",
+            "파트너십을 통한 자본 유입"
+        ]
+    }
+}

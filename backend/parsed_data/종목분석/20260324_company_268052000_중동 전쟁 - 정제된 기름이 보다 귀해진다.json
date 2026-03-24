@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-03",
+        "brokerage": "삼성증권",
+        "analyst_name": "조현렬, 김원영",
+        "report_title": "중동 전쟁 - 정제된 기름이 보다 귀해진다"
+    },
+    "specific_data": {
+        "company_name": "S-Oil",
+        "ticker": "010950",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "중동 전쟁으로 정유 제품 수급 타이트 심화 전망",
+            "2026년 ROE 추가 상향(9→12%)을 감안하여 목표주가 12% 추가 상향",
+            "업종 내 Top-pick 의견 유지"
+        ],
+        "risk_factors": [
+            "지정학적 리스크",
+            "원유 가격 변동성"
+        ],
+        "shareholder_structure": "주식수 112,582,792주 (유동주식 비중 36.6%)"
+    }
+}

@@ -1,0 +1,37 @@
+{
+    "common_metadata": {
+        "report_type": "전략정보",
+        "report_date": "2026-03-23",
+        "brokerage": "DS투자증권",
+        "analyst_name": "양형모",
+        "report_title": "협상 이후 증시는 AI 사이클로 복귀"
+    },
+    "specific_data": {
+        "strategy_theme": "AI 투자 사이클",
+        "recommended_portfolio": [
+            "엔비디아",
+            "알파벳",
+            "마이크로소프트",
+            "테슬라",
+            "브로드컴",
+            "엑슨모빌",
+            "모건스탠리",
+            "마스터카드",
+            "AT&T",
+            "웰스파고"
+        ],
+        "strategy_logic": [
+            "AI 투자는 혁명이기 때문에 멈추지 않는다.",
+            "전쟁 종료 유무에 따른 유가 레벨 안정 여부가 중요하다.",
+            "미-중 AI 패권 경쟁이 AI 투자를 구조적으로 강제하고 있다.",
+            "AI 투자 구조가 강화되고 있다."
+        ],
+        "quant_factors": [
+            "유가",
+            "금리",
+            "AI 투자",
+            "전쟁 종료",
+            "미국과 중국의 AI 경쟁"
+        ]
+    }
+}

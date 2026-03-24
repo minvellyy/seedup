@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-24",
+        "brokerage": "IBK투자증권",
+        "analyst_name": "이현욱",
+        "report_title": "현대차, 날개를 달다!"
+    },
+    "specific_data": {
+        "sector_name": "자동차/2차전지",
+        "industry_rating": "매수 (유지)",
+        "top_picks": [
+            "현대차 (005380)",
+            "현대모비스 (012330)",
+            "HL만도 (204320)",
+            "현대오토에버 (307950)"
+        ],
+        "industry_trends": [
+            "자동차 산업의 경쟁력이 단순 제조와 판매를 넘어 데이터, 소프트웨어, 자율주행, 로보틱스를 결합한 Physical AI 플랫폼으로 이동하고 있음.",
+            "SDV(Software Defined Vehicle), 자율주행, 스마트팩토리, 로보틱스는 각각 독립된 테마가 아니라 하나의 비전은 AI 기반 생태계 연속선 위에 놓여 있는 변화."
+        ],
+        "risk_factors": [
+            "자동차 업종의 경기민감성.",
+            "기술 변화에 따른 경쟁 심화."
+        ]
+    }
+}

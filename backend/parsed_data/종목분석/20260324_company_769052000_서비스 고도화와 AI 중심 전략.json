@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-13",
+        "brokerage": "삼성증권",
+        "analyst_name": "최민하, 강영훈",
+        "report_title": "서비스 고도화와 AI 중심 전략"
+    },
+    "specific_data": {
+        "company_name": "LG유플러스",
+        "ticker": "032640",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "서비스 고도화와 저수익 사업 재편 등을 통한 수익성 개선 지속 전망",
+            "AICC, AIDC 사업 확대를 통해 AX 전환 가속화 도모",
+            "이익 개선에 따른 주주 환원 확대 예상"
+        ],
+        "risk_factors": [
+            "2023~2024년 감익 구간",
+            "저수익·비핵심 사업 재편에 따른 일시적 비용 발생"
+        ],
+        "shareholder_structure": "주식수 429,828,355주 (유동주식 비중 60.5%)"
+    }
+}

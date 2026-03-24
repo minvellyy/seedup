@@ -1,0 +1,15 @@
+{
+    "common_metadata": {
+        "report_type": null,
+        "report_date": null,
+        "brokerage": null,
+        "analyst_name": null,
+        "report_title": "China Weekly Issue"
+    },
+    "specific_data": {
+        "strategy_theme": null,
+        "recommended_portfolio": [],
+        "strategy_logic": [],
+        "quant_factors": []
+    }
+}

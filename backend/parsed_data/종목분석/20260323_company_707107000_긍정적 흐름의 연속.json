@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-23",
+        "brokerage": "미래에셋증권",
+        "analyst_name": "김영건",
+        "report_title": "긍정적 흐름의 연속"
+    },
+    "specific_data": {
+        "company_name": "삼성전자",
+        "ticker": "005930",
+        "investment_rating": "매수",
+        "investment_points": [
+            "메모리 가격 강세 지속",
+            "높은 ROE 유지 전망",
+            "목표주가 30만원 유지"
+        ],
+        "risk_factors": [
+            "메모리 가격의 Peak out 우려",
+            "글로벌 경제 불확실성"
+        ],
+        "shareholder_structure": "주요 주주 지분율: 지배주주 49.5%, 외국인 보유 비중 49.5%"
+    }
+}

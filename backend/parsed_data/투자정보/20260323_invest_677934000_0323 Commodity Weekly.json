@@ -1,0 +1,15 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-23",
+        "brokerage": "키움증권",
+        "analyst_name": "심수빈",
+        "report_title": "0323 Commodity Weekly"
+    },
+    "specific_data": {
+        "strategy_theme": null,
+        "recommended_portfolio": null,
+        "strategy_logic": null,
+        "quant_factors": null
+    }
+}

@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "교보증권",
+        "analyst_name": "최보영",
+        "report_title": "2026년 3월 넷째 주 반도체 Weekly"
+    },
+    "specific_data": {
+        "sector_name": "반도체",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "삼성전자",
+            "SK하이닉스"
+        ],
+        "industry_trends": [
+            "DRAM 중심 업황 개선",
+            "AI 인프라 확장에 따른 메모리 수요 증가",
+            "LTA 계약 확대 및 선급금 구조"
+        ],
+        "risk_factors": [
+            "금리 변동성",
+            "지정학적 리스크"
+        ]
+    }
+}

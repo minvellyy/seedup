@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-23",
+        "brokerage": "하나증권",
+        "analyst_name": "심은주, 고찬결",
+        "report_title": "1Q26 Pre 바이오 시황 부담"
+    },
+    "specific_data": {
+        "company_name": "CJ제일제당",
+        "ticker": "097950",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "바이오 시황 부담에도 불구하고 1Q26 실적이 바닥을 찍고 하반기 회복 전망",
+            "국내 가공 매출 증가 및 해외 가공 매출 증가 예상",
+            "비핵심 자산 유동화 의지를 통한 재무구조 개선 가능성"
+        ],
+        "risk_factors": [
+            "바이오 시황 악화로 인한 손익 기여 감소",
+            "원자재 가격 상승에 따른 수익성 악화 가능성"
+        ],
+        "shareholder_structure": "CJ 외 7인 45.50%, 국민연금공단 7.81%"
+    }
+}

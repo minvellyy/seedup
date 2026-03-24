@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "유진투자증권",
+        "analyst_name": "양승윤",
+        "report_title": "공개된 중국 로봇 대장 ‘유니트리’의 어마.."
+    },
+    "specific_data": {
+        "sector_name": "로보틱스",
+        "industry_rating": "OVERWEIGHT",
+        "top_picks": [
+            "유니트리"
+        ],
+        "industry_trends": [
+            "중국 유니트리 로보틱스 IPO 신청",
+            "사족보행로봇과 휴머노이드의 글로벌 M/S 1위",
+            "국내 수요 증가에 따른 수출 비중 감소"
+        ],
+        "risk_factors": [
+            "주식보상비용 발생",
+            "국내 로봇 기술 수준과 상용화 수준의 차이"
+        ]
+    }
+}

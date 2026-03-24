@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-24",
+        "brokerage": "하나증권",
+        "analyst_name": "송선재",
+        "report_title": "중국 유니트리의 상장 사전심사 통과"
+    },
+    "specific_data": {
+        "sector_name": "자동차",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "유니트리"
+        ],
+        "industry_trends": [
+            "중국 유니트리의 상장 사전심사 통과",
+            "로봇 기업들의 Valuation 상승",
+            "휴머노이드 로봇 시장의 잠재력 증가"
+        ],
+        "risk_factors": [
+            "경쟁사들의 속도 및 자금 경쟁 심화",
+            "수익성 둔화"
+        ]
+    }
+}

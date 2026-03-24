@@ -1,0 +1,32 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-24",
+        "brokerage": "한화리서치",
+        "analyst_name": "이용욱",
+        "report_title": "배터리 기술 평준화 시대, 서방권의 정책이 .."
+    },
+    "specific_data": {
+        "sector_name": "2차전지",
+        "industry_rating": "Neutral",
+        "top_picks": [
+            "LG에너지솔루션",
+            "삼성SDI",
+            "에코프로비엠",
+            "엘앤에프",
+            "포스코퓨처엠"
+        ],
+        "industry_trends": [
+            "배터리 기술 평준화 시대",
+            "서방권의 정책이 버팀목",
+            "중국의 압도적 원가 경쟁력",
+            "유럽 TCA/IAA: 탈중국 기조가 열어준 한국의 반등 기회",
+            "미국 시장의 재편: EV의 일시 후퇴와 ESS의 부상"
+        ],
+        "risk_factors": [
+            "중국 배터리 기술력의 급속한 발전",
+            "원가 경쟁력의 지속적인 우위",
+            "정책 변화에 따른 시장 불확실성"
+        ]
+    }
+}

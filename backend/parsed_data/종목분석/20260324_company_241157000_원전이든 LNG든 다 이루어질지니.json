@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-11",
+        "brokerage": "삼성증권",
+        "analyst_name": "김영호",
+        "report_title": "원전이든 LNG든 다 이루어질지니"
+    },
+    "specific_data": {
+        "company_name": "두산에너빌리티",
+        "ticker": "034020",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "대형 원전부터 SMR까지 해외 원전 수주가 확대될 것으로 기대",
+            "가스터빈 또한 국내외 추가 수주가 이어지고 있어 수주 가이던스 상향 조정 기대",
+            "목표주가 12만원 유지"
+        ],
+        "risk_factors": [
+            "글로벌 원전 수주 모멘텀의 변동성",
+            "가스/수소 부문 수익성 변동"
+        ],
+        "shareholder_structure": "주식 수 640,561,146주 (69.1% 유동주식 비중)"
+    }
+}

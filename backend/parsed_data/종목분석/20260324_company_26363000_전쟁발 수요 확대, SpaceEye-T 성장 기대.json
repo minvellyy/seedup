@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2023-03-26",
+        "brokerage": "대신증권",
+        "analyst_name": "김아영",
+        "report_title": "전쟁발 수요 확대, SpaceEye-T 성장 기대"
+    },
+    "specific_data": {
+        "company_name": "쎄트렉아이",
+        "ticker": "099320",
+        "investment_rating": "N.R",
+        "investment_points": [
+            "위성 제조 → 데이터, 플랫폼으로 확장 중인 국내 유일 EO/SAR 회사",
+            "2026년 수주와 실적 가시화로 추가적인 리레이팅은 필연적",
+            "지정학 리스크 확대 국면에서 SpaceEye-T의 전략적 가치 확대"
+        ],
+        "risk_factors": [
+            "지정학적 리스크",
+            "고객 예산 집행 일정 변동성"
+        ],
+        "shareholder_structure": "한화에어로스페이스 36.43%, 박성동 6.46%, 기타 57.11%"
+    }
+}

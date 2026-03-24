@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-24",
+        "brokerage": "키움증권",
+        "analyst_name": "오현진",
+        "report_title": "로봇에도 쓰인다면"
+    },
+    "specific_data": {
+        "company_name": "디케이티",
+        "ticker": "290550",
+        "investment_rating": "Not Rated",
+        "investment_points": [
+            "IT OLED와 Auto OLED 부문 실적 기여 본격화에 따른 수익성 증가 기대",
+            "로봇용 충전 모듈 사업 부문의 성과 기대",
+            "현재 주가는 27년 기준 PER 8.6배로 저평가 국면"
+        ],
+        "risk_factors": [
+            "로보틱스 부문 신규 사업의 불확실성",
+            "시장 경쟁 심화"
+        ],
+        "shareholder_structure": "주요 주주 비에이치 외 2 인 50.5%"
+    }
+}

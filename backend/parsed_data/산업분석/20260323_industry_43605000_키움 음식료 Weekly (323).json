@@ -1,0 +1,30 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-23",
+        "brokerage": "키움증권",
+        "analyst_name": "박상준, CFA, 권용일",
+        "report_title": "키움 음식료 Weekly (323)"
+    },
+    "specific_data": {
+        "sector_name": "음식료/유통",
+        "industry_rating": null,
+        "top_picks": [
+            "CJ제일제당",
+            "오리온",
+            "농심",
+            "KT&G"
+        ],
+        "industry_trends": [
+            "아이스크림 가격 인하",
+            "K-푸드 일본 진출",
+            "베트남 법인 청산",
+            "전자담배 브랜드 통합"
+        ],
+        "risk_factors": [
+            "원자재 가격 변동",
+            "경영 효율성 문제",
+            "해외 시장 진출 리스크"
+        ]
+    }
+}

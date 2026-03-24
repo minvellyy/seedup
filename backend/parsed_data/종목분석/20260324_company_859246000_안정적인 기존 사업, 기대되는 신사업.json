@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-18",
+        "brokerage": "삼성증권",
+        "analyst_name": "백재승",
+        "report_title": "안정적인 기존 사업, 기대되는 신사업"
+    },
+    "specific_data": {
+        "company_name": "포스코인터내셔널",
+        "ticker": "047050",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "에너지 사업의 중요성이 커지고 있으며, 각국의 에너지 확보 노력이 강화될 것으로 예상됨.",
+            "LNG value chain 확장을 통해 전사 실적 증가에 기여할 것.",
+            "모빌리티 사업의 이익 기여도 증대."
+        ],
+        "risk_factors": [
+            "에너지원 가격의 부침 가능성.",
+            "글로벌 에너지 수급 불안정성."
+        ],
+        "shareholder_structure": "주요 주주 지분율: 지배주주 6,909억원, 비지배주주 805억원."
+    }
+}

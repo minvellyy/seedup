@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-23",
+        "brokerage": "유안타증권",
+        "analyst_name": "권명준",
+        "report_title": "실적과 성장성 동반 부각 기대"
+    },
+    "specific_data": {
+        "company_name": "가온그룹",
+        "ticker": "078890",
+        "investment_rating": "NOT RATED",
+        "investment_points": [
+            "해외 진출 확대",
+            "On-device AI 탑재 차세대 OTT 디바이스 공급"
+        ],
+        "risk_factors": [
+            "글로벌 경제 불확실성",
+            "경쟁 심화"
+        ],
+        "shareholder_structure": "주요주주 임동연 외 4 인"
+    }
+}

@@ -1,0 +1,22 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "한화리서치",
+        "analyst_name": "김도하",
+        "report_title": "1월 연체율 모수 효과도 없이, 완연하게 둔.."
+    },
+    "specific_data": {
+        "sector_name": "은행",
+        "industry_rating": "Positive",
+        "top_picks": [],
+        "industry_trends": [
+            "2026년 1월 말 연체율 0.56%(+3bp YoY)로 최저 상승폭 기록",
+            "가계 연체율은 0.42%(-1bp YoY)로 44개월 만에 YoY 변동폭이 음수로 전환",
+            "연중 업종 연체율이 YoY 개선세로 전환될 것이라는 전망 유지"
+        ],
+        "risk_factors": [
+            "4Q25부터의 시장금리 상승이 건전성 부담으로 전이되는 시점이 변수"
+        ]
+    }
+}

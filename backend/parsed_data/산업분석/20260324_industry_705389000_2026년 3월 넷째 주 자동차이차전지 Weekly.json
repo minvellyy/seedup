@@ -1,0 +1,30 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-24",
+        "brokerage": "교보증권",
+        "analyst_name": "김광식, 최보영",
+        "report_title": "2026년 3월 넷째 주 자동차이차전지 Weekly"
+    },
+    "specific_data": {
+        "sector_name": "자동차/이차전지",
+        "industry_rating": null,
+        "top_picks": [
+            "현대차",
+            "기아",
+            "LG에너지솔루션",
+            "삼성SDI"
+        ],
+        "industry_trends": [
+            "해외 판매량 증가",
+            "전기차 수요 증가",
+            "AI 수요에 따른 전력반도체 가격 인상",
+            "친환경 에너지 투자 확대"
+        ],
+        "risk_factors": [
+            "글로벌 경쟁 심화",
+            "신차 수요 축소",
+            "원자재 가격 변동"
+        ]
+    }
+}

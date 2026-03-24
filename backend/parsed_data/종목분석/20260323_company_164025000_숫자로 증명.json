@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-23",
+        "brokerage": "IBK투자증권",
+        "analyst_name": "오지훈",
+        "report_title": "숫자로 증명"
+    },
+    "specific_data": {
+        "company_name": "HJ중공업",
+        "ticker": "097230",
+        "investment_rating": "매수 (유지)",
+        "investment_points": [
+            "신조선 부문 14.0% OPM 달성",
+            "건설 부문 흑자전환",
+            "2027년 인도 예정 물량 증가"
+        ],
+        "risk_factors": [
+            "군산 조선소 인수 주체 미정",
+            "미국 현지 조선사와의 협력 구체화 미비"
+        ],
+        "shareholder_structure": "에코프라임마린퍼시픽유 48.90%, 기타 주요 주주 지분율 미제공"
+    }
+}

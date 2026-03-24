@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-11",
+        "brokerage": "삼성증권",
+        "analyst_name": "최민하, 강영훈",
+        "report_title": "글로벌 팬덤 기반 성장 레버리지 확대"
+    },
+    "specific_data": {
+        "company_name": "JYP Ent.",
+        "ticker": "035900",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "4분기 영업이익은 419억원(+14% YoY)으로 컨센서스 상회.",
+            "서구권 음반 판매 확대에 따른 음반 매출 호조와 북미·유럽 투어의 초과 수익 반영.",
+            "탑티어 아티스트는 물론 저연차 아티스트도 꾸준한 성장세 지속."
+        ],
+        "risk_factors": [
+            "글로벌 경제 불확실성",
+            "아티스트 활동 중단 리스크"
+        ],
+        "shareholder_structure": "주요 주주 지분율은 77.3%의 유동주식 비중을 포함하여, 지배주주 지분이 72% 이상."
+    }
+}

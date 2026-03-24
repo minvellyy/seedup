@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-20",
+        "brokerage": "삼성증권",
+        "analyst_name": "이혜인",
+        "report_title": "휠라 경쟁력 제고 vs. K패션은 시간 필요"
+    },
+    "specific_data": {
+        "company_name": "미스토홀딩스",
+        "ticker": "081660",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "영업이익 컨센서스 하회했으나, 휠라 브랜드 경쟁력 제고 확인 긍정적",
+            "매출액 9,152억원(+6% y-y) 기록",
+            "목표주가 54,000원(SOTP) 유지"
+        ],
+        "risk_factors": [
+            "아쿠쉬네트의 비수기 영향으로 영업이익 적자",
+            "K패션의 중국 유통 사업 성장 둔화 불가피"
+        ],
+        "shareholder_structure": "주식수 53,091,840주 (58.9% 유동주식 비중)"
+    }
+}

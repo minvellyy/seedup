@@ -1,0 +1,21 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "DS증권",
+        "analyst_name": "강태호",
+        "report_title": "[DS Defense Daily] 2026-03-23"
+    },
+    "specific_data": {
+        "market_summary": "한국은 프라보워 방한 기간 중 인도네시아와 KF-21 전투기 16대 수출 계약을 체결할 예정.",
+        "macro_indicators": null,
+        "fund_flows": null,
+        "key_news": [
+            "인도네시아의 조달구조는 당초 계획했던 48대에서 초기 16대로 축소됨.",
+            "미국무부는 긴급상황이라고 판단하여 즉각적인 판매를 결정함.",
+            "자카르타 분담금은 6,000억원으로 줄어들었음.",
+            "KF-21 전투기 16대 도입은 기존 기종을 보완하는 형태로 구성됨.",
+            "대만은 이란 전쟁 중 미국의 미사일 재고 감소에 대해 우려를 표명함."
+        ]
+    }
+}

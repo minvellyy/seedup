@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2023-03-26",
+        "brokerage": "대신증권",
+        "analyst_name": "김아영",
+        "report_title": "스페이스붐의 숨은 수혜주"
+    },
+    "specific_data": {
+        "company_name": "이노와이어리스",
+        "ticker": "073490",
+        "investment_rating": "N.R",
+        "investment_points": [
+            "위성통신 확대로 시험, 검증, 커버리지가 필연적으로 증가하는 수혜주",
+            "통신 capex 회복과 방산, 우주 확장이 겹치는 저점 구간",
+            "2026년, ‘통신 투자 사이클+방산/우주 확장’ 동시에 열리는 해"
+        ],
+        "risk_factors": [
+            "고객 고지 리스크"
+        ],
+        "shareholder_structure": "최대주주가 ㈜LIG로 그룹 내 위성 통신의 시험, 검증, 신호처리 영역을 담당하는 전략적 포지션을 보유"
+    }
+}

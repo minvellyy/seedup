@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-24",
+        "brokerage": "키움증권",
+        "analyst_name": "김진영, 조호준",
+        "report_title": "뉴 ETF 라인 업  K제조업핵심기업 액티브 ETF 1종목 .."
+    },
+    "specific_data": {
+        "strategy_theme": "AI 하드파워와 국가 전략산업 중심의 투자",
+        "recommended_portfolio": [
+            "PLUS K제조업핵심기업액티브"
+        ],
+        "strategy_logic": [
+            "AI 및 전력 인프라 등 메가트렌드에 부합하는 기업에 장기투자",
+            "구조적 성장흐름이 새롭게 부각되는 기업에 중단기 투자"
+        ],
+        "quant_factors": [
+            "시가총액",
+            "3개월 평균 일 거래대금",
+            "AICS 기준 Primary 분류"
+        ]
+    }
+}

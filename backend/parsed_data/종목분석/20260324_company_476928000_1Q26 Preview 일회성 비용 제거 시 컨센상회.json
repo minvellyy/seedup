@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-24",
+        "brokerage": "교보증권",
+        "analyst_name": "최보영",
+        "report_title": "1Q26 Preview 일회성 비용 제거 시 컨센상회"
+    },
+    "specific_data": {
+        "company_name": "삼성전기",
+        "ticker": "009150",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "일회성 비용 제거 시 컨센서스 상회",
+            "TP 600,000원 상향",
+            "견조한 본업 지속",
+            "MLCC의 계절적 성수기 효과와 AI 서버향 공급 확대"
+        ],
+        "risk_factors": [
+            "일회성 비용 반영",
+            "시장 경쟁 심화"
+        ],
+        "shareholder_structure": "삼성전자 외 5인 23.79%"
+    }
+}

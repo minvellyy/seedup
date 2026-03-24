@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2023-03-26",
+        "brokerage": "대신증권",
+        "analyst_name": "김아영",
+        "report_title": "스페이스X 하면 스피어지"
+    },
+    "specific_data": {
+        "company_name": "스피어",
+        "ticker": "347700",
+        "investment_rating": "N.R",
+        "investment_points": [
+            "납기 경쟁력 기반 Tier 1 벤더 지위 확보 및 전방 시장 확대 수혜 기대",
+            "2026년 실적 턴어라운드 및 니켈 제련소 효과 본격 반영 구간",
+            "SpaceX를 핵심 고객사로 확보"
+        ],
+        "risk_factors": [
+            "단기 주가 상승으로 밸류에이션 부담 존재",
+            "실적 턴어라운드 및 구조적 성장 초입 국면"
+        ],
+        "shareholder_structure": "최광수 외 4 인 35.38%"
+    }
+}

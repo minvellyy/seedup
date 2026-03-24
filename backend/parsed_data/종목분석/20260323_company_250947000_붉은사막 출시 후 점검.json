@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-23",
+        "brokerage": "SK증권",
+        "analyst_name": "남효지",
+        "report_title": "붉은사막 출시 후 점검"
+    },
+    "specific_data": {
+        "company_name": "펄어비스",
+        "ticker": "3773",
+        "investment_rating": "중립",
+        "investment_points": [
+            "출시 16시간만에 판매량 200만장 달성",
+            "출시 초기 주가 변동성 높음",
+            "후속작 출시까지 멀어 보수적 접근 필요"
+        ],
+        "risk_factors": [
+            "예상보다 낮은 평가로 주가 -36.8%",
+            "출시 초반 플레이어 수, 판매량, 평가 등에 변동이 많음",
+            "후속작 예상 출시 시기가 상당히 멀 것으로 예상"
+        ],
+        "shareholder_structure": null
+    }
+}

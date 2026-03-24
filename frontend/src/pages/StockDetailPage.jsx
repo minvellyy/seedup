@@ -223,6 +223,56 @@ function CandlestickChart({ data, days = 30 }) {
   )
 }
 
+// ── 레이더 지표별 산정 설명 ─────────────────────────────────────────────────
+const RADAR_TOOLTIPS = {
+  profitability: {
+    title: '수익성',
+    desc: '기업이 얼마나 효율적으로 이익을 창출하는지 측정합니다.',
+    items: [
+      'ROE (자기자본이익률): 주주 자본 대비 순이익 비율',
+      'ROA (총자산이익률): 보유 자산 대비 순이익 비율',
+      '영업이익률: 매출 대비 영업이익 비율',
+      '순이익률: 매출 대비 최종 순이익 비율',
+    ],
+  },
+  growth: {
+    title: '성장성',
+    desc: '기업의 매출·이익이 얼마나 빠르게 성장하고 있는지 측정합니다.',
+    items: [
+      '매출 성장률: 전년 대비 매출액 증가율',
+      '영업이익 성장률: 전년 대비 영업이익 증가율',
+      'EPS 성장률: 주당순이익 증가율',
+    ],
+  },
+  stability: {
+    title: '안정성',
+    desc: '재무 구조의 건전성과 채무 상환 능력을 측정합니다.',
+    items: [
+      '부채비율: 총부채 ÷ 자기자본 (낮을수록 안전)',
+      '유동비율: 유동자산 ÷ 유동부채 (높을수록 단기 안전)',
+      '이자보상배율: 영업이익 ÷ 이자비용 (높을수록 채무 여유)',
+    ],
+  },
+  cashflow: {
+    title: '현금흐름',
+    desc: '실제 현금 창출 능력과 투자·재무 활동의 건전성을 측정합니다.',
+    items: [
+      '영업현금흐름: 본업에서 벌어들이는 현금',
+      'FCF (잉여현금흐름): 영업현금흐름 − 설비투자',
+      '현금흐름 대비 부채 비율: 채무 상환 여력',
+    ],
+  },
+  valuation: {
+    title: '밸류에이션',
+    desc: '현재 주가가 기업 가치 대비 얼마나 저평가·고평가됐는지 측정합니다.',
+    items: [
+      'PER (주가수익비율): 주가 ÷ EPS (낮을수록 저평가)',
+      'PBR (주가순자산비율): 주가 ÷ BPS (낮을수록 저평가)',
+      'EV/EBITDA: 기업가치 ÷ 세전영업이익 (낮을수록 저평가)',
+    ],
+  },
+}
+
 // ── 레이더(오각형) 차트 (SVG) ──────────────────────────────────────────────
 function RadarChart({ points }) {
   if (!points || points.length < 3) return null
@@ -260,6 +310,7 @@ function RadarChart({ points }) {
       </svg>
       {points.map((p, i) => {
         const pos = labelPos[i]
+        const tip = RADAR_TOOLTIPS[p.key]
         return (
           <div key={i} className="sd-radar-label"
             style={{ left: `${(pos.x / SIZE * 100).toFixed(1)}%`, top: `${(pos.y / SIZE * 100).toFixed(1)}%` }}>
@@ -267,6 +318,14 @@ function RadarChart({ points }) {
             <span className="sd-radar-label-score" style={p.score == null ? { color: '#9ca3af' } : undefined}>
               {p.score != null ? Math.round(p.score) : '-'}
             </span>
+            {tip && (
+              <div className="sd-radar-tooltip">
+                <p className="sd-radar-tooltip-desc">{tip.desc}</p>
+                <ul className="sd-radar-tooltip-items">
+                  {tip.items.map((item, idx) => <li key={idx}>{item}</li>)}
+                </ul>
+              </div>
+            )}
           </div>
         )
       })}

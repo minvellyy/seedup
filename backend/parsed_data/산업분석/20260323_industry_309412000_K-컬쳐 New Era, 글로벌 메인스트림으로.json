@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2023-03-20",
+        "brokerage": "KYOBO",
+        "analyst_name": "null",
+        "report_title": "K-컬쳐 New Era, 글로벌 메인스트림으로"
+    },
+    "specific_data": {
+        "sector_name": "화장품/엔터",
+        "industry_rating": "Buy",
+        "top_picks": [
+            "에이피알",
+            "하이브"
+        ],
+        "industry_trends": [
+            "K-Culture의 글로벌 확산",
+            "K-뷰티의 글로벌 시장 내 존재감 확대",
+            "K-Pop의 글로벌 팬덤 확장"
+        ],
+        "risk_factors": [
+            "글로벌 경제 불확실성",
+            "경쟁 심화",
+            "소비자 선호 변화"
+        ]
+    }
+}

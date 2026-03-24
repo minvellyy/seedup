@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-24",
+        "brokerage": "한화투자증권",
+        "analyst_name": "박세연, 김예인",
+        "report_title": "[ESG & Transition] 통키[通 Keys] Transitio.."
+    },
+    "specific_data": {
+        "sector_name": "탄소배출권",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "EU-ETS는 정책 리스크로 급락",
+            "K-ETS는 기대 속에 빠르게 상승",
+            "EU-ETS는 박스권 장세, K-ETS는 중장기 상승세 전망"
+        ],
+        "risk_factors": [
+            "정책 불확실성",
+            "지정학적 리스크",
+            "EU 산업 수요 파괴 우려"
+        ]
+    }
+}

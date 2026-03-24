@@ -1,0 +1,30 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-23",
+        "brokerage": "하나증권",
+        "analyst_name": "박승진, 신민건",
+        "report_title": "[Global ETF] ETF 트렌드 & 포트폴리오 사라진 금리.."
+    },
+    "specific_data": {
+        "strategy_theme": "지정학적 리스크 대응 및 인플레이션 경계",
+        "recommended_portfolio": [
+            "SMH",
+            "PAVE",
+            "QUAL",
+            "QGRO",
+            "USO",
+            "DBA"
+        ],
+        "strategy_logic": [
+            "지정학적 리스크가 시장의 주요 변수로 작용 중",
+            "인플레이션 압력을 장기화시킬 수 있는 중동 지역 인프라 훼손 수준 확인",
+            "통화정책 완화 기대 약화로 인한 달러 강세, 금리 상승, 유동성 위축 가능성"
+        ],
+        "quant_factors": [
+            "ROE",
+            "이익의 질",
+            "재무 건전성"
+        ]
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2023-03-26",
+        "brokerage": "대신증권",
+        "analyst_name": "김아영",
+        "report_title": "플래닛랩스, KAI 협력기반 위성·지상국사업 .."
+    },
+    "specific_data": {
+        "company_name": "컨텍",
+        "ticker": "451760",
+        "investment_rating": "N.R",
+        "investment_points": [
+            "아시아 유일 민간 지상국 기업으로 위성 플랫폼 사업자로 도약",
+            "매출 고성장 지속, 2026년 흑자 전환 본격화 전망",
+            "지상국→안테나→플랫폼까지, 수직계열화 본격 성과 구간 진입"
+        ],
+        "risk_factors": [
+            "고객 고지 리스크",
+            "국내외 우주 개발 정책 확대에 따른 변동성"
+        ],
+        "shareholder_structure": "이성희 외 7 인 29.83%, 힐스프링인베스트먼트 외 2 인 6.17%"
+    }
+}

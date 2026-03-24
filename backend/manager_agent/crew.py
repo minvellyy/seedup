@@ -1,4 +1,4 @@
-﻿# manager_agent/crew.py
+# manager_agent/crew.py
 #
 # 세 가지 분석 모델(정형 재무 / 주가 방향성 / 비정형)의 결과를 종합하는
 # CrewAI 매니저 에이전트 크루.

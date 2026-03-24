@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "유진투자증권",
+        "analyst_name": "한병화",
+        "report_title": "국내 재생에너지 중심 전환 정책 빨라진다"
+    },
+    "specific_data": {
+        "sector_name": "재생에너지",
+        "industry_rating": "OVERWIGHT",
+        "top_picks": [
+            "씨에스윈드",
+            "SK오션플랜트"
+        ],
+        "industry_trends": [
+            "중동 전쟁으로 에너지 전환 정책 탄력",
+            "2030년 재생에너지 100GW 확보 목표 가시성 높아져",
+            "태양광 약 90GW 확보 목표 예상",
+            "풍력 10GW 수준 누적 설치 목표",
+            "재생에너지 확대에 걸림돌 제거하는 정책 예상"
+        ],
+        "risk_factors": [
+            "중동 전쟁의 불확실성",
+            "정책 변화에 따른 시장 변동성"
+        ]
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-04",
+        "brokerage": "삼성증권",
+        "analyst_name": "정동희",
+        "report_title": "기다림이 길어지나 리레이팅을 위한 고군분투.."
+    },
+    "specific_data": {
+        "company_name": "덴티움",
+        "ticker": "145720",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "내수/중국 부진 지속에도 매출 믹스 개선 및 판관비 통제로 영업 레버리지 소폭 회복",
+            "VBP 시행 시점 지연은 아쉬우나 여타 EM 시장 성장 및 주주 환원 정책 시행을 통한 리레이팅 최소 조건 마련 중"
+        ],
+        "risk_factors": [
+            "내수 및 중국 시장의 경기 부진",
+            "VBP 시행 지연"
+        ],
+        "shareholder_structure": "주식수 10,253,850주 (유동주식 비중 63.6%)"
+    }
+}

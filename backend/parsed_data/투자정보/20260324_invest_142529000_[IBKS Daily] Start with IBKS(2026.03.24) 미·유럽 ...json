@@ -1,0 +1,36 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-24",
+        "brokerage": "투자분석부",
+        "analyst_name": null,
+        "report_title": "[IBKS Daily] Start with IBKS(2026.03.24) 미·유럽 .."
+    },
+    "specific_data": {
+        "strategy_theme": null,
+        "recommended_portfolio": [
+            "삼성전자",
+            "현대모비스",
+            "LIG넥스원",
+            "현대차",
+            "한화에어로스페이스",
+            "삼성생명",
+            "SK하이닉스",
+            "두산에너빌리티",
+            "삼양식품",
+            "한국콜마"
+        ],
+        "strategy_logic": [
+            "중동 전쟁 불확실성 확대",
+            "미국의 이란 내 에너지 시설 공격 유예",
+            "유가 급등 및 경기 둔화 우려 완화",
+            "여행주 중심 강세"
+        ],
+        "quant_factors": [
+            "KOSPI 하락",
+            "KOSDAQ 하락",
+            "외국인 순매도",
+            "기관 순매도"
+        ]
+    }
+}

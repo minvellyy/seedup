@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-24",
+        "brokerage": "하나증권",
+        "analyst_name": "김승준, 하민호",
+        "report_title": "저PBR 관심 부각 vs 자재 수급 우려"
+    },
+    "specific_data": {
+        "sector_name": "건설",
+        "industry_rating": "긍정적",
+        "top_picks": [
+            "GS건설",
+            "DL이앤씨",
+            "대우건설"
+        ],
+        "industry_trends": [
+            "저PBR 기업 리스트 공개 방침에 따른 주가 상승",
+            "원전 및 LNG 테마 종목 상승",
+            "전국 아파트 매매가 29주 연속 상승"
+        ],
+        "risk_factors": [
+            "이란 문제 장기화로 인한 펀더멘탈 악화",
+            "유가 상승 및 화학 원재료 가격 상승으로 인한 건축자재 가격 상승",
+            "원유 수급 불안정으로 인한 건축자재 생산량 감소"
+        ]
+    }
+}

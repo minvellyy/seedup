@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "유진투자증권",
+        "analyst_name": "황성현",
+        "report_title": "Next Energy(Power & Battery Weekly) - 혁신.."
+    },
+    "specific_data": {
+        "sector_name": "전력 및 배터리",
+        "industry_rating": null,
+        "top_picks": [
+            "LG에너지솔루션",
+            "삼성SDI",
+            "포스코퓨처엠"
+        ],
+        "industry_trends": [
+            "배터리 및 ESS 시장의 성장",
+            "원자력 발전 기술의 혁신",
+            "전력 판매량 증가"
+        ],
+        "risk_factors": [
+            "원자력 안전성 문제",
+            "원자재 가격 변동",
+            "글로벌 공급망 불안정"
+        ]
+    }
+}

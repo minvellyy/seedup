@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-24",
+        "brokerage": "대신증권",
+        "analyst_name": "박강호, 서지원RA",
+        "report_title": "피지컬 AI(로봇)는 끌고 1Q 실적 호조가 밀다.."
+    },
+    "specific_data": {
+        "company_name": "LG전자",
+        "ticker": "066570",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "1Q26 영업이익 1.61조원으로 컨센서스 17.5% 상회",
+            "피지컬 AI 경쟁력 강화로 저평가",
+            "가전 및 전자부품업종에서의 가격 경쟁력 확보"
+        ],
+        "risk_factors": [
+            "중동 이슈로 인한 가전 수요 및 물류비 불확실성",
+            "중국의 저가 정책에 대한 대응 필요"
+        ],
+        "shareholder_structure": "주요주주 LG 외 2인 35.27%, 국민연금공단 6.51%"
+    }
+}

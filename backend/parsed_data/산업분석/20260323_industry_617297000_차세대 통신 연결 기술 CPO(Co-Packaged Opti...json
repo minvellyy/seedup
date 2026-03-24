@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "한화리서치",
+        "analyst_name": "박준영, 김나우",
+        "report_title": "차세대 통신 연결 기술 CPO(Co-Packaged Opti.."
+    },
+    "specific_data": {
+        "sector_name": "반도체",
+        "industry_rating": "Positive",
+        "top_picks": [],
+        "industry_trends": [
+            "CPO(Co-Packaged Optics)의 부상",
+            "AI 데이터센터에서 데이터 이동량 증가",
+            "전력 효율 개선",
+            "대역폭 확장 용이"
+        ],
+        "risk_factors": [
+            "열 관리의 어려움",
+            "패키징과 제조의 복잡성"
+        ]
+    }
+}

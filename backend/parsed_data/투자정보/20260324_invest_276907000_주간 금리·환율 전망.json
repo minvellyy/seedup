@@ -1,0 +1,30 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-23",
+        "brokerage": "DAISHIN",
+        "analyst_name": "공동락, 이정훈",
+        "report_title": "주간 금리·환율 전망"
+    },
+    "specific_data": {
+        "strategy_theme": null,
+        "recommended_portfolio": [],
+        "strategy_logic": [
+            "금융안정 이슈로 인하 종료",
+            "미-이란 군사 충돌로 단기적으로 높은 환율 변동성 지속",
+            "중립금리 영역 진입 이후 상당 기간 동결 기조",
+            "에너지 공급 차질 문제 완화되는 국면 예상",
+            "수급 개선에 대한 반영 끝내고 시장금리 다시 반등할 가능성",
+            "한국 경기 모멘텀 점차 약해지기 시작"
+        ],
+        "quant_factors": [
+            "기준금리",
+            "통안채 1년 금리",
+            "국고채 3년 금리",
+            "국고채 5년 금리",
+            "국고채 10년 금리",
+            "회사채AAA 3년 Spread",
+            "달러원환율"
+        ]
+    }
+}

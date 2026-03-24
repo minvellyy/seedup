@@ -1,0 +1,30 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-24",
+        "brokerage": "DS Securities",
+        "analyst_name": "김현지",
+        "report_title": "현시점 2026-03-24"
+    },
+    "specific_data": {
+        "market_summary": "전일 코스피와 코스닥은 각각 6.5%, 5.6% 하락. 트럼프 대통령은 이란에 48시간 이내 호르무즈 해협 개방을 요구하며 최후통첩. 이에 이란은 강경하게 대응할 것을 예고하면서 양국 간 지정학적 긴장감 고조.",
+        "macro_indicators": "원/달러 환율 1,510원대 상회, 외국인 수급 부담 가중. 코스피 현선물 5조원가량 순매도, 기관도 4조원 가까이 순매도.",
+        "fund_flows": {
+            "credit_balance": {
+                "institution": 23000,
+                "foreign": 20000,
+                "individual": 110000
+            },
+            "customer_deposit": {
+                "institution": 140000,
+                "foreign": 125000,
+                "individual": 17000
+            }
+        },
+        "key_news": [
+            "트럼프 대통령이 이란의 에너지 시설에 대한 물리적 타격을 5일 유예할 것 발표.",
+            "이스라엘의 공습 강화와 함께 이란 외무부가 미국과의 협상 소식을 부인.",
+            "고유가 고착화에 대한 인플레 부담 덜어내면서 2년물 국채금리와 10년물 국채금리 하락."
+        ]
+    }
+}

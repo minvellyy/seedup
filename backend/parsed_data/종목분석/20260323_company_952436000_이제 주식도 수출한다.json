@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-23",
+        "brokerage": "미래에셋증권",
+        "analyst_name": "김영건",
+        "report_title": "이제 주식도 수출한다"
+    },
+    "specific_data": {
+        "company_name": "SK하이닉스",
+        "ticker": "000660",
+        "investment_rating": "매수",
+        "investment_points": [
+            "업계 전반의 실적 전망치 상향으로 밸류에이션 부담 축소",
+            "메모리 가격 상승세 반영",
+            "높은 ROE 유지 전망"
+        ],
+        "risk_factors": [
+            "메모리 가격의 Peak out에 대한 경계심",
+            "데이터센터와 컨슈머 IT향 메모리 수급 양극화"
+        ],
+        "shareholder_structure": "주요 주주 지분율은 외국인 보유비중 53.5%로, 유동주식비율은 75.2%입니다."
+    }
+}

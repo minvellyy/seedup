@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-20",
+        "brokerage": "하나증권",
+        "analyst_name": "백승혜, 안기량",
+        "report_title": "[Hana China Weekly] 2025년 실적 발표 속 기업 간 차.."
+    },
+    "specific_data": {
+        "strategy_theme": "2025년 실적 발표 속 기업 간 차별화 심화",
+        "recommended_portfolio": [
+            "GDS(9698.HK)",
+            "텐센트(0700.HK)",
+            "알리바바(BABA.US)"
+        ],
+        "strategy_logic": [
+            "GDS는 매출 증가에도 불구하고 순손실이 확대되었으나, AI 데이터센터 수요 증가로 인한 Capex 투자 확대가 긍정적.",
+            "텐센트는 게임 및 AI 부문에서 긍정적인 실적을 기록하며 중장기 성장 가능성을 시사.",
+            "알리바바는 수익성 압박에 직면했으나 AI 및 클라우드 사업으로의 전환이 진행 중."
+        ],
+        "quant_factors": [
+            "매출 성장률",
+            "순이익 성장률",
+            "GPM",
+            "Capex 투자"
+        ]
+    }
+}
