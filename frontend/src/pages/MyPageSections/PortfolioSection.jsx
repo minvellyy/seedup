@@ -54,34 +54,56 @@ const DonutChart = ({ items, size = 400, selectedIndex, hoveredIndex, onSelectIt
 
   return (
     <svg width={size} height={size} viewBox={`0 0 ${size} ${size}`}>
-      {items.map((item, index) => {
-        const angle = (item.value / 100) * 360
-        const path = createArc(currentAngle, currentAngle + angle, index)
-        currentAngle += angle
-        
-        const isActive = index === selectedIndex || index === hoveredIndex
-        const hasSelection = selectedIndex !== null
-        const opacity = hasSelection && !isActive ? 0.5 : 1
-        
-        return (
-          <path
-            key={index}
-            d={path}
-            fill={colors[index % colors.length]}
+      {items.length === 1 ? (
+        // 종목 1개(100%)일 때 arc 대신 circle로 렌더링
+        <>
+          <circle
+            cx={center}
+            cy={center}
+            r={outerRadius}
+            fill={colors[0]}
             stroke="#fff"
             strokeWidth="3"
-            opacity={opacity}
-            style={{ 
-              cursor: 'pointer', 
-              transition: 'all 0.3s ease',
-              transformOrigin: 'center',
-            }}
-            onClick={() => onSelectItem(index)}
-            onMouseEnter={() => onSelectItem(index, true)}
-            onMouseLeave={() => onSelectItem(null, true)}
+            style={{ cursor: 'pointer' }}
+            onClick={() => onSelectItem(0)}
           />
-        )
-      })}
+          <circle
+            cx={center}
+            cy={center}
+            r={innerRadius}
+            fill="#fff"
+          />
+        </>
+      ) : (
+        items.map((item, index) => {
+          const angle = (item.value / 100) * 360
+          const path = createArc(currentAngle, currentAngle + angle, index)
+          currentAngle += angle
+
+          const isActive = index === selectedIndex || index === hoveredIndex
+          const hasSelection = selectedIndex !== null
+          const opacity = hasSelection && !isActive ? 0.5 : 1
+
+          return (
+            <path
+              key={index}
+              d={path}
+              fill={colors[index % colors.length]}
+              stroke="#fff"
+              strokeWidth="3"
+              opacity={opacity}
+              style={{
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                transformOrigin: 'center',
+              }}
+              onClick={() => onSelectItem(index)}
+              onMouseEnter={() => onSelectItem(index, true)}
+              onMouseLeave={() => onSelectItem(null, true)}
+            />
+          )
+        })
+      )}
     </svg>
   )
 }
