@@ -17,6 +17,7 @@ import PortfolioDetailPage from './pages/PortfolioDetailPage'
 import MyPage from './pages/MyPage'
 import ChatBotPage from './pages/ChatBotPage'
 import CustomerCenterPage from './pages/CustomerCenterPage'
+import Footer from './components/Footer'
 import './App.css'
 
 function App() {
@@ -42,6 +43,7 @@ function App() {
             <Route path="/chat" element={<ChatBotPage />} />
             <Route path="/support" element={<CustomerCenterPage />} />
           </Routes>
+          <Footer />
         </div>
       </AuthProvider>
     </Router>
