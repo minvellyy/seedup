@@ -19,10 +19,19 @@ def load_year(processed: Path, year: int) -> pd.DataFrame:
         parts.append(pd.read_parquet(p))
     return pd.concat(parts, ignore_index=True)
 
+def load_fy_only(processed: Path, year: int) -> pd.DataFrame:
+    """FY(연간) 파일만 로드. 현금흐름 롤링 윈도우 확장 용도."""
+    p = processed / f"fin_core_norm_{year}_FY_{SETTINGS.fs_div}.parquet"
+    if not p.exists():
+        raise FileNotFoundError(f"Missing FY normalized file: {p}")
+    return pd.read_parquet(p)
+
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--target_year", type=int, default=2024)
     ap.add_argument("--base_year", type=int, default=2023, help="TTM 계산을 위해 함께 로드할 이전 연도")
+    ap.add_argument("--backfill_year", type=int, default=None,
+                    help="현금흐름 롤링 윈도우 확장용 추가 연도(FY만 로드). 예: --backfill_year 2022")
     ap.add_argument("--with_market_cap", action="store_true", help="merge market cap (data/processed/market_cap.parquet)")
     ap.add_argument("--with_price", action="store_true", help="merge price features (data/processed/price_features_asof.parquet)")
     ap.add_argument("--out_tag", default="", help="output tag suffix, e.g. with_mc_with_price")
@@ -32,10 +41,13 @@ def main():
     processed = ensure_dir(base / "processed")
 
     # 1) 캐시된 normalized 재무만 로드
-    core = pd.concat(
-        [load_year(processed, args.base_year), load_year(processed, args.target_year)],
-        ignore_index=True
-    )
+    parts = []
+    if args.backfill_year is not None:
+        print(f"[INFO] backfill_year={args.backfill_year}: FY 데이터만 로드 (현금흐름 윈도우 확장)")
+        parts.append(load_fy_only(processed, args.backfill_year))
+    parts.append(load_year(processed, args.base_year))
+    parts.append(load_year(processed, args.target_year))
+    core = pd.concat(parts, ignore_index=True)
 
     # 2) as_of 생성 + YTD->분기 변환 + TTM
     core = add_as_of(core)

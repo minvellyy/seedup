@@ -32,9 +32,16 @@ def build_ttm(df_q: pd.DataFrame) -> pd.DataFrame:
     stock_cols = ["total_assets", "total_liab", "total_equity", "current_assets", "current_liab"]
 
     # rolling sum for flow
+    # cfo/capex는 DART 분기 보고서에 없고 연간(FY)만 존재하므로 min_periods=1로 연간값 활용
+    # 이후 ffill로 cfo 없는 최신 FY 행(연간보고서 제출됐으나 CF 미포함)도 이전 값 승계
     for c in flow_cols:
         if c in d.columns:
-            d[f"{c}_ttm"] = d.groupby("ticker")[c].rolling(4, min_periods=4).sum().reset_index(level=0, drop=True)
+            mp = 1 if c in ("cfo", "capex") else 4
+            d[f"{c}_ttm"] = d.groupby("ticker")[c].rolling(4, min_periods=mp).sum().reset_index(level=0, drop=True)
+    for c in ("cfo", "capex"):
+        col = f"{c}_ttm"
+        if col in d.columns:
+            d[col] = d.groupby("ticker")[col].ffill()
     
     # --- explainability flag: propagate proxy usage into TTM window ---
     if "net_income_proxy" in d.columns:

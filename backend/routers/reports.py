@@ -121,18 +121,26 @@ def get_report_insights(
             seen_titles.add(title)
 
             # PDF URL 생성: report_type(카테고리) + source(파일명) → /api/v1/reports/pdf/{category}/{filename}
+            # report_type 불일치·'None' 케이스 대비 모든 카테고리 폴더를 탐색
             pdf_url: str | None = None
             source = r["metadata"].get("source", "")
             report_type = r["metadata"].get("report_type", "")
-            if source and report_type:
+            if source:
                 pdf_filename = source.replace(".json", ".pdf")
-                pdf_path = _REPORTS_DIR / report_type / pdf_filename
-                if pdf_path.exists():
-                    encoded = urllib.parse.quote(pdf_filename, safe="")
-                    pdf_url = f"/api/v1/reports/pdf/{urllib.parse.quote(report_type, safe='')}/{encoded}"
+                _CATEGORIES = ["종목분석", "산업분석", "시황정보", "투자정보"]
+                # 1) 메타데이터 report_type 우선, 2) 나머지 폴더 순차 탐색
+                candidate_types = ([report_type] if report_type and report_type != "None" else []) + _CATEGORIES
+                for cat in candidate_types:
+                    pdf_path = _REPORTS_DIR / cat / pdf_filename
+                    if pdf_path.exists():
+                        encoded = urllib.parse.quote(pdf_filename, safe="")
+                        pdf_url = f"/api/v1/reports/pdf/{urllib.parse.quote(cat, safe='')}/{encoded}"
+                        break
             # 로컬 PDF 없으면 Naver 원문 URL로 폴백
             if pdf_url is None:
-                pdf_url = r["metadata"].get("naver_pdf_url") or None
+                naver = r["metadata"].get("naver_pdf_url")
+                if naver and naver != "None":
+                    pdf_url = naver
 
             items.append(
                 ReportInsightItem(
