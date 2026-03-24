@@ -19,6 +19,7 @@ const DashboardPage = () => {
   const [pfAvailableAmount, setPfAvailableAmount] = useState('')
   const [recRequested, setRecRequested] = useState(false)  // 사용자가 추천 버튼을 누른 적 있는지
   const [loading, setLoading] = useState(true)
+  const [weatherLoading, setWeatherLoading] = useState(false)
   const [error, setError] = useState(null)
   const [selectedMarket, setSelectedMarket] = useState('KOSPI')
   const [showChatbot, setShowChatbot] = useState(false)
@@ -38,6 +39,11 @@ const DashboardPage = () => {
 
   useEffect(() => {
     fetchDashboardData()
+  }, [])
+
+  useEffect(() => {
+    if (loading) return
+    fetchMarketWeather()
   }, [selectedMarket])
 
   useEffect(() => {
@@ -251,6 +257,21 @@ const DashboardPage = () => {
     } finally {
       clearTimeout(timeoutId)
       setPfRecsLoading(false)
+    }
+  }
+
+  const fetchMarketWeather = async () => {
+    setWeatherLoading(true)
+    try {
+      const FALLBACK_WEATHER = { weather: '흐림', score: 50, recommendation: '시장 분석 중', hint: '현재 시장 데이터를 수집하고 있습니다.' }
+      const result = await fetch(`${API_BASE_URL}/api/dashboard/market-weather?market=${selectedMarket}`)
+        .then(r => r.ok ? r.json() : FALLBACK_WEATHER)
+        .catch(() => FALLBACK_WEATHER)
+      setMarketWeather(result)
+    } catch (err) {
+      console.warn('시장 날씨 조회 실패:', err)
+    } finally {
+      setWeatherLoading(false)
     }
   }
 
@@ -579,7 +600,9 @@ const DashboardPage = () => {
                 <option value="KOSDAQ">KOSDAQ</option>
               </select>
             </div>
-            {marketWeather && (
+            {weatherLoading ? (
+              <div className="weather-loading">로딩 중...</div>
+            ) : marketWeather && (
               <div className="weather-content">
                 <div className="weather-icon">
                   {getWeatherIcon(marketWeather.weather)}
@@ -1033,13 +1056,6 @@ const DashboardPage = () => {
           </div>
         </div>
       )}
-
-      {/* 면책 조항 */}
-      <div className="disclaimer">
-        <p>
-          ※ 본 정보는 투자 판단의 참고 자료이며, 투자 결과에 대한 책임은 본인에게 있습니다.
-        </p>
-      </div>
     </div>
   )
 }

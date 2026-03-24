@@ -227,6 +227,15 @@
   color: white;
 }
 
+.weather-loading {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 80px;
+  color: #6b7280;
+  font-size: 14px;
+}
+
 .weather-content {
   display: flex;
   align-items: center;

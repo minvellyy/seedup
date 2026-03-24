@@ -422,7 +422,7 @@ function PortfolioDetailPage() {
 
     // ── 헤더 (매 페이지 상단) ──────────────────────────────────
     const headerHtml = `<div id="pdf-header" style="${W}background:#1e293b;padding:20px 40px;display:flex;justify-content:space-between;align-items:center;">
-      <div><span style="color:#ffec48;font-size:22px;font-weight:700;letter-spacing:-0.5px;">SeedUp</span>
+      <div><span style="color:#ffec48;font-size:22px;font-weight:700;letter-spacing:-0.5px;">SeedUP</span>
         <span style="color:#94a3b8;font-size:12px;margin-left:12px;">포트폴리오 분석 보고서</span></div>
       <div style="color:#94a3b8;font-size:11px;">${today}</div>
     </div>`
@@ -436,7 +436,7 @@ function PortfolioDetailPage() {
         </ul>
       </div>
       <div style="background:#1e293b;padding:14px 40px;display:flex;justify-content:space-between;align-items:center;">
-        <span style="color:#ffec48;font-size:16px;font-weight:700;">SeedUp</span>
+        <span style="color:#ffec48;font-size:16px;font-weight:700;">SeedUP</span>
         <span style="color:#64748b;font-size:11px;">AI 기반 투자 포트폴리오 분석 서비스</span>
         <span style="color:#94a3b8;font-size:11px;">${today}</span>
       </div>

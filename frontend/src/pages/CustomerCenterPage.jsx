@@ -9,7 +9,7 @@ const FAQ_DATA = [
   {
     id: 1,
     question: '투자 경험이 없어도 이용할 수 있나요?',
-    answer: '네, 가능합니다. SeedUp은 투자 경험이 많지 않은 사용자도 쉽게 이해할 수 있도록 투자 성향 설문과 추천 결과를 직관적으로 제공합니다.'
+    answer: '네, 가능합니다. SeedUP은 투자 경험이 많지 않은 사용자도 쉽게 이해할 수 있도록 투자 성향 설문과 추천 결과를 직관적으로 제공합니다.'
   },
   {
     id: 2,
@@ -34,7 +34,7 @@ const FAQ_DATA = [
   {
     id: 6,
     question: '개인정보는 안전하게 보호되나요?',
-    answer: '네, SeedUp은 최신 보안 기술을 사용하여 개인정보를 암호화하고 안전하게 보호합니다. 관련 법규를 철저히 준수하고 있습니다.'
+    answer: '네, SeedUP은 최신 보안 기술을 사용하여 개인정보를 암호화하고 안전하게 보호합니다. 관련 법규를 철저히 준수하고 있습니다.'
   },
   {
     id: 7,
@@ -44,7 +44,7 @@ const FAQ_DATA = [
   {
     id: 8,
     question: '추천받은 종목을 실제로 매매할 수 있나요?',
-    answer: 'SeedUp은 투자 추천 서비스로, 실제 매매는 증권사 계좌를 통해 진행하셔야 합니다. 추천 정보를 참고하여 투자 결정을 내리실 수 있습니다.'
+    answer: 'SeedUP은 투자 추천 서비스로, 실제 매매는 증권사 계좌를 통해 진행하셔야 합니다. 추천 정보를 참고하여 투자 결정을 내리실 수 있습니다.'
   }
 ]
 
@@ -464,7 +464,7 @@ const InquirySection = () => {
                   <div className="inq-support-reply">
                     <div className="inq-support-avatar">S</div>
                     <div className="inq-support-body">
-                      <div className="inq-support-name">SeedUp Support Team</div>
+                      <div className="inq-support-name">SeedUP Support Team</div>
                       <p className="inq-support-text">{selectedAnswer}</p>
                     </div>
                   </div>

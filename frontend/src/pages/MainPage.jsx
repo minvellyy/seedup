@@ -163,7 +163,7 @@ function MainPage() {
             <div className="phone-mockup">
               <div className="mockup-screen">
                 <div className="mockup-header">
-                  <span className="mockup-logo">SeedUp</span>
+                  <span className="mockup-logo">SeedUP</span>
                 </div>
 
                 <div className="mockup-card card-1">
@@ -253,7 +253,7 @@ function MainPage() {
 
       <section className="gallery-section">
         <div className="gallery-header" data-scroll-fade>
-          <h2>SeedUp만의 특별함</h2>
+          <h2>SeedUP만의 특별함</h2>
           <p>더 나은 투자 경험을 위한 혁신</p>
         </div>
 

@@ -9,7 +9,7 @@ export default function Hero() {
     <section className="hero">
       <div className="hero-container">
         <div className="hero-content">
-          <div className="hero-label">SeedUp</div>
+          <div className="hero-label">SeedUP</div>
           <h1 className="hero-title">
             나에게 맞는<br />
             투자 설계
