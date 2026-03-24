@@ -1,0 +1,7 @@
+﻿user_input,retrieved_contexts,response,reference,faithfulness,answer_relevancy,context_precision,context_recall,answer_correctness
+최근 미국 연준 금리 결정과 국내 증시에 미치는 영향은?,['(검색 결과 없음)'],오류: search_news_context() got an unexpected keyword argument 'company_name',연준의 금리 동결 또는 인하 기대감이 커지면서 국내 주식시장의 외국인 매수세가 강화되고 있다.,0.0,,0.0,0.0,
+최근 원달러 환율 변동과 수출 기업 영향은?,['(검색 결과 없음)'],오류: search_news_context() got an unexpected keyword argument 'company_name',"원달러 환율 상승은 반도체, 자동차 등 수출 비중이 높은 기업들의 원화 기준 매출 증가 요인이 된다.",0.0,,0.0,0.0,
+AI 반도체 시장 성장과 관련 국내 기업 현황은?,['(검색 결과 없음)'],오류: search_news_context() got an unexpected keyword argument 'company_name',AI 데이터센터 투자 확대로 HBM과 AI 가속기 수요가 급증하며 관련 국내 기업들의 수혜가 기대된다.,0.0,,0.0,0.0,
+중국 소비 회복 둔화가 국내 화학·소재 기업에 미치는 영향은?,['(검색 결과 없음)'],오류: search_news_context() got an unexpected keyword argument 'company_name',중국 내수 소비 회복이 지연되면서 석유화학·소재 기업들의 중국 수출 물량과 마진이 압박을 받고 있다.,0.0,,0.0,0.0,
+국제 유가 상승이 국내 정유·에너지 기업에 미치는 영향은?,['(검색 결과 없음)'],오류: search_news_context() got an unexpected keyword argument 'company_name',국제 유가 상승 시 정유사의 정제마진과 재고 평가이익이 증가하나 에너지 수입 비용도 동반 상승한다.,0.0,,0.0,0.0,
+반도체 업황 회복 시점과 주요 관전 포인트는?,['(검색 결과 없음)'],오류: search_news_context() got an unexpected keyword argument 'company_name',글로벌 반도체 재고 조정이 마무리 국면에 접어들며 2024년 하반기부터 업황 회복이 가시화될 것으로 예상된다.,0.0,,0.0,0.0,

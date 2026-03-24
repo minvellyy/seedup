@@ -1,0 +1,29 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "하나증권",
+        "analyst_name": "김현수, 홍지원",
+        "report_title": "태양열은 호르무즈를 건너지 않는다"
+    },
+    "specific_data": {
+        "sector_name": "2차전지",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "LG에너지솔루션",
+            "삼성SDI",
+            "엘앤에프",
+            "더블유씨피",
+            "한중엔시에스"
+        ],
+        "industry_trends": [
+            "ESS 관련주 집중",
+            "전기차 및 배터리 관련 기업들의 주가 상승",
+            "전고체 배터리 연구 개발 확대"
+        ],
+        "risk_factors": [
+            "중국 의존도 심화 리스크",
+            "전기차 관련 실적 부진"
+        ]
+    }
+}

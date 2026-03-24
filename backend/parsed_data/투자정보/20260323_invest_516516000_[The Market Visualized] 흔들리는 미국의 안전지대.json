@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-23",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "[The Market Visualized] 흔들리는 미국의 안전지대"
+    },
+    "specific_data": {
+        "strategy_theme": "안전지대",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "국내 증시는 GTC, 마이크론 호실적, 삼성전자 주총 등 AI·메모리 기대 재확인에 힘입어 가격 반등에 성공",
+            "미국은 방어 업종 비중이 높은 모멘텀 바스켓과 호실적을 발표한 마이크론의 주가마저 약해짐",
+            "국내는 외국인 현·선물 수급 약화가 지속돼 지수 상승의 소유권은 개인 중심으로 이동 중",
+            "증시 전반에 위험회피 심리가 강화되며 대형주, 가치주가 우위",
+            "중동 리스크가 장기화되며 미국의 채권시장 변동성지수 상승"
+        ],
+        "quant_factors": [
+            "Momentum",
+            "Sentiment",
+            "Fundamental"
+        ]
+    }
+}

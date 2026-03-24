@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-23",
+        "brokerage": "유진투자증권",
+        "analyst_name": "이재일 CFA",
+        "report_title": "Corp.Day 후기 로봇SDV가 수익 모델의 구조.."
+    },
+    "specific_data": {
+        "company_name": "현대오토에버",
+        "ticker": "307950",
+        "investment_rating": "BUY(유지)",
+        "investment_points": [
+            "1Q26 실적은 안정적인 성장세를 유지할 전망",
+            "고부가가치 신사업들 대기하고 있어 고성장세와 수익성 개선 이어질 것으로 기대됨",
+            "SDV 관련 사업은 그룹의 SDV 전략을 지원하고 표준화된 미들웨어를 모든 차량에 장착하는 것이 목표"
+        ],
+        "risk_factors": [
+            "로봇 비즈니스는 실제 양산 시점과 생산 물량, 로봇의 가격 등에 따라 변동될 수 있음"
+        ],
+        "shareholder_structure": "현대자동차 (외 4인) 75.3%, 국민연금공단 (외 1인) 8.2%"
+    }
+}

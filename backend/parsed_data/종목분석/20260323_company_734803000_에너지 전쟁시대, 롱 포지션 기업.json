@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-23",
+        "brokerage": "iM증권",
+        "analyst_name": "이상헌, 장호",
+        "report_title": "에너지 전쟁시대, 롱 포지션 기업"
+    },
+    "specific_data": {
+        "company_name": "포스코인터내셔널",
+        "ticker": "047050",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "미얀마 가스전의 안정적인 공급처 확보",
+            "유가 상승에 따른 실적 개선 기대",
+            "LNG 트레이딩 기회 증가",
+            "희토류 공급망 강화"
+        ],
+        "risk_factors": [
+            "유가 변동성",
+            "정치적 리스크",
+            "계약 이행 리스크"
+        ],
+        "shareholder_structure": "주요 주주 지분율: 지배주주 6,545억원, 비지배주주 805억원"
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-24",
+        "brokerage": "유진투자증권",
+        "analyst_name": "박종선",
+        "report_title": "콥데이 後記 대형고객 확보 통한 턴어라운드.."
+    },
+    "specific_data": {
+        "company_name": "하나기술",
+        "ticker": "299030",
+        "investment_rating": "NR(유지)",
+        "investment_points": [
+            "인도 대형고객 확보 및 제품 다양화로 실적 턴어라운드 기대",
+            "2026년 실적 기준 PER 18.7배로, 국내 동종업체 평균 PER 13.9배 대비 할증되어 거래 중"
+        ],
+        "risk_factors": [
+            "기존 고객의 투자가 축소",
+            "해외고객 확보 추진"
+        ],
+        "shareholder_structure": "오태봉 (외 3인) 29.3%, 김정용 (외 1인) 1.1%, 외국인 지분율 3.0%"
+    }
+}

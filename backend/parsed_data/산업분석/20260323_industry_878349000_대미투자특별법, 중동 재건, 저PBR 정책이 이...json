@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "키움증권",
+        "analyst_name": "신대현",
+        "report_title": "대미투자특별법, 중동 재건, 저PBR 정책이 이.."
+    },
+    "specific_data": {
+        "sector_name": "건설",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "삼성E&A",
+            "DL이앤씨",
+            "GS건설"
+        ],
+        "industry_trends": [
+            "대미투자특별법 통과에 따른 미국 원전 사업 진출 기대감",
+            "중동 재건 기대감",
+            "정부의 저PBR 정책에 따른 건설사 주가 상승"
+        ],
+        "risk_factors": [
+            "이란과 이스라엘의 전쟁으로 인한 중동 지역의 불안정성",
+            "전쟁으로 인한 건설사 실적에 대한 부담"
+        ]
+    }
+}

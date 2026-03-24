@@ -1,0 +1,29 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-20",
+        "brokerage": "대신증권",
+        "analyst_name": "박강호, 류형근, 서지원",
+        "report_title": "IT Weekly"
+    },
+    "specific_data": {
+        "sector_name": "IT/전기전자",
+        "industry_rating": "긍정적",
+        "top_picks": [
+            "삼성전자",
+            "SK하이닉스",
+            "삼성전기",
+            "LG이노텍"
+        ],
+        "industry_trends": [
+            "반도체 PCB 및 수동부품 가격 상승 기대",
+            "AI 인프라 투자 증가",
+            "메모리 가격 상승"
+        ],
+        "risk_factors": [
+            "중동 이슈로 인한 불확실성",
+            "유가 변동성",
+            "금리 인상"
+        ]
+    }
+}

@@ -1,0 +1,33 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "유진투자증권",
+        "analyst_name": "류태환, 임범수",
+        "report_title": "건설부동산 Weekly - 2026년 공동주택 공시.."
+    },
+    "specific_data": {
+        "sector_name": "건설/부동산",
+        "industry_rating": null,
+        "top_picks": [
+            "현대건설",
+            "대우건설",
+            "삼성E&A",
+            "GS건설",
+            "DL이앤씨",
+            "HDC현대산업개발"
+        ],
+        "industry_trends": [
+            "아파트 가격 상승세 지속",
+            "공시가격 현실화율 동결",
+            "중소·중견 건설사 유동성 위기",
+            "매수 심리 위축"
+        ],
+        "risk_factors": [
+            "금리 상승 우려",
+            "대출 규제",
+            "건설경기 침체",
+            "미분양 증가"
+        ]
+    }
+}

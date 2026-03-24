@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-24",
+        "brokerage": "SK증권",
+        "analyst_name": "박준형",
+        "report_title": "탄소년단 활동 초기 구간, 주가 조정은 매수 .."
+    },
+    "specific_data": {
+        "company_name": "하이브",
+        "ticker": "352820",
+        "investment_rating": "매수",
+        "investment_points": [
+            "방탄소년단 컴백과 동시에 음원 차트 진입 및 음반 판매량 신기록 갱신",
+            "주가 조정은 매수 기회로 판단",
+            "글로벌 콘텐츠 경쟁력 재확인"
+        ],
+        "risk_factors": [
+            "미국-이란 지정학적 리스크",
+            "광화문 공연에 대한 부정적 여론"
+        ],
+        "shareholder_structure": "주요 주주 지분율에 대한 정보는 제공되지 않음"
+    }
+}

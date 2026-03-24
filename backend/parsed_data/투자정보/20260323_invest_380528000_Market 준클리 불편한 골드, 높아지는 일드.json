@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-23",
+        "brokerage": "iM증권",
+        "analyst_name": "김준영",
+        "report_title": "Market 준클리 불편한 골드, 높아지는 일드"
+    },
+    "specific_data": {
+        "strategy_theme": "불편한 골드, 높아지는 일드",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "금 가격 하락은 글로벌 유동성 하락의 시그널",
+            "공급발 인플레이션 우려와 연내 동결을 반영한 시장",
+            "금리로 설명할 수 없는 성장/가치 로테이션",
+            "유동성 프록시 골드의 하락은 매크로 환경 악화를 시사"
+        ],
+        "quant_factors": [
+            "PPI 상승",
+            "금리 인하 기대감 소멸",
+            "실질금리 급등",
+            "소비자 심리지수 하락"
+        ]
+    }
+}

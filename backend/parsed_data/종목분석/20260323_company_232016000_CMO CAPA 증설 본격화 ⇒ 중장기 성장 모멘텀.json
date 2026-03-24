@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-23",
+        "brokerage": "iM증권",
+        "analyst_name": "이상헌, 장호",
+        "report_title": "CMO CAPA 증설 본격화 ⇒ 중장기 성장 모멘텀"
+    },
+    "specific_data": {
+        "company_name": "동아쏘시오홀딩스",
+        "ticker": "000640",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "CMO CAPA 증설 본격화로 중장기 성장 모멘텀",
+            "에스티젠바이오 CAPA 증설 효과가 가시화되는 2028년부터 성장성 가속화",
+            "스텔라라BS 이뮬도사 상승여력 36.7%"
+        ],
+        "risk_factors": [
+            "경쟁 심화",
+            "일회성 비용 발생"
+        ],
+        "shareholder_structure": "지분 80.4% 보유한 에스티젠바이오"
+    }
+}

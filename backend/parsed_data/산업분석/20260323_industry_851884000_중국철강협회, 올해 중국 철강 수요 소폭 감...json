@@ -1,0 +1,29 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "하나증권",
+        "analyst_name": "박성봉, 김승규",
+        "report_title": "중국철강협회, 올해 중국 철강 수요 소폭 감.."
+    },
+    "specific_data": {
+        "sector_name": "철강금속",
+        "industry_rating": "Neutral",
+        "top_picks": [
+            "POSCO홀딩스",
+            "현대제철",
+            "세아제강",
+            "세아베스틸지주"
+        ],
+        "industry_trends": [
+            "중국철강협회, 올해 중국 철강 수요 소폭 감소 전망",
+            "국내 철강 유통가격 상승세",
+            "글로벌 철강사 주가 약세"
+        ],
+        "risk_factors": [
+            "중국의 부동산 시장 부진",
+            "수출 허가제 도입으로 인한 수출 위축",
+            "원자재 가격 상승"
+        ]
+    }
+}

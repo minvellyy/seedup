@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "다신증권",
+        "analyst_name": "박강호, 서지원RA",
+        "report_title": "가격 상승의 기대감은 높아지고 있다"
+    },
+    "specific_data": {
+        "sector_name": "IT/전기전자",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "삼성전기",
+            "대덕전자"
+        ],
+        "industry_trends": [
+            "MLCC 가격 인상 가능성 부각",
+            "PCB 가격 인상 전망",
+            "반도체 업황 긍정적 유지"
+        ],
+        "risk_factors": [
+            "대외 불확실성",
+            "유가 상승",
+            "금리인하 가능성 축소"
+        ]
+    }
+}

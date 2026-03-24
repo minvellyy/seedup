@@ -1,0 +1,31 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-23",
+        "brokerage": "대신증권",
+        "analyst_name": "이경민, 정해창",
+        "report_title": "[주간 퀀틴전시 플랜] 지정학적 리스크  정책실적 .."
+    },
+    "specific_data": {
+        "strategy_theme": "지정학적 리스크와 정책/실적 모멘텀",
+        "recommended_portfolio": [
+            "반도체",
+            "조선",
+            "기계",
+            "유틸리티",
+            "운송",
+            "화장품/의류",
+            "보험"
+        ],
+        "strategy_logic": [
+            "지정학적 리스크가 장기화될 가능성이 있지만, 주요 기업들의 자사주 매입과 주주 친화 정책 강화가 긍정적인 영향을 미칠 것",
+            "KOSPI가 과거 경기 부진과 통화 정책 불확실성을 반영하여 Deep Value 국면에 진입",
+            "선행 EPS 상승과 외국인 순매수 유입이 예상되는 업종에 주목"
+        ],
+        "quant_factors": [
+            "KOSPI 12개월 선행 PER 8.51배",
+            "KOSPI 12개월 선행 EPS 654.7p",
+            "KOSPI 5,700선 회복"
+        ]
+    }
+}

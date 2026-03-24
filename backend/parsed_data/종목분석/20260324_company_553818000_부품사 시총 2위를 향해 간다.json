@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-16",
+        "brokerage": "삼성증권",
+        "analyst_name": "임은영, 김현지",
+        "report_title": "부품사 시총 2위를 향해 간다"
+    },
+    "specific_data": {
+        "company_name": "에스엘",
+        "ticker": "005850",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "팬데믹 이후 매출 고성장과 부품사 중 가장 높은 수익성 유지",
+            "2025년~2027년 배당 성향 40% 예상으로 주주 환원 정책 우수",
+            "2026년에 본업인 램프 사업과 신사업(BMS, 바디제어 모듈, 로봇) 모두 성장"
+        ],
+        "risk_factors": [
+            "한온시스템, HL만도의 수익성 부진",
+            "구조조정으로 인한 배당 여력 감소"
+        ],
+        "shareholder_structure": "주요 주주 지분율에 대한 정보는 제공되지 않음"
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-24",
+        "brokerage": "한화투자증권",
+        "analyst_name": "김소혜, 김나우",
+        "report_title": "일회성 비용에 따른 컨센서스 하회 전망"
+    },
+    "specific_data": {
+        "company_name": "제일기획",
+        "ticker": "030000",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "일회성 비용 반영으로 영업이익 컨센서스를 크게 하회할 것으로 전망",
+            "2분기 순성장으로 재차 돌아설 가능성",
+            "목표주가를 2만 5천 원으로 낮춰 제시"
+        ],
+        "risk_factors": [
+            "일회성 비용 약 120억 원 반영",
+            "경기침체로 인한 사업 환경 부정적 요인"
+        ],
+        "shareholder_structure": "삼성전자 (외 6인) 28.4%, 자사주 (외 1인) 12.0%, 국민연금공단 (외 1인) 9.9%"
+    }
+}

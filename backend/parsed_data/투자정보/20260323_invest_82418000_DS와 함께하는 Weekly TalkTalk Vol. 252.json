@@ -1,0 +1,33 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "DS투자증권",
+        "analyst_name": "이수림, 조대형, 김민정",
+        "report_title": "DS와 함께하는 Weekly TalkTalk Vol. 252"
+    },
+    "specific_data": {
+        "strategy_theme": "반도체, IT/전기전자, 제약·바이오, 대체투자",
+        "recommended_portfolio": [
+            "삼성전자(005930)",
+            "SK하이닉스(000660)",
+            "LG이노텍(011070)",
+            "비에이치(090460)",
+            "알지노믹스(476830)"
+        ],
+        "strategy_logic": [
+            "메모리 가격 상승에 따른 실적 경신 기대",
+            "AI 인프라 확장에 따른 삼성 파운드리 경쟁력 상승",
+            "MLCC 가격 인상에 따른 실적 레벨업 기대",
+            "K-바이오의 글로벌 항암 시장 진출",
+            "재생에너지 및 디지털 인프라 투자 확대"
+        ],
+        "quant_factors": [
+            "1W 수익률 비교",
+            "장기 메모리 계약 도입 검토",
+            "국제유가 상승",
+            "MLCC 수급 타이트",
+            "K-방산의 성과"
+        ]
+    }
+}

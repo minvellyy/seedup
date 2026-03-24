@@ -1,0 +1,38 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-23",
+        "brokerage": "투자분석부",
+        "analyst_name": null,
+        "report_title": "[IBKS Daily] Start with IBKS(2026.03.23) 중동 리스.."
+    },
+    "specific_data": {
+        "strategy_theme": null,
+        "recommended_portfolio": [
+            "두산에너빌리티",
+            "SK하이닉스",
+            "대한항공",
+            "삼성전자",
+            "한미반도체",
+            "삼성전자우",
+            "포스코인터내셔널",
+            "현대차",
+            "한화솔루션",
+            "기아"
+        ],
+        "strategy_logic": [
+            "유가 하락과 고환율 부담이 상존한 가운데 강보합.",
+            "중동 지정학적 긴장 완화 기대 속 유가가 안정되며 순환매 장세가 전개.",
+            "고환율 부담이 지속되며 반도체·자동차 등 대형주 중심으로 순매도.",
+            "KOSDAQ은 외국인 순매수세에 상승.",
+            "중동 리스크에 따른 안전자산 선호와 금리 인하 기대 약화."
+        ],
+        "quant_factors": [
+            "KOSPI 상승률",
+            "KOSDAQ 상승률",
+            "미국 증시 하락",
+            "유럽 증시 하락",
+            "국제유가 상승"
+        ]
+    }
+}

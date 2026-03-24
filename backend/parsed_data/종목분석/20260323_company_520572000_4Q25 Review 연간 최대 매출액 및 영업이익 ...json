@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2023-10-01",
+        "brokerage": "유진투자증권",
+        "analyst_name": "박종선",
+        "report_title": "4Q25 Review 연간 최대 매출액 및 영업이익 .."
+    },
+    "specific_data": {
+        "company_name": "헥토파이낸셜",
+        "ticker": "234340",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "4Q25 실적이 매출액 +14.4%yoy, 영업이익 +131.3%yoy로 긍정적",
+            "2025E 영업수익 187.4십억원, 2026E 213.4십억원으로 성장 전망"
+        ],
+        "risk_factors": [
+            "고객 고지 리스크",
+            "시장 경쟁 심화"
+        ],
+        "shareholder_structure": "주요 주주 지분율: 지배주주 94.5%, 비지배주주 5.5%"
+    }
+}

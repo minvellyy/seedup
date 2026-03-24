@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-23",
+        "brokerage": "대신증권",
+        "analyst_name": "박강호, 서지원RA",
+        "report_title": "과거의 대덕이 아니다"
+    },
+    "specific_data": {
+        "company_name": "대덕전자",
+        "ticker": "353200",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "서버향 반도체 PCB 매출 확대",
+            "FC BGA는 흑자전환 이후 이익 확대",
+            "2026년 목표주가 95,000원 상향"
+        ],
+        "risk_factors": [
+            "메모리 수요 변동성",
+            "글로벌 경제 불확실성"
+        ],
+        "shareholder_structure": "주요주주 대덕 외 6 인 32.77%, 국민연금공단 12.03%"
+    }
+}

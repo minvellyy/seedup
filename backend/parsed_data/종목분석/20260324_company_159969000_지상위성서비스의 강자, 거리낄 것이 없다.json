@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2023-03-26",
+        "brokerage": "Daishin Securities",
+        "analyst_name": "김아영",
+        "report_title": "지상위성서비스의 강자, 거리낄 것이 없다"
+    },
+    "specific_data": {
+        "company_name": "인텔리안테크",
+        "ticker": "189300",
+        "investment_rating": "N.R",
+        "investment_points": [
+            "LEO 게이트웨이 성장 + VSAT 회복, 이중 성장 사이클 진입",
+            "2026년, 매출 확대 기반 실적 가시화로 추가적인 리레이팅은 필연적",
+            "LEO 인프라 확장과 VSAT 구조 전환이 동시에 열어주는 성장 구간"
+        ],
+        "risk_factors": [
+            "LEO 전환 초기 영향으로 2024년까지 수요가 일부 위축될 가능성"
+        ],
+        "shareholder_structure": "주요주주 성상엽 외 6 인 23.14%"
+    }
+}

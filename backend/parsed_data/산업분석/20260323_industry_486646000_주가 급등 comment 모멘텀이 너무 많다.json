@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "유진투자증권",
+        "analyst_name": "류태환",
+        "report_title": "주가 급등 comment 모멘텀이 너무 많다"
+    },
+    "specific_data": {
+        "sector_name": "건설/부동산",
+        "industry_rating": "OVERWEIGHT",
+        "top_picks": [],
+        "industry_trends": [
+            "대미 투자 본격화",
+            "에너지 안보 강화",
+            "종전 이후 투자 사이클",
+            "3기 신도시 가속",
+            "저PBR 해소"
+        ],
+        "risk_factors": [
+            "전쟁 장기화 시 실적 추정치 하향",
+            "해외수주 실적이 아닌 기대감이 선반영"
+        ]
+    }
+}

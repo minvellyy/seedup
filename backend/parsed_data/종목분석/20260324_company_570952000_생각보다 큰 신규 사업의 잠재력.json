@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-24",
+        "brokerage": "하나증권",
+        "analyst_name": "유재선, 성무규",
+        "report_title": "생각보다 큰 신규 사업의 잠재력"
+    },
+    "specific_data": {
+        "company_name": "SGC에너지",
+        "ticker": "005090",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "생각보다 큰 신규 사업의 잠재력",
+            "목표주가 76,000원으로 상향",
+            "안정적 실적 기대"
+        ],
+        "risk_factors": [
+            "단기적으로 대외 변수 변화에 따른 실적 변동성",
+            "발전/에너지 부문의 판가 하락"
+        ],
+        "shareholder_structure": "이우성 외 8 인 54.76%"
+    }
+}

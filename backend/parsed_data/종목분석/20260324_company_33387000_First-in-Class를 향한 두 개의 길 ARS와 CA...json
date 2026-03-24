@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-23",
+        "brokerage": "한국IR협의회",
+        "analyst_name": "김승준, 이금민",
+        "report_title": "First-in-Class를 향한 두 개의 길 ARS와 CA.."
+    },
+    "specific_data": {
+        "company_name": "네오이뮨텍",
+        "ticker": "950220",
+        "investment_rating": "매수",
+        "investment_points": [
+            "ARS 치료제 개발을 통한 단기 상업화 모멘텀 가시화",
+            "CAR-T 지속성 한계를 겨냥한 플랫폼 확장성 부각",
+            "Endari 매출 가세를 통한 외형 성장 + R&D 레버리지 확보"
+        ],
+        "risk_factors": [
+            "정부 비축 시장 진입 지연 가능성",
+            "CAR-T 병용 전략의 기술이전 성과 미비",
+            "유동성 리스크"
+        ],
+        "shareholder_structure": "제넥신 16.63%, 기타 83.37%"
+    }
+}

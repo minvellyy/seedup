@@ -1,0 +1,22 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-23",
+        "brokerage": "한화투자증권",
+        "analyst_name": "송유림, 김예인",
+        "report_title": "나는 상한가를 처음 보았다"
+    },
+    "specific_data": {
+        "company_name": "DL이앤씨",
+        "ticker": "375500",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "원전을 필두로 업종 밸류에이션 정상화가 빠르게 진행되고 있습니다.",
+            "상한가에도 불구하고 동사 주가는 P/B 0.5배 수준이며, 이를 자극할 수 있는 원전, 종전 등의 수혜가 예상됩니다."
+        ],
+        "risk_factors": [
+            "고객 고지 리스크 배열"
+        ],
+        "shareholder_structure": "주주 구성: DL (외 8인) 24.8%, Kopernik Global Investors, LLC 8.5%, (국외민 1연인금) 공단 (외 1인) 8.1%"
+    }
+}

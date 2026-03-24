@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-24",
+        "brokerage": "iM증권",
+        "analyst_name": "이상수",
+        "report_title": "코스닥 액티브 ETF 영향권에 놓인 국내 로보.."
+    },
+    "specific_data": {
+        "sector_name": "로보틱스",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "레인보우로보틱스",
+            "유일로보틱스",
+            "클로봇"
+        ],
+        "industry_trends": [
+            "코스닥 액티브 ETF 상장 본격화",
+            "로보틱스 산업의 이벤트 플레이 성격",
+            "주요 자산운용사의 코스닥 150 ETF에 대한 수급 집중"
+        ],
+        "risk_factors": [
+            "시장 불확실성",
+            "패시브 ETF 수급의 영향력",
+            "유동 물량 부족"
+        ]
+    }
+}

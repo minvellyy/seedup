@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-23",
+        "brokerage": "대신증권",
+        "analyst_name": "문건우, 문남중",
+        "report_title": "THE GLOBAL 마켓 파인더"
+    },
+    "specific_data": {
+        "strategy_theme": "지정학적 불확실성에 따른 에너지 및 원유 상승",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "에너지/원유 상승",
+            "금속/광업 하락",
+            "인플레이션 우려"
+        ],
+        "quant_factors": [
+            "지정학적 리스크",
+            "원자재 가격 변동",
+            "금리 동결"
+        ]
+    }
+}

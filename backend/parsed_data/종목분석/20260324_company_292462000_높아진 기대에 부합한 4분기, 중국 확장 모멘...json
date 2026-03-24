@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-19",
+        "brokerage": "삼성증권",
+        "analyst_name": "이혜인",
+        "report_title": "높아진 기대에 부합한 4분기, 중국 확장 모멘.."
+    },
+    "specific_data": {
+        "company_name": "감성코퍼레이션",
+        "ticker": "036620",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "4분기 영업이익 컨센서스 소폭 상회",
+            "중국 출점 계획 소폭 조정, 효율성 중심 전략으로 우려 제한적",
+            "목표주가 8,000원(’26E PER 15배) 유지"
+        ],
+        "risk_factors": [
+            "중국 출점 계획 조정에 따른 실적 성장 둔화 우려"
+        ],
+        "shareholder_structure": "주식수 90,503,771주 (유동주식 비중 69.6%)"
+    }
+}

@@ -1,0 +1,34 @@
+{
+    "common_metadata": {
+        "report_type": "ETF 전략",
+        "report_date": "2026-03-23",
+        "brokerage": "키움증권",
+        "analyst_name": "김진영, 조호준",
+        "report_title": "Kiwoom ETF Weekly (0323)"
+    },
+    "specific_data": {
+        "strategy_theme": "글로벌 ETF 동향",
+        "recommended_portfolio": [
+            "UGA",
+            "BNO",
+            "PFIX",
+            "OILK",
+            "VIXY",
+            "USCI",
+            "SDCI",
+            "TOXR",
+            "XRPZ",
+            "COMT"
+        ],
+        "strategy_logic": [
+            "미국 경제지표 발표에 따른 ETF 반응",
+            "중앙은행 통화정책 변화에 따른 자산군 변동",
+            "지정학적 리스크에 따른 원자재 가격 상승"
+        ],
+        "quant_factors": [
+            "자산군별 수익률",
+            "거래량 변화",
+            "자금 유입/유출"
+        ]
+    }
+}

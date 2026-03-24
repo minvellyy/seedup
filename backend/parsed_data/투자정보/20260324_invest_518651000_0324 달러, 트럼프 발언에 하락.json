@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-24",
+        "brokerage": "키움증권",
+        "analyst_name": "김유미, 안예하, 심수빈",
+        "report_title": "0324 달러, 트럼프 발언에 하락"
+    },
+    "specific_data": {
+        "strategy_theme": "달러 하락 및 국제유가 급락",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "트럼프 대통령의 이란 에너지 시설 공격 연기 발언으로 중동 전쟁 확전 우려 완화",
+            "뉴욕증시 반등과 금융시장 내 투자심리 개선",
+            "NDF 달러/원 환율 하락 예상"
+        ],
+        "quant_factors": [
+            "달러 하락",
+            "국제유가 급락",
+            "금리 하락"
+        ]
+    }
+}

@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-13",
+        "brokerage": "삼성증권",
+        "analyst_name": "오동환",
+        "report_title": "신규 엔진 확보로 `30년 매출 5조 목표"
+    },
+    "specific_data": {
+        "company_name": "엔씨소프트",
+        "ticker": "036570",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "글로벌 캐주얼게임 플랫폼 인수로 비유기적 외형 성장과 캐주얼 장르 경쟁력 확보",
+            "리니지 클래식 흥행으로 1Q25부터 영업이익 정상화 기대",
+            "신성장 동력 확보와 이익 성장으로 점진적 밸류에이션 할인 해소 전망"
+        ],
+        "risk_factors": [
+            "게임 시장의 경쟁 심화",
+            "신작 출시 지연 가능성",
+            "글로벌 경제 불확실성"
+        ],
+        "shareholder_structure": "주식수 21,544,022주 (유동주식 비중 77.6%)"
+    }
+}

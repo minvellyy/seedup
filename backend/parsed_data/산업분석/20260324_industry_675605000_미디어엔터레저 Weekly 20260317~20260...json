@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-24",
+        "brokerage": "유진투자증권",
+        "analyst_name": "이현지, 고수영",
+        "report_title": "미디어엔터레저 Weekly 20260317~20260.."
+    },
+    "specific_data": {
+        "sector_name": "미디어/엔터/레저",
+        "industry_rating": null,
+        "top_picks": [],
+        "industry_trends": [
+            "BTS 'ARIRANG' 발매 첫 날 398 만장 판매",
+            "영화 <왕과 사는 남자> 역대 개봉작 중 관람객 3위, 매출액 1위 등극",
+            "2월 방일 중국인 -45%yoy 기록",
+            "3월 1-18일 방한 외국인 +32.7%yoy 기록"
+        ],
+        "risk_factors": [
+            "방일령 여파",
+            "BTS 공연에 따른 수혜 기대"
+        ]
+    }
+}

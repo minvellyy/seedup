@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "하나증권",
+        "analyst_name": "심은주, 고찬결",
+        "report_title": "1~2월 분위기 + 자산 효율화 현황"
+    },
+    "specific_data": {
+        "sector_name": "음식료/담배",
+        "industry_rating": "긍정적",
+        "top_picks": [
+            "오리온",
+            "삼양식품",
+            "CJ제일제당"
+        ],
+        "industry_trends": [
+            "저 PBR 중심으로 주가 강하게 반등",
+            "해외 성장이 견조한 가운데 환율 효과 기대",
+            "가공 식품 선물세트 반영으로 견조한 성장 전망"
+        ],
+        "risk_factors": [
+            "바이오 부문 실적 부진",
+            "주류 및 음료 수요 부진",
+            "원자재 가격 상승"
+        ]
+    }
+}

@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-24",
+        "brokerage": "하나증권",
+        "analyst_name": "김근아",
+        "report_title": "[신흥국 전략] 베트남, FTSE 기대 유효하나 단기 변수.."
+    },
+    "specific_data": {
+        "strategy_theme": "신흥국 전략",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "FTSE 승격 기대가 베트남 증시 재평가의 계기가 될 전망",
+            "지정학 리스크가 베트남 증시 하방 압력으로 작용",
+            "유가 상승이 성장 경로에 부정적 영향",
+            "환율 불안이 외국인 자금 유입 속도에 영향"
+        ],
+        "quant_factors": [
+            "지정학 리스크",
+            "유가",
+            "환율"
+        ]
+    }
+}

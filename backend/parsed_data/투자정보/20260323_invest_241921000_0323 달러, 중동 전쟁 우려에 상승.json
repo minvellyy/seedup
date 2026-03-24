@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "투자정보",
+        "report_date": "2026-03-23",
+        "brokerage": "키움증권",
+        "analyst_name": "김유미, 안예하, 심수빈",
+        "report_title": "0323 달러, 중동 전쟁 우려에 상승"
+    },
+    "specific_data": {
+        "strategy_theme": "달러 강세, 중동 전쟁 우려",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "미국 정부의 이란 지상군 파병 검토로 지정학적 리스크 확대",
+            "중동 전쟁 장기화 우려로 국제유가 상승",
+            "인플레이션 압력 확대 및 연준의 통화 긴축 가능성 증가"
+        ],
+        "quant_factors": [
+            "달러화 강세",
+            "국제유가 상승",
+            "국채금리 상승"
+        ]
+    }
+}

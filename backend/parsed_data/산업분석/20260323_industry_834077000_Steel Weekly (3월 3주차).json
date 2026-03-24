@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "iM증권",
+        "analyst_name": "김윤상",
+        "report_title": "Steel Weekly (3월 3주차)"
+    },
+    "specific_data": {
+        "sector_name": "철강",
+        "industry_rating": "Neutral",
+        "top_picks": [
+            "포스코 홀딩스",
+            "현대제철",
+            "세아베스틸지주"
+        ],
+        "industry_trends": [
+            "중동 전쟁 발발로 인한 글로벌 철강/비철금속 업종 주가 부진",
+            "중국 고정자산 투자 증가율 개선",
+            "국내 판재류 유통가격 강세"
+        ],
+        "risk_factors": [
+            "원자재 가격 상승",
+            "중국 부동산 투자 감소",
+            "글로벌 경제 불확실성"
+        ]
+    }
+}

@@ -1,0 +1,31 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "하나증권",
+        "analyst_name": "윤재성, 김형준",
+        "report_title": "에너지 가격 급등과 수요 탄력도"
+    },
+    "specific_data": {
+        "sector_name": "에너지/화학",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "S-Oil",
+            "SK이노베이션",
+            "한화솔루션",
+            "유니드"
+        ],
+        "industry_trends": [
+            "에너지 가격 급등과 수요 탄력도",
+            "정제마진 하락",
+            "LNG 수출 증가",
+            "중국의 납사 소비세 개편",
+            "태양광 시장 회복"
+        ],
+        "risk_factors": [
+            "전쟁으로 인한 에너지 인프라 타격",
+            "중국의 납사 소비세 개편으로 인한 원가 상승",
+            "미국의 천연가스 가격 상승"
+        ]
+    }
+}

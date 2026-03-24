@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "하나증권",
+        "analyst_name": "최정욱, CFA, 정소영",
+        "report_title": "PBR 아직도 낮고, 실적도 편안하다"
+    },
+    "specific_data": {
+        "sector_name": "은행",
+        "industry_rating": "매수",
+        "top_picks": [
+            "KB금융",
+            "신한지주"
+        ],
+        "industry_trends": [
+            "전통 금융사들의 가상자산시장 지출 규제 완화 조짐",
+            "가계대출 관리대책 발표 예정",
+            "4대 시중은행의 LTV 정보교환 담합 제재 행정소송",
+            "중동 전쟁 확전 우려로 미국 증시 약세"
+        ],
+        "risk_factors": [
+            "금리 상승에 따른 채권평가손 발생",
+            "환율 상승에 따른 외화환산손실",
+            "중동 전쟁 장기화에 따른 에너지 인플레이션 우려"
+        ]
+    }
+}

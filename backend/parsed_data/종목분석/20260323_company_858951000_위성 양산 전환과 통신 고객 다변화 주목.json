@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-23",
+        "brokerage": "한국IR협의회",
+        "analyst_name": "이나연, 권지승",
+        "report_title": "위성 양산 전환과 통신 고객 다변화 주목"
+    },
+    "specific_data": {
+        "company_name": "AP위성",
+        "ticker": "211270",
+        "investment_rating": null,
+        "investment_points": [
+            "위성사업부는 KPS 및 AIS 양산 전환으로 실적 턴어라운드의 출발점에 진입.",
+            "2026E 매출 631억원(+32%), 영업이익 87억원(OPM 13.8%)으로 V자 회복 전망.",
+            "FY2026E PER 28.9배로 우주항공 피어(95.8배) 대비 뚜렷한 할인 구간."
+        ],
+        "risk_factors": [
+            "위성사업부 수주 지연 리스크.",
+            "LEO 위성통신 서비스의 부상으로 인한 통신사업부의 구조적 존속 가능성."
+        ],
+        "shareholder_structure": "최대주주인 ㈜컨텍은 24.73%의 지분을 보유하고 있으며, 류장수 前 회장이 8.01%, 홈스㈜가 7.86%를 차지."
+    }
+}

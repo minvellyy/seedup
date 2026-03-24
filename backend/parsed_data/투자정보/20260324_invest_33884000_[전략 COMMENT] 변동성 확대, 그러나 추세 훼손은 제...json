@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "주식전략",
+        "report_date": "2026-03-24",
+        "brokerage": "SK증권",
+        "analyst_name": "강대승",
+        "report_title": "[전략 COMMENT] 변동성 확대, 그러나 추세 훼손은 제.."
+    },
+    "specific_data": {
+        "strategy_theme": "분할 매수 전략",
+        "recommended_portfolio": null,
+        "strategy_logic": [
+            "변동성이 확대된 주식시장",
+            "개인 투자자들의 매수 심리 견조",
+            "조정 시 분할 매수 전략 유효"
+        ],
+        "quant_factors": [
+            "KOSPI 12개월 선행 PER 8배 초반",
+            "신용 잔고",
+            "개인 순매수세"
+        ]
+    }
+}

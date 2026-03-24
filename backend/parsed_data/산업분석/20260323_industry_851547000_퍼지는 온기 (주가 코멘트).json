@@ -1,0 +1,30 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "한화리서치",
+        "analyst_name": "송유림, 김예인",
+        "report_title": "퍼지는 온기 (주가 코멘트)"
+    },
+    "specific_data": {
+        "sector_name": "건설",
+        "industry_rating": "Positive",
+        "top_picks": [
+            "현대건설",
+            "DL이앤씨",
+            "GS건설",
+            "한미글로벌",
+            "HL D&I",
+            "자이에스앤디"
+        ],
+        "industry_trends": [
+            "원전 수혜 확산 가능성",
+            "바닥을 찍은 주택 업황",
+            "낮은 밸류에이션"
+        ],
+        "risk_factors": [
+            "원전 관련 인력 부족",
+            "정상화 과정에서의 주가 변동성"
+        ]
+    }
+}

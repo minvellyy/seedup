@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2023-10-26",
+        "brokerage": "SK증권",
+        "analyst_name": "한승한",
+        "report_title": "한수위 글로벌 지정학 리스크 및 해군 현대.."
+    },
+    "specific_data": {
+        "sector_name": "조선업",
+        "industry_rating": "Overweight",
+        "top_picks": [
+            "HD현대중공업",
+            "한화오션"
+        ],
+        "industry_trends": [
+            "글로벌 지정학 리스크 및 해군 현대화 수요 확대",
+            "K-함정 수출의 기회",
+            "글로벌 해양 패권을 위한 해군력 강화 수요 증가"
+        ],
+        "risk_factors": [
+            "글로벌 해양 패권을 위한 강대국들의 수요 증가",
+            "과거 강대국들의 조선업 역량 쇠퇴"
+        ]
+    }
+}

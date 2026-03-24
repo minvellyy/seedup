@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-24",
+        "brokerage": "하나증권",
+        "analyst_name": "이기훈, 김현수",
+        "report_title": "이렇게까지 빠질 일인가"
+    },
+    "specific_data": {
+        "company_name": "하이브",
+        "ticker": "352820",
+        "investment_rating": "BUY (유지)",
+        "investment_points": [
+            "현재주가가 2026년 예상 P/E 30배도 하회",
+            "BTS의 월드 투어가 진행되면서 실적 개선 가능성",
+            "투어 매출 최소 1.5조원 예상"
+        ],
+        "risk_factors": [
+            "관객수에 대한 논란으로 인한 주가 하락",
+            "외부 요인에 따른 공연 매진 여부"
+        ],
+        "shareholder_structure": "방시혁 외 10인 31.42%, 넷마블 9.13%"
+    }
+}

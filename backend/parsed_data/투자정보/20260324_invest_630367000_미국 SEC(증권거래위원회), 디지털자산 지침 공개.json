@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-24",
+        "brokerage": "iM증권",
+        "analyst_name": "양현경",
+        "report_title": "미국 SEC(증권거래위원회), 디지털자산 지침 공개"
+    },
+    "specific_data": {
+        "strategy_theme": "디지털 자산 규제 및 시장 분석",
+        "recommended_portfolio": [
+            "비트코인",
+            "이더리움",
+            "리플",
+            "솔라나"
+        ],
+        "strategy_logic": [
+            "SEC-CFTC의 디지털 자산 공동 지침 발표로 인한 규제 명확화",
+            "디지털 자산의 증권성 여부는 거래 구조에 따라 달라질 수 있음",
+            "법적 리스크가 여전히 존재함"
+        ],
+        "quant_factors": [
+            "하위 테스트(Howey Test) 적용",
+            "디지털 자산의 구조적 분류",
+            "시장 약세 배경 분석"
+        ]
+    }
+}

@@ -1,0 +1,19 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-23",
+        "brokerage": "SK증권",
+        "analyst_name": null,
+        "report_title": "SK증권 Global Carbon Market Daily_260323"
+    },
+    "specific_data": {
+        "market_summary": "국내외 배출권 가격 추이 및 원자재 가격 동향",
+        "macro_indicators": null,
+        "fund_flows": null,
+        "key_news": [
+            "[뉴욕유가] 美 추가 파병에 긴장감 더욱 고조…WTI 2.3%↑",
+            "제4기 배출권거래제 본격 가동… 민관협의체로 제도 보완",
+            "무협 \"EU 탄소장벽 확대…2031년부터 수출 타격 우려\""
+        ]
+    }
+}

@@ -1,0 +1,28 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "유진투자증권",
+        "analyst_name": "이승우, 박재환",
+        "report_title": "Memory Watch - 견고한 펀더멘털 vs. 호르무.."
+    },
+    "specific_data": {
+        "sector_name": "메모리",
+        "industry_rating": "긍정적",
+        "top_picks": [
+            "삼성전자",
+            "SK하이닉스",
+            "마이크론"
+        ],
+        "industry_trends": [
+            "헬륨 쇼크 우려",
+            "AI 및 클라우드 매출 성장",
+            "메모리 캐팩스 증가"
+        ],
+        "risk_factors": [
+            "호르무즈 불확실성",
+            "헬륨 가격 상승",
+            "자동차 반도체의 레거시 노드 비중"
+        ]
+    }
+}

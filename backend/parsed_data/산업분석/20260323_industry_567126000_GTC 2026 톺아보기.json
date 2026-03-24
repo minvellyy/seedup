@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2023-10-01",
+        "brokerage": "SK증권",
+        "analyst_name": "박제민",
+        "report_title": "GTC 2026 톺아보기"
+    },
+    "specific_data": {
+        "sector_name": "AI 인프라",
+        "industry_rating": "Buy",
+        "top_picks": [
+            "NVDA"
+        ],
+        "industry_trends": [
+            "AI 제품 변화: Chat에서 Agent로 전환",
+            "Coding Agent의 확산",
+            "B2B 소프트웨어 시장의 성장"
+        ],
+        "risk_factors": [
+            "전력 부족",
+            "데이터 보안 이슈",
+            "인력 부족"
+        ]
+    }
+}

@@ -1,0 +1,23 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2023-03-26",
+        "brokerage": "대신증권",
+        "analyst_name": "김아영",
+        "report_title": "발사 서비스 공급 부족, 국내 유일 대안"
+    },
+    "specific_data": {
+        "company_name": "이노스페이스",
+        "ticker": "462350",
+        "investment_rating": "N/R",
+        "investment_points": [
+            "국내 유일 민간 위성발사 사업자, 구조적 공급 부족 수혜 기대",
+            "하이브리드 엔진 기반의 구조적 원가 경쟁력 확보"
+        ],
+        "risk_factors": [
+            "발사 일정 지연",
+            "기술 검증 및 시스템 안정화 필요"
+        ],
+        "shareholder_structure": "김수종 최대주주 외 3인 14.71%, 코오롱인베스트먼트 외 6인 10.88%"
+    }
+}

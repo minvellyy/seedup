@@ -1,0 +1,33 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "유진투자증권",
+        "analyst_name": "양승윤",
+        "report_title": "안녕하세요 위클리에요(로봇방산항공조선.."
+    },
+    "specific_data": {
+        "sector_name": "로봇/기계/운송/조선",
+        "industry_rating": null,
+        "top_picks": [
+            "유니트리",
+            "KF-21",
+            "K-9",
+            "천궁-II",
+            "레드백"
+        ],
+        "industry_trends": [
+            "유니트리의 상장",
+            "방산 수출 파이프라인 업데이트",
+            "카타르의 FORCE MAJEURE와 불확실성",
+            "유류할증료 급등",
+            "전쟁보험료 급등"
+        ],
+        "risk_factors": [
+            "이란 사태",
+            "중동 사태",
+            "LNG 수요 감소 가능성",
+            "전쟁 장기화에 따른 비용 상승 압력"
+        ]
+    }
+}

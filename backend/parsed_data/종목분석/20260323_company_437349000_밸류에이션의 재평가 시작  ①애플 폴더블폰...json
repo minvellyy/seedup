@@ -1,0 +1,25 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-23",
+        "brokerage": "대신증권",
+        "analyst_name": "박강호, 서지원RA",
+        "report_title": "밸류에이션의 재평가 시작  ①애플 폴더블폰.."
+    },
+    "specific_data": {
+        "company_name": "비에이치",
+        "ticker": "090460",
+        "investment_rating": "BUY",
+        "investment_points": [
+            "애플 폴더블폰 생산 가시화",
+            "피지컬 AI 및 R/F PCB 공급 추진",
+            "2026년 매출 2조원 초과 예상",
+            "목표주가 35,000원으로 상향"
+        ],
+        "risk_factors": [
+            "애플의 스마트폰 판매량에 의존",
+            "경쟁사의 사업 중단에 따른 리스크"
+        ],
+        "shareholder_structure": "주요주주 이경환 외 6인 21.85%, 국민연금공단 7.46%, 외국인지분율 22.46%"
+    }
+}

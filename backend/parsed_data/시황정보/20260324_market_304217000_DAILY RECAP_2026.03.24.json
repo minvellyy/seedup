@@ -1,0 +1,15 @@
+{
+    "common_metadata": {
+        "report_type": "시황정보",
+        "report_date": "2026-03-24",
+        "brokerage": "SK증권",
+        "analyst_name": "황지우",
+        "report_title": "DAILY RECAP_2026.03.24"
+    },
+    "specific_data": {
+        "market_summary": "전일 Pre-market 변동성은 0.003 상승하여 오전 중 지수 하방 요인으로 작용할 확률이 상대적으로 높습니다.",
+        "macro_indicators": "환율과 금리, 글로벌 위험선호도를 종합했을 때 금일 외국인 수급은 방향성은 제한적이나 이탈 압력은 낮은 환경으로 판단됩니다.",
+        "fund_flows": "전일 업종별 수익률 분산과 현재 외국인 수급 여건을 감안할 때, 금일은 종목 선택 중심의 알파 전략이 상대적으로 유리할 것으로 예상됩니다.",
+        "key_news": []
+    }
+}

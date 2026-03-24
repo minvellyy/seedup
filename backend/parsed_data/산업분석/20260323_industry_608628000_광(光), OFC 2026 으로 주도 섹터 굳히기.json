@@ -1,0 +1,33 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-23",
+        "brokerage": "유진투자증권",
+        "analyst_name": "이찬영",
+        "report_title": "광(光), OFC 2026 으로 주도 섹터 굳히기"
+    },
+    "specific_data": {
+        "sector_name": "통신장비",
+        "industry_rating": null,
+        "top_picks": [
+            "Lumentum",
+            "Ciena",
+            "Coherent",
+            "Tower Semiconductor",
+            "Nokia",
+            "Corning",
+            "Celestica",
+            "AAOI"
+        ],
+        "industry_trends": [
+            "Scale-Up 시장(구리→광 전환)",
+            "Scale-Out 시장(CPO)",
+            "OCS 시장",
+            "Scale-Across 시장"
+        ],
+        "risk_factors": [
+            "수요 전망과 가이던스의 하향 조정 가능성",
+            "공급 제약으로 인한 생산량 감소"
+        ]
+    }
+}

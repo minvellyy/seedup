@@ -1,0 +1,27 @@
+{
+    "common_metadata": {
+        "report_type": "비상장기업 투자 동향",
+        "report_date": "2026-03-02",
+        "brokerage": "유진투자증권",
+        "analyst_name": "박종선, 이채은",
+        "report_title": "비상장기업 투자 동향(2026-03) - 헬스케어바이오(금.."
+    },
+    "specific_data": {
+        "strategy_theme": "비상장기업 투자 동향",
+        "recommended_portfolio": [
+            "헬스케어/바이오",
+            "AI/딥테크/블록체인",
+            "제조/하드웨어"
+        ],
+        "strategy_logic": [
+            "비상장기업 투자 건수 감소",
+            "비상장기업 투자금액 증가",
+            "헬스케어/바이오 부문 투자금액 1위"
+        ],
+        "quant_factors": [
+            "투자 건수",
+            "투자 금액",
+            "카테고리별 투자 비중"
+        ]
+    }
+}

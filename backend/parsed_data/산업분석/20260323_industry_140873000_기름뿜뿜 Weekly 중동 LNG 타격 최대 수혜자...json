@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "산업분석",
+        "report_date": "2026-03-20",
+        "brokerage": "iM증권",
+        "analyst_name": "전유진, 장호",
+        "report_title": "기름뿜뿜 Weekly 중동 LNG 타격 최대 수혜자.."
+    },
+    "specific_data": {
+        "sector_name": "정유/화학/에너지",
+        "industry_rating": null,
+        "top_picks": [
+            "Venture Global",
+            "Cheniere"
+        ],
+        "industry_trends": [
+            "중동LNG 타격 최대 수혜자 찾기",
+            "정유사 상대적 매력도 비교 및 선호도 정리"
+        ],
+        "risk_factors": [
+            "이란 사태",
+            "LNG 공급 차질 우려",
+            "미국-이란 물밑 협상"
+        ]
+    }
+}

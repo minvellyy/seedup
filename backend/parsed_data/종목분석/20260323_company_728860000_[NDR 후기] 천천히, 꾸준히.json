@@ -1,0 +1,24 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-23",
+        "brokerage": "iM증권",
+        "analyst_name": "고의영, 박정하",
+        "report_title": "[NDR 후기] 천천히, 꾸준히"
+    },
+    "specific_data": {
+        "company_name": "필옵틱스",
+        "ticker": "161580",
+        "investment_rating": "NR",
+        "investment_points": [
+            "최대 고객사의 유상증자 결정으로 설비 투자 관심 확대",
+            "TGV 장비 수주 타임라인 2Q26 전후 예상",
+            "유리기판 상용화 시점 2028년으로 추정"
+        ],
+        "risk_factors": [
+            "고객사와의 협력 관계에 따른 벤더 교체 가능성 낮음",
+            "기술 개발 속도에서 미국 반도체 업체가 빠를 수 있음"
+        ],
+        "shareholder_structure": "주요 주주 지분율: 외국인지분율 0.4%"
+    }
+}

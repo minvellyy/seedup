@@ -1,0 +1,26 @@
+{
+    "common_metadata": {
+        "report_type": "종목분석",
+        "report_date": "2026-03-23",
+        "brokerage": "한화리서치",
+        "analyst_name": "한유정, 고예진",
+        "report_title": "간담회 후기 수요보다 공급이 변수, 성장 방.."
+    },
+    "specific_data": {
+        "company_name": "삼양식품",
+        "ticker": "003230",
+        "investment_rating": "Buy",
+        "investment_points": [
+            "2026년 사업 방향성과 중장기 성장 전략 점검",
+            "체질 개선에 집중하는 해",
+            "성장 여력 여전히 충분",
+            "해외 채널 확장 및 중국공장 가동 계획"
+        ],
+        "risk_factors": [
+            "공급 제약으로 외형 성장 속도 제한",
+            "부채비율 증가 가능성",
+            "해외 시장 침투율 저조"
+        ],
+        "shareholder_structure": "삼양라운드스퀘어 45.0%, 국민연금공단 9.6%, 윤영희 0.0%"
+    }
+}
