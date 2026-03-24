@@ -34,17 +34,23 @@ def percentile_scores(df: pd.DataFrame, group_col: str | None = None) -> pd.Data
 def pillar_and_overall(d: pd.DataFrame) -> pd.DataFrame:
     out = d.copy()
 
-    # pillar scores
-    out["profitability_score"] = 0.6*out["opm_score"] + 0.4*out["roa_score"]
-    out["growth_score"] = 0.5*out["sales_yoy_score"] + 0.5*out["op_income_yoy_score"]
-    out["stability_score"] = 0.6*out["debt_equity_score"] + 0.4*out["current_ratio_score"]
+    # pillar scores — NaN-safe: 하나라도 유효하면 가중 평균 계산
+    def _weighted2(a, b, wa, wb):
+        """두 Series를 가중평균. 어느 한쪽이 NaN이면 나머지로만 계산."""
+        both_nan = a.isna() & b.isna()
+        return np.where(
+            both_nan, np.nan,
+            np.where(a.isna(), b,
+            np.where(b.isna(), a,
+            wa*a + wb*b))
+        )
+
+    out["profitability_score"] = _weighted2(out["opm_score"], out["roa_score"], 0.6, 0.4)
+    out["growth_score"]        = _weighted2(out["sales_yoy_score"], out["op_income_yoy_score"], 0.5, 0.5)
+    out["stability_score"]     = _weighted2(out["debt_equity_score"], out["current_ratio_score"], 0.6, 0.4)
 
     # cashflow: if fcf_margin_score missing -> use cfo only
-    out["cashflow_score"] = np.where(
-        out["fcf_margin_score"].isna(),
-        out["cfo_margin_score"],
-        0.6*out["cfo_margin_score"] + 0.4*out["fcf_margin_score"]
-    )
+    out["cashflow_score"] = _weighted2(out["cfo_margin_score"], out["fcf_margin_score"], 0.6, 0.4)
 
     # valuation: if per missing -> pbr only
     out["valuation_score"] = np.where(

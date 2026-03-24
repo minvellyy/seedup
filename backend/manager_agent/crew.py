@@ -100,7 +100,7 @@ def run_manager_analysis(
         llm=llm,
         verbose=True,
         allow_delegation=False,
-        max_iter=4,
+        max_iter=8,
     )
 
     direction_analyst = Agent(
@@ -118,7 +118,7 @@ def run_manager_analysis(
         llm=llm,
         verbose=True,
         allow_delegation=False,
-        max_iter=4,
+        max_iter=8,
     )
 
     unstructured_analyst = Agent(
@@ -136,7 +136,7 @@ def run_manager_analysis(
         llm=llm,
         verbose=True,
         allow_delegation=False,
-        max_iter=4,
+        max_iter=8,
     )
 
     manager = Agent(
@@ -154,7 +154,7 @@ def run_manager_analysis(
         llm=llm,
         verbose=True,
         allow_delegation=False,
-        max_iter=3,
+        max_iter=5,
     )
 
     # ── 태스크 ─────────────────────────────────────────────────────────────────
@@ -383,7 +383,7 @@ def run_manager_analysis(
             llm=llm,
             verbose=True,
             allow_delegation=False,
-            max_iter=4,
+            max_iter=8,
         )
 
         company_analyst = Agent(
@@ -401,7 +401,7 @@ def run_manager_analysis(
             llm=llm,
             verbose=True,
             allow_delegation=False,
-            max_iter=4,
+            max_iter=8,
         )
 
         industry_analyst = Agent(
@@ -421,7 +421,7 @@ def run_manager_analysis(
             llm=llm,
             verbose=True,
             allow_delegation=False,
-            max_iter=4,
+            max_iter=8,
         )
 
         t_fit = Task(
@@ -651,7 +651,7 @@ def run_manager_analysis(
             tasks=[t_fit, t_company, t_industry, t_unstr, t_detail_mgr],
             process=Process.sequential,
             verbose=True,
-            max_execution_time=240,
+            max_execution_time=360,
         )
 
     else:
@@ -661,7 +661,7 @@ def run_manager_analysis(
             tasks=[t_fin, t_dir, t_unstr, t_mgr],
             process=Process.sequential,
             verbose=True,
-            max_execution_time=180,
+            max_execution_time=300,
         )
 
     result = crew.kickoff()
