@@ -412,6 +412,7 @@ const HoldingsSection = () => {
                   required
                 >
                   <option value="">증권사를 선택하세요</option>
+                  <option value="kis">한국투자증권</option>
                   <option value="samsung">삼성증권</option>
                   <option value="mirae">미래에셋증권</option>
                   <option value="kb">KB증권</option>

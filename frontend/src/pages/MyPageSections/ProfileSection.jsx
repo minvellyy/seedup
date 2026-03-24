@@ -11,6 +11,7 @@ const ProfileSection = () => {
     name: '',
     phone: '',
     email: '',
+    lumpSumAmount: '',
     currentPassword: '',
     newPassword: '',
     confirmPassword: '',
@@ -39,6 +40,7 @@ const ProfileSection = () => {
             name: data.user.name || data.user.username || '',
             phone: data.user.phone || '',
             email: data.user.email || '',
+            lumpSumAmount: data.user.lump_sum_amount != null ? String(data.user.lump_sum_amount) : '',
           }
           console.log('[ProfileSection] 설정할 데이터:', userData)
           
@@ -117,6 +119,11 @@ const ProfileSection = () => {
         email: formData.email,
       }
 
+      if (formData.lumpSumAmount !== '') {
+        const parsed = Number(formData.lumpSumAmount.replace(/,/g, ''))
+        if (!isNaN(parsed)) updateData.lump_sum_amount = parsed
+      }
+
       // 비밀번호 변경이 있는 경우에만 추가
       if (formData.newPassword) {
         updateData.newPassword = formData.newPassword
@@ -134,6 +141,12 @@ const ProfileSection = () => {
 
       if (data.success) {
         console.log('[UPDATE] 성공')
+        // 일시투자금 변경 시 대시보드 포트폴리오 캐시 무효화
+        if (updateData.lump_sum_amount !== undefined) {
+          try {
+            sessionStorage.removeItem(`pf_recs_${user.userId}`)
+          } catch {}
+        }
         alert('개인정보가 수정되었습니다.')
         // 비밀번호 필드 초기화
         setFormData(prev => ({
@@ -212,6 +225,26 @@ const ProfileSection = () => {
               placeholder="example@email.com"
             />
             {errors.email && <p className="form-error">{errors.email}</p>}
+          </div>
+
+          <div className="form-group">
+            <label htmlFor="lumpSumAmount">일시투자금</label>
+            <p className="form-helper">
+              현재:{' '}
+              {formData.lumpSumAmount
+                ? `${Number(formData.lumpSumAmount).toLocaleString('ko-KR')}원`
+                : '설정된 금액이 없습니다'}
+            </p>
+            <input
+              type="number"
+              id="lumpSumAmount"
+              name="lumpSumAmount"
+              value={formData.lumpSumAmount}
+              onChange={handleChange}
+              className="form-input"
+              placeholder="새 금액 입력 (원)"
+              min="0"
+            />
           </div>
 
           <div className="form-divider"></div>

@@ -810,15 +810,28 @@ async def get_user(user_id: int, db: Session = Depends(get_db)):
             {'user_id': user_id}
         )
         user = result.fetchone()
-        
+
         if user:
+            # 일시투자금(LUMP_SUM_AMOUNT) 설문 답변 조회
+            lump_sum_result = db.execute(
+                text('''
+                    SELECT sa.value_number FROM survey_answers sa
+                    JOIN survey_questions sq ON sa.question_id = sq.id
+                    WHERE sa.user_id = :user_id AND sq.code = 'LUMP_SUM_AMOUNT'
+                '''),
+                {'user_id': user_id}
+            )
+            lump_sum_row = lump_sum_result.fetchone()
+            lump_sum_amount = lump_sum_row[0] if lump_sum_row else None
+
             user_data = {
                 'id': user[0],
                 'email': user[1],
                 'username': user[2],
                 'name': user[3],
                 'phone': user[4],
-                'created_at': str(user[5])
+                'created_at': str(user[5]),
+                'lump_sum_amount': lump_sum_amount,
             }
             print(f"[GET_USER] user_id: {user_id}, phone: {user[4]}, data: {user_data}")
             return {
@@ -874,20 +887,48 @@ async def update_user(user_id: int, data: dict, db: Session = Depends(get_db)):
             update_fields.append('password = :password')
             params['password'] = password_hash
         
-        if not update_fields:
+        # lump_sum_amount는 survey_answers 테이블에 별도 저장
+        lump_sum_amount = data.get('lump_sum_amount')
+
+        if not update_fields and lump_sum_amount is None:
             print(f"[UPDATE_USER] 업데이트할 필드 없음")
             return {'success': True, 'message': '업데이트할 정보가 없습니다.'}
-        
-        # SQL 쿼리 실행
-        query = f"UPDATE users SET {', '.join(update_fields)} WHERE id = :user_id"
-        print(f"[UPDATE_USER] SQL: {query}")
-        print(f"[UPDATE_USER] Params: {params}")
-        
-        db.execute(text(query), params)
+
+        if update_fields:
+            # SQL 쿼리 실행
+            query = f"UPDATE users SET {', '.join(update_fields)} WHERE id = :user_id"
+            print(f"[UPDATE_USER] SQL: {query}")
+            print(f"[UPDATE_USER] Params: {params}")
+            db.execute(text(query), params)
+
+        if lump_sum_amount is not None:
+            # LUMP_SUM_AMOUNT 질문 ID 조회
+            q_result = db.execute(
+                text("SELECT id FROM survey_questions WHERE code = 'LUMP_SUM_AMOUNT'")
+            )
+            q_row = q_result.fetchone()
+            if q_row:
+                question_id = q_row[0]
+                existing = db.execute(
+                    text('SELECT id FROM survey_answers WHERE user_id = :user_id AND question_id = :question_id'),
+                    {'user_id': user_id, 'question_id': question_id}
+                ).fetchone()
+                if existing:
+                    db.execute(
+                        text('UPDATE survey_answers SET value_number = :val, updated_at = NOW() WHERE user_id = :user_id AND question_id = :question_id'),
+                        {'val': float(lump_sum_amount), 'user_id': user_id, 'question_id': question_id}
+                    )
+                else:
+                    db.execute(
+                        text('INSERT INTO survey_answers (user_id, question_id, value_number, created_at, updated_at) VALUES (:user_id, :question_id, :val, NOW(), NOW())'),
+                        {'user_id': user_id, 'question_id': question_id, 'val': float(lump_sum_amount)}
+                    )
+                print(f"[UPDATE_USER] lump_sum_amount 업데이트: {lump_sum_amount}")
+
         db.commit()
-        
+
         print(f"[UPDATE_USER] 성공!")
-        
+
         return {
             'success': True,
             'message': '사용자 정보가 성공적으로 수정되었습니다.'

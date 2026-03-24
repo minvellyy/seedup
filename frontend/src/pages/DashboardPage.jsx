@@ -829,8 +829,17 @@ const DashboardPage = () => {
                     <button
                       className="dash-analysis-btn"
                       disabled={pfRecsLoading || !user?.userId}
-                      onClick={() => {
+                      onClick={async () => {
                         const amt = pfAvailableAmount ? parseInt(pfAvailableAmount, 10) : null
+                        if (amt && user?.userId) {
+                          try {
+                            await fetch(`${API_BASE_URL}/api/users/${user.userId}`, {
+                              method: 'PUT',
+                              headers: { 'Content-Type': 'application/json' },
+                              body: JSON.stringify({ lump_sum_amount: amt }),
+                            })
+                          } catch {}
+                        }
                         user?.userId && fetchPortfolioRecs(user.userId, true, amt)
                       }}
                     >
