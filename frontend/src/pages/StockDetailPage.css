@@ -1479,6 +1479,7 @@
   pointer-events: auto;
   cursor: default;
   z-index: 1;
+  white-space: nowrap;
 }
 .sd-radar-label-name  { font-size: 13px; color: #666; font-weight: 600; }
 .sd-radar-label-score { font-size: 17px; color: #F97316; font-weight: 700; }
@@ -1491,6 +1492,7 @@
   left: 50%;
   transform: translateX(-50%);
   width: 230px;
+  white-space: normal;
   background: #1f2937;
   color: #f9fafb;
   border-radius: 10px;
@@ -1499,6 +1501,7 @@
   z-index: 100;
   text-align: left;
   pointer-events: none;
+  word-break: keep-all;
 }
 /* 툴팁 꼬리 삼각형 */
 .sd-radar-tooltip::after {
