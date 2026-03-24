@@ -391,7 +391,89 @@ def get_stock_scores(stock_code: str):
             except Exception:
                 return None
 
+        def _fallback2(primary_key, sub_keys, weights):
+            """pre-computed 점수가 NaN이면 sub-score들로 직접 계산."""
+            v = _f(primary_key)
+            if v is not None:
+                return v
+            vals = [(_f(k), w) for k, w in zip(sub_keys, weights)]
+            valid = [(sv, w) for sv, w in vals if sv is not None]
+            if not valid:
+                return None
+            total_w = sum(w for _, w in valid)
+            return round(sum(sv * w for sv, w in valid) / total_w, 1)
+
+        def _pct_rank_in_df(col, val, higher_is_better=True):
+            """전체 종목 최신 row 대비 val의 percentile 점수(0~100) 반환."""
+            if val is None:
+                return None
+            try:
+                # 종목별 최신 row만 사용
+                snap = df.sort_values("as_of").groupby("ticker")[col].last().dropna()
+                if snap.empty:
+                    return None
+                pct = float((snap <= val).sum()) / len(snap)
+                if not higher_is_better:
+                    pct = 1.0 - pct
+                return round(pct * 100, 1)
+            except Exception:
+                return None
+
         mc = _raw("market_cap") if "market_cap" in row.index else None
+
+        # ── 성장성 ─ sub-score → opm/roa 개선도 percentile 순으로 fallback
+        growth_score = _fallback2(
+            "growth_score",
+            ["sales_yoy_score", "op_income_yoy_score"], [0.5, 0.5]
+        )
+        if growth_score is None:
+            opm_now = _raw("opm")
+            opm_lag = _raw("opm_lag4") if "opm_lag4" in row.index else None
+            roa_now = _raw("roa")
+            roa_lag = _raw("roa_lag4") if "roa_lag4" in row.index else None
+
+            def _delta_pct(col_now, col_lag, val_now, val_lag):
+                if val_now is None or val_lag is None:
+                    return None
+                delta = val_now - val_lag
+                try:
+                    snap = df.sort_values("as_of").groupby("ticker").last().reset_index()
+                    pop_delta = (snap[col_now] - snap[col_lag]).dropna()
+                    if pop_delta.empty:
+                        return None
+                    return round(float((pop_delta <= delta).mean()) * 100, 1)
+                except Exception:
+                    return None
+
+            parts = [
+                _delta_pct("opm", "opm_lag4", opm_now, opm_lag),
+                _delta_pct("roa", "roa_lag4", roa_now, roa_lag),
+            ]
+            valid = [p for p in parts if p is not None]
+            if valid:
+                growth_score = round(sum(valid) / len(valid), 1)
+
+            # 최종 fallback: roa 절대 수준 percentile (수익창출력 기준 근사)
+            if growth_score is None and roa_now is not None:
+                growth_score = _pct_rank_in_df("roa", roa_now, higher_is_better=True)
+
+        # ── 현금흐름 ─ sub-score → cfo_to_assets 순으로 fallback
+        cashflow_score = _fallback2(
+            "cashflow_score",
+            ["cfo_margin_score", "fcf_margin_score"], [0.6, 0.4]
+        )
+        if cashflow_score is None and "cfo_to_assets" in row.index:
+            cfo_assets = _raw("cfo_to_assets")
+            cashflow_score = _pct_rank_in_df("cfo_to_assets", cfo_assets, higher_is_better=True)
+
+        profitability_score = _fallback2(
+            "profitability_score",
+            ["opm_score", "roa_score"], [0.6, 0.4]
+        )
+        stability_score = _fallback2(
+            "stability_score",
+            ["debt_equity_score", "current_ratio_score"], [0.6, 0.4]
+        )
 
         return {
             "stock_code": stock_code,
@@ -400,10 +482,10 @@ def get_stock_scores(stock_code: str):
             "overall_score": _f("overall_score"),
             "overall_grade": str(row["overall_grade"]) if "overall_grade" in row.index and row["overall_grade"] else None,
             "radar": [
-                {"key": "profitability", "label": "수익성",  "score": _f("profitability_score")},
-                {"key": "growth",        "label": "성장성",  "score": _f("growth_score")},
-                {"key": "stability",     "label": "안정성",  "score": _f("stability_score")},
-                {"key": "cashflow",      "label": "현금흐름", "score": _f("cashflow_score")},
+                {"key": "profitability", "label": "수익성",    "score": profitability_score},
+                {"key": "growth",        "label": "성장성",    "score": growth_score},
+                {"key": "stability",     "label": "안정성",    "score": stability_score},
+                {"key": "cashflow",      "label": "현금흐름",  "score": cashflow_score},
                 {"key": "valuation",     "label": "밸류에이션", "score": _f("valuation_score")},
             ],
             "market_cap": mc,

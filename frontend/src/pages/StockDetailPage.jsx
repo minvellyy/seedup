@@ -378,7 +378,7 @@ function StockDetailPage() {
     setLoading(true)
     setError(null)
     const controller = new AbortController()
-    const timer = setTimeout(() => controller.abort(), 10000)
+    const timer = setTimeout(() => controller.abort(), 30000)
     Promise.all([
       fetch(`/api/instruments/stocks/${stockCode}`, { signal: controller.signal }).then(r => { if (!r.ok) throw new Error(`HTTP ${r.status}`); return r.json() }),
       fetch(`/api/instruments/stocks/${stockCode}/scores`, { signal: controller.signal }).then(r => r.json()).catch(() => null),

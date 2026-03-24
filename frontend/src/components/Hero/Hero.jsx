@@ -20,10 +20,10 @@ export default function Hero() {
 
           <div className="hero-actions">
             <button className="btn-primary" onClick={() => navigate('/signup')}>
-              시작하기
+              Sign Up
             </button>
             <button className="btn-secondary" onClick={() => navigate('/login')}>
-              로그인
+              Login
             </button>
           </div>
         </div>
