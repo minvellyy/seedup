@@ -242,33 +242,40 @@ async def _db_price_sync_loop() -> None:
                 continue
 
             today = datetime.now().strftime("%Y-%m-%d")
-            db = SessionLocal()
-            try:
-                updated = 0
-                for code, price_data in store.items():
-                    db.execute(
-                        text(
-                            """
-                            UPDATE instruments
-                               SET last_price      = :price,
-                                   last_price_date = :date
-                             WHERE stock_code = :code
-                            """
-                        ),
-                        {
-                            "price": price_data["current_price"],
-                            "date":  today,
-                            "code":  code,
-                        },
-                    )
-                    updated += 1
-                db.commit()
-                logger.info("DB 가격 동기화 완료 (WS): %d개 종목", updated)
-            except Exception as e:
-                db.rollback()
-                logger.error("DB 가격 동기화 오류: %s", e)
-            finally:
-                db.close()
+            updated = 0
+            for code, price_data in store.items():
+                for attempt in range(3):
+                    db = SessionLocal()
+                    try:
+                        db.execute(
+                            text(
+                                """
+                                UPDATE instruments
+                                   SET last_price      = :price,
+                                       last_price_date = :date
+                                 WHERE stock_code = :code
+                                """
+                            ),
+                            {
+                                "price": price_data["current_price"],
+                                "date":  today,
+                                "code":  code,
+                            },
+                        )
+                        db.commit()
+                        updated += 1
+                        break
+                    except Exception as e:
+                        db.rollback()
+                        from pymysql.err import OperationalError as PyMySQLOperationalError
+                        if attempt < 2 and hasattr(e, 'orig') and isinstance(e.orig, PyMySQLOperationalError) and e.orig.args[0] == 1213:
+                            await asyncio.sleep(0.1 * (attempt + 1))
+                        else:
+                            logger.error("DB 가격 동기화 오류: %s", e)
+                            break
+                    finally:
+                        db.close()
+            logger.info("DB 가격 동기화 완료 (WS): %d개 종목", updated)
         except Exception as e:
             logger.error("DB 가격 동기화 루프 오류: %s", e)
 

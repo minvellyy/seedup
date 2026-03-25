@@ -1,3 +1,9 @@
+# =============================================================================
+# Runtime cache & evaluation outputs
+# =============================================================================
+backend/docs_cache/
+backend/ragas_eval/results/
+
 # Chroma / vector DB
 ./backend/reports_chroma_db/
 ./backend/reports/

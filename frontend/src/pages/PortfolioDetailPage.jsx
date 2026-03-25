@@ -646,7 +646,8 @@ function PortfolioDetailPage() {
   }
 
   const handlePdf = async () => {
-    const filename = `${new Date().toISOString().slice(0, 10)}_${portfolioRank ? `TOP${portfolioRank}_` : ''}${risk_tier || '포트폴리오'}_${user?.name || user?.userId || 'user'}.pdf`
+    const pfLabel = portfolioData.portfolio_label || risk_tier || '포트폴리오'
+    const filename = `${new Date().toISOString().slice(0, 10).replace(/-/g, '')}_${pfLabel}_${user?.name || user?.userId || 'user'}.pdf`
 
     const overlay = document.createElement('div')
     overlay.style.cssText = 'position:fixed;inset:0;background:white;z-index:9999;display:flex;align-items:center;justify-content:center;'
