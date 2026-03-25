@@ -159,7 +159,7 @@ function RecommendationsPage() {
           <div className="rec-cards-grid">
             {stockData?.items?.map((item) => {
               const score = Math.round(item.total_score * 100)
-              const barPct = Math.min(score / 10, 100)
+              const barPct = Math.min(score, 100)
               const badge = getGrowthBadge(item)
               const vol = item.features?.vol_ann
               return (
@@ -180,7 +180,7 @@ function RecommendationsPage() {
                     <div className="rec-score-header">
                       <span className="rec-score-label">Recommendation Score</span>
                       <span className="rec-score-num">
-                        {score} <span className="rec-score-total">/ 1000</span>
+                        {score} <span className="rec-score-total">/ 100</span>
                       </span>
                     </div>
                     <div className="rec-score-bar-bg">
