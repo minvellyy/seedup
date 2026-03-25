@@ -443,7 +443,9 @@ def run_manager_analysis(
                 "   - 추천 이유(reasons) 각각이 이 사용자에게 왜 의미 있는지\n"
                 "   - 투자 기간·목표와의 적합성\n"
                 "   - 주요 주의사항 1가지 (전문용어 없이)\n\n"
-                "[작성 원칙] 사용자에게 직접 말하는 톤. '당신의', '고객님의' 대신 '내'로 표현."
+                "[작성 원칙] 사용자에게 직접 말하는 톤. '당신의', '고객님의' 대신 '내'로 표현. "
+                "모든 문장은 반드시 '~합니다', '~입니다', '~습니다', '~니다' 등 격식체 존댓말로 끝내야 한다. "
+                "절대 '~요', '~어', '~야', '~다' 등 반말이나 비격식체로 끝내지 말 것."
             ),
             expected_output=(
                 "투자원칙 적합도 분석 JSON:\n"
@@ -452,10 +454,10 @@ def run_manager_analysis(
                 '  "ticker": str,\n'
                 '  "fit_score": float,         // 0.0~1.0, 종목이 사용자 성향과 맞는 정도\n'
                 '  "fit_grade": str,            // 매우 적합|적합|보통|주의 필요\n'
-                '  "fit_summary": str,          // 2~3문장, 입문자 눈높이 적합도 요약\n'
-                '  "reason_explanations": [str], // 각 추천 이유를 사용자 상황에 맞게 설명 (최대 3개)\n'
-                '  "horizon_fit": str,          // 투자 기간과의 적합성 설명 1문장\n'
-                '  "caution": str|null          // 주의사항 1가지 (없으면 null)\n'
+                '  "fit_summary": str,          // 2~3문장, 입문자 눈높이 적합도 요약. 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
+                '  "reason_explanations": [str], // 각 추천 이유를 사용자 상황에 맞게 설명 (최대 3개). 각 항목 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
+                '  "horizon_fit": str,          // 투자 기간과의 적합성 설명 1문장. 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
+                '  "caution": str|null          // 주의사항 1가지 (없으면 null). 있다면 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
                 '}'
             ),
             agent=fit_analyst,
@@ -512,9 +514,9 @@ def run_manager_analysis(
                 '    "valuation_summary": str       // 밸류에이션 2문장 (저평가/고평가 판단 포함)\n'
                 '  },\n'
                 '  "momentum_summary": str,      // 주가 모멘텀 1문장\n'
-                '  "strengths": [str],           // 2~3개\n'
-                '  "cautions": [str],            // 1~2개\n'
-                '  "overall_company_view": str   // 기업 전반 평가 2~3문장\n'
+                '  "strengths": [str],           // 2~3개. 각 항목 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
+                '  "cautions": [str],            // 1~2개. 각 항목 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
+                '  "overall_company_view": str   // 기업 전반 평가 2~3문장. 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
                 '}'
             ),
             agent=company_analyst,
@@ -564,12 +566,12 @@ def run_manager_analysis(
                 '  "sector": str,\n'
                 '  "industry": str,\n'
                 '  "industry_overview": str,     // 산업 정의·설명 2~3문장\n'
-                '  "current_trends": [str],      // 현재 주요 트렌드 2~3개\n'
-                '  "growth_outlook": str,        // 성장 전망 2문장\n'
-                '  "industry_risks": [str],      // 산업 리스크 1~2개\n'
-                '  "competitive_position": str, // 이 종목의 경쟁 위치 1~2문장\n'
-                '  "policy_regulatory": str|null, // 관련 규제·정책 (없으면 null)\n'
-                '  "opportunity_threat_summary": str // 기회·위협 종합 2문장\n'
+                '  "current_trends": [str],      // 현재 주요 트렌드 2~3개. 각 항목 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
+                '  "growth_outlook": str,        // 성장 전망 2문장. 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
+                '  "industry_risks": [str],      // 산업 리스크 1~2개. 각 항목 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
+                '  "competitive_position": str, // 이 종목의 경쟁 위치 1~2문장. 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
+                '  "policy_regulatory": str|null, // 관련 규제·정책 (없으면 null). 있다면 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
+                '  "opportunity_threat_summary": str // 기회·위협 종합 2문장. 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
                 '}'
             ),
             agent=industry_analyst,
@@ -619,26 +621,26 @@ def run_manager_analysis(
                 '      "valuation_summary": str\n'
                 '    },\n'
                 '    "momentum_summary": str,\n'
-                '    "strengths": [str],\n'
-                '    "cautions": [str],\n'
-                '    "overall_company_view": str\n'
+                '    "strengths": [str],           // 각 항목 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
+                '    "cautions": [str],            // 각 항목 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
+                '    "overall_company_view": str   // 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
                 '  },\n'
                 '  "industry_analysis": {         // 산업분석 섹션\n'
                 '    "sector": str,\n'
                 '    "industry": str,\n'
-                '    "industry_overview": str,\n'
-                '    "current_trends": [str],\n'
-                '    "growth_outlook": str,\n'
-                '    "industry_risks": [str],\n'
-                '    "competitive_position": str,\n'
-                '    "policy_regulatory": str|null,\n'
-                '    "opportunity_threat_summary": str\n'
+                '    "industry_overview": str,     // 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
+                '    "current_trends": [str],      // 각 항목 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
+                '    "growth_outlook": str,        // 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
+                '    "industry_risks": [str],      // 각 항목 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
+                '    "competitive_position": str,  // 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
+                '    "policy_regulatory": str|null, // 있다면 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
+                '    "opportunity_threat_summary": str // 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
                 '  },\n'
                 '  "unstructured_analysis": {     // ESG·뉴스·증권사 리포트 인사이트\n'
-                '    "esg_risks": str|null,        // ESG 주요 리스크 (없으면 null)\n'
-                '    "esg_opportunities": str|null, // ESG 기대 요인 (없으면 null)\n'
-                '    "news_summary": str|null,     // 최신 뉴스 요약 1~2문장 (없으면 null)\n'
-                '    "reports_insight": str|null   // 증권사 리포트 핵심 인사이트 (없으면 null)\n'
+                '    "esg_risks": str|null,        // ESG 주요 리스크 (없으면 null). 있다면 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
+                '    "esg_opportunities": str|null, // ESG 기대 요인 (없으면 null). 있다면 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
+                '    "news_summary": str|null,     // 최신 뉴스 요약 1~2문장 (없으면 null). 있다면 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
+                '    "reports_insight": str|null   // 증권사 리포트 핵심 인사이트 (없으면 null). 있다면 반드시 ~합니다/~입니다/~습니다로 끝낼 것\n'
                 '  }\n'
                 '}'
             ),

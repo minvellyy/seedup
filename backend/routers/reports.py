@@ -136,7 +136,17 @@ def get_report_insights(
                         encoded = urllib.parse.quote(pdf_filename, safe="")
                         pdf_url = f"/api/v1/reports/pdf/{urllib.parse.quote(cat, safe='')}/{encoded}"
                         break
-            # 로컬 PDF 없으면 Naver 원문 URL로 폴백
+            # 로컬 PDF 없으면: 1) .url 사이드카 파일 직접 탐색, 2) ChromaDB 메타데이터 naver_pdf_url 순으로 폴백
+            if pdf_url is None and source:
+                url_filename = source.replace(".json", ".url")
+                for cat in candidate_types:
+                    url_path = _REPORTS_DIR / cat / url_filename
+                    if url_path.exists():
+                        try:
+                            pdf_url = url_path.read_text(encoding="utf-8").strip()
+                        except Exception:
+                            pass
+                        break
             if pdf_url is None:
                 naver = r["metadata"].get("naver_pdf_url")
                 if naver and naver != "None":
@@ -162,7 +172,9 @@ def get_report_insights(
 @router.get("/pdf/{report_type}/{filename}", summary="증권사 리포트 PDF 다운로드")
 def get_report_pdf(report_type: str, filename: str):
     """로컬에 저장된 증권사 리포트 PDF 파일을 반환한다."""
-    if ".." in report_type or ".." in filename:
+    if ("/" in report_type or "\\" in report_type or
+            "/" in filename or "\\" in filename or
+            report_type.startswith("..") or filename.startswith("..")):
         raise HTTPException(status_code=400, detail="잘못된 경로입니다.")
     pdf_path = _REPORTS_DIR / report_type / filename
     if not pdf_path.exists() or pdf_path.suffix.lower() != ".pdf":

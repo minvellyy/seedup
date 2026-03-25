@@ -1,6 +1,0 @@
-{
-  "dependencies": {
-    "html2pdf.js": "^0.14.0",
-    "react-markdown": "^10.1.0"
-  }
-}

@@ -829,7 +829,7 @@ function StockDetailPage() {
                     <li>✓ {personalizeText(reportsInsight.split('.')[0], userName)}.</li>
                   )}
                   {!reportsInsight && reportItems?.[0] && (
-                    <li>✓ {reportItems[0].brokerage} 리포트에 따르면 {personalizeText(reportItems[0].title, userName)}</li>
+                    <li>✓ {reportItems[0].brokerage} 리포트에 따르면 {personalizeText(reportItems[0].title, userName)}입니다.</li>
                   )}
                   {fitCaution && <li className="fit-caution">△ {personalizeText(fitCaution, userName)}</li>}
                 </ul>
