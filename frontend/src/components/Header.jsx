@@ -106,13 +106,7 @@ function Header() {
         </div>
         <nav className="nav-menu">
           <div className="nav-left">
-            <button 
-              className="nav-item"
-              onClick={() => handleNavClick('/about')}
-            >
-              About
-            </button>
-            <button 
+            <button
               className="nav-item"
               onClick={() => handleNavClick('/support')}
             >
