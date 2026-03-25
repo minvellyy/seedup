@@ -451,7 +451,7 @@ const HoldingsSection = () => {
               </div>
 
               <div className="form-group">
-                <label htmlFor="stockCode">종목코드</label>
+                <label htmlFor="stockCode">종목코드 <span className="required">*</span></label>
                 <input
                   type="text"
                   id="stockCode"
@@ -460,6 +460,7 @@ const HoldingsSection = () => {
                   onChange={handleChange}
                   className="form-input"
                   placeholder="예: 005930"
+                  required
                 />
               </div>
 

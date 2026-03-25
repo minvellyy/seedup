@@ -61,6 +61,7 @@ const ChatBotPage = () => {
   const [currentSessionId, setCurrentSessionId] = useState(null)
   const [sessions, setSessions] = useState([])
   const [error, setError] = useState(null)
+  const [sidebarOpen, setSidebarOpen] = useState(false)
   const messagesEndRef = useRef(null)
 
   // 상수 정의로 한글 문자열 분리
@@ -211,11 +212,18 @@ const ChatBotPage = () => {
     setMessages([])
     setCurrentSessionId(null)
     setError(null)
-    
+    setSidebarOpen(false)
+
     // 로그인한 사용자의 마지막 세션 ID 삭제
     if (isLoggedIn && user?.userId) {
       localStorage.removeItem(`lastSessionId_${user.userId}`)
     }
+  }
+
+  // 세션 선택 (모바일에서 사이드바 자동 닫기)
+  const selectSession = (sessionId) => {
+    loadSessionMessages(sessionId)
+    setSidebarOpen(false)
   }
 
   // 메시지 전송
@@ -359,7 +367,10 @@ const ChatBotPage = () => {
 
   return (
     <div className="chatbot-page">
-      <div className="chatbot-sidebar">
+      {sidebarOpen && (
+        <div className="sidebar-backdrop" onClick={() => setSidebarOpen(false)} />
+      )}
+      <div className={`chatbot-sidebar${sidebarOpen ? ' open' : ''}`}>
         <div className="sidebar-header">
           <div className="bot-icon">
             <svg width="36" height="36" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -395,7 +406,7 @@ const ChatBotPage = () => {
                   <li
                     key={session.id}
                     className={`session-item ${currentSessionId === session.id ? 'active' : ''}`}
-                    onClick={() => loadSessionMessages(session.id)}
+                    onClick={() => selectSession(session.id)}
                   >
                     <div className="session-item-content">
                       <div className="session-title">{session.title || NEW_CHAT_TITLE}</div>
@@ -440,9 +451,23 @@ const ChatBotPage = () => {
 
       <div className="chatbot-main">
         <div className="chat-header">
-          <div>
-            <div className="chat-title">투자 전문 AI Assistant</div>
-            <div className="chat-subtitle">개인화된 투자 상담 및 포트폴리오 관리</div>
+          <div className="chat-header-left">
+            <button
+              className="sidebar-toggle-btn"
+              onClick={() => setSidebarOpen(prev => !prev)}
+              aria-label="대화 목록 열기"
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <line x1="3" y1="6" x2="21" y2="6"/>
+                <line x1="3" y1="12" x2="21" y2="12"/>
+                <line x1="3" y1="18" x2="21" y2="18"/>
+              </svg>
+              대화 목록
+            </button>
+            <div>
+              <div className="chat-title">투자 전문 AI Assistant</div>
+              <div className="chat-subtitle">개인화된 투자 상담 및 포트폴리오 관리</div>
+            </div>
           </div>
           
           <div className="user-info">

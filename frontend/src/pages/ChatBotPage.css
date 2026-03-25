@@ -659,20 +659,114 @@
   }
 }
 
-/* 반응형 디자인 */
+/* =====================
+   사이드바 토글 버튼 (모바일에서만 표시)
+   ===================== */
+
+.sidebar-toggle-btn {
+  display: none;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 12px;
+  background: #f0f9f4;
+  border: 1px solid #d1e8da;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 600;
+  color: #4a7a58;
+  white-space: nowrap;
+  flex-shrink: 0;
+  transition: background 0.2s;
+}
+
+.sidebar-toggle-btn:hover {
+  background: #e0f5ea;
+}
+
+.chat-header-left {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* =====================
+   반응형 (768px)
+   ===================== */
+
 @media (max-width: 768px) {
-  .chatbot-page {
-    flex-direction: column;
+  .sidebar-toggle-btn {
+    display: flex;
   }
-  
+
+  /* 사이드바: 슬라이드 오버레이 */
   .chatbot-sidebar {
-    width: 100%;
-    height: 200px;
-    border-right: none;
-    border-bottom: 1px solid #e0e0e0;
+    position: fixed;
+    top: 70px;
+    left: 0;
+    bottom: 0;
+    width: 280px;
+    z-index: 300;
+    transform: translateX(-100%);
+    transition: transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.15);
+    border-right: 1px solid #e5e7eb;
+    overflow-y: auto;
   }
-  
+
+  .chatbot-sidebar.open {
+    transform: translateX(0);
+  }
+
+  /* 백드롭 */
+  .sidebar-backdrop {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.35);
+    z-index: 299;
+    animation: backdropFadeIn 0.2s ease;
+  }
+
+  @keyframes backdropFadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+  }
+
   .message-content {
     max-width: 85%;
+  }
+
+  .chat-header {
+    padding: 14px 16px;
+  }
+
+  .chat-title {
+    font-size: 18px;
+  }
+
+  .chat-subtitle {
+    font-size: 12px;
+  }
+
+  .user-info {
+    padding: 6px 12px;
+    font-size: 13px;
+  }
+
+  .empty-title {
+    font-size: 22px;
+  }
+
+  .empty-subtitle {
+    font-size: 15px;
+  }
+
+  .quick-questions {
+    gap: 10px;
+  }
+
+  .quick-question-btn {
+    font-size: 13px;
+    padding: 10px 16px;
   }
 }

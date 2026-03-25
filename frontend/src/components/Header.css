@@ -120,3 +120,110 @@
 .nav-item.disabled:hover {
   color: #d0d0d0;
 }
+
+/* =====================
+   햄버거 버튼
+   ===================== */
+
+.hamburger-btn {
+  display: none;
+  flex-direction: column;
+  gap: 5px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 8px;
+  flex-shrink: 0;
+}
+
+.hamburger-btn span {
+  display: block;
+  width: 24px;
+  height: 2px;
+  background: #333;
+  border-radius: 2px;
+  transition: all 0.3s ease;
+  transform-origin: center;
+}
+
+.hamburger-btn.open span:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.hamburger-btn.open span:nth-child(2) {
+  opacity: 0;
+  transform: scaleX(0);
+}
+
+.hamburger-btn.open span:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+/* =====================
+   모바일 드롭다운 메뉴
+   ===================== */
+
+.mobile-menu {
+  display: none;
+  flex-direction: column;
+  background: #fff;
+  border-top: 1px solid #e0e0e0;
+  padding: 8px 0 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.mobile-nav-item {
+  background: none;
+  border: none;
+  font-size: 15px;
+  font-weight: 500;
+  color: #333;
+  cursor: pointer;
+  padding: 13px 20px;
+  text-align: left;
+  transition: background 0.15s, color 0.15s;
+  width: 100%;
+}
+
+.mobile-nav-item:hover:not(:disabled) {
+  background: #f8f8f8;
+  color: #ffec48;
+}
+
+.mobile-nav-item:disabled {
+  color: #d0d0d0;
+  cursor: not-allowed;
+}
+
+.mobile-logout {
+  color: #666;
+  border-top: 1px solid #f0f0f0;
+  margin-top: 4px;
+  padding-top: 13px;
+}
+
+/* =====================
+   반응형 (768px)
+   ===================== */
+
+@media (max-width: 768px) {
+  .hamburger-btn {
+    display: flex;
+  }
+
+  .nav-menu {
+    display: none;
+  }
+
+  .mobile-menu {
+    display: flex;
+  }
+
+  .header-container {
+    padding: 0 16px;
+  }
+
+  .logo {
+    margin-right: 0;
+  }
+}
