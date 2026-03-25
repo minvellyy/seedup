@@ -1,4 +1,4 @@
-import React from 'react'
+import { useState } from 'react'
 import { useNavigate, useLocation } from 'react-router-dom'
 import { useAuth } from '../contexts/AuthContext'
 import './Header.css'
@@ -6,14 +6,15 @@ import './Header.css'
 function Header() {
   const navigate = useNavigate()
   const location = useLocation()
-  const { isLoggedIn, logout, user } = useAuth()
+  const { isLoggedIn, logout } = useAuth()
+  const [menuOpen, setMenuOpen] = useState(false)
 
   // 개인화 설문 페이지에서는 비활성화된 새로운 네비게이션 바
   const showDisabledNav = location.pathname === '/survey' || location.pathname === '/survey/investment'
   // 로그인 후 홈 화면과 대시보드, 추천 페이지 등에서는 활성화된 새로운 네비게이션 바
   const showActiveNav = isLoggedIn && (
-    location.pathname === '/' || 
-    location.pathname === '/dashboard' || 
+    location.pathname === '/' ||
+    location.pathname === '/dashboard' ||
     location.pathname === '/recommendations' ||
     location.pathname === '/mypage' ||
     location.pathname === '/chat' ||
@@ -23,23 +24,40 @@ function Header() {
     location.pathname.startsWith('/etf/') ||
     location.pathname.startsWith('/portfolio/')
   )
-  
+
   const handleLogoClick = () => {
     if (isLoggedIn) {
       navigate('/dashboard')
     } else {
       navigate('/')
     }
+    setMenuOpen(false)
   }
 
   const handleNavClick = (path) => {
     navigate(path)
+    setMenuOpen(false)
   }
 
   const handleLogout = () => {
     logout()
     navigate('/')
+    setMenuOpen(false)
   }
+
+  const toggleMenu = () => setMenuOpen(prev => !prev)
+
+  const HamburgerBtn = () => (
+    <button
+      className={`hamburger-btn${menuOpen ? ' open' : ''}`}
+      onClick={toggleMenu}
+      aria-label="메뉴 열기"
+    >
+      <span />
+      <span />
+      <span />
+    </button>
+  )
 
   // 개인화 설문 페이지용 네비게이션 바 (비활성화)
   if (showDisabledNav) {
@@ -64,7 +82,17 @@ function Header() {
               </button>
             </div>
           </nav>
+          <HamburgerBtn />
         </div>
+        {menuOpen && (
+          <div className="mobile-menu">
+            <button className="mobile-nav-item" disabled>Home</button>
+            <button className="mobile-nav-item" disabled>Portfolio</button>
+            <button className="mobile-nav-item" disabled>Stocks</button>
+            <button className="mobile-nav-item" disabled>Chatbot</button>
+            <button className="mobile-nav-item" disabled>Support</button>
+          </div>
+        )}
       </header>
     )
   }
@@ -92,7 +120,19 @@ function Header() {
               </button>
             </div>
           </nav>
+          <HamburgerBtn />
         </div>
+        {menuOpen && (
+          <div className="mobile-menu">
+            <button className="mobile-nav-item" onClick={() => handleNavClick('/')}>Home</button>
+            <button className="mobile-nav-item" onClick={() => handleNavClick('/recommendations')}>Portfolio</button>
+            <button className="mobile-nav-item" onClick={() => handleNavClick('/stocks')}>Stocks</button>
+            <button className="mobile-nav-item" onClick={() => handleNavClick('/chat')}>Chatbot</button>
+            <button className="mobile-nav-item" onClick={() => handleNavClick('/support')}>Support</button>
+            <button className="mobile-nav-item" onClick={() => handleNavClick('/mypage')}>My Page</button>
+            <button className="mobile-nav-item mobile-logout" onClick={handleLogout}>Logout</button>
+          </div>
+        )}
       </header>
     )
   }
@@ -116,7 +156,7 @@ function Header() {
           <div className="nav-right">
             {isLoggedIn ? (
               <>
-                <button 
+                <button
                   className="nav-item logout-btn"
                   onClick={handleLogout}
                 >
@@ -125,13 +165,13 @@ function Header() {
               </>
             ) : (
               <>
-                <button 
+                <button
                   className="nav-item"
                   onClick={() => handleNavClick('/login')}
                 >
                   Login
                 </button>
-                <button 
+                <button
                   className="nav-item"
                   onClick={() => handleNavClick('/signup')}
                 >
@@ -141,7 +181,21 @@ function Header() {
             )}
           </div>
         </nav>
+        <HamburgerBtn />
       </div>
+      {menuOpen && (
+        <div className="mobile-menu">
+          <button className="mobile-nav-item" onClick={() => handleNavClick('/support')}>Support</button>
+          {isLoggedIn ? (
+            <button className="mobile-nav-item mobile-logout" onClick={handleLogout}>Logout</button>
+          ) : (
+            <>
+              <button className="mobile-nav-item" onClick={() => handleNavClick('/login')}>Login</button>
+              <button className="mobile-nav-item" onClick={() => handleNavClick('/signup')}>Sign Up</button>
+            </>
+          )}
+        </div>
+      )}
     </header>
   )
 }

@@ -63,3 +63,24 @@
   color: #111827;
   text-decoration: underline;
 }
+
+@media (max-width: 768px) {
+  .footer {
+    padding: 12px 20px;
+  }
+
+  .footer-inner {
+    flex-direction: column;
+    column-gap: 0;
+    gap: 6px;
+    align-items: flex-start;
+  }
+
+  .footer-right {
+    gap: 10px;
+  }
+
+  .footer-disclaimer-row {
+    text-align: left;
+  }
+}
