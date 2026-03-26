@@ -105,6 +105,41 @@ function Header() {
           <div className="logo" onClick={handleLogoClick}>
             <span className="logo-text">SeedUP</span>
           </div>
+          <div className="mobile-header-actions">
+            <button
+              className="mobile-support-btn"
+              onClick={() => handleNavClick('/support')}
+              aria-label="고객센터"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+                {/* 헤드폰 밴드 + 이어컵 */}
+                <path d="M3 10a9 9 0 0 1 18 0"/>
+                <rect x="1" y="10" width="3.5" height="5.5" rx="1.5"/>
+                <rect x="19.5" y="10" width="3.5" height="5.5" rx="1.5"/>
+                {/* 말풍선 (채팅) */}
+                <rect x="7" y="6.5" width="10" height="7.5" rx="1.8"/>
+                <path d="M9.5 17l1.5-3h3"/>
+                {/* 말풍선 점 3개 */}
+                <circle cx="10" cy="10.5" r="0.7" fill="currentColor" stroke="none"/>
+                <circle cx="12" cy="10.5" r="0.7" fill="currentColor" stroke="none"/>
+                <circle cx="14" cy="10.5" r="0.7" fill="currentColor" stroke="none"/>
+                {/* 하단 마이크 연결선 + 캡슐 */}
+                <path d="M21 15.5v1.5a2 2 0 0 1-2 2h-3"/>
+                <rect x="10.5" y="18" width="4" height="2.2" rx="1.1"/>
+              </svg>
+            </button>
+            <button
+              className="mobile-logout-btn"
+              onClick={handleLogout}
+              aria-label="로그아웃"
+            >
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
+                <polyline points="16 17 21 12 16 7"/>
+                <line x1="21" y1="12" x2="9" y2="12"/>
+              </svg>
+            </button>
+          </div>
           <nav className="nav-menu">
             <div className="nav-left">
               <button className="nav-item" onClick={() => handleNavClick('/')}>Home</button>

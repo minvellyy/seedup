@@ -29,8 +29,8 @@ const ProfileSection = () => {
       }
 
       try {
-        console.log('[ProfileSection] API 호출:', `http://localhost:8000/api/users/${user.userId}`)
-        const response = await fetch(`http://localhost:8000/api/users/${user.userId}`)
+        console.log('[ProfileSection] API 호출:', `/api/users/${user.userId}`)
+        const response = await fetch(`/api/users/${user.userId}`)
         const data = await response.json()
         
         console.log('[ProfileSection] API 응답:', data)
@@ -129,7 +129,7 @@ const ProfileSection = () => {
         updateData.newPassword = formData.newPassword
       }
 
-      const url = `http://localhost:8000/api/users/${user.userId}`
+      const url = `/api/users/${user.userId}`
       console.log('[UPDATE] 요청 데이터:', updateData)
       console.log('[UPDATE] API URL:', url)
 

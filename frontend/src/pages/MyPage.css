@@ -1173,6 +1173,14 @@ select.form-input {
     flex-direction: row;
     overflow-x: auto;
     gap: 0.625rem;
+    /* 스크롤 끝에서 마지막 탭 잘림 방지 */
+    padding-right: 0.75rem;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+  }
+
+  .sidebar-menu::-webkit-scrollbar {
+    display: none;
   }
 
   .menu-item {
@@ -1204,18 +1212,125 @@ select.form-input {
   }
 }
 
+/* 모바일 전용 고정 탭바: 기본 숨김 */
+.mypage-mobile-tabbar {
+  display: none;
+}
+
+.mypage-mobile-tabbar .sidebar-menu {
+  flex-direction: row;
+  overflow-x: auto;
+  gap: 0.25rem;
+  padding: 0 0.75rem;
+  scrollbar-width: none;
+}
+
+.mypage-mobile-tabbar .sidebar-menu::-webkit-scrollbar {
+  display: none;
+}
+
+.mypage-mobile-tabbar .menu-item {
+  flex-shrink: 0;
+  border-left: none;
+  border-bottom: 3px solid transparent;
+  border-radius: 0;
+  padding: 0.6rem 0.875rem;
+  font-size: 0.875rem;
+}
+
+.mypage-mobile-tabbar .menu-item.active {
+  border-left-color: transparent;
+  border-bottom-color: #16A34A;
+  background: transparent;
+}
+
 @media (max-width: 768px) {
+  /* 페이지 전체 */
   .mypage {
-    padding: 1.25rem 0;
+    padding: 0;
+    /* 탭바 높이(약 48px)만큼 상단 여백 */
+    padding-top: 48px;
+    overflow-x: clip;
+  }
+
+  /* 모바일 전용 고정 탭바 표시 */
+  .mypage-mobile-tabbar {
+    display: block;
+    position: fixed;
+    top: 70px;
+    left: 0;
+    right: 0;
+    z-index: 500;
+    background: #ffffff;
+    border-bottom: 1px solid #E5E7EB;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+    overflow: hidden;
+  }
+
+  /* 모바일에서 데스크탑 사이드바 숨김 */
+  .mypage-sidebar {
+    display: none;
   }
 
   .mypage-container {
-    padding: 0 0.875rem;
+    padding: 0;
+    gap: 0;
+    overflow-x: clip;
+  }
+
+  /* Grid 아이템 가로 폭 한계 고정 */
+  .mypage-content {
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* CATEGORIES 레이블 (데스크탑용이라 모바일에선 불필요) */
+  .sidebar-category {
+    display: none;
+  }
+
+  /* 콘텐츠 영역 */
+  .mypage-content {
+    padding: 1rem;
+    overflow-x: hidden;
   }
 
   .section-content {
-    padding: 1.5rem;
-    border-radius: 14px;
+    padding: 1.25rem;
+    border-radius: 12px;
+    width: 100%;
+    box-sizing: border-box;
+    overflow-x: hidden;
+  }
+
+  /* 프로필 카드 */
+  .profile-card {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* 모든 폼 요소 너비 제한 */
+  .form-group {
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .form-input,
+  .section-content input,
+  .section-content select,
+  .section-content textarea {
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  /* 포트폴리오 SVG 차트 너비 제한 */
+  .portfolio-chart-section svg {
+    width: 100% !important;
+    height: auto !important;
+    max-width: 100%;
   }
 
   .section-title {
@@ -1226,14 +1341,11 @@ select.form-input {
     font-size: 1.25rem;
   }
 
-  .mypage-sidebar {
-    padding: 1.25rem 0.875rem;
-    border-radius: 12px;
-  }
-
   .holdings-form-card,
   .holdings-list-card {
     padding: 1.25rem;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .summary-card {
@@ -1246,6 +1358,8 @@ select.form-input {
 
   .strategy-item {
     padding: 1.25rem;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .strategy-content {
@@ -1262,10 +1376,14 @@ select.form-input {
 
   .portfolio-chart-section {
     padding: 1.5rem 1.25rem;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .portfolio-legend-section {
     padding: 1.25rem;
+    width: 100%;
+    box-sizing: border-box;
   }
 }
 

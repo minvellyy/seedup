@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import './MyPage.css'
 import ProfileSection from './MyPageSections/ProfileSection'
 import HoldingsSection from './MyPageSections/HoldingsSection'
@@ -42,23 +42,33 @@ const MyPage = () => {
     }
   }
 
+  const TabBar = () => (
+    <nav className="sidebar-menu">
+      {menuItems.map((item) => (
+        <button
+          key={item.key}
+          className={`menu-item ${activeSection === item.key ? 'active' : ''}`}
+          onClick={() => setActiveSection(item.key)}
+        >
+          <span className="menu-icon">{item.icon}</span>
+          <span className="menu-label">{item.label}</span>
+        </button>
+      ))}
+    </nav>
+  )
+
   return (
     <div className="mypage">
+      {/* 모바일 전용 고정 탭바 */}
+      <div className="mypage-mobile-tabbar">
+        <TabBar />
+      </div>
+
       <div className="mypage-container">
+        {/* 데스크탑 사이드바 */}
         <div className="mypage-sidebar">
           <p className="sidebar-category">CATEGORIES</p>
-          <nav className="sidebar-menu">
-            {menuItems.map((item) => (
-              <button
-                key={item.key}
-                className={`menu-item ${activeSection === item.key ? 'active' : ''}`}
-                onClick={() => setActiveSection(item.key)}
-              >
-                <span className="menu-icon">{item.icon}</span>
-                <span className="menu-label">{item.label}</span>
-              </button>
-            ))}
-          </nav>
+          <TabBar />
         </div>
 
         <div className="mypage-content">

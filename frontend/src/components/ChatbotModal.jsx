@@ -121,6 +121,13 @@ function ChatbotModal() {
     if (!footer) return
 
     const updatePosition = () => {
+      const isMobile = window.innerWidth <= 768
+      if (isMobile) {
+        const bottomNav = document.querySelector('.mobile-bottom-nav')
+        const navHeight = bottomNav ? bottomNav.getBoundingClientRect().height : 0
+        setBottomOffset(navHeight + BUTTON_MARGIN)
+        return
+      }
       const footerRect = footer.getBoundingClientRect()
       const viewportHeight = window.innerHeight
       const footerVisibleHeight = Math.max(0, viewportHeight - footerRect.top)

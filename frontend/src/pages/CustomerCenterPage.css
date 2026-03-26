@@ -1238,6 +1238,16 @@
     padding: 0 1rem;
   }
 
+  /* 1:1 문의 — 우측 문의내역을 아래로 이동 */
+  .inq-layout {
+    grid-template-columns: 1fr;
+    min-height: unset;
+  }
+
+  .inquiry-container {
+    grid-template-columns: 1fr;
+  }
+
   .cs-sidebar {
     position: static;
     max-height: none;
