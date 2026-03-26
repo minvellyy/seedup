@@ -2,9 +2,24 @@
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/png" href="/pwa-192x192.png" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>SeedUP</title>
+
+    <!-- PWA: 홈화면 추가 시 앱처럼 전체화면 실행 -->
+    <meta name="mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="SeedUP" />
+
+    <!-- 테마 색상 (상태바 색상) -->
+    <meta name="theme-color" content="#1a1a2e" />
+
+    <!-- iOS 홈화면 아이콘 -->
+    <link rel="apple-touch-icon" href="/pwa-192x192.png" />
+
+    <!-- iOS 스플래시 스크린 (선택사항) -->
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
   </head>
   <body>
     <div id="root"></div>

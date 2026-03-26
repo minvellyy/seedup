@@ -130,7 +130,7 @@ const PortfolioSection = () => {
         setLoading(true)
         setError(null)
 
-        const response = await fetch(`http://localhost:8000/api/holdings/${user.userId}/summary`)
+        const response = await fetch(`/api/holdings/${user.userId}/summary`)
         if (!response.ok) {
           throw new Error('포트폴리오 조회에 실패했습니다')
         }

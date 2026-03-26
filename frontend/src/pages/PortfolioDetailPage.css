@@ -543,6 +543,18 @@
   .pd-stock-left { width: 100%; }
   .pd-stock-row { flex-direction: column; }
   .pd-bar-label { font-size: 0.7em; }
+
+  /* 도넛차트 + 구성종목 세로 배치 */
+  .pd-donut-wrap {
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .pd-donut-legend {
+    width: 100%;
+    flex: none;
+  }
 }
 
 /* ── PDF 다운로드 전용 글씨 축소 ─────────────────────────────── */

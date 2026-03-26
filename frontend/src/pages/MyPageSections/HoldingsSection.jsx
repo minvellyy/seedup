@@ -43,7 +43,7 @@ const HoldingsSection = () => {
         setLoading(true)
         setError(null)
         
-        const response = await fetch(`http://localhost:8000/api/holdings/${user.userId}/summary`)
+        const response = await fetch(`/api/holdings/${user.userId}/summary`)
         if (!response.ok) {
           throw new Error('보유 주식 조회에 실패했습니다')
         }
@@ -106,7 +106,7 @@ const HoldingsSection = () => {
       const formDataObj = new FormData()
       formDataObj.append('file', file)
 
-      const response = await fetch('http://localhost:8000/api/holdings/parse-mts-image', {
+      const response = await fetch('/api/holdings/parse-mts-image', {
         method: 'POST',
         body: formDataObj,
       })
@@ -154,7 +154,7 @@ const HoldingsSection = () => {
     }
     
     try {
-      const response = await fetch('http://localhost:8000/api/holdings', {
+      const response = await fetch('/api/holdings', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -188,7 +188,7 @@ const HoldingsSection = () => {
         purchaseDate: '',
       })
       
-      const summaryResponse = await fetch(`http://localhost:8000/api/holdings/${user.userId}/summary`)
+      const summaryResponse = await fetch(`/api/holdings/${user.userId}/summary`)
       if (summaryResponse.ok) {
         const data = await summaryResponse.json()
         
@@ -221,7 +221,7 @@ const HoldingsSection = () => {
     }
     
     try {
-      const response = await fetch(`http://localhost:8000/api/holdings/${holdingId}`, {
+      const response = await fetch(`/api/holdings/${holdingId}`, {
         method: 'DELETE',
       })
       
@@ -231,7 +231,7 @@ const HoldingsSection = () => {
       
       alert(`${stockName} 종목이 삭제되었습니다`)
       
-      const summaryResponse = await fetch(`http://localhost:8000/api/holdings/${user.userId}/summary`)
+      const summaryResponse = await fetch(`/api/holdings/${user.userId}/summary`)
       if (summaryResponse.ok) {
         const data = await summaryResponse.json()
         

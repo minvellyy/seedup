@@ -1,0 +1,64 @@
+/* 데스크탑에서는 숨김 */
+.mobile-bottom-nav {
+  display: none;
+}
+
+@media (max-width: 768px) {
+  .mobile-bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 1100;
+    background: #fff;
+    border-top: 1px solid #e8e8e8;
+    box-shadow: 0 -2px 12px rgba(0, 0, 0, 0.08);
+    /* iOS 홈 인디케이터 영역 확보 */
+    padding-bottom: env(safe-area-inset-bottom);
+  }
+
+  .mobile-bottom-nav__item {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    padding: 10px 4px 8px;
+    background: none;
+    border: none;
+    cursor: pointer;
+    color: #aaa;
+    transition: color 0.15s;
+    /* 터치 피드백 */
+    -webkit-tap-highlight-color: transparent;
+  }
+
+  .mobile-bottom-nav__item.active {
+    color: #f5c518;
+  }
+
+  .mobile-bottom-nav__item:active {
+    opacity: 0.6;
+  }
+
+  .mobile-bottom-nav__icon {
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-bottom-nav__icon svg {
+    width: 24px;
+    height: 24px;
+  }
+
+  .mobile-bottom-nav__label {
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: -0.2px;
+  }
+}

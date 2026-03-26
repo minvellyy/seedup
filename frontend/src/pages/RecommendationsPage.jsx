@@ -180,7 +180,7 @@ function RecommendationsPage() {
                     <div className="rec-score-header">
                       <span className="rec-score-label">Recommendation Score</span>
                       <span className="rec-score-num">
-                        {score} <span className="rec-score-total">/ 100</span>
+                        {score} <span className="rec-score-total">/ 1000</span>
                       </span>
                     </div>
                     <div className="rec-score-bar-bg">
